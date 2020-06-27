@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.softartdev.notedelight.ui.main.MainActivity">
+    <item
+        android:id="@+id/action_save_note"
+        android:icon="@drawable/ic_save_white_24dp"
+        android:title="@string/action_save_note"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_edit_title"
+        android:icon="@drawable/ic_title_white_24dp"
+        android:title="@string/action_edit_title"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_delete_note"
+        android:icon="@drawable/ic_delete_forever_white_24dp"
+        android:title="@string/action_delete_note"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+</menu>

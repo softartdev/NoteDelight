@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.softartdev.notedelight.ui.note.NoteActivity">
+
+    <ProgressBar
+        android:id="@+id/note_progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <com.softartdev.notedelight.ui.widget.LinedEditText
+        android:id="@+id/note_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:fadingEdge="vertical"
+        android:fontFamily="@font/podkova"
+        android:gravity="top"
+        android:hint="@string/type_text"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:textSize="19.5sp"
+        tools:text="@tools:sample/lorem/random" />
+
+</LinearLayout>

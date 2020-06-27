@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name" translatable="false">Note Delight</string>
+    <string name="action_save_note">Save note</string>
+    <string name="action_delete_note">Delete note</string>
+    <string name="press_add_note">Press \"+\" to add a note.</string>
+    <string name="title_activity_note">New Note</string>
+    <string name="type_text">Type Text</string>
+    <string name="note_deleted">Note deleted</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_delete_dialog_message">Are you sure want to delete the note?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="note_changes_not_saved_dialog_title">Changes not saved</string>
+    <string name="note_save_change_dialog_message">Do you want to save the changes?</string>
+    <string name="note_empty">The note is empty. Enter the data.</string>
+    <string name="sign_in">Sign in</string>
+    <string name="security">Security</string>
+    <string name="pref_title_enable_encryption">Enable encryption</string>
+    <string name="pref_title_set_password">Set password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="empty_password">Password must not be empty</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="label_empty_result">The list is empty</string>
+    <string name="loading">Loading</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="error_title">Error</string>
+    <string name="error_message">There was a problem loading the note, please try again!</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="settings">Settings</string>
+    <string name="theme">Theme</string>
+    <string name="choose_theme">Choose theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="set_by_byttery_saver">Set by Battery Saver</string>
+    <string name="system_default">System default</string>
+    <string name="light_theme_entry" translatable="false">light</string>
+    <string name="dark_theme_entry" translatable="false">dark</string>
+    <string name="default_theme_entry" translatable="false">default</string>
+    <string name="theme_key" translatable="false">theme_key</string>
+    <string name="security_key" translatable="false">security_key</string>
+    <string name="password_key" translatable="false">password_key</string>
+    <string name="hide_screen_contents_key" translatable="false">hide_screen_contents_key</string>
+    <string name="hide_screen_contents">Hide screen contents</string>
+    <string name="hide_screen_contents_summary">Turn on to hide the contents of the screen when switching between applications. Also, the ability to take a screenshot will be disabled.</string>
+    <string name="action_edit_title">Edit title</string>
+    <string name="enter_title">Enter title</string>
+    <string name="empty_title">Title must not be empty</string>
+    <string name="create_note">Create note</string>
+    <string name="dialog_title_change_password">Changing password</string>
+    <string name="dialog_title_conform_password">Confirming password</string>
+    <string name="dialog_title_enter_password">Entering password</string>
+    <string name="dialog_title_change_title">Editing title</string>
+</resources>

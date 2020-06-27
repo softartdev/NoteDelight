@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="LinearLayout"
+    tools:orientation="vertical"
+    tools:gravity="center">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="16dp"
+        android:text="@string/label_empty_result"
+        android:textAppearance="?attr/textAppearanceHeadline5" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/add_note_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:text="@string/press_add_note"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+</merge>

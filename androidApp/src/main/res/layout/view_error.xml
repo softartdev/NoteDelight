@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="LinearLayout"
+    tools:orientation="vertical"
+    tools:gravity="center">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_error_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:gravity="center_horizontal"
+        android:text="@string/error_title"
+        android:textAppearance="?attr/textAppearanceHeadline5" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_horizontal"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="64dp"
+        android:text="@string/error_message"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/retry" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/cancel" />
+
+</merge>
