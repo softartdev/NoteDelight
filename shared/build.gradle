@@ -4,27 +4,6 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
 }
-android {
-    compileSdkVersion 30
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 1
-        versionName '1.0'
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
 kotlin {
     android()
     iosX64('ios') {
@@ -62,6 +41,43 @@ kotlin {
         }
     }
 }
+task(packForXcode, type: Sync) {
+    group = 'build'
+    def mode = System.getenv('CONFIGURATION') ?: 'DEBUG'
+    def framework = kotlin.targets.ios.binaries.getFramework(mode)
+    inputs.property('mode', mode)
+    dependsOn(framework.linkTask)
+    def targetDir = new File(buildDir, 'xcode-frameworks')
+    from({ framework.outputDirectory })
+    into(targetDir)
+}
+tasks.getByName('build').dependsOn(packForXcode)
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName '1.0'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
+    }
+}
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "androidx.room:room-runtime:$room_version"
@@ -78,14 +94,3 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
-task(packForXcode, type: Sync) {
-    group = 'build'
-    def mode = System.getenv('CONFIGURATION') ?: 'DEBUG'
-    def framework = kotlin.targets.ios.binaries.getFramework(mode)
-    inputs.property('mode', mode)
-    dependsOn(framework.linkTask)
-    def targetDir = new File(buildDir, 'xcode-frameworks')
-    from({ framework.outputDirectory })
-    into(targetDir)
-}
-tasks.getByName('build').dependsOn(packForXcode)
