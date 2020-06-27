@@ -28,10 +28,22 @@ kotlin {
         androidMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+                implementation "androidx.room:room-runtime:$room_version"
+                implementation "androidx.room:room-ktx:$room_version"
+                api "com.commonsware.cwac:saferoom.x:1.2.1"
+                api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
+                implementation "com.jakewharton.timber:timber:$timber_version"
             }
         }
         androidTest {
-
+            dependencies {
+                implementation project(path: ':shared-android-test-util')
+                implementation "junit:junit:$junit_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+                implementation "org.mockito:mockito-core:$mockito_version"
+                implementation "org.mockito:mockito-inline:$mockito_version"
+            }
         }
         iosMain {
 
@@ -79,18 +91,6 @@ android {
     }
 }
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
     kapt "androidx.room:room-compiler:$room_version"
-    api "com.commonsware.cwac:saferoom.x:1.2.1"
-    api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
-    implementation "com.jakewharton.timber:timber:$timber_version"
-    testImplementation project(path: ':shared-android-test-util')
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.mockito:mockito-inline:$mockito_version"
-    androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
