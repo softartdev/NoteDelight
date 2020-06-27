@@ -8,7 +8,6 @@ pluginManagement {
 }
 rootProject.name = 'NoteDelight'
 
-
-include(':shared')
-include(':androidApp')
-
+include ':shared-android-test-util'
+include ':shared'
+include ':androidApp'
