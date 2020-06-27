@@ -21,8 +21,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.0'
     }
 }
-group = 'com.softartdev.notedelight'
-version = '1.0-SNAPSHOT'
 
 allprojects {
     repositories {
@@ -32,6 +30,8 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
     }
+    group = 'com.softartdev.notedelight'
+    version = '1.0-SNAPSHOT'
 }
 
 task clean(type: Delete) {

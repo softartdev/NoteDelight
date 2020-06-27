@@ -3,16 +3,18 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android-extensions'
 }
-group = 'com.softartdev.notedelight'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    gradlePluginPortal()
-    google()
-    jcenter()
-    mavenCentral()
-    maven {
-        url 'https://dl.bintray.com/kotlin/kotlin-eap'
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName '1.0'
+    }
+    buildTypes {
+        'release' {
+            minifyEnabled false
+        }
     }
 }
 kotlin {
@@ -50,20 +52,6 @@ kotlin {
         }
         iosTest {
 
-        }
-    }
-}
-android {
-    compileSdkVersion 29
-    defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 29
-        versionCode 1
-        versionName '1.0'
-    }
-    buildTypes {
-        'release' {
-            minifyEnabled false
         }
     }
 }
