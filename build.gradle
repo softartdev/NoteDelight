@@ -7,8 +7,6 @@ buildscript {
         timber_version = '4.7.1'
         junit_version = '4.13'
         mockito_version = '3.3.3'
-        junit_android_version = '1.1.1'
-        espresso_version = "3.2.0"
     }
     repositories {
         google()
