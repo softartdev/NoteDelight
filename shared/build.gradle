@@ -2,19 +2,27 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
     id 'com.android.library'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 29
+        minSdkVersion 16
+        targetSdkVersion 30
         versionCode 1
         versionName '1.0'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildTypes {
-        'release' {
+        release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 kotlin {
@@ -40,8 +48,7 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation kotlin('stdlib-jdk7')
-                implementation 'androidx.core:core-ktx:1.2.0'
+                implementation kotlin('stdlib-jdk8')
             }
         }
         androidTest {
@@ -54,6 +61,22 @@ kotlin {
 
         }
     }
+}
+dependencies {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    api "com.commonsware.cwac:saferoom.x:1.2.1"
+    api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
+    implementation "com.jakewharton.timber:timber:$timber_version"
+    testImplementation project(path: ':shared-android-test-util')
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
 task(packForXcode, type: Sync) {
     group = 'build'
