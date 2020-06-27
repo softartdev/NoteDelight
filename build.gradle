@@ -1,0 +1,23 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        jcenter()
+        google()
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-eap'
+        }
+    }
+    dependencies {
+        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:1.4-M2')
+        classpath('com.android.tools.build:gradle:3.5.2')
+    }
+}
+group = 'com.softartdev.notedelight'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://dl.bintray.com/kotlin/kotlin-eap'
+    }
+}
