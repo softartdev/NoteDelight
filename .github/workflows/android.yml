@@ -1,0 +1,59 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ui_test_job:
+    name: UI-tests on emulator
+    runs-on: macos-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Cache gradle
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Decrypt large secret
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+      - name: Run UI-tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          script: ./gradlew connectedCheck
+  build_unit_test_publish_job:
+    name: Build -> Unit-test -> Publish
+    needs: ui_test_job
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Cache gradle
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Decrypt large secret
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+      - name: Upload to Google Play
+        run: bundle exec fastlane build_bundle_publish
+      - name: Archive output artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: output-artifacts
+          path: app/build/
