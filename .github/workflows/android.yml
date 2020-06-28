@@ -32,7 +32,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           target: google_apis
-          script: ./gradlew connectedCheck
+          script: ./gradlew :androidApp:connectedCheck
   build_unit_test_publish_job:
     name: Build -> Unit-test -> Publish
     needs: ui_test_job

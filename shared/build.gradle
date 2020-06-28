@@ -89,6 +89,13 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
     }
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+        exclude "**/attach_hotspot_windows.dll"
+        exclude "META-INF/licenses/**"
+        pickFirst "META-INF/AL2.0"
+        pickFirst "META-INF/LGPL2.1"
+    }
 }
 dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
