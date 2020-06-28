@@ -7,3 +7,6 @@ CREATE TABLE note (
     dateCreated INTEGER AS Date NOT NULL,
     dateModified INTEGER AS Date NOT NULL
 );
+
+selectAll:
+SELECT * FROM note;
