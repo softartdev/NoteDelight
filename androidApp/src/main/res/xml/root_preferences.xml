@@ -1,5 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <PreferenceCategory
         android:icon="@drawable/ic_brightness_black_24dp"
@@ -40,6 +41,14 @@
             android:key="@string/hide_screen_contents_key"
             android:summary="@string/hide_screen_contents_summary"
             android:title="@string/hide_screen_contents" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+
+        <Preference
+            android:key="@string/version_key"
+            tools:summary="Kotlin Multiplatform on Android"/>
 
     </PreferenceCategory>
 

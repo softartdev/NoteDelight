@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.*
 import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.ui.settings.security.change.ChangePasswordDialog
 import com.softartdev.notedelight.ui.settings.security.confirm.ConfirmPasswordDialog
@@ -49,6 +50,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChan
         passwordPreference?.tintIcon()
 
         findPreference<CheckBoxPreference>(getString(R.string.hide_screen_contents_key))?.tintIcon()
+
+        val versionPreference = findPreference<Preference>(getString(R.string.version_key))
+        versionPreference?.summary = createMultiplatformMessage()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
