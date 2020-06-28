@@ -8,5 +8,20 @@ CREATE TABLE note (
     dateModified INTEGER AS Date NOT NULL
 );
 
-selectAll:
+getAll:
 SELECT * FROM note;
+
+getById:
+SELECT * FROM note WHERE id = :noteId;
+
+insert:
+INSERT INTO note VALUES ?;
+
+update:
+INSERT OR REPLACE INTO note VALUES ?;
+
+delete:
+DELETE FROM note WHERE id = :noteId;
+
+deleteAll:
+DELETE FROM note;
