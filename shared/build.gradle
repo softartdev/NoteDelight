@@ -7,7 +7,7 @@ plugins {
 }
 sqldelight {
     NoteDb {
-        packageName = 'com.softartdev.notedelight'
+        packageName = 'com.softartdev.notedelight.shared.db'
     }
 }
 kotlin {
@@ -23,6 +23,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
             }
         }
         commonTest {
