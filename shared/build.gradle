@@ -23,6 +23,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
                 implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
             }
         }

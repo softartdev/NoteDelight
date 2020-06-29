@@ -17,6 +17,9 @@ SELECT * FROM note WHERE id = :noteId;
 insert:
 INSERT INTO note VALUES ?;
 
+lastInsertRowId:
+SELECT last_insert_rowid();
+
 update:
 INSERT OR REPLACE INTO note VALUES ?;
 
