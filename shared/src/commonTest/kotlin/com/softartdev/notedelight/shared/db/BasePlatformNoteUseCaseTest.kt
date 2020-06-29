@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.shared.db
 
-import kotlinx.coroutines.flow.first
 import kotlin.test.*
 
 abstract class BasePlatformNoteUseCaseTest {
@@ -11,7 +10,7 @@ abstract class BasePlatformNoteUseCaseTest {
     private val notes: MutableList<Note> = mutableListOf()
 
     @BeforeTest
-    fun setUp() {
+    open fun setUp() {
         platformRepo.buildDatabaseInstanceIfNeed()
         noteUseCase = PlatformNoteUseCase(platformRepo)
 
@@ -24,13 +23,11 @@ abstract class BasePlatformNoteUseCaseTest {
     }
 
     @AfterTest
-    fun tearDown() {
+    open fun tearDown() {
         platformRepo.closeDatabase()
 
         notes.clear()
     }
-
-    internal abstract fun <T> runTest(block: suspend () -> T)
 
     @Test
     fun getTitleChannel() {
@@ -38,37 +35,37 @@ abstract class BasePlatformNoteUseCaseTest {
     }
 
     @Test
-    fun getNotes() = runTest {
-        assertEquals(notes, noteUseCase.getNotes().first())
+    fun getNotes() {
+        assertEquals(notes, platformRepo.noteQueries.getAll().executeAsList())
     }
 
     @Test
-    fun createNote() = runTest {
-        assertEquals(notes.last().id.inc(), noteUseCase.createNote())
+    fun createNote() {
+        assertEquals(notes.first().id.dec(), noteUseCase.createNote())
     }
 
     @Test
-    fun saveNote() = runTest {
+    fun saveNote() {
         val id: Long = 2
         val newTitle = "new title"
         val newText = "new text"
         noteUseCase.saveNote(id, newTitle, newText)
-        val updatedNote = notes.find { it.id == id }
-        assertEquals(newTitle, updatedNote?.title)
-        assertEquals(newText, updatedNote?.text)
+        val updatedNote = noteUseCase.loadNote(id)
+        assertEquals(newTitle, updatedNote.title)
+        assertEquals(newText, updatedNote.text)
     }
 
     @Test
-    fun updateTitle() = runTest {
+    fun updateTitle() {
         val id: Long = 2
         val newTitle = "new title"
         noteUseCase.updateTitle(id, newTitle)
-        val updatedNote = notes.find { it.id == id }
-        assertEquals(newTitle, updatedNote?.title)
+        val updatedNote = noteUseCase.loadNote(id)
+        assertEquals(newTitle, updatedNote.title)
     }
 
     @Test
-    fun loadNote() = runTest {
+    fun loadNote() {
         val id: Long = 2
         val exp = notes.find { it.id == id }
         val act = noteUseCase.loadNote(id)
@@ -76,22 +73,22 @@ abstract class BasePlatformNoteUseCaseTest {
     }
 
     @Test
-    fun deleteNote() = runTest {
+    fun deleteNote() {
         val id: Long = 2
-        assertNotNull(notes.find { it.id == id })
+        assertNotNull(platformRepo.noteQueries.getById(id).executeAsOneOrNull())
         noteUseCase.deleteNote(id)
-        assertNull(notes.find { it.id == id })
+        assertNull(platformRepo.noteQueries.getById(id).executeAsOneOrNull())
     }
 
     @Test
-    fun isChanged() = runTest {
+    fun isChanged() {
         val note = notes.random()
         assertFalse(noteUseCase.isChanged(note.id, note.title, note.text))
         assertTrue(noteUseCase.isChanged(note.id, "new title", "new text"))
     }
 
     @Test
-    fun isEmpty() = runTest {
+    fun isEmpty() {
         val note = notes.random()
         assertFalse(noteUseCase.isEmpty(note.id))
     }
