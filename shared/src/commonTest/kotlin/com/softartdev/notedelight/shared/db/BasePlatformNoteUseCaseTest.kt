@@ -6,18 +6,21 @@ import kotlin.test.*
 abstract class BasePlatformNoteUseCaseTest {
 
     abstract val platformRepo: PlatformRepo
-    private val noteUseCase = PlatformNoteUseCase(platformRepo)
+    private lateinit var noteUseCase: PlatformNoteUseCase
 
     private val notes: MutableList<Note> = mutableListOf()
 
     @BeforeTest
     fun setUp() {
         platformRepo.buildDatabaseInstanceIfNeed()
+        noteUseCase = PlatformNoteUseCase(platformRepo)
 
         val firstNote = Note(1, "first title", "first text", Date(), Date())
         val secondNote = Note(2, "second title", "second text", Date(), Date())
         val thirdNote = Note(3, "third title", "third text", Date(), Date())
         notes.addAll(listOf(firstNote, secondNote, thirdNote))
+
+        notes.forEach(platformRepo.noteQueries::insert)
     }
 
     @AfterTest

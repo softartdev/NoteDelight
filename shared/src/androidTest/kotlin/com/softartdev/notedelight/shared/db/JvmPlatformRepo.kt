@@ -13,5 +13,9 @@ class JvmPlatformRepo : PlatformRepo() {
         passphrase: CharSequence
     ): NoteDb = super.buildDatabaseInstanceIfNeed(passphrase)
 
-    override fun createDriver(): SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+    override fun createDriver(): SqlDriver {
+        val jdbcSqliteDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        NoteDb.Schema.create(jdbcSqliteDriver)
+        return jdbcSqliteDriver
+    }
 }
