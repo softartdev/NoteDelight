@@ -1,22 +1,49 @@
 package com.softartdev.notedelight.shared.db
 
-expect class PlatformRepo {
+import com.squareup.sqldelight.db.SqlDriver
 
-    var noteDb: NoteDb?
+abstract class PlatformRepo {
 
-    val dbState: PlatformSQLiteState
+    internal open var driver: SqlDriver? = null
+    abstract var noteDb: NoteDb?
+
+    val dbState: PlatformSQLiteState = PlatformSQLiteState.UNENCRYPTED
 
     val noteQueries: NoteQueries
+        get() = noteDb?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
 
-    var relaunchFlowEmitter: (() -> Unit)?
+    var relaunchFlowEmitter: (() -> Unit)? = null
 
-    fun buildDatabaseInstanceIfNeed(passphrase: CharSequence = ""): NoteDb
+    open fun buildDatabaseInstanceIfNeed(
+        passphrase: CharSequence = ""
+    ): NoteDb {
+        var instance = noteDb
+        if (instance == null) {
+            val sqlDriver = createDriver()
+            instance = createDatabase(sqlDriver)
+            driver = sqlDriver
+            noteDb = instance
+        }
+        return instance
+    }
 
-    fun decrypt(oldPass: CharSequence)
+    abstract fun createDriver(): SqlDriver
 
-    fun rekey(oldPass: CharSequence, newPass: CharSequence)
+    fun decrypt(oldPass: CharSequence) {
+        TODO("Not yet implemented")
+    }
 
-    fun encrypt(newPass: CharSequence)
+    fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+        TODO("Not yet implemented")
+    }
 
-    fun closeDatabase()
+    fun encrypt(newPass: CharSequence) {
+        TODO("Not yet implemented")
+    }
+
+    fun closeDatabase() {
+        noteDb = null
+        driver?.close()
+        driver = null
+    }
 }

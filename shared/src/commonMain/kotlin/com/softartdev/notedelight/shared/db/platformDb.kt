@@ -8,8 +8,7 @@ expect class DriverFactory {
     fun createDriver(): SqlDriver
 }
 
-fun createDatabase(driverFactory: DriverFactory): NoteDb {
-    val driver = driverFactory.createDriver()
+fun createDatabase(driver: SqlDriver): NoteDb {
     val dateAdapter = DateAdapter()
     val noteAdapter = Note.Adapter(dateAdapter, dateAdapter)
     return NoteDb(driver, noteAdapter)
