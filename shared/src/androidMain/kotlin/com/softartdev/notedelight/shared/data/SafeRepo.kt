@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
 import android.content.Context
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import androidx.room.Room
 import com.commonsware.cwac.saferoom.SQLCipherUtils
@@ -25,20 +24,20 @@ class SafeRepo(
     var relaunchFlowEmitter: (() -> Unit)? = null
 
     fun buildDatabaseInstanceIfNeed(
-            passphrase: Editable = SpannableStringBuilder()
+            passphrase: CharSequence = ""
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
             instance = Room
                     .databaseBuilder(context, NoteDatabase::class.java, DB_NAME)
-                    .openHelperFactory(SafeHelperFactory.fromUser(passphrase))
+                    .openHelperFactory(SafeHelperFactory.fromUser(SpannableStringBuilder(passphrase)))
                     .build()
             noteDatabase = instance
         }
         return instance
     }
 
-    fun decrypt(oldPass: Editable) {
+    fun decrypt(oldPass: CharSequence) {
         val originalFile = context.getDatabasePath(DB_NAME)
 
         val oldCopy = SpannableStringBuilder(oldPass) // threadsafe
@@ -51,7 +50,7 @@ class SafeRepo(
         buildDatabaseInstanceIfNeed()
     }
 
-    fun rekey(oldPass: Editable, newPass: Editable) {
+    fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
@@ -60,7 +59,7 @@ class SafeRepo(
         buildDatabaseInstanceIfNeed(passphrase)
     }
 
-    fun encrypt(newPass: Editable) {
+    fun encrypt(newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         closeDatabase()
