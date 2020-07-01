@@ -9,13 +9,13 @@ object Db {
   private val driverRef = AtomicReference<SqlDriver?>(null)
   private val dbRef = AtomicReference<NoteDb?>(null)
 
-  internal fun dbSetup(driver: SqlDriver) {
+  fun dbSetup(driver: SqlDriver) {
     val db = createQueryWrapper(driver)
     driverRef.value = driver.freeze()
     dbRef.value = db.freeze()
   }
 
-  internal fun dbClear() {
+  fun dbClear() {
     driverRef.value!!.close()
     dbRef.value = null
     driverRef.value = null
