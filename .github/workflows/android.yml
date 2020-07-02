@@ -52,11 +52,11 @@ jobs:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
       - name: Upload to Google Play
         run: bundle exec fastlane build_bundle_publish
-      - name: Archive output artifacts
+      - name: Archive build artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: output-artifacts
+          name: build-artifacts
           path: |
             androidApp/build/
             shared/build/
