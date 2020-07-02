@@ -14,7 +14,7 @@ class IosSchemaTest : BaseTest() {
   fun notesCreated() {
     val notes = getDb().noteQueries.getAll().executeAsList()
     assertTrue(notes.any {
-      it.title == TestSchema.secondNote.text//TODO revert after check force fail
+      it.title == TestSchema.secondNote.title
     })
   }
 

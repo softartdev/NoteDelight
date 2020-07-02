@@ -24,8 +24,6 @@ jobs:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
       - name: Build
         run: ./gradlew build
-      - name: All tests
-        run: ./gradlew allTests
       - name: Archive output artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
