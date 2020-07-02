@@ -1,0 +1,30 @@
+import com.softartdev.notedelight.shared.db.Date;
+
+CREATE TABLE note (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    text TEXT NOT NULL,
+    dateCreated INTEGER AS Date NOT NULL,
+    dateModified INTEGER AS Date NOT NULL
+);
+
+getAll:
+SELECT * FROM note;
+
+getById:
+SELECT * FROM note WHERE id = :noteId;
+
+insert:
+INSERT INTO note VALUES ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+update:
+INSERT OR REPLACE INTO note VALUES ?;
+
+delete:
+DELETE FROM note WHERE id = :noteId;
+
+deleteAll:
+DELETE FROM note;
