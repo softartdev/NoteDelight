@@ -31,7 +31,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: output-artifacts
-          path: |
-            androidApp/build/
-            shared/build/
-            shared-android-test-util/build/
+          path: '**/build/'
