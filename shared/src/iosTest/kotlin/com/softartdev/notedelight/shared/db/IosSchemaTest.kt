@@ -7,7 +7,7 @@ class IosSchemaTest : BaseTest() {
 
   @Test
   fun someData() {
-    assertTrue(Db.instance.noteQueries.getAll().executeAsList().isNotEmpty())
+    assertTrue(NoteData.notes().isNotEmpty())
   }
 
   @Test

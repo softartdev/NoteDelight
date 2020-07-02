@@ -16,7 +16,7 @@ object Db {
   }
 
   fun dbClear() {
-    driverRef.value!!.close()
+    driverRef.value?.close()
     dbRef.value = null
     driverRef.value = null
   }
@@ -27,8 +27,6 @@ object Db {
     Db.dbSetup(NativeSqliteDriver(NoteDb.Schema, "sampledb"))
   }
 
-  // Called from Swift
-  @Suppress("unused")
   fun defaultTestDriver() {
     Db.dbSetup(NativeSqliteDriver(TestSchema, "sampledb"))
   }
