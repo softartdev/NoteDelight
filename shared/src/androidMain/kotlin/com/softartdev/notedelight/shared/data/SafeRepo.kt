@@ -2,11 +2,10 @@ package com.softartdev.notedelight.shared.data
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import androidx.room.Room
 import com.commonsware.cwac.saferoom.SQLCipherUtils
-import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.database.NoteDao
 import com.softartdev.notedelight.shared.database.NoteDatabase
+import com.softartdev.notedelight.shared.database.NoteDatabaseImpl
 
 class SafeRepo(
         private val context: Context
@@ -28,10 +27,7 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = Room
-                    .databaseBuilder(context, NoteDatabase::class.java, DB_NAME)
-                    .openHelperFactory(SafeHelperFactory.fromUser(SpannableStringBuilder(passphrase)))
-                    .build()
+            instance = NoteDatabaseImpl()
             noteDatabase = instance
         }
         return instance
@@ -53,8 +49,8 @@ class SafeRepo(
     fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
-        val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
-        SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
+//        val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
+//        SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
 
         buildDatabaseInstanceIfNeed(passphrase)
     }
@@ -69,7 +65,7 @@ class SafeRepo(
     }
 
     fun closeDatabase() = synchronized(this) {
-        noteDatabase?.close()
+//        noteDatabase?.close()
         noteDatabase = null
     }
 
