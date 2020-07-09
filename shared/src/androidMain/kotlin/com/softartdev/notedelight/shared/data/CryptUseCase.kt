@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.shared.data
 
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import kotlinx.coroutines.flow.first
@@ -16,7 +15,7 @@ class CryptUseCase(
         SQLCipherUtils.State.DOES_NOT_EXIST -> false
     }
 
-    suspend fun checkPassword(pass: Editable): Boolean = try {
+    suspend fun checkPassword(pass: CharSequence): Boolean = try {
         safeRepo.closeDatabase()
         val passphrase = SpannableStringBuilder(pass) // threadsafe
         safeRepo.buildDatabaseInstanceIfNeed(passphrase)
@@ -27,7 +26,7 @@ class CryptUseCase(
         false
     }
 
-    fun changePassword(oldPass: Editable?, newPass: Editable?) {
+    fun changePassword(oldPass: CharSequence?, newPass: CharSequence?) {
         if (dbIsEncrypted()) {
             requireNotNull(oldPass)
             if (newPass.isNullOrEmpty()) {
