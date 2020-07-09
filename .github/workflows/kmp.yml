@@ -1,0 +1,32 @@
+name: Kotlin Multiplatform CI
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  build_job:
+    name: Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Cache gradle
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Decrypt large secret
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+      - name: Build
+        run: ./gradlew build
+      - name: Archive output artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-artifacts
+          path: '**/build/'
