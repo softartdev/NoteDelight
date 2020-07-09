@@ -1,33 +1,35 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.db.NoteQueries
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-class NoteDaoImpl : NoteDao {
+class NoteDaoImpl(
+    private val noteQueries: NoteQueries
+) : NoteDao {
 
-    private val notes = mutableListOf<Note>()
+    override fun getNotes(): Flow<List<Note>> = noteQueries.getAll().asFlow().mapToList()
 
-    override fun getNotes(): Flow<List<Note>> = flowOf(notes)
-
-    override suspend fun getNoteById(noteId: Long): Note = notes.find { it.id == noteId }!!
+    override suspend fun getNoteById(noteId: Long): Note = noteQueries.getById(noteId).executeAsOne()
 
     override suspend fun insertNote(note: Note): Long {
-        val lastId = notes.lastOrNull()?.id ?: 0
-        val noteId = lastId.inc()
-        notes.add(note.copy(id = noteId))
+        val noteId = if (note.id == 0L) {
+            noteQueries.lastInsertRowId().executeAsOne() + 1
+        } else note.id
+        noteQueries.insert(note.copy(id = noteId))
         return noteId
     }
 
     override suspend fun updateNote(note: Note): Int {
-        val update = notes.removeAll { it.id == note.id }
-        notes.add(note)
-        return if (update) 1 else 0
+        noteQueries.update(note)
+        return 1
     }
 
     override suspend fun deleteNoteById(noteId: Long): Int {
-        val delete = notes.removeAll { it.id == noteId }
-        return if (delete) 1 else 0
+        noteQueries.delete(noteId)
+        return 1
     }
 
-    override suspend fun deleteNotes() = notes.clear()
+    override suspend fun deleteNotes() = noteQueries.deleteAll()
 }

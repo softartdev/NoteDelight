@@ -6,6 +6,8 @@ import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.softartdev.notedelight.shared.database.NoteDao
 import com.softartdev.notedelight.shared.database.NoteDatabase
 import com.softartdev.notedelight.shared.database.NoteDatabaseImpl
+import com.softartdev.notedelight.shared.db.Db
+import com.softartdev.notedelight.shared.db.getInstance
 
 class SafeRepo(
         private val context: Context
@@ -27,7 +29,8 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = NoteDatabaseImpl()
+            val noteDb = Db.getInstance(context)
+            instance = NoteDatabaseImpl(noteDb)
             noteDatabase = instance
         }
         return instance
