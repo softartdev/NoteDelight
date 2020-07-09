@@ -28,7 +28,7 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = NoteDatabaseImpl(context)
+            instance = NoteDatabaseImpl(context, passphrase)
             noteDatabase = instance
         }
         return instance
