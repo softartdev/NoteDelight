@@ -1,9 +1,12 @@
 package com.softartdev.notedelight.shared.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 
-@Database(entities = [Note::class], version = 1, exportSchema = false)
-abstract class NoteDatabase : RoomDatabase() {
+
+abstract class NoteDatabase {
+
+    abstract val openHelper: SupportSQLiteOpenHelper
+
     abstract fun noteDao(): NoteDao
+    abstract fun close()
 }
