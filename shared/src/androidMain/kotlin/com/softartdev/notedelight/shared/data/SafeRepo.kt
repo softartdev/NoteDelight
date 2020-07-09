@@ -2,18 +2,18 @@ package com.softartdev.notedelight.shared.data
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import androidx.room.Room
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.database.NoteDao
 import com.softartdev.notedelight.shared.database.NoteDatabase
+import com.softartdev.notedelight.shared.database.NoteDatabaseImpl
 
 class SafeRepo(
         private val context: Context
 ) {
 
     @Volatile
-    private var noteDatabase: NoteDatabase? = buildDatabaseInstanceIfNeed()
+    private var noteDatabase: NoteDatabase? = null
 
     val databaseState: SQLCipherUtils.State
         get() = SQLCipherUtils.getDatabaseState(context, DB_NAME)
@@ -28,10 +28,7 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = Room
-                    .databaseBuilder(context, NoteDatabase::class.java, DB_NAME)
-                    .openHelperFactory(SafeHelperFactory.fromUser(SpannableStringBuilder(passphrase)))
-                    .build()
+            instance = NoteDatabaseImpl(context, passphrase)
             noteDatabase = instance
         }
         return instance

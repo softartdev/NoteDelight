@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.notedelight.shared.database.Note
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.database.NoteDao
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.anyObject
