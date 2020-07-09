@@ -37,6 +37,10 @@ kotlin {
                 implementation kotlin('stdlib-jdk8')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
                 implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+                def sqlite_version = "2.1.0"
+                implementation "androidx.sqlite:sqlite:$sqlite_version"
+                implementation "androidx.sqlite:sqlite-ktx:$sqlite_version"
+                implementation "androidx.sqlite:sqlite-framework:$sqlite_version"
                 api "com.commonsware.cwac:saferoom.x:1.2.1"
                 api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
                 implementation "com.jakewharton.timber:timber:$timber_version"

@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteQueries
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList

@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.db.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteDao {
