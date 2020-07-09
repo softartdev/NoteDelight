@@ -18,7 +18,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath 'com.android.tools.build:gradle:4.2.0-alpha03'
+        classpath 'com.android.tools.build:gradle:4.2.0-alpha04'
         classpath 'com.google.gms:google-services:4.3.3'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.2'
