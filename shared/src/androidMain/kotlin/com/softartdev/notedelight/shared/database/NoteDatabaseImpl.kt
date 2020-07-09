@@ -26,7 +26,11 @@ class NoteDatabaseImpl(
                 .name(name)
                 .build()
         )
-    private val noteDb = Db.getInstance(AndroidSqliteDriver(openHelper))
+    private val driver = AndroidSqliteDriver(openHelper)
+    private val noteDb: NoteDb = Db.getInstance(driver)
+    private val noteDaoImpl = NoteDaoImpl(noteDb.noteQueries)
 
-    override fun noteDao(): NoteDao = NoteDaoImpl(noteDb.noteQueries)
+    override fun noteDao(): NoteDao = noteDaoImpl
+
+    override fun close() = driver.close()
 }

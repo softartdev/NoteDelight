@@ -13,7 +13,7 @@ class SafeRepo(
 ) {
 
     @Volatile
-    private var noteDatabase: NoteDatabase? = buildDatabaseInstanceIfNeed()
+    private var noteDatabase: NoteDatabase? = null
 
     val databaseState: SQLCipherUtils.State
         get() = SQLCipherUtils.getDatabaseState(context, DB_NAME)
@@ -66,7 +66,7 @@ class SafeRepo(
     }
 
     fun closeDatabase() = synchronized(this) {
-//        noteDatabase?.close()
+        noteDatabase?.close()
         noteDatabase = null
     }
 

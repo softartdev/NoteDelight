@@ -8,4 +8,5 @@ abstract class NoteDatabase {
     abstract val openHelper: SupportSQLiteOpenHelper
 
     abstract fun noteDao(): NoteDao
+    abstract fun close()
 }
