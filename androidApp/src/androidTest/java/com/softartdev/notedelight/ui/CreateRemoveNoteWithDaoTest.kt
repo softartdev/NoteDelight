@@ -15,7 +15,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.data.SafeRepo
-import com.softartdev.notedelight.shared.database.Note
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
