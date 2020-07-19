@@ -29,9 +29,9 @@ struct NoteRow: View {
 struct NoteRow_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            NoteRow(note: noteData[0])
-            NoteRow(note: noteData[1])
-            NoteRow(note: noteData[2])
+            NoteRow(note: notePreviewData[0])
+            NoteRow(note: notePreviewData[1])
+            NoteRow(note: notePreviewData[2])
         }
         .previewLayout(.fixed(width: 300, height: 70))
     }

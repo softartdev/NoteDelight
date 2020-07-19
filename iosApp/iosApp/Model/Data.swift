@@ -13,5 +13,5 @@ var firstNote = Note(id: 1, title: "first title", text: "first text", dateCreate
 var secondNote = Note(id: 1, title: "second title", text: "second text", dateCreated: Date(), dateModified: Date())
 var thirdNote = Note(id: 1, title: "third title", text: "third text", dateCreated: Date(), dateModified: Date())
 
-let noteData: [Note] = [firstNote, secondNote, thirdNote]
+let notePreviewData: [Note] = [firstNote, secondNote, thirdNote]
 

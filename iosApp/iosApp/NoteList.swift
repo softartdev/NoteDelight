@@ -7,11 +7,14 @@
 //
 
 import SwiftUI
+import shared
 
 struct NoteList: View {
+    var notes: [Note]
+    
     var body: some View {
         NavigationView {
-            List(noteData, id: \.id) { note in
+            List(notes, id: \.id) { note in
                 NavigationLink(destination: NoteDetail(note: note)) {
                     NoteRow(note: note)
                 }
@@ -23,6 +26,6 @@ struct NoteList: View {
 
 struct NoteList_Previews: PreviewProvider {
     static var previews: some View {
-        NoteList()
+        NoteList(notes: notePreviewData)
     }
 }
