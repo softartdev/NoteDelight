@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		751F6C0F24C4FA66002D3F07 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F6C0E24C4FA66002D3F07 /* Data.swift */; };
+		751F6C1124C4FD79002D3F07 /* NoteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F6C1024C4FD79002D3F07 /* NoteList.swift */; };
+		753045DC24BE4ED700105886 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753045DB24BE4ED700105886 /* NoteRow.swift */; };
+		753045DE24BE53A800105886 /* NoteDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753045DD24BE53A800105886 /* NoteDetail.swift */; };
 		7555FF7F242A565900829871 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF7E242A565900829871 /* AppDelegate.swift */; };
 		7555FF81242A565900829871 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF80242A565900829871 /* SceneDelegate.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
@@ -51,6 +55,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		751F6C0E24C4FA66002D3F07 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		751F6C1024C4FD79002D3F07 /* NoteList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteList.swift; sourceTree = "<group>"; };
+		753045DB24BE4ED700105886 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
+		753045DD24BE53A800105886 /* NoteDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetail.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* Note Delight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Note Delight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF7E242A565900829871 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7555FF80242A565900829871 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +102,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		751F6C0D24C4FA3B002D3F07 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				751F6C0E24C4FA66002D3F07 /* Data.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +134,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				751F6C0D24C4FA3B002D3F07 /* Model */,
 				7555FF7E242A565900829871 /* AppDelegate.swift */,
 				7555FF80242A565900829871 /* SceneDelegate.swift */,
 				7555FF82242A565900829871 /* ContentView.swift */,
@@ -125,6 +142,9 @@
 				7555FF89242A565B00829871 /* LaunchScreen.storyboard */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				7555FF86242A565B00829871 /* Preview Content */,
+				753045DB24BE4ED700105886 /* NoteRow.swift */,
+				753045DD24BE53A800105886 /* NoteDetail.swift */,
+				751F6C1024C4FD79002D3F07 /* NoteList.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -317,8 +337,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7555FF7F242A565900829871 /* AppDelegate.swift in Sources */,
+				751F6C0F24C4FA66002D3F07 /* Data.swift in Sources */,
 				7555FF81242A565900829871 /* SceneDelegate.swift in Sources */,
+				753045DC24BE4ED700105886 /* NoteRow.swift in Sources */,
+				751F6C1124C4FD79002D3F07 /* NoteList.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				753045DE24BE53A800105886 /* NoteDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
