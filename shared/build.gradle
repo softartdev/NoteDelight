@@ -41,7 +41,7 @@ kotlin {
                 implementation "androidx.sqlite:sqlite:$sqlite_version"
                 implementation "androidx.sqlite:sqlite-ktx:$sqlite_version"
                 implementation "androidx.sqlite:sqlite-framework:$sqlite_version"
-                api "com.commonsware.cwac:saferoom.x:1.2.1"
+                api "com.commonsware.cwac:saferoom.x:1.3.0"
                 api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
                 implementation "com.jakewharton.timber:timber:$timber_version"
             }
