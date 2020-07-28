@@ -106,7 +106,7 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     implementation "androidx.test.espresso:espresso-idling-resource:3.2.0"
