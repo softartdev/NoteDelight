@@ -13,7 +13,7 @@ class SafeRepo(
 ) {
 
     @Volatile
-    private var noteDatabase: NoteDatabase? = null
+    private var noteDatabase: NoteDatabase? = buildDatabaseInstanceIfNeed()
 
     val databaseState: SQLCipherUtils.State
         get() = SQLCipherUtils.getDatabaseState(context, DB_NAME)
