@@ -6,7 +6,7 @@ import android.view.Menu
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softartdev.notedelight.R
-import com.softartdev.notedelight.shared.database.Note
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.note.NoteActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity

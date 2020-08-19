@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.notedelight.shared.database.Note
+import com.softartdev.notedelight.shared.db.Note
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
