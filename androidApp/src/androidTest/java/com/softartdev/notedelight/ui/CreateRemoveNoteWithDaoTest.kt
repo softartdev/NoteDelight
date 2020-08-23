@@ -20,7 +20,7 @@ import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -63,7 +63,7 @@ class CreateRemoveNoteWithDaoTest {
     }
 
     @Test
-    fun createRemoveNote() = runBlockingTest {
+    fun createRemoveNote() = runBlocking<Unit> {
         val messageTextView = onView(withId(R.id.text_message))
         messageTextView.check(matches(withText(R.string.label_empty_result)))
 
