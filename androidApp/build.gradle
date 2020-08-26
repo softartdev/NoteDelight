@@ -120,7 +120,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.2.0"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0"
     androidTestImplementation "androidx.arch.core:core-testing:$arch_version"
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestUtil 'androidx.test:orchestrator:1.2.0'
