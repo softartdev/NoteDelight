@@ -18,7 +18,7 @@ object Db {
     dbRef = db
   }
 
-  internal fun dbClear() {
+  fun dbClear() {
     driverRef!!.close()
     dbRef = null
     driverRef = null

@@ -36,7 +36,7 @@ kotlin {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-                implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+                api "com.squareup.sqldelight:android-driver:$sqldelight_version"
                 def sqlite_version = "2.1.0"
                 implementation "androidx.sqlite:sqlite:$sqlite_version"
                 implementation "androidx.sqlite:sqlite-ktx:$sqlite_version"
