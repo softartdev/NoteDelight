@@ -28,7 +28,8 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = NoteDatabaseImpl(context, passphrase)
+            val passCopy = SpannableStringBuilder(passphrase) // threadsafe
+            instance = NoteDatabaseImpl(context, passCopy)
             noteDatabase = instance
         }
         return instance
@@ -53,7 +54,7 @@ class SafeRepo(
         val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
         SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
 
-        buildDatabaseInstanceIfNeed(passphrase)
+        buildDatabaseInstanceIfNeed(newPass)
     }
 
     fun encrypt(newPass: CharSequence) {
@@ -62,7 +63,7 @@ class SafeRepo(
         closeDatabase()
         SQLCipherUtils.encrypt(context, DB_NAME, passphrase)
 
-        buildDatabaseInstanceIfNeed(passphrase)
+        buildDatabaseInstanceIfNeed(newPass)
     }
 
     fun closeDatabase() = synchronized(this) {

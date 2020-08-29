@@ -5,6 +5,7 @@ import com.softartdev.notedelight.shared.db.NoteQueries
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class NoteDaoImpl(
     private val noteQueries: NoteQueries
@@ -16,7 +17,9 @@ class NoteDaoImpl(
 
     override suspend fun insertNote(note: Note): Long {
         val noteId = if (note.id == 0L) {
-            noteQueries.lastInsertRowId().executeAsOne() + 1
+            val lastInsertRowId = noteQueries.lastInsertRowId().executeAsOne()
+            val notes = getNotes().first()
+            if (notes.isEmpty()) 1 else lastInsertRowId + 1
         } else note.id
         noteQueries.insert(note.copy(id = noteId))
         return noteId
