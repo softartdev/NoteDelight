@@ -28,7 +28,8 @@ class SafeRepo(
     ): NoteDatabase = synchronized(this) {
         var instance = noteDatabase
         if (instance == null) {
-            instance = NoteDatabaseImpl(context, passphrase)
+            val passCopy = SpannableStringBuilder(passphrase) // threadsafe
+            instance = NoteDatabaseImpl(context, passCopy)
             noteDatabase = instance
         }
         return instance
