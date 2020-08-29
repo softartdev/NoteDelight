@@ -5,8 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.softartdev.notedelight.shared.data.SafeRepo
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,11 +19,6 @@ class CryptInstrumentedTest {
 
     @Test
     fun cryptTest() {
-        assertEquals(safeRepo.databaseState, SQLCipherUtils.State.DOES_NOT_EXIST)
-        while (safeRepo.databaseState == SQLCipherUtils.State.DOES_NOT_EXIST) {
-            val db = safeRepo.buildDatabaseInstanceIfNeed()
-            runBlocking { db.noteDao().getNotes().first() }
-        }
         assertEquals(safeRepo.databaseState, SQLCipherUtils.State.UNENCRYPTED)
         safeRepo.encrypt(SpannableStringBuilder(password))
         assertEquals(safeRepo.databaseState, SQLCipherUtils.State.ENCRYPTED)

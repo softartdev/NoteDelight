@@ -42,6 +42,7 @@ class SignInActivityTest {
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)
             }
             safeRepo.encrypt(SpannableStringBuilder(password))
+            safeRepo.closeDatabase()
             Timber.d("databaseState = %s", safeRepo.databaseState.name)
         }
     }

@@ -53,7 +53,7 @@ class SafeRepo(
         val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
         SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
 
-        buildDatabaseInstanceIfNeed(passphrase)
+        buildDatabaseInstanceIfNeed(newPass)
     }
 
     fun encrypt(newPass: CharSequence) {
@@ -62,7 +62,7 @@ class SafeRepo(
         closeDatabase()
         SQLCipherUtils.encrypt(context, DB_NAME, passphrase)
 
-        buildDatabaseInstanceIfNeed(passphrase)
+        buildDatabaseInstanceIfNeed(newPass)
     }
 
     fun closeDatabase() = synchronized(this) {

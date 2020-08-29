@@ -16,7 +16,6 @@ class CryptUseCase(
     }
 
     suspend fun checkPassword(pass: CharSequence): Boolean = try {
-        safeRepo.closeDatabase()
         val passphrase = SpannableStringBuilder(pass) // threadsafe
         safeRepo.buildDatabaseInstanceIfNeed(passphrase)
         safeRepo.noteDao.getNotes().first()//TODO remove if no need (after tests for sign in)

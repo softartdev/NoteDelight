@@ -45,6 +45,7 @@ abstract class BaseViewModel<T> : ViewModel() {
                 onResult(result)
                 if (result == loadingResult) EspressoIdlingResource.decrement()
             }.catch { throwable ->
+                Timber.e(throwable)
                 onResult(errorResult(throwable))
             }.launchIn(this)
         }.start()
