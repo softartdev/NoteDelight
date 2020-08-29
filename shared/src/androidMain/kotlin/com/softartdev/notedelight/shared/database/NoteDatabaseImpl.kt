@@ -7,9 +7,8 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.data.SafeRepo
-import com.softartdev.notedelight.shared.db.Db
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.getInstance
+import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 
@@ -29,36 +28,13 @@ class NoteDatabaseImpl(
     } else SafeHelperFactory
         .fromUser(SpannableStringBuilder.valueOf(passphrase))
         .create(context, name, AndroidSqliteDriver.Callback(schema))
+    private val openDatabase: SupportSQLiteDatabase = openHelper.writableDatabase
+    private val driver = AndroidSqliteDriver(openDatabase)
+    private val noteDb: NoteDb = createQueryWrapper(driver)
+    private val noteQueries = noteDb.noteQueries
+    private val noteDaoImpl = NoteDaoImpl(noteQueries)
 
-    private val driver = AndroidSqliteDriver(openHelper)
-    private val noteDb: NoteDb = Db.getInstance(driver)
+    override fun noteDao(): NoteDao = noteDaoImpl
 
-    private var openedDatabase: SupportSQLiteDatabase? = null
-    private var noteDaoImpl: NoteDao? = null
-
-    init {
-        open()
-    }
-
-    @Synchronized
-    private fun open(): SupportSQLiteDatabase = openedDatabase ?: run {
-        val db = openHelper.writableDatabase
-        openedDatabase = db
-        return@run db
-    }
-
-    @Synchronized
-    override fun noteDao(): NoteDao = noteDaoImpl ?: run {
-        val noteQueries = noteDb.noteQueries
-        val dao = NoteDaoImpl(noteQueries)
-        noteDaoImpl = dao
-        return@run dao
-    }
-
-    @Synchronized
-    override fun close() {
-        openedDatabase = null
-        noteDaoImpl = null
-        driver.close()
-    }
+    override fun close() = driver.close()
 }
