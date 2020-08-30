@@ -10,7 +10,7 @@ import SwiftUI
 import shared
 
 struct NoteList: View {
-    var notes: [Note]
+    @State var notes: [Note]
     
     var body: some View {
         NavigationView {
@@ -20,6 +20,14 @@ struct NoteList: View {
                 }
             }
             .navigationBarTitle(Text("Notes"))
+            .navigationBarItems(trailing:
+                Button(action: {
+                    let newNote = createNote()
+                    self.notes.insert(newNote, at: 0)
+                }) {
+                    Image(systemName: "plus")
+                }
+            )
         }
     }
 }
