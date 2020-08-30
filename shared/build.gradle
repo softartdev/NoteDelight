@@ -21,8 +21,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation kotlin('stdlib-common')
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
                 implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
             }
         }
@@ -34,8 +33,7 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation kotlin('stdlib-jdk8')
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
                 api "com.squareup.sqldelight:android-driver:$sqldelight_version"
                 def sqlite_version = "2.1.0"
                 implementation "androidx.sqlite:sqlite:$sqlite_version"
