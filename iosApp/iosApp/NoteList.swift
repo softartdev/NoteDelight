@@ -15,7 +15,7 @@ struct NoteList: View {
     var body: some View {
         NavigationView {
             List(notes, id: \.id) { note in
-                NavigationLink(destination: NoteDetail(note: note)) {
+                NavigationLink(destination: NoteDetail(note: .constant(note))) {
                     NoteRow(note: note)
                 }
             }
