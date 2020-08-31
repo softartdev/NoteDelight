@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        kotlin_version = '1.3.72'
-        coroutines_version = '1.3.8'
-        sqldelight_version = '1.4.0'
+        kotlin_version = '1.4.0'
+        coroutines_version = '1.3.9'
+        sqldelight_version = '1.4.2'
         lifecycle_version = '2.2.0'
         timber_version = '4.7.1'
         junit_version = '4.13'
-        mockito_version = '3.5.2'
+        mockito_version = '3.5.7'
     }
     repositories {
         google()
@@ -17,9 +17,9 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.2.0-alpha08'
         classpath 'com.google.gms:google-services:4.3.3'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.2'
     }
 }
@@ -31,6 +31,7 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        maven { url "https://kotlin.bintray.com/kotlinx/" }
     }
     group = 'com.softartdev.notedelight'
     version = '1.0-SNAPSHOT'

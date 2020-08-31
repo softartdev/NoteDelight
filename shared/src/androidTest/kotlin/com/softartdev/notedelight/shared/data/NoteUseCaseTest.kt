@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.database.NoteDao
+import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.anyObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
-import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NoteUseCaseTest {
@@ -29,9 +29,10 @@ class NoteUseCaseTest {
 
     @Before
     fun setUp() = mainCoroutineRule.runBlockingTest {
-        val firstNote = Note(1, "first title", "first text", Date(), Date())
-        val secondNote = Note(2, "second title", "second text", Date(), Date())
-        val thirdNote = Note(3, "third title", "third text", Date(), Date())
+        val ldt = createLocalDateTime()
+        val firstNote = Note(1, "first title", "first text", ldt, ldt)
+        val secondNote = Note(2, "second title", "second text", ldt, ldt)
+        val thirdNote = Note(3, "third title", "third text", ldt, ldt)
         notes.addAll(listOf(firstNote, secondNote, thirdNote))
         val mockNoteDao = Mockito.mock(NoteDao::class.java)
         Mockito.`when`(mockSafeRepo.noteDao).thenReturn(mockNoteDao)

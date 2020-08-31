@@ -9,6 +9,12 @@
 import SwiftUI
 import shared
 
+private let dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    return dateFormatter
+}()
+
 struct NoteRow: View {
     var note: Note
     
@@ -18,7 +24,7 @@ struct NoteRow: View {
                 .font(.headline)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.leading)
-            Text(note.dateModified.nsDate.description)
+            Text("\(note.dateModified.toNSDate(), formatter: dateFormatter)")
                 .font(.footnote)
                 .fontWeight(.light)
                 .multilineTextAlignment(.trailing)

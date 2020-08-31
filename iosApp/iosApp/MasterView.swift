@@ -9,23 +9,24 @@
 import SwiftUI
 import shared
 
-struct NoteList: View {
-    var notes: [Note]
+struct MasterView: View {
+    @Binding var notes: [Note]
     
     var body: some View {
-        NavigationView {
-            List(notes, id: \.id) { note in
-                NavigationLink(destination: NoteDetail(note: note)) {
+        List {
+            ForEach(notes, id: \.id) { note in
+                NavigationLink(destination: DetailView(note: note)) {
                     NoteRow(note: note)
                 }
+            }.onDelete { indices in
+                indices.forEach { self.notes.remove(at: $0) }
             }
-            .navigationBarTitle(Text("Notes"))
         }
     }
 }
 
 struct NoteList_Previews: PreviewProvider {
     static var previews: some View {
-        NoteList(notes: notePreviewData)
+        MasterView(notes: .constant(notePreviewData))
     }
 }

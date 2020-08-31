@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.shared.db
 
+import com.softartdev.notedelight.shared.date.DateAdapter
+import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.squareup.sqldelight.db.SqlDriver
 
 fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb {
@@ -12,9 +14,11 @@ fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb {
 }
 
 object TestSchema : SqlDriver.Schema by NoteDb.Schema {
-    val firstNote = Note(1, "first title from test schema", "first text", Date(), Date())
-    val secondNote = Note(2, "second title", "second text", Date(), Date())
-    val thirdNote = Note(3, "third title", "third text", Date(), Date())
+    private val ldt get() = createLocalDateTime()
+
+    val firstNote = Note(1, "first title from test schema", "first text", ldt, ldt)
+    val secondNote = Note(2, "second title", "second text", ldt, ldt)
+    val thirdNote = Note(3, "third title", "third text", ldt, ldt)
 
     override fun create(driver: SqlDriver) {
         NoteDb.Schema.create(driver)
