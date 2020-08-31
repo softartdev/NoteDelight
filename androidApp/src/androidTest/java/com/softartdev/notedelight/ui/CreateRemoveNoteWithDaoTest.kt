@@ -16,6 +16,7 @@ import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.data.SafeRepo
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +30,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent.inject
-import java.util.*
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -49,8 +49,9 @@ class CreateRemoveNoteWithDaoTest {
             id = 0,
             title = "Test title",
             text = "Test text",
-            dateCreated = Date(),
-            dateModified = Date())
+            dateCreated = createLocalDateTime(),
+            dateModified = createLocalDateTime()
+    )
 
     @Before
     fun registerIdlingResource() {

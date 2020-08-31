@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.date.toJvmDate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_note.view.*
 import java.text.SimpleDateFormat
@@ -40,7 +41,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.NotesViewHolder>() {
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(note: Note) = with(containerView) {
             item_note_title_text_view.text = note.title
-            item_note_date_text_view.text = simpleDateFormat.format(note.dateModified)
+            item_note_date_text_view.text = simpleDateFormat.format(note.dateModified.toJvmDate())
             setOnClickListener { clickListener?.onNoteClick(note.id) }
         }
     }
