@@ -19,10 +19,16 @@ kotlin {
         }
     }
     sourceSets {
+        all {
+            languageSettings {
+                useExperimentalAnnotation('kotlin.RequiresOptIn')
+            }
+        }
         commonMain {
             dependencies {
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
                 implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
+                api "org.jetbrains.kotlinx:kotlinx-datetime:0.1.0"
             }
         }
         commonTest {

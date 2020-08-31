@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.date.createLocalDateTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import java.util.*
 
 class NoteUseCase(
         private val safeRepo: SafeRepo
@@ -20,8 +20,8 @@ class NoteUseCase(
     fun getNotes(): Flow<List<Note>> = safeRepo.noteDao.getNotes().distinctUntilChanged()
 
     suspend fun createNote(title: String = "", text: String = ""): Long {
-        val date = Date()
-        val note = Note(0, title, text, date, date)
+        val localDateTime = createLocalDateTime()
+        val note = Note(0, title, text, localDateTime, localDateTime)
         return safeRepo.noteDao.insertNote(note)
     }
 
@@ -29,7 +29,7 @@ class NoteUseCase(
         val note = safeRepo.noteDao.getNoteById(id).copy(
                 title = title,
                 text = text,
-                dateModified = Date()
+                dateModified = createLocalDateTime()
         )
         return safeRepo.noteDao.updateNote(note)
     }
@@ -37,7 +37,7 @@ class NoteUseCase(
     suspend fun updateTitle(id: Long, title: String): Int {
         val note = safeRepo.noteDao.getNoteById(id).copy(
                 title = title,
-                dateModified = Date()
+                dateModified = createLocalDateTime()
         )
         return safeRepo.noteDao.updateNote(note)
     }

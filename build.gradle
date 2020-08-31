@@ -31,6 +31,7 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        maven { url "https://kotlin.bintray.com/kotlinx/" }
     }
     group = 'com.softartdev.notedelight'
     version = '1.0-SNAPSHOT'

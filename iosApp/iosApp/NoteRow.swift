@@ -24,7 +24,7 @@ struct NoteRow: View {
                 .font(.headline)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.leading)
-            Text("\(note.dateModified.nsDate, formatter: dateFormatter)")
+            Text("\(note.dateModified.toNSDate(), formatter: dateFormatter)")
                 .font(.footnote)
                 .fontWeight(.light)
                 .multilineTextAlignment(.trailing)
