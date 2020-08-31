@@ -11,7 +11,7 @@ actual fun getSystemTimeInMillis(): Long = getTimeMillis()
 @OptIn(ExperimentalTime::class)
 fun LocalDateTime.toNSDate(): NSDate {
     val referenceDateTime = LocalDateTime(2001, 1, 1, 0, 0, 0, 0)
-    val referenceInstant: Instant = referenceDateTime.toInstant(TimeZone.currentSystemDefault())
+    val referenceInstant: Instant = referenceDateTime.toInstant(TimeZone.UTC)
     val instant: Instant = toInstant(TimeZone.currentSystemDefault())
     val duration = instant - referenceInstant
     val secondsFromReferenceDate = duration.inSeconds
