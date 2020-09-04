@@ -1,6 +1,6 @@
 # NoteDelight
 ![Kotlin Multiplatform CI](https://github.com/softartdev/NoteDelight/workflows/Kotlin%20Multiplatform%20CI/badge.svg)
-![Android CI](https://github.com/softartdev/NoteDelight/workflows/Android%20CI/badge.svg)
+![Fastlane CI/CD Android](https://github.com/softartdev/NoteDelight/workflows/Fastlane%20CI/CD%20Android/badge.svg)
 
 This project is a fork of [NoteRoom](https://github.com/softartdev/NoteRoom) (which in turn is a fork of [NoteCrypt](https://github.com/softartdev/NoteCrypt)).
 

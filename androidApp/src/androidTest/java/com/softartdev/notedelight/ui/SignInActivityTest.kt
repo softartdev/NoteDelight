@@ -15,8 +15,6 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.data.SafeRepo
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -36,9 +34,7 @@ class SignInActivityTest {
         override fun beforeActivityLaunched() {
             val safeRepo by inject(SafeRepo::class.java)
             while (safeRepo.databaseState == SQLCipherUtils.State.DOES_NOT_EXIST) {
-                val db = safeRepo.buildDatabaseInstanceIfNeed()
-                val notes = runBlocking { db.noteDao().getNotes().first() }
-                Timber.d("notes = %s", notes)
+                Thread.sleep(1000)
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)
             }
             safeRepo.encrypt(SpannableStringBuilder(password))

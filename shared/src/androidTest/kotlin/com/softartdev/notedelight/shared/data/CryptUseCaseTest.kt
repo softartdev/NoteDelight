@@ -1,24 +1,21 @@
 package com.softartdev.notedelight.shared.data
 
 import com.commonsware.cwac.saferoom.SQLCipherUtils
-import com.softartdev.notedelight.shared.database.NoteDao
-import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
+import com.softartdev.notedelight.shared.db.NoteDb
+import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.softartdev.notedelight.shared.test.util.StubEditable
+import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
 @Suppress("IllegalIdentifier")
 @OptIn(ExperimentalCoroutinesApi::class)
 class CryptUseCaseTest {
-
-    @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
 
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val cryptUseCase = CryptUseCase(mockSafeRepo)
@@ -42,16 +39,17 @@ class CryptUseCaseTest {
     }
 
     @Test
-    fun `check correct password`() = mainCoroutineRule.runBlockingTest {
-        val mockNoteDao = Mockito.mock(NoteDao::class.java)
-        Mockito.`when`(mockSafeRepo.noteDao).thenReturn(mockNoteDao)
-        Mockito.`when`(mockNoteDao.getNotes()).thenReturn(flowOf(emptyList()))
+    fun `check correct password`() = runBlocking {
+        val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        NoteDb.Schema.create(driver)
+        val noteDb = createQueryWrapper(driver)
+        Mockito.`when`(mockSafeRepo.noteQueries).thenReturn(noteDb.noteQueries)
         val pass = StubEditable("correct password")
         assertTrue(cryptUseCase.checkPassword(pass))
     }
 
     @Test
-    fun `check incorrect password`() = mainCoroutineRule.runBlockingTest {
+    fun `check incorrect password`() = runBlocking {
         val pass = StubEditable("incorrect password")
         assertFalse(cryptUseCase.checkPassword(pass))
     }
