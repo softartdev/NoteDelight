@@ -10,9 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.softartdev.notedelight.R
-import com.softartdev.notedelight.shared.data.SafeRepo
+import com.softartdev.notedelight.shared.database.PlatformSQLiteState
+import com.softartdev.notedelight.shared.database.SafeRepo
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import org.junit.After
@@ -33,7 +33,7 @@ class SignInActivityTest {
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
         override fun beforeActivityLaunched() {
             val safeRepo by inject(SafeRepo::class.java)
-            while (safeRepo.databaseState == SQLCipherUtils.State.DOES_NOT_EXIST) {
+            while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
                 Thread.sleep(1000)
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)
             }

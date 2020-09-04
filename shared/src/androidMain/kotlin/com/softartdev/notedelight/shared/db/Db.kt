@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.db
 
 import android.content.Context
-import com.softartdev.notedelight.shared.data.SafeRepo.Companion.DB_NAME
+import com.softartdev.notedelight.shared.database.DatabaseRepo.Companion.DB_NAME
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 

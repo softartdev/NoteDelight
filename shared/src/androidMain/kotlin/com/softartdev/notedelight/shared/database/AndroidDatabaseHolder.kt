@@ -6,7 +6,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.data.SafeRepo
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.android.AndroidSqliteDriver
@@ -16,7 +15,7 @@ class AndroidDatabaseHolder(
     context: Context,
     passphrase: CharSequence,
     schema: SqlDriver.Schema = NoteDb.Schema,
-    name: String? = SafeRepo.DB_NAME
+    name: String? = DatabaseRepo.DB_NAME
 ) : DatabaseHolder() {
     private val openHelper: SupportSQLiteOpenHelper = if (passphrase.isEmpty()) {
         val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)

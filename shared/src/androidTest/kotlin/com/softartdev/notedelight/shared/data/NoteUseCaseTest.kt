@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
+import com.softartdev.notedelight.shared.database.SafeRepo
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.TestSchema

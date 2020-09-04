@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
+import com.softartdev.notedelight.shared.database.SafeRepo
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.squareup.sqldelight.runtime.coroutines.asFlow

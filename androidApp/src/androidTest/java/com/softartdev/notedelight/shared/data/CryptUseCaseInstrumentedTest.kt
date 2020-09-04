@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import com.softartdev.notedelight.shared.database.SafeRepo
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

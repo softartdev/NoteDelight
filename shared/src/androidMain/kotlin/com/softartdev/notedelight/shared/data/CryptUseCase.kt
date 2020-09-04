@@ -1,7 +1,8 @@
 package com.softartdev.notedelight.shared.data
 
 import android.text.SpannableStringBuilder
-import com.commonsware.cwac.saferoom.SQLCipherUtils
+import com.softartdev.notedelight.shared.database.PlatformSQLiteState
+import com.softartdev.notedelight.shared.database.SafeRepo
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.first
@@ -10,11 +11,10 @@ import timber.log.Timber
 class CryptUseCase(
         private val safeRepo: SafeRepo
 ) {
-
     fun dbIsEncrypted(): Boolean = when (safeRepo.databaseState) {
-        SQLCipherUtils.State.ENCRYPTED -> true
-        SQLCipherUtils.State.UNENCRYPTED -> false
-        SQLCipherUtils.State.DOES_NOT_EXIST -> false
+        PlatformSQLiteState.ENCRYPTED -> true
+        PlatformSQLiteState.UNENCRYPTED -> false
+        PlatformSQLiteState.DOES_NOT_EXIST -> false
     }
 
     suspend fun checkPassword(pass: CharSequence): Boolean = try {

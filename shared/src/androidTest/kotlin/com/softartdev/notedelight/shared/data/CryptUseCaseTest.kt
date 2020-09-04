@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.shared.data
 
-import com.commonsware.cwac.saferoom.SQLCipherUtils
+import com.softartdev.notedelight.shared.database.PlatformSQLiteState
+import com.softartdev.notedelight.shared.database.SafeRepo
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.softartdev.notedelight.shared.test.util.StubEditable
@@ -22,19 +23,19 @@ class CryptUseCaseTest {
 
     @Test
     fun `check db state when db is encrypted`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.ENCRYPTED)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
         assertTrue(cryptUseCase.dbIsEncrypted())
     }
 
     @Test
     fun `check db state when db is unencrypted`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.UNENCRYPTED)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.UNENCRYPTED)
         assertFalse(cryptUseCase.dbIsEncrypted())
     }
 
     @Test
     fun `check db state when db not exist`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.DOES_NOT_EXIST)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.DOES_NOT_EXIST)
         assertFalse(cryptUseCase.dbIsEncrypted())
     }
 
@@ -56,7 +57,7 @@ class CryptUseCaseTest {
 
     @Test
     fun `change password for decrypt`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.ENCRYPTED)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
         val oldPass = StubEditable("old password")
         val newPass = null
         cryptUseCase.changePassword(oldPass, newPass)
@@ -65,7 +66,7 @@ class CryptUseCaseTest {
 
     @Test
     fun `change password for rekey`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.ENCRYPTED)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
         val oldPass = StubEditable("old password")
         val newPass = StubEditable("new password")
         cryptUseCase.changePassword(oldPass, newPass)
@@ -74,7 +75,7 @@ class CryptUseCaseTest {
 
     @Test
     fun `change password for encrypt`() {
-        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(SQLCipherUtils.State.UNENCRYPTED)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.UNENCRYPTED)
         val oldPass = null
         val newPass = StubEditable("new password")
         cryptUseCase.changePassword(oldPass, newPass)

@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.data.SafeRepo.Companion.DB_NAME
+import com.softartdev.notedelight.shared.database.DatabaseRepo.Companion.DB_NAME
 import com.softartdev.notedelight.shared.db.Db
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.db.createQueryWrapper
