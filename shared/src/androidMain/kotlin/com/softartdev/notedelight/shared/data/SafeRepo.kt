@@ -4,33 +4,32 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.database.NoteDao
-import com.softartdev.notedelight.shared.database.NoteDatabase
-import com.softartdev.notedelight.shared.database.NoteDatabaseImpl
+import com.softartdev.notedelight.shared.database.AndroidDatabaseHolder
+import com.softartdev.notedelight.shared.database.DatabaseHolder
+import com.softartdev.notedelight.shared.db.NoteQueries
 
 class SafeRepo(
         private val context: Context
 ) {
-
     @Volatile
-    private var noteDatabase: NoteDatabase? = buildDatabaseInstanceIfNeed()
+    private var databaseHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
 
     val databaseState: SQLCipherUtils.State
         get() = SQLCipherUtils.getDatabaseState(context, DB_NAME)
 
-    val noteDao: NoteDao
-        get() = noteDatabase?.noteDao() ?: throw SafeSQLiteException("DB is null")
+    val noteQueries: NoteQueries
+        get() = databaseHolder?.noteQueries ?: throw SafeSQLiteException("DB is null")
 
     var relaunchFlowEmitter: (() -> Unit)? = null
 
     fun buildDatabaseInstanceIfNeed(
             passphrase: CharSequence = ""
-    ): NoteDatabase = synchronized(this) {
-        var instance = noteDatabase
+    ): DatabaseHolder = synchronized(this) {
+        var instance = databaseHolder
         if (instance == null) {
             val passCopy = SpannableStringBuilder(passphrase) // threadsafe
-            instance = NoteDatabaseImpl(context, passCopy)
-            noteDatabase = instance
+            instance = AndroidDatabaseHolder(context, passCopy)
+            databaseHolder = instance
         }
         return instance
     }
@@ -51,7 +50,8 @@ class SafeRepo(
     fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
-        val supportSQLiteDatabase = buildDatabaseInstanceIfNeed(oldPass).openHelper.writableDatabase
+        val androidDatabaseHolder = buildDatabaseInstanceIfNeed(oldPass) as AndroidDatabaseHolder
+        val supportSQLiteDatabase = androidDatabaseHolder.openDatabase
         SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
 
         buildDatabaseInstanceIfNeed(newPass)
@@ -67,8 +67,8 @@ class SafeRepo(
     }
 
     fun closeDatabase() = synchronized(this) {
-        noteDatabase?.close()
-        noteDatabase = null
+        databaseHolder?.close()
+        databaseHolder = null
     }
 
     companion object {

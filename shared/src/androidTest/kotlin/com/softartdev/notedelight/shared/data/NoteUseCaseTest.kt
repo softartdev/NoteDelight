@@ -1,64 +1,40 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.database.NoteDao
-import com.softartdev.notedelight.shared.date.createLocalDateTime
-import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
-import com.softartdev.notedelight.shared.test.util.anyObject
+import com.softartdev.notedelight.shared.db.NoteDb
+import com.softartdev.notedelight.shared.db.TestSchema
+import com.softartdev.notedelight.shared.db.createQueryWrapper
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NoteUseCaseTest {
 
-    @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
-
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val noteUseCase = NoteUseCase(mockSafeRepo)
 
-    private val notes: MutableList<Note> = mutableListOf()
+    private val noteDb = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
+        NoteDb.Schema.create(driver)
+        return@let createQueryWrapper(driver)
+    }
+    private val notes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
 
     @Before
-    fun setUp() = mainCoroutineRule.runBlockingTest {
-        val ldt = createLocalDateTime()
-        val firstNote = Note(1, "first title", "first text", ldt, ldt)
-        val secondNote = Note(2, "second title", "second text", ldt, ldt)
-        val thirdNote = Note(3, "third title", "third text", ldt, ldt)
-        notes.addAll(listOf(firstNote, secondNote, thirdNote))
-        val mockNoteDao = Mockito.mock(NoteDao::class.java)
-        Mockito.`when`(mockSafeRepo.noteDao).thenReturn(mockNoteDao)
-        Mockito.`when`(mockNoteDao.getNotes()).thenReturn(flowOf(notes))
-        Mockito.`when`(mockNoteDao.insertNote(anyObject())).thenReturn(notes.last().id.inc())
-        Mockito.`when`(mockNoteDao.getNoteById(Mockito.anyLong())).thenAnswer { invocationOnMock ->
-            val id: Long = invocationOnMock.arguments[0] as Long
-            return@thenAnswer notes.find { foundNote -> foundNote.id == id }
-        }
-        Mockito.`when`(mockNoteDao.updateNote(anyObject())).thenAnswer { invocationOnMock ->
-            val note: Note = invocationOnMock.arguments[0] as Note
-            val index = notes.indexOfFirst { foundNote -> foundNote.id == note.id }
-            notes.removeAt(index)
-            notes.add(index, note)
-            return@thenAnswer 1
-        }
-        Mockito.`when`(mockNoteDao.deleteNoteById(Mockito.anyLong())).thenAnswer { invocationOnMock ->
-            val id: Long = invocationOnMock.arguments[0] as Long
-            notes.removeIf { foundNote -> foundNote.id == id }
-            return@thenAnswer 1
-        }
+    fun setUp() = runBlocking<Unit> {
+        notes.forEach(noteDb.noteQueries::insert)
+        Mockito.`when`(mockSafeRepo.noteQueries).thenReturn(noteDb.noteQueries)
     }
 
     @After
-    fun tearDown() {
-        notes.clear()
+    fun tearDown() = runBlocking {
+        noteDb.noteQueries.deleteAll()
     }
 
     @Test
@@ -67,60 +43,59 @@ class NoteUseCaseTest {
     }
 
     @Test
-    fun getNotes() = mainCoroutineRule.runBlockingTest {
+    fun getNotes() = runBlocking {
         assertEquals(notes, noteUseCase.getNotes().first())
     }
 
     @Test
-    fun createNote() = mainCoroutineRule.runBlockingTest {
+    fun createNote() = runBlocking {
         assertEquals(notes.last().id.inc(), noteUseCase.createNote())
     }
 
     @Test
-    fun saveNote() = mainCoroutineRule.runBlockingTest {
+    fun saveNote() = runBlocking {
         val id: Long = 2
         val newTitle = "new title"
         val newText = "new text"
         assertEquals(1, noteUseCase.saveNote(id, newTitle, newText))
-        val updatedNote = notes.find { it.id == id }
-        assertEquals(newTitle, updatedNote?.title)
-        assertEquals(newText, updatedNote?.text)
+        val updatedNote = noteUseCase.loadNote(id)
+        assertEquals(newTitle, updatedNote.title)
+        assertEquals(newText, updatedNote.text)
     }
 
     @Test
-    fun updateTitle() = mainCoroutineRule.runBlockingTest {
+    fun updateTitle() = runBlocking {
         val id: Long = 2
         val newTitle = "new title"
         assertEquals(1, noteUseCase.updateTitle(id, newTitle))
-        val updatedNote = notes.find { it.id == id }
-        assertEquals(newTitle, updatedNote?.title)
+        val updatedNote = noteUseCase.loadNote(id)
+        assertEquals(newTitle, updatedNote.title)
     }
 
     @Test
-    fun loadNote() = mainCoroutineRule.runBlockingTest {
+    fun loadNote() = runBlocking {
         val id: Long = 2
         val exp = notes.find { it.id == id }
         val act = noteUseCase.loadNote(id)
         assertEquals(exp, act)
     }
 
-    @Test
-    fun deleteNote() = mainCoroutineRule.runBlockingTest {
+    @Test(expected = NullPointerException::class)
+    fun deleteNote() = runBlocking<Unit> {
         val id: Long = 2
-        assertNotNull(notes.find { it.id == id })
         assertEquals(1, noteUseCase.deleteNote(id))
-        assertNull(notes.find { it.id == id })
+        noteUseCase.loadNote(id)
     }
 
     @Test
-    fun isChanged() = mainCoroutineRule.runBlockingTest {
+    fun isChanged() = runBlocking {
         val note = notes.random()
         assertFalse(noteUseCase.isChanged(note.id, note.title, note.text))
         assertTrue(noteUseCase.isChanged(note.id, "new title", "new text"))
     }
 
     @Test
-    fun isEmpty() = mainCoroutineRule.runBlockingTest {
+    fun isEmpty() = runBlocking {
         val note = notes.random()
         assertFalse(noteUseCase.isEmpty(note.id))
     }

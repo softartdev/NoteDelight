@@ -2,6 +2,8 @@ package com.softartdev.notedelight.shared.data
 
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
@@ -19,7 +21,7 @@ class CryptUseCase(
         safeRepo.closeDatabase()
         val passphrase = SpannableStringBuilder(pass) // threadsafe
         safeRepo.buildDatabaseInstanceIfNeed(passphrase)
-        safeRepo.noteDao.getNotes().first()//TODO remove if no need (after tests for sign in)
+        safeRepo.noteQueries.getAll().asFlow().mapToList().first()//TODO remove if no need (after tests for sign in)
         true
     } catch (e: Exception) {
         Timber.e(e)
