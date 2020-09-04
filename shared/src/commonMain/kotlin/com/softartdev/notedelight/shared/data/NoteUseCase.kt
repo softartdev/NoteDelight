@@ -1,8 +1,9 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.notedelight.shared.database.SafeRepo
-import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.database.transactionResultWithContext
 import com.softartdev.notedelight.shared.date.createLocalDateTime
+import com.softartdev.notedelight.shared.db.Note
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
@@ -13,24 +14,24 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 
 class NoteUseCase(
-        private val safeRepo: SafeRepo
+        private val dbRepo: DatabaseRepo
 ) {
     val titleChannel: Channel<String> by lazy { return@lazy Channel<String>() }
 
     fun doOnRelaunchFlow(function: () -> Unit) {
-        safeRepo.relaunchFlowEmitter = function
+        dbRepo.relaunchFlowEmitter = function
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getNotes(): Flow<List<Note>> = safeRepo.noteQueries.getAll().asFlow().mapToList().distinctUntilChanged()
+    fun getNotes(): Flow<List<Note>> = dbRepo.noteQueries.getAll().asFlow().mapToList().distinctUntilChanged()
 
     suspend fun createNote(title: String = "", text: String = ""): Long {
-        val lastInsertRowId = safeRepo.noteQueries.lastInsertRowId().executeAsOne()
+        val lastInsertRowId = dbRepo.noteQueries.lastInsertRowId().executeAsOne()
         val notes = getNotes().first()
         val noteId = if (notes.isEmpty()) 1 else lastInsertRowId + 1
         val localDateTime = createLocalDateTime()
         val note = Note(noteId, title, text, localDateTime, localDateTime)
-        safeRepo.noteQueries.insert(note)
+        dbRepo.noteQueries.insert(note)
         return noteId
     }
 
@@ -40,7 +41,7 @@ class NoteUseCase(
                 text = text,
                 dateModified = createLocalDateTime()
         )
-        safeRepo.noteQueries.update(note)
+        dbRepo.noteQueries.update(note)
         return 1
     }
 
@@ -49,17 +50,17 @@ class NoteUseCase(
                 title = title,
                 dateModified = createLocalDateTime()
         )
-        safeRepo.noteQueries.update(note)
+        dbRepo.noteQueries.update(note)
         return 1
     }
 
-    suspend fun loadNote(noteId: Long): Note = safeRepo.noteQueries.getById(noteId).asFlow().mapToOne().first()
+    suspend fun loadNote(noteId: Long): Note = dbRepo.noteQueries.getById(noteId).asFlow().mapToOne().first()
 
-    suspend fun deleteNote(id: Long): Int {
-        val before = getNotes().first().size
-        safeRepo.noteQueries.delete(id)
-        val after = getNotes().first().size
-        return before - after
+    suspend fun deleteNote(id: Long): Int = dbRepo.noteQueries.transactionResultWithContext {
+        val before = dbRepo.noteQueries.getAll().executeAsList().size
+        dbRepo.noteQueries.delete(id)
+        val after = dbRepo.noteQueries.getAll().executeAsList().size
+        return@transactionResultWithContext before - after
     }
 
     suspend fun isChanged(id: Long, title: String, text: String): Boolean {

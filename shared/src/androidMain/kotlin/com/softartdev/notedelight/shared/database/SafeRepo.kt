@@ -4,7 +4,7 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.data.SafeSQLiteException
+import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 
 class SafeRepo(
@@ -22,7 +22,7 @@ class SafeRepo(
         }
 
     override val noteQueries: NoteQueries
-        get() = databaseHolder?.noteQueries ?: throw SafeSQLiteException("DB is null")
+        get() = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
 
     override fun buildDatabaseInstanceIfNeed(
             passphrase: CharSequence

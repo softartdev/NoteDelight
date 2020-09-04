@@ -1,30 +1,28 @@
 package com.softartdev.notedelight.shared.data
 
-import android.text.SpannableStringBuilder
+import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.PlatformSQLiteState
-import com.softartdev.notedelight.shared.database.SafeRepo
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.first
-import timber.log.Timber
 
 class CryptUseCase(
-        private val safeRepo: SafeRepo
+        private val dbRepo: DatabaseRepo
 ) {
-    fun dbIsEncrypted(): Boolean = when (safeRepo.databaseState) {
+    fun dbIsEncrypted(): Boolean = when (dbRepo.databaseState) {
         PlatformSQLiteState.ENCRYPTED -> true
         PlatformSQLiteState.UNENCRYPTED -> false
         PlatformSQLiteState.DOES_NOT_EXIST -> false
     }
 
     suspend fun checkPassword(pass: CharSequence): Boolean = try {
-        safeRepo.closeDatabase()
-        val passphrase = SpannableStringBuilder(pass) // threadsafe
-        safeRepo.buildDatabaseInstanceIfNeed(passphrase)
-        safeRepo.noteQueries.getAll().asFlow().mapToList().first()//TODO remove if no need (after tests for sign in)
+        dbRepo.closeDatabase()
+        val passphrase = StringBuilder(pass) // threadsafe
+        dbRepo.buildDatabaseInstanceIfNeed(passphrase)
+        dbRepo.noteQueries.getAll().asFlow().mapToList().first()//TODO remove if no need (after tests for sign in)
         true
-    } catch (e: Exception) {
-        Timber.e(e)
+    } catch (t: Throwable) {
+        t.printStackTrace()
         false
     }
 
@@ -32,14 +30,14 @@ class CryptUseCase(
         if (dbIsEncrypted()) {
             requireNotNull(oldPass)
             if (newPass.isNullOrEmpty()) {
-                safeRepo.decrypt(oldPass)
+                dbRepo.decrypt(oldPass)
             } else {
-                safeRepo.rekey(oldPass, newPass)
+                dbRepo.rekey(oldPass, newPass)
             }
         } else {
             requireNotNull(newPass)
-            safeRepo.encrypt(newPass)
+            dbRepo.encrypt(newPass)
         }
-        safeRepo.relaunchFlowEmitter?.invoke()
+        dbRepo.relaunchFlowEmitter?.invoke()
     }
 }
