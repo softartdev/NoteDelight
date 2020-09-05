@@ -16,20 +16,37 @@ class IosDbRepo : DatabaseRepo() {
         get() = dbHolderRef.value?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
 
     override fun buildDatabaseInstanceIfNeed(passphrase: CharSequence): DatabaseHolder {
-        dbHolderRef.value = IosDatabaseHolder().freeze()
+        if (dbHolderRef.value != null) {
+            return dbHolderRef.value!!
+        }
+        val passkey = if (passphrase.isEmpty()) null else passphrase.toString()
+        dbHolderRef.value = IosDatabaseHolder(
+            key = passkey,
+            rekey = passkey
+        ).freeze()
         return dbHolderRef.value!!
     }
 
     override fun decrypt(oldPass: CharSequence) {
-        TODO("Not yet implemented")
+        closeDatabase()
+        dbHolderRef.value = IosDatabaseHolder(
+            key = oldPass.toString()
+        ).freeze()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
-        TODO("Not yet implemented")
+        closeDatabase()
+        dbHolderRef.value = IosDatabaseHolder(
+            key = oldPass.toString(),
+            rekey = newPass.toString()
+        ).freeze()
     }
 
     override fun encrypt(newPass: CharSequence) {
-        TODO("Not yet implemented")
+        closeDatabase()
+        dbHolderRef.value = IosDatabaseHolder(
+            rekey = newPass.toString()
+        ).freeze()
     }
 
     override fun closeDatabase() {
