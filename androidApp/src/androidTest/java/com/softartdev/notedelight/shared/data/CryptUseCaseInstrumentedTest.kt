@@ -2,7 +2,7 @@ package com.softartdev.notedelight.shared.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.softartdev.notedelight.shared.database.SafeRepo
+import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -14,8 +14,8 @@ import org.koin.java.KoinJavaComponent.inject
 @RunWith(AndroidJUnit4::class)
 class CryptUseCaseInstrumentedTest {
 
-    private val safeRepo by inject(SafeRepo::class.java)
-    private val cryptUseCase = CryptUseCase(safeRepo)
+    private val dbRepo by inject(AndroidDbRepo::class.java)
+    private val cryptUseCase = CryptUseCase(dbRepo)
     private val password = "password"
 
     @Test
@@ -23,7 +23,7 @@ class CryptUseCaseInstrumentedTest {
         assertFalse(cryptUseCase.dbIsEncrypted())
         cryptUseCase.changePassword(null, password)
         assertTrue(cryptUseCase.dbIsEncrypted())
-        safeRepo.closeDatabase()
+        dbRepo.closeDatabase()
         assertFalse(cryptUseCase.checkPassword("incorrect password"))
         assertTrue(cryptUseCase.checkPassword(password))
     }

@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.notedelight.shared.database.SafeRepo
+import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.TestSchema
@@ -18,8 +18,8 @@ import org.mockito.Mockito
 @OptIn(ExperimentalCoroutinesApi::class)
 class NoteUseCaseTest {
 
-    private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
-    private val noteUseCase = NoteUseCase(mockSafeRepo)
+    private val mockDbRepo = Mockito.mock(AndroidDbRepo::class.java)
+    private val noteUseCase = NoteUseCase(mockDbRepo)
 
     private val noteDb = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
         NoteDb.Schema.create(driver)
@@ -30,7 +30,7 @@ class NoteUseCaseTest {
     @Before
     fun setUp() = runBlocking<Unit> {
         notes.forEach(noteDb.noteQueries::insert)
-        Mockito.`when`(mockSafeRepo.noteQueries).thenReturn(noteDb.noteQueries)
+        Mockito.`when`(mockDbRepo.noteQueries).thenReturn(noteDb.noteQueries)
     }
 
     @After

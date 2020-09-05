@@ -7,7 +7,7 @@ import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 
-class SafeRepo(
+class AndroidDbRepo(
         private val context: Context
 ): DatabaseRepo() {
     @Volatile

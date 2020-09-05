@@ -3,7 +3,7 @@ package com.softartdev.notedelight.di
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.database.DatabaseRepo
-import com.softartdev.notedelight.shared.database.SafeRepo
+import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.main.MainViewModel
 import com.softartdev.notedelight.ui.note.NoteActivity
@@ -28,7 +28,7 @@ import org.koin.dsl.module
 
 val appModule = module {
     single { PreferencesHelper(get()) }
-    single<DatabaseRepo> { SafeRepo(get()) }
+    single<DatabaseRepo> { AndroidDbRepo(get()) }
     single { CryptUseCase(get()) }
     single { NoteUseCase(get()) }
 }
