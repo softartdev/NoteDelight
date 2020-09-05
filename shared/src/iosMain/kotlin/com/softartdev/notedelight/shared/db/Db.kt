@@ -24,11 +24,7 @@ object Db {
   // Called from Swift
   @Suppress("unused")
   fun defaultDriver() {
-    Db.dbSetup(NativeSqliteDriver(NoteDb.Schema, "sampledb"))
-  }
-
-  fun defaultTestDriver() {
-    Db.dbSetup(NativeSqliteDriver(TestSchema, "sampledb"))
+    dbSetup(NativeSqliteDriver(NoteDb.Schema, "sampledb"))
   }
 
   val instance: NoteDb

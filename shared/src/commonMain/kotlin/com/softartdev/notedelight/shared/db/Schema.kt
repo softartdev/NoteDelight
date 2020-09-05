@@ -13,27 +13,14 @@ fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb {
     )
 }
 
-object TestSchema : SqlDriver.Schema by NoteDb.Schema {
+object TestSchema {
     private val ldt get() = createLocalDateTime()
 
     val firstNote = Note(1, "first title from test schema", "first text", ldt, ldt)
     val secondNote = Note(2, "second title", "second text", ldt, ldt)
     val thirdNote = Note(3, "third title", "third text", ldt, ldt)
 
-    private var noteDb: NoteDb? = null
-
-    override fun create(driver: SqlDriver) {
-        NoteDb.Schema.create(driver)
-
-        // Seed data time!
-        getOrCreate(driver).apply {
-            sequenceOf(
-                firstNote,
-                secondNote,
-                thirdNote
-            ).forEach(noteQueries::insert)
-        }
-    }
-
-    fun getOrCreate(driver: SqlDriver) = noteDb ?: createQueryWrapper(driver).also { noteDb = it }
+    fun insertTestNotes(noteQueries: NoteQueries) =
+        sequenceOf(firstNote, secondNote, thirdNote)
+            .forEach(noteQueries::insert)
 }

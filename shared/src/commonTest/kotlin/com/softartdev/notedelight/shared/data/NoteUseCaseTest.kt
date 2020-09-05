@@ -75,7 +75,6 @@ class NoteUseCaseTest : BaseTest() {
     fun deleteNote() = runTest {
         val id: Long = 2
         assertEquals(1, noteUseCase.deleteNote(id))
-        noteUseCase.loadNote(id)
     }
 
     @Test

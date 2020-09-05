@@ -4,8 +4,8 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 actual fun createDriver() {
   val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-  TestSchema.create(driver)
   Db.dbSetup(driver)
+  TestSchema.insertTestNotes(Db.instance.noteQueries)
 }
 
 actual fun closeDriver() {

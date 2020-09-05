@@ -26,9 +26,8 @@ class NoteUseCase(
     fun getNotes(): Flow<List<Note>> = dbRepo.noteQueries.getAll().asFlow().mapToList().distinctUntilChanged()
 
     suspend fun createNote(title: String = "", text: String = ""): Long {
-        val lastInsertRowId = dbRepo.noteQueries.lastInsertRowId().executeAsOne()
         val notes = getNotes().first()
-        val noteId = if (notes.isEmpty()) 1 else lastInsertRowId + 1
+        val noteId = if (notes.isEmpty()) 1 else notes.last().id + 1
         val localDateTime = createLocalDateTime()
         val note = Note(noteId, title, text, localDateTime, localDateTime)
         dbRepo.noteQueries.insert(note)

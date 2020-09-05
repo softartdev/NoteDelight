@@ -44,7 +44,8 @@ fun Db.getInstance(context: Context): NoteDb {
 
 fun Db.getTestInstance(context: Context): NoteDb {
   if (!Db.ready) {
-    Db.dbSetup(AndroidSqliteDriver(TestSchema, context, DB_NAME))
+    Db.dbSetup(AndroidSqliteDriver(NoteDb.Schema, context, DB_NAME))
+    TestSchema.insertTestNotes(Db.instance.noteQueries)
   }
   return Db.instance
 }

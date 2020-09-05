@@ -3,7 +3,7 @@ package com.softartdev.notedelight.shared.database
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.NoteQueries
-import com.softartdev.notedelight.shared.db.TestSchema
+import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.native.wrapConnection
@@ -12,7 +12,7 @@ class IosDatabaseTestHolder(
     key: String? = null,
     rekey: String? = null,
     name: String = DatabaseRepo.DB_NAME,
-    schema: SqlDriver.Schema = TestSchema
+    schema: SqlDriver.Schema = NoteDb.Schema
 ) : DatabaseHolder() {
     private val configuration = DatabaseConfiguration(
         name = name,
@@ -28,7 +28,7 @@ class IosDatabaseTestHolder(
         rekey = rekey
     )
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
-    override val noteDb: NoteDb = TestSchema.getOrCreate(driver)
+    override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries: NoteQueries = noteDb.noteQueries
 
     override fun close() = driver.close()
