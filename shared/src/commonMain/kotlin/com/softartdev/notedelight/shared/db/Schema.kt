@@ -20,11 +20,13 @@ object TestSchema : SqlDriver.Schema by NoteDb.Schema {
     val secondNote = Note(2, "second title", "second text", ldt, ldt)
     val thirdNote = Note(3, "third title", "third text", ldt, ldt)
 
+    private var noteDb: NoteDb? = null
+
     override fun create(driver: SqlDriver) {
         NoteDb.Schema.create(driver)
 
         // Seed data time!
-        createQueryWrapper(driver).apply {
+        getOrCreate(driver).apply {
             sequenceOf(
                 firstNote,
                 secondNote,
@@ -32,4 +34,6 @@ object TestSchema : SqlDriver.Schema by NoteDb.Schema {
             ).forEach(noteQueries::insert)
         }
     }
+
+    fun getOrCreate(driver: SqlDriver) = noteDb ?: createQueryWrapper(driver).also { noteDb = it }
 }

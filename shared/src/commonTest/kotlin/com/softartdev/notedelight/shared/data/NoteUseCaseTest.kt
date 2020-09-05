@@ -1,60 +1,50 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.notedelight.shared.database.AndroidDbRepo
-import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.db.NoteDb
+import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.db.TestSchema
-import com.softartdev.notedelight.shared.db.createQueryWrapper
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mockito
+import kotlin.test.*
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class NoteUseCaseTest {
+class NoteUseCaseTest : BaseTest() {
 
-    private val mockDbRepo = Mockito.mock(AndroidDbRepo::class.java)
-    private val noteUseCase = NoteUseCase(mockDbRepo)
+    private val noteUseCase = NoteUseCase(dbRepo)
 
-    private val noteDb = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
-        NoteDb.Schema.create(driver)
-        return@let createQueryWrapper(driver)
-    }
-    private val notes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
+    private val notes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
 
-    @Before
-    fun setUp() = runBlocking<Unit> {
+    @BeforeTest
+    fun setUp() = runTest {
+        val noteDb = dbRepo.buildDatabaseInstanceIfNeed().noteDb
         notes.forEach(noteDb.noteQueries::insert)
-        Mockito.`when`(mockDbRepo.noteQueries).thenReturn(noteDb.noteQueries)
     }
 
-    @After
-    fun tearDown() = runBlocking {
+    @AfterTest
+    fun tearDown() = runTest {
+        val noteDb = dbRepo.buildDatabaseInstanceIfNeed().noteDb
         noteDb.noteQueries.deleteAll()
     }
 
     @Test
-    fun getTitleChannel() {
-        assertNotNull(noteUseCase.titleChannel)
+    fun getTitleChannel() = runTest {
+        val act = "test title"
+        val deferred = async { noteUseCase.titleChannel.receive() }
+        noteUseCase.titleChannel.send(act)
+        val exp = deferred.await()
+        assertEquals(exp, act)
     }
 
     @Test
-    fun getNotes() = runBlocking {
+    fun getNotes() = runTest {
         assertEquals(notes, noteUseCase.getNotes().first())
     }
 
     @Test
-    fun createNote() = runBlocking {
+    fun createNote() = runTest {
         assertEquals(notes.last().id.inc(), noteUseCase.createNote())
     }
 
     @Test
-    fun saveNote() = runBlocking {
+    fun saveNote() = runTest {
         val id: Long = 2
         val newTitle = "new title"
         val newText = "new text"
@@ -65,7 +55,7 @@ class NoteUseCaseTest {
     }
 
     @Test
-    fun updateTitle() = runBlocking {
+    fun updateTitle() = runTest {
         val id: Long = 2
         val newTitle = "new title"
         assertEquals(1, noteUseCase.updateTitle(id, newTitle))
@@ -74,30 +64,31 @@ class NoteUseCaseTest {
     }
 
     @Test
-    fun loadNote() = runBlocking {
+    fun loadNote() = runTest {
         val id: Long = 2
         val exp = notes.find { it.id == id }
         val act = noteUseCase.loadNote(id)
         assertEquals(exp, act)
     }
 
-    @Test(expected = NullPointerException::class)
-    fun deleteNote() = runBlocking<Unit> {
+    @Test
+    fun deleteNote() = runTest {
         val id: Long = 2
         assertEquals(1, noteUseCase.deleteNote(id))
         noteUseCase.loadNote(id)
     }
 
     @Test
-    fun isChanged() = runBlocking {
+    fun isChanged() = runTest {
         val note = notes.random()
         assertFalse(noteUseCase.isChanged(note.id, note.title, note.text))
         assertTrue(noteUseCase.isChanged(note.id, "new title", "new text"))
     }
 
     @Test
-    fun isEmpty() = runBlocking {
+    fun isEmpty() = runTest {
         val note = notes.random()
         assertFalse(noteUseCase.isEmpty(note.id))
     }
+
 }

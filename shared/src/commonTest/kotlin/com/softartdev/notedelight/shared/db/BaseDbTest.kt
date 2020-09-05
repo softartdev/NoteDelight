@@ -3,7 +3,7 @@ package com.softartdev.notedelight.shared.db
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-open class BaseTest {
+open class BaseDbTest {
   @BeforeTest
   fun initDb() {
     createDriver()
@@ -28,4 +28,4 @@ expect fun closeDriver()
 /**
  * Platform specific access to HockeyDb
  */
-expect fun BaseTest.getDb(): NoteDb
+expect fun BaseDbTest.getDb(): NoteDb

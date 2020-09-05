@@ -16,7 +16,7 @@ import org.mockito.Mockito
 
 @Suppress("IllegalIdentifier")
 @OptIn(ExperimentalCoroutinesApi::class)
-class CryptUseCaseTest {
+class CryptUseCaseUnitTest {
 
     private val mockDbRepo = Mockito.mock(AndroidDbRepo::class.java)
     private val cryptUseCase = CryptUseCase(mockDbRepo)

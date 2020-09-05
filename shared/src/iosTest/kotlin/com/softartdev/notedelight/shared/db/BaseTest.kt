@@ -10,4 +10,4 @@ actual fun closeDriver() {
   Db.dbClear()
 }
 
-actual fun BaseTest.getDb(): NoteDb = Db.instance
+actual fun BaseDbTest.getDb(): NoteDb = Db.instance
