@@ -3,7 +3,6 @@ package com.softartdev.notedelight.shared.database
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.NoteQueries
-import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.native.wrapConnection

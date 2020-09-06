@@ -3,8 +3,8 @@ package com.softartdev.notedelight.shared.data
 import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.TestSchema
-import com.softartdev.notedelight.shared.db.createQueryWrapper
+import com.softartdev.notedelight.shared.database.TestSchema
+import com.softartdev.notedelight.shared.database.createQueryWrapper
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async

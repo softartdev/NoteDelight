@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.BaseTest
-import com.softartdev.notedelight.shared.db.TestSchema
+import com.softartdev.notedelight.shared.database.TestSchema
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlin.test.*

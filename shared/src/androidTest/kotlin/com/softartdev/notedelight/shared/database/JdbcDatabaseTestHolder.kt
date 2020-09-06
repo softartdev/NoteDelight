@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 class JdbcDatabaseTestHolder: DatabaseHolder() {

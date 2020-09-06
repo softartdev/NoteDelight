@@ -3,7 +3,7 @@ package com.softartdev.notedelight.shared.data
 import com.softartdev.notedelight.shared.database.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.createQueryWrapper
+import com.softartdev.notedelight.shared.database.createQueryWrapper
 import com.softartdev.notedelight.shared.test.util.StubEditable
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver

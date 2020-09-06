@@ -7,7 +7,6 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 
