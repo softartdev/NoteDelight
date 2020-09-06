@@ -8,5 +8,9 @@ class JdbcDatabaseTestHolder: DatabaseHolder() {
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries = noteDb.noteQueries
 
+    init {
+        NoteDb.Schema.create(driver)
+    }
+
     override fun close() = driver.close()
 }
