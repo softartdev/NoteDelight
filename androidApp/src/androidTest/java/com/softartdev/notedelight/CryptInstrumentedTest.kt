@@ -3,8 +3,8 @@ package com.softartdev.notedelight
 import android.text.SpannableStringBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.database.PlatformSQLiteState
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,10 +19,10 @@ class CryptInstrumentedTest {
 
     @Test
     fun cryptTest() {
-        assertEquals(dbRepo.databaseState, SQLCipherUtils.State.UNENCRYPTED)
+        assertEquals(PlatformSQLiteState.UNENCRYPTED, dbRepo.databaseState)
         dbRepo.encrypt(SpannableStringBuilder(password))
-        assertEquals(dbRepo.databaseState, SQLCipherUtils.State.ENCRYPTED)
+        assertEquals(PlatformSQLiteState.ENCRYPTED, dbRepo.databaseState)
         dbRepo.decrypt(SpannableStringBuilder(password))
-        assertEquals(dbRepo.databaseState, SQLCipherUtils.State.UNENCRYPTED)
+        assertEquals(PlatformSQLiteState.UNENCRYPTED, dbRepo.databaseState)
     }
 }
