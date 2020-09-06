@@ -11,8 +11,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.PlatformSQLiteState
-import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import org.junit.After
@@ -32,7 +32,7 @@ class SignInActivityTest {
     @JvmField
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
         override fun beforeActivityLaunched() {
-            val safeRepo by inject(AndroidDbRepo::class.java)
+            val safeRepo by inject(DatabaseRepo::class.java)
             while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
                 Thread.sleep(1000)
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)

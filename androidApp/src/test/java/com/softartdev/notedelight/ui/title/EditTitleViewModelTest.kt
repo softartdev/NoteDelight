@@ -2,8 +2,8 @@ package com.softartdev.notedelight.ui.title
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.softartdev.notedelight.shared.data.NoteUseCase
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.date.createLocalDateTime
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.assertValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -6,6 +6,7 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent.inject
 
 @LargeTest
+@FlakyTest
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateRemoveNoteWithUseCaseTest {

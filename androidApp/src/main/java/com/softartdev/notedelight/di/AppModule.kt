@@ -2,8 +2,8 @@ package com.softartdev.notedelight.di
 
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.data.NoteUseCase
-import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.AndroidDbRepo
+import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.main.MainViewModel
 import com.softartdev.notedelight.ui.note.NoteActivity
