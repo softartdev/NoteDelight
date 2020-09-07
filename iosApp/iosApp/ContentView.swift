@@ -2,32 +2,44 @@ import SwiftUI
 import shared
 
 struct ContentView: View {
-    @State var notes: [Note]
+    @ObservedObject private(set) var viewModel: ContentViewModel
     
     var body: some View {
         NavigationView {
-            MasterView(notes: $notes)
+            listView()
                 .navigationBarTitle(Text("Notes"))
                 .navigationBarItems(
                     leading: EditButton(),
                     trailing: Button(
                         action: {
                             withAnimation {
-                                let newNote = createNote()
-                                self.notes.insert(newNote, at: 0)
+                                self.viewModel.createNote()
                             }
                         }
                     ) {
                         Image(systemName: "plus")
-                    }
-                )
+                    })
             DetailView()
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
+            .onAppear(perform: {
+                self.viewModel.loadNotes()
+            })
+    }
+    
+    private func listView() -> AnyView {
+        switch viewModel.state {
+            case .loading:
+                return AnyView(LoadingView())
+            case .result(let notes):
+                return AnyView(MasterView(notes: .constant(notes), viewModel: self.viewModel))
+            case .error(let description):
+                return AnyView(ErrorView(message: description))
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(notes: notePreviewData)
+        ContentView(viewModel: ContentViewModel(queryUseCase: QueryUseCase(noteQueries: IosDbRepo().noteQueries)))
     }
 }

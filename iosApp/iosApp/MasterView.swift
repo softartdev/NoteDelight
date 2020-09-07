@@ -11,6 +11,7 @@ import shared
 
 struct MasterView: View {
     @Binding var notes: [Note]
+    @ObservedObject private(set) var viewModel: ContentViewModel
     
     var body: some View {
         List {
@@ -19,7 +20,9 @@ struct MasterView: View {
                     NoteRow(note: note)
                 }
             }.onDelete { indices in
-                indices.forEach { self.notes.remove(at: $0) }
+                indices.forEach { (index: Int) in
+                    self.viewModel.deleteNote(noteId: self.notes[index].id)
+                }
             }
         }
     }
@@ -27,6 +30,6 @@ struct MasterView: View {
 
 struct NoteList_Previews: PreviewProvider {
     static var previews: some View {
-        MasterView(notes: .constant(notePreviewData))
+        MasterView(notes: .constant(notePreviewData), viewModel: ContentViewModel(queryUseCase: QueryUseCase(noteQueries: IosDbRepo().noteQueries)))
     }
 }
