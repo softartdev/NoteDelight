@@ -19,7 +19,7 @@ struct ContentView: View {
                     ) {
                         Image(systemName: "plus")
                     })
-            DetailView()
+            DetailView(noteId: nil, viewModel: DetailViewModel(queryUseCase: self.viewModel.queryUseCase))
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
             .onAppear(perform: {
                 self.viewModel.loadNotes()

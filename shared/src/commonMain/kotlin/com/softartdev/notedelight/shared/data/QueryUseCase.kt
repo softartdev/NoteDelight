@@ -4,9 +4,6 @@ import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteQueries
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToOne
-import kotlinx.coroutines.flow.first
 
 class QueryUseCase(
     val noteQueries: NoteQueries
@@ -42,17 +39,17 @@ class QueryUseCase(
         return noteId
     }
 
-    @Throws(Exception::class) suspend fun saveNote(id: Long, title: String, text: String): Int {
+    @Throws(Exception::class) suspend fun saveNote(id: Long, title: String, text: String): Note {
         val note = loadNote(id).copy(
             title = title,
             text = text,
             dateModified = createLocalDateTime()
         )
         noteQueries.update(note)
-        return 1
+        return loadNote(id)
     }
 
-    @Throws(Exception::class) suspend fun loadNote(noteId: Long): Note = noteQueries.getById(noteId).asFlow().mapToOne().first()
+    @Throws(Exception::class) suspend fun loadNote(noteId: Long): Note = noteQueries.getById(noteId).executeAsOne()
 
     fun deleteNote(id: Long) = noteQueries.delete(id)
 }

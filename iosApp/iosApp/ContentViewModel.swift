@@ -10,7 +10,7 @@ import Foundation
 import shared
 
 class ContentViewModel: ObservableObject {
-    private let queryUseCase: QueryUseCase
+    let queryUseCase: QueryUseCase
     @Published var state: ContentViewState = ContentViewState.loading
     
     init(queryUseCase: QueryUseCase) {

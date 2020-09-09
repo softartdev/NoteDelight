@@ -16,7 +16,7 @@ struct MasterView: View {
     var body: some View {
         List {
             ForEach(notes, id: \.id) { note in
-                NavigationLink(destination: DetailView(note: note)) {
+                NavigationLink(destination: DetailView(noteId: note.id, viewModel: DetailViewModel(queryUseCase: self.viewModel.queryUseCase))) {
                     NoteRow(note: note)
                 }
             }.onDelete { indices in
