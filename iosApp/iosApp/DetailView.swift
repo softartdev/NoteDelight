@@ -17,9 +17,10 @@ struct DetailView: View {
         Group {
             if noteId != nil {
                 textView(noteId: noteId!)
-                .onAppear(perform: {
-                    self.viewModel.loadNote(id: self.noteId!)
-                })
+                    .onAppear(perform: {
+                        self.viewModel.loadNote(id: self.noteId!)
+                    })
+                    .navigationBarTitle("",displayMode: .inline)
             } else {
                 Text("Click + for create new note")
                     .navigationBarTitle("Note")
