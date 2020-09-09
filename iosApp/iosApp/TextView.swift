@@ -10,7 +10,7 @@ import SwiftUI
 
 // We will provide this pre-built to the students
 struct TextView: UIViewRepresentable {
-    @Binding var text: String
+    var text: String
 
     func makeCoordinator() -> Coordinator {
         return(Coordinator(self))
@@ -43,6 +43,6 @@ struct TextView: UIViewRepresentable {
 struct TextField_Previews: PreviewProvider {
     @State static var textValue = "Note 1\nTesting 1, 2, 3..."
     static var previews: some View {
-        TextView(text: $textValue)
+        TextView(text: textValue)
     }
 }

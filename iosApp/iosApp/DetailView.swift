@@ -12,6 +12,7 @@ import shared
 struct DetailView: View {
     var noteId: Int64?
     @ObservedObject private(set) var viewModel: DetailViewModel
+    @State var isSaveAlertShowing = false
     
     var body: some View {
         Group {
@@ -33,27 +34,25 @@ struct DetailView: View {
                 return AnyView(LoadingView())
             case .loaded(let note):
                 return textView(note: note)
-            case .saved(let note):
-                return textView(note: note)
             case .error(let description):
                 return AnyView(ErrorView(message: description))
         }
     }
     
     private func textView(note: Note) -> AnyView {
-        let textView = TextView(text: .constant(note.text))
+        let textView = TextView(text: note.text)
         return AnyView(textView
             .navigationBarTitle(note.title)
             .navigationBarItems(trailing: Button(action: {
-                self.viewModel.saveNote(id: self.noteId!, title: note.title, text: textView.text)
+                self.isSaveAlertShowing.toggle()
             }, label: {
                 Text("Save")
             }))
-            .alert(isPresented: .constant(self.viewModel.stateIsSaved()), content: {
-                return Alert(title: Text("Saved"), message: Text("Note is saved"), dismissButton: .default(Text("OK"), action: {
-                    self.viewModel.checkSave()
-                }))
-            }))
+            .alert(isPresented: $isSaveAlertShowing) {
+                Alert(title: Text("Save"), message: Text("Are you sure you want to save this?"), primaryButton: .destructive(Text("OK")) {
+                    self.viewModel.saveNote(id: self.noteId!, title: note.title, text: textView.text)
+                }, secondaryButton: .cancel())
+        })
     }
 }
 

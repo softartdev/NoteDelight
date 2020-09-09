@@ -46,7 +46,7 @@ class QueryUseCase(
             dateModified = createLocalDateTime()
         )
         noteQueries.update(note)
-        return loadNote(id)
+        return note
     }
 
     @Throws(Exception::class) suspend fun loadNote(noteId: Long): Note = noteQueries.getById(noteId).executeAsOne()

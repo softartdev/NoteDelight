@@ -33,38 +33,17 @@ class DetailViewModel: ObservableObject {
         print("Save note id=\(id),title=\(title),text=\(text)")
         queryUseCase.saveNote(id: id, title: title, text: text, completionHandler: { note, error in
             if let note = note {
-                if case .loaded(_) = self.state {
-                    self.state = .saved(note)
-                } else {
-                    self.state = .error("Illegal state != loaded before save")
-                }
+                print("Note saved: \(note)")
             } else {
                 print("Unexpected error: \(String(describing: error))")
                 self.state = .error(error?.localizedDescription ?? "error")
             }
         })
     }
-    
-    func stateIsSaved() -> Bool {
-        if case .saved(_) = self.state {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    func checkSave() {
-        if case .saved(let note) = self.state {
-            self.state = .loaded(note)
-        } else {
-            self.state = .error("Illegal state != saved before check save")
-        }
-    }
 }
 
 enum DetailViewState {
     case loading
     case loaded(Note)
-    case saved(Note)
     case error(String?)
 }
