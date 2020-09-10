@@ -36,8 +36,6 @@
 -keep class com.google.firebase.crashlytics.* { *; }
 -dontwarn com.google.firebase.crashlytics.**
 
--keep interface com.softartdev.notedelight.shared.database.NoteDao
-
 -keepclassmembers class androidx.arch.core.executor.ArchTaskExecutor { *; }
 
 -keepclassmembers class net.sqlcipher.CursorWindow { *; }

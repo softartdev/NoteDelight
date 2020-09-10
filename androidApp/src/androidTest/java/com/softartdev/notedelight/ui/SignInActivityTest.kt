@@ -10,13 +10,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.softartdev.notedelight.R
-import com.softartdev.notedelight.shared.data.SafeRepo
+import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.database.PlatformSQLiteState
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -34,11 +32,9 @@ class SignInActivityTest {
     @JvmField
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
         override fun beforeActivityLaunched() {
-            val safeRepo by inject(SafeRepo::class.java)
-            while (safeRepo.databaseState == SQLCipherUtils.State.DOES_NOT_EXIST) {
-                val db = safeRepo.buildDatabaseInstanceIfNeed()
-                val notes = runBlocking { db.noteDao().getNotes().first() }
-                Timber.d("notes = %s", notes)
+            val safeRepo by inject(DatabaseRepo::class.java)
+            while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
+                Thread.sleep(1000)
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)
             }
             safeRepo.encrypt(SpannableStringBuilder(password))

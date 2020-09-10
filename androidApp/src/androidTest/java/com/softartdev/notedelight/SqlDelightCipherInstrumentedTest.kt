@@ -10,11 +10,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.data.SafeRepo.Companion.DB_NAME
-import com.softartdev.notedelight.shared.db.Db
-import com.softartdev.notedelight.shared.db.TestSchema
-import com.softartdev.notedelight.shared.db.createQueryWrapper
-import com.softartdev.notedelight.shared.db.getInstance
+import com.softartdev.notedelight.shared.database.DatabaseRepo.Companion.DB_NAME
+import com.softartdev.notedelight.shared.database.TestSchema
+import com.softartdev.notedelight.shared.database.createQueryWrapper
+import com.softartdev.notedelight.shared.db.NoteDb
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import org.junit.Assert.assertEquals
@@ -35,7 +34,7 @@ class SqlDelightCipherInstrumentedTest {
         assertEquals(SQLCipherUtils.State.DOES_NOT_EXIST, databaseState)
 
         val emptyPassword: Editable = SpannableStringBuilder.valueOf("")
-        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(TestSchema)
+        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(NoteDb.Schema)
         var openDatabase: SupportSQLiteDatabase = SafeHelperFactory
             .fromUser(emptyPassword)
             .create(context, DB_NAME, callback)
@@ -44,9 +43,10 @@ class SqlDelightCipherInstrumentedTest {
         assertEquals(SQLCipherUtils.State.UNENCRYPTED, databaseState)
 
         var driver: SqlDriver = AndroidSqliteDriver(openDatabase)
-        var noteQueries = Db.getInstance(driver).noteQueries//TODO use createQueryWrapper instead
+        var noteQueries = createQueryWrapper(driver).noteQueries
 
         //ZERO STEP
+        TestSchema.insertTestNotes(noteQueries)
         var exp = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
         assertEquals(exp, noteQueries.getAll().executeAsList())
 
@@ -59,8 +59,7 @@ class SqlDelightCipherInstrumentedTest {
             .create(context, DB_NAME, callback)
             .writableDatabase
         driver = AndroidSqliteDriver(openDatabase)
-        Db.dbClear()//TODO check app code about this moment!!!
-        noteQueries = Db.getInstance(driver).noteQueries
+        noteQueries = createQueryWrapper(driver).noteQueries
 
         //FIRST STEP
         noteQueries.delete(TestSchema.firstNote.id)
@@ -83,7 +82,6 @@ class SqlDelightCipherInstrumentedTest {
             .create(context, DB_NAME, callback)
             .writableDatabase
         driver = AndroidSqliteDriver(openDatabase)
-        Db.dbClear()
         noteQueries = createQueryWrapper(driver).noteQueries
 
         //THIRD STEP
