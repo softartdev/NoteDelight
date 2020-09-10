@@ -25,4 +25,3 @@ func createNote() -> Note {
     notePreviewData.append(newNote)
     return newNote
 }
-

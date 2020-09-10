@@ -2,7 +2,6 @@ package com.softartdev.notedelight.ui.splash
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.softartdev.notedelight.shared.data.CryptUseCase
-import com.softartdev.notedelight.shared.data.SafeSQLiteException
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.getOrAwaitValue
 import org.junit.Assert.assertEquals
@@ -36,7 +35,7 @@ class SplashViewModelTest {
 
     @Test
     fun showError() {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenThrow(SafeSQLiteException::class.java)
+        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenThrow(RuntimeException::class.java)
         val splashViewModel = SplashViewModel(cryptUseCase)
         assertEquals(splashViewModel.resultLiveData.getOrAwaitValue(), SplashResult.ShowError(null))
     }
