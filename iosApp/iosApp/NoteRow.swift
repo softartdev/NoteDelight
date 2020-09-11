@@ -20,7 +20,7 @@ struct NoteRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(note.title)
+            Text(note.title.isEmpty ? "untitled" : note.title)
                 .font(.headline)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.leading)
