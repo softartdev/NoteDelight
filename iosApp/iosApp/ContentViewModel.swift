@@ -28,7 +28,7 @@ class ContentViewModel: ObservableObject {
     
     func createNote() {
         do {
-            try self.queryUseCase.addNote(title: "New note title", text: "New note text")
+            try self.queryUseCase.addNote(title: "", text: "")
         } catch {
             print("Unexpected error: \(error)")
             self.state = ContentViewState.error(error.localizedDescription)
