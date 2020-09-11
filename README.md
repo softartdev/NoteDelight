@@ -6,8 +6,7 @@ This project is a fork of [NoteRoom](https://github.com/softartdev/NoteRoom) (wh
 
 Migrated to [SQLDelight](https://github.com/cashapp/sqldelight) from [Room](https://developer.android.com/topic/libraries/architecture/room) Persistence Library.
 
-<img src="https://github.com/softartdev/NoteDelight/raw/master/demo_android.gif" width="300" height="500" />
-<img src="https://github.com/softartdev/NoteDelight/raw/master/demo_ios.gif" width="300" height="500" />
+<img src="https://github.com/softartdev/NoteDelight/raw/master/demo_android.gif" width="300" height="500" />    <img src="https://github.com/softartdev/NoteDelight/raw/master/demo_ios.gif" width="300" height="500" />
 
 <p>
   <a href="https://play.google.com/store/apps/details?id=com.softartdev.noteroom"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" height="75px"/></a>
