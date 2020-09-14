@@ -19,6 +19,9 @@ We need an iOS developer. If you have the skill to create apps with SwiftUI and 
 
 We are also working on shared code for the multi-platform module.
 
+## ARCHITECTURE 🏛
+![Architecture blueprint for this project](architecture.png)
+
 ## HISTORY 📜
 
 This project is a fork of [NoteRoom](https://github.com/softartdev/NoteRoom) (which in turn is a fork of [NoteCrypt](https://github.com/softartdev/NoteCrypt)).
