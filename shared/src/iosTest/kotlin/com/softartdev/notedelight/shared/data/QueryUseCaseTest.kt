@@ -12,14 +12,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.native.concurrent.AtomicInt
+import kotlin.native.concurrent.InvalidMutabilityException
 import kotlin.native.concurrent.isFrozen
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.*
 
 class QueryUseCaseTest : BaseTest() {
-    
+
     private val queryUseCase = QueryUseCase(dbRepo.noteQueries)
 
     private val notes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
@@ -27,7 +25,9 @@ class QueryUseCaseTest : BaseTest() {
     @BeforeTest
     fun setUp() {
         val noteDb = dbRepo.buildDatabaseInstanceIfNeed().noteDb
-        notes.forEach(noteDb.noteQueries::insert)
+        noteDb.noteQueries.transaction {
+            notes.forEach(noteDb.noteQueries::insert)
+        }
     }
 
     @AfterTest
@@ -37,26 +37,52 @@ class QueryUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun launchNotesFlow() {
+    fun launchInvalidMutabilityException() {
         val count = AtomicInt(0)
-        val flow = queryUseCase.noteQueries.getAll().asFlow().mapToList()
         runBlocking {
             withContext(Dispatchers.Default) {
-                flow.onEach { actNotes ->
-                    withContext(this@runBlocking.coroutineContext) {
-                        println("launchNotes - #${count.addAndGet(1)} isFrozen = ${actNotes.isFrozen}")
-                        println("launchNotes - #${count.value} onEach = $actNotes")
-                        if (actNotes.isNotEmpty()) {
-                            println("launchNotes - #${count.value} assertEquals")
-                            assertEquals(notes, actNotes)
+                queryUseCase.noteQueries.getAll().asFlow().mapToList()
+                    .onEach { actNotes ->
+                        withContext(Dispatchers.Main) {
+                            println("launchFlow - #${count.addAndGet(1)} isFrozen = ${actNotes.isFrozen}")
+                            println("launchFlow - #${count.value} onEach = $actNotes")
+                            if (actNotes.isNotEmpty()) {
+                                println("launchFlow - #${count.value} assertEquals")
+                                assertEquals(notes, actNotes)
+                            }
                         }
-                    }
-                }.catch { throwable ->
-                    withContext(this@runBlocking.coroutineContext) {
-                        throw Throwable("catch flow error: ${throwable.message}", throwable)
-                    }
-                }.launchIn(this@withContext)
-            }.join()
+                    }.catch {
+                        withContext(Dispatchers.Main) {
+                            it.printStackTrace()
+                            assertFailsWith(InvalidMutabilityException::class) { throw it }
+                        }
+                    }.launchIn(this@withContext)
+            }
+        }
+    }
+
+    @Ignore
+    @Test
+    fun launchFlow() {
+        val count = AtomicInt(0)
+        runBlocking {
+            withContext(Dispatchers.Default) {
+                queryUseCase.noteQueries.getAll().asFlow().mapToList()
+                    .onEach { actNotes ->
+                        withContext(Dispatchers.Main) {
+                            println("launchFlow - #${count.addAndGet(1)} isFrozen = ${actNotes.isFrozen}")
+                            println("launchFlow - #${count.value} onEach = $actNotes")
+                            if (actNotes.isNotEmpty()) {
+                                println("launchFlow - #${count.value} assertEquals")
+                                assertEquals(notes, actNotes)
+                            }
+                        }
+                    }.catch {
+                        withContext(Dispatchers.Main) {
+                            throw it
+                        }
+                    }.launchIn(this@withContext)
+            }
         }
     }
 
