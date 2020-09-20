@@ -16,7 +16,7 @@ struct MasterView: View {
     var body: some View {
         List {
             ForEach(notes, id: \.id) { note in
-                NavigationLink(destination: DetailView(noteId: note.id, viewModel: DetailViewModel(queryUseCase: self.viewModel.queryUseCase))) {
+                NavigationLink(destination: DetailView(noteId: note.id, viewModel: DetailViewModel(noteUseCase: self.viewModel.noteUseCase))) {
                     NoteRow(note: note)
                 }
             }.onDelete { indices in
@@ -30,6 +30,6 @@ struct MasterView: View {
 
 struct NoteList_Previews: PreviewProvider {
     static var previews: some View {
-        MasterView(notes: .constant(notePreviewData), viewModel: ContentViewModel(queryUseCase: QueryUseCase(noteQueries: IosDbRepo().noteQueries)))
+        MasterView(notes: .constant(notePreviewData), viewModel: ContentViewModel(noteUseCase: NoteUseCase(dbRepo: IosDbRepo())))
     }
 }

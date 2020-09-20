@@ -69,7 +69,7 @@ struct DetailView: View {
 
 struct NoteDetail_Previews: PreviewProvider {
     static let prevNote: Note = createNote()
-    static let detailViewModel = DetailViewModel(queryUseCase: QueryUseCase(noteQueries: IosDbRepo().noteQueries))
+    static let detailViewModel = DetailViewModel(noteUseCase: NoteUseCase(dbRepo: IosDbRepo()))
     
     static var previews: some View {
         Group {
