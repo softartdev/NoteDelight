@@ -14,8 +14,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         let iosDbRepo = IosDbRepo()
-        let useCase = QueryUseCase(noteQueries: iosDbRepo.noteQueries)
-        let contentViewModel = ContentViewModel(queryUseCase: useCase)
+        let useCase = NoteUseCase(dbRepo: iosDbRepo)
+        let contentViewModel = ContentViewModel(noteUseCase: useCase)
         let contentView = ContentView(viewModel: contentViewModel)
 
         // Use a UIHostingController as window root view controller.

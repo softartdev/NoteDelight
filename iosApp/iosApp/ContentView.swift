@@ -19,7 +19,7 @@ struct ContentView: View {
                     ) {
                         Image(systemName: "plus")
                     })
-            DetailView(noteId: nil, viewModel: DetailViewModel(queryUseCase: self.viewModel.queryUseCase))
+            DetailView(noteId: nil, viewModel: DetailViewModel(noteUseCase: self.viewModel.noteUseCase))
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
             .onAppear(perform: {
                 self.viewModel.loadNotes()
@@ -40,6 +40,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(viewModel: ContentViewModel(queryUseCase: QueryUseCase(noteQueries: IosDbRepo().noteQueries)))
+        ContentView(viewModel: ContentViewModel(noteUseCase: NoteUseCase(dbRepo: IosDbRepo())))
     }
 }

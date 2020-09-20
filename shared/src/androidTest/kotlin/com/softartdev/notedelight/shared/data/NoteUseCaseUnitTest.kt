@@ -63,7 +63,7 @@ class NoteUseCaseUnitTest {
         val id: Long = 2
         val newTitle = "new title"
         val newText = "new text"
-        assertEquals(1, noteUseCase.saveNote(id, newTitle, newText))
+        noteUseCase.saveNote(id, newTitle, newText)
         val updatedNote = noteUseCase.loadNote(id)
         assertEquals(newTitle, updatedNote.title)
         assertEquals(newText, updatedNote.text)
