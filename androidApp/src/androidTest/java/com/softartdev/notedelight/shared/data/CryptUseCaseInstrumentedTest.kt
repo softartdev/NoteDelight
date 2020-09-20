@@ -20,6 +20,7 @@ class CryptUseCaseInstrumentedTest {
 
     @Test
     fun cryptTest() = runBlocking {
+        dbRepo.buildDatabaseInstanceIfNeed()
         assertFalse(cryptUseCase.dbIsEncrypted())
         cryptUseCase.changePassword(null, password)
         assertTrue(cryptUseCase.dbIsEncrypted())
