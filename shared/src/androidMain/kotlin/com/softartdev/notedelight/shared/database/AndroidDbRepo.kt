@@ -4,14 +4,13 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 
 class AndroidDbRepo(
         private val context: Context
 ): DatabaseRepo() {
     @Volatile
-    private var databaseHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var databaseHolder: DatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
         @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
@@ -22,7 +21,7 @@ class AndroidDbRepo(
         }
 
     override val noteQueries: NoteQueries
-        get() = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
+        get() = buildDatabaseInstanceIfNeed("").noteQueries
 
     override fun buildDatabaseInstanceIfNeed(
             passphrase: CharSequence

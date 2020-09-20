@@ -34,6 +34,7 @@ class SignInActivityTest {
         override fun beforeActivityLaunched() {
             val safeRepo by inject(DatabaseRepo::class.java)
             while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
+                safeRepo.buildDatabaseInstanceIfNeed()
                 Thread.sleep(1000)
                 Timber.d("databaseState = %s", safeRepo.databaseState.name)
             }
