@@ -25,8 +25,8 @@ android {
         applicationId "com.softartdev.noteroom"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 57
-        versionName "5.7"
+        versionCode 58
+        versionName "5.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -55,6 +55,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -108,6 +109,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
     testImplementation project(path: ':shared-android-test-util')
     testImplementation "junit:junit:$junit_version"
