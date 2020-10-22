@@ -1,20 +1,22 @@
 name: iOS starter workflow
 
-on:
+on: # Trigger the workflow on push, as well as pull request events
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master ] # This configuration does not affect the push event above
 
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
     runs-on: macos-latest
+    env:
+      working-directory: ./iosApp
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set Default Scheme
+        working-directory: ${{env.working-directory}}
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
@@ -24,6 +26,7 @@ jobs:
         env:
           scheme: ${{ 'default' }}
           platform: ${{ 'iOS Simulator' }}
+        working-directory: ${{env.working-directory}}
         run: |
           device=`instruments -s -devices | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}'`
           if [ $scheme = default ]; then scheme=$(cat default); fi
@@ -34,6 +37,7 @@ jobs:
         env:
           scheme: ${{ 'default' }}
           platform: ${{ 'iOS Simulator' }}
+        working-directory: ${{env.working-directory}}
         run: |
           device=`instruments -s -devices | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}'`
           if [ $scheme = default ]; then scheme=$(cat default); fi
