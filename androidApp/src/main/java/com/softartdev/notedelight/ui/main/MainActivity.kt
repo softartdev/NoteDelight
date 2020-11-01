@@ -16,14 +16,13 @@ import com.softartdev.notedelight.util.tintIcon
 import com.softartdev.notedelight.util.visible
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_error.view.*
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(
         contentLayoutId = R.layout.activity_main
 ), MainAdapter.ClickListener, Observer<NoteListResult> {
 
-    private val mainViewModel by lifecycleScope.viewModel<MainViewModel>(this)
+    private val mainViewModel by viewModel<MainViewModel>()
     private var mainAdapter by autoCleared<MainAdapter>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

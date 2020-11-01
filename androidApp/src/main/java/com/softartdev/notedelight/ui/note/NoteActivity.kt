@@ -14,12 +14,11 @@ import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.title.EditTitleDialog
 import com.softartdev.notedelight.util.*
 import kotlinx.android.synthetic.main.activity_note.*
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> {
 
-    private val noteViewModel by lifecycleScope.viewModel<NoteViewModel>(this)
+    private val noteViewModel by viewModel<NoteViewModel>()
 
     private val noteId: Long
         get() = intent.getLongExtra(NOTE_ID, 0L)

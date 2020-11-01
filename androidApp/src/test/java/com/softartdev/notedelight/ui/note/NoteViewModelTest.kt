@@ -41,7 +41,7 @@ class NoteViewModelTest {
     fun setUp() = mainCoroutineRule.runBlockingTest {
         Mockito.`when`(noteUseCase.createNote()).thenReturn(id)
         Mockito.`when`(noteUseCase.loadNote(id)).thenReturn(note)
-        Mockito.`when`(noteUseCase.saveNote(id, title, text)).thenReturn(1)
+        Mockito.`when`(noteUseCase.saveNote(id, title, text)).thenReturn(note)
         Mockito.`when`(noteUseCase.titleChannel).thenReturn(titleChannel)
         Mockito.`when`(noteUseCase.deleteNote(id)).thenReturn(1)
     }

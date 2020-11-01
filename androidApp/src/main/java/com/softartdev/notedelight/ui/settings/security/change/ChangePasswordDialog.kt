@@ -10,15 +10,13 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
 
 class ChangePasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_password,
         dialogLayoutRes = R.layout.dialog_change_password
 ), Observer<ChangeResult> {
 
-    private val changeViewModel by lifecycleScope.viewModel<ChangeViewModel>(this)
+    private val changeViewModel by viewModel<ChangeViewModel>()
 
     private val progressBar: ProgressBar
         get() = requireDialog().findViewById(R.id.dialog_change_progress_bar)

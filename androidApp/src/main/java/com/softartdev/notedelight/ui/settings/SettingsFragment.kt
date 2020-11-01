@@ -10,19 +10,18 @@ import androidx.preference.*
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
+import com.softartdev.notedelight.ui.base.BasePrefFragment
 import com.softartdev.notedelight.ui.settings.security.change.ChangePasswordDialog
 import com.softartdev.notedelight.ui.settings.security.confirm.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.settings.security.enter.EnterPasswordDialog
 import com.softartdev.notedelight.util.ThemeHelper
 import com.softartdev.notedelight.util.tintIcon
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
 import timber.log.Timber
 
 @SuppressLint("InflateParams")
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener, Observer<SecurityResult> {
+class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListener, Observer<SecurityResult> {
 
-    private val settingsViewModel by lifecycleScope.viewModel<SettingsViewModel>(this)
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     private var securityPreferences: SwitchPreference? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

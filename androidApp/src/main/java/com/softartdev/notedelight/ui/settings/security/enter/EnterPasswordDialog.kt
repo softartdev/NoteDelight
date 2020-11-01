@@ -10,15 +10,13 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
 
 class EnterPasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_enter_password,
         dialogLayoutRes = R.layout.dialog_password
 ), Observer<EnterResult> {
 
-    private val enterViewModel by lifecycleScope.viewModel<EnterViewModel>(this)
+    private val enterViewModel by viewModel<EnterViewModel>()
 
     private val progressBar: ProgressBar
         get() = requireDialog().findViewById(R.id.enter_progress_bar)

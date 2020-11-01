@@ -10,16 +10,16 @@ import Foundation
 import shared
 
 class DetailViewModel: ObservableObject {
-    private let queryUseCase: QueryUseCase
+    private let noteUseCase: NoteUseCase
     @Published var state: DetailViewState = DetailViewState.loading
     
-    init(queryUseCase: QueryUseCase) {
-        self.queryUseCase = queryUseCase
+    init(noteUseCase: NoteUseCase) {
+        self.noteUseCase = noteUseCase
     }
     
     func loadNote(id: Int64) {
         self.state = DetailViewState.loading
-        queryUseCase.loadNote(noteId: id, completionHandler: { note, error in
+        noteUseCase.loadNote(noteId: id, completionHandler: { note, error in
             if let note = note {
                 self.state = .loaded(note)
             } else {
@@ -31,7 +31,7 @@ class DetailViewModel: ObservableObject {
     
     func saveNote(id: Int64, title: String, text: String) {
         print("Save note id=\(id),title=\(title),text=\(text)")
-        queryUseCase.saveNote(id: id, title: title, text: text, completionHandler: { note, error in
+        noteUseCase.saveNote(id: id, title: title, text: text, completionHandler: { note, error in
             if let note = note {
                 print("Note saved: \(note)")
             } else {

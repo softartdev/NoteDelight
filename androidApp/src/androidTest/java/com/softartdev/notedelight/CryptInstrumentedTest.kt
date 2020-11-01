@@ -19,6 +19,8 @@ class CryptInstrumentedTest {
 
     @Test
     fun cryptTest() {
+        assertEquals(PlatformSQLiteState.DOES_NOT_EXIST, dbRepo.databaseState)
+        dbRepo.buildDatabaseInstanceIfNeed()
         assertEquals(PlatformSQLiteState.UNENCRYPTED, dbRepo.databaseState)
         dbRepo.encrypt(SpannableStringBuilder(password))
         assertEquals(PlatformSQLiteState.ENCRYPTED, dbRepo.databaseState)

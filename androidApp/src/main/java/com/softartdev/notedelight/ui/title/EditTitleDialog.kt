@@ -10,15 +10,13 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
 
 class EditTitleDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_title,
         dialogLayoutRes = R.layout.dialog_edit_title
 ), Observer<EditTitleResult> {
 
-    private val editTitleViewModel by lifecycleScope.viewModel<EditTitleViewModel>(this)
+    private val editTitleViewModel by viewModel<EditTitleViewModel>()
 
     private val noteId: Long
         get() = requireNotNull(arguments?.getLong(ARG_NOTE_ID))
