@@ -109,7 +109,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.6.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.0'
     implementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
     testImplementation project(path: ':shared-android-test-util')
     testImplementation "junit:junit:$junit_version"
