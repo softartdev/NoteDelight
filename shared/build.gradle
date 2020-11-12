@@ -11,7 +11,7 @@ sqldelight {
 }
 kotlin {
     android()
-    iosX64('ios') {
+    ios {
         binaries {
             framework {
                 baseName = 'shared'
@@ -46,7 +46,7 @@ kotlin {
                 implementation "androidx.sqlite:sqlite-ktx:$sqlite_version"
                 implementation "androidx.sqlite:sqlite-framework:$sqlite_version"
                 api "com.commonsware.cwac:saferoom.x:1.3.0"
-                api 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
+                api 'net.zetetic:android-database-sqlcipher:4.4.1@aar'
                 implementation "com.jakewharton.timber:timber:$timber_version"
             }
         }
@@ -66,6 +66,9 @@ kotlin {
             dependencies {
                 implementation "com.squareup.sqldelight:native-driver:$sqldelight_version"
             }
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(it)
+            iosArm64Main.dependsOn(it)
         }
         iosTest {
         }
@@ -74,7 +77,9 @@ kotlin {
 task(packForXcode, type: Sync) {
     group = 'build'
     def mode = System.getenv('CONFIGURATION') ?: 'DEBUG'
-    def framework = kotlin.targets.ios.binaries.getFramework(mode)
+    def sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
+    def targetName = "ios${sdkName.startsWith("iphoneos") ? "Arm64" : "X64"}"
+    def framework = kotlin.targets.getByName(targetName).binaries.getFramework(mode)
     inputs.property('mode', mode)
     dependsOn(framework.linkTask)
     def targetDir = new File(buildDir, 'xcode-frameworks')

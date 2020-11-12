@@ -8,6 +8,7 @@ import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.main.MainViewModel
 import com.softartdev.notedelight.ui.note.NoteActivity
 import com.softartdev.notedelight.ui.note.NoteViewModel
+import com.softartdev.notedelight.ui.settings.SettingsActivity
 import com.softartdev.notedelight.ui.settings.SettingsFragment
 import com.softartdev.notedelight.ui.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.settings.security.change.ChangePasswordDialog
@@ -49,6 +50,7 @@ val mvvmModule = module {
     scope<EditTitleDialog> {
         viewModel { EditTitleViewModel(get()) }
     }
+    scope<SettingsActivity> { scoped {  } }
     scope<SettingsFragment> {
         viewModel { SettingsViewModel(get()) }
     }

@@ -10,6 +10,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.category.CheckModuleTest
 import org.koin.test.check.checkModules
+import org.koin.test.mock.MockProviderRule
 import org.mockito.Mockito.mock
 
 @Category(CheckModuleTest::class)
@@ -20,6 +21,11 @@ class ModuleCheckTest : AutoCloseKoinTest() {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
+
+    @get:Rule
+    val mockProvider = MockProviderRule.create { clazz ->
+        mock(clazz.java)
+    }
 
     private val mockContext = mock(Context::class.java)
 

@@ -12,12 +12,11 @@ import com.softartdev.notedelight.util.hideKeyboard
 import com.softartdev.notedelight.util.visible
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.view_error.view.*
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInResult> {
 
-    private val signInViewModel by lifecycleScope.viewModel<SignInViewModel>(this)
+    private val signInViewModel by viewModel<SignInViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
