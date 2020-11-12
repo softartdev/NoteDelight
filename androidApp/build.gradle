@@ -101,7 +101,7 @@ dependencies {
     def leak_canary_version = '2.5'
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
     implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
-    def koin_version= "2.1.6"
+    def koin_version= "2.2.0"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
