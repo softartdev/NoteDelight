@@ -9,10 +9,15 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.settings.SettingsActivity
 import com.softartdev.notedelight.util.PreferencesHelper
 import org.koin.androidx.scope.ScopeActivity
+import org.koin.java.KoinJavaComponent
 
-abstract class BaseActivity(@LayoutRes contentLayoutId: Int = 0) : ScopeActivity(contentLayoutId) {
+abstract class BaseActivity(
+    @LayoutRes contentLayoutId: Int = 0,
+    initialiseScope: Boolean = true
+) : ScopeActivity(contentLayoutId, initialiseScope) {
 
-    private val preferencesHelper by inject<PreferencesHelper>()
+    //inject out of scope because not all descendants have to declare a scope definition
+    private val preferencesHelper by KoinJavaComponent.inject(PreferencesHelper::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
