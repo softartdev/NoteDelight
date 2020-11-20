@@ -8,17 +8,19 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.softartdev.notedelight.R
+import com.softartdev.notedelight.databinding.ActivityNoteBinding
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.title.EditTitleDialog
 import com.softartdev.notedelight.util.*
-import kotlinx.android.synthetic.main.activity_note.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> {
 
     private val noteViewModel by viewModel<NoteViewModel>()
+    private val binding by viewBinding(ActivityNoteBinding::bind, R.id.note_linear_layout)
 
     private val noteId: Long
         get() = intent.getLongExtra(NOTE_ID, 0L)
@@ -33,8 +35,8 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
         }
 
     private var noteText: String
-        get() = note_edit_text.text.toString()
-        set(value) = note_edit_text.setText(value)
+        get() = binding.noteEditText.text.toString()
+        set(value) = binding.noteEditText.setText(value)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,17 +52,17 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
     }
 
     override fun onChanged(noteResult: NoteResult) {
-        note_progress_bar.invisible()
+        binding.noteProgressBar.invisible()
         when (noteResult) {
-            NoteResult.Loading -> note_progress_bar.visible()
-            is NoteResult.Created -> note_edit_text.showKeyboard()
+            NoteResult.Loading -> binding.noteProgressBar.visible()
+            is NoteResult.Created -> binding.noteEditText.showKeyboard()
             is NoteResult.Loaded -> {
                 noteTitle = noteResult.result.title
                 noteText = noteResult.result.text
             }
             is NoteResult.Saved -> {
                 val noteSaved = getString(R.string.note_saved) + ": " + noteResult.title
-                Snackbar.make(note_edit_text, noteSaved, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.noteEditText, noteSaved, Snackbar.LENGTH_LONG).show()
             }
             is NoteResult.NavEditTitle -> {
                 val editTitleDialog = EditTitleDialog.create(noteResult.noteId)
@@ -70,7 +72,7 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
                 noteTitle = noteResult.title
             }
             NoteResult.Empty -> {
-                Snackbar.make(note_edit_text, R.string.note_empty, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.noteEditText, R.string.note_empty, Snackbar.LENGTH_LONG).show()
             }
             NoteResult.Deleted -> {
                 Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_LONG).show()
