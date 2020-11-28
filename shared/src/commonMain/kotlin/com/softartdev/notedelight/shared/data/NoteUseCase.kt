@@ -16,7 +16,7 @@ class NoteUseCase(
 ) {
     val titleChannel: Channel<String> by lazy { return@lazy Channel<String>() }
 
-    fun doOnRelaunchFlow(function: () -> Unit) {
+    fun doOnRelaunchFlow(function: (() -> Unit)?) {
         dbRepo.relaunchFlowEmitter = function
     }
 

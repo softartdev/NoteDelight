@@ -2,7 +2,6 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
     id 'com.squareup.sqldelight'
     id 'com.android.library'
-    id 'kotlin-android-extensions'
 }
 sqldelight {
     NoteDb {

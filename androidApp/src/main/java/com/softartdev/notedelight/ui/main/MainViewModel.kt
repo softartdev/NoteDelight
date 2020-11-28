@@ -26,4 +26,6 @@ class MainViewModel (
         is SQLiteException -> NoteListResult.NavMain
         else -> NoteListResult.Error(throwable.message)
     }
+
+    override fun onCleared() = noteUseCase.doOnRelaunchFlow(null)
 }
