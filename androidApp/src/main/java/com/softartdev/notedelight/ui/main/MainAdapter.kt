@@ -1,14 +1,11 @@
 package com.softartdev.notedelight.ui.main
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.softartdev.notedelight.R
+import com.softartdev.notedelight.databinding.ItemNoteBinding
 import com.softartdev.notedelight.shared.date.toJvmDate
 import com.softartdev.notedelight.shared.db.Note
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_note.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,8 +22,8 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.NotesViewHolder>() {
     private val simpleDateFormat = SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
-        return NotesViewHolder(v)
+        val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NotesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
@@ -37,12 +34,12 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.NotesViewHolder>() {
     override fun getItemCount(): Int = notes.size
 
     inner class NotesViewHolder(
-            override val containerView: View
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(note: Note) = with(containerView) {
-            item_note_title_text_view.text = note.title
-            item_note_date_text_view.text = simpleDateFormat.format(note.dateModified.toJvmDate())
-            setOnClickListener { clickListener?.onNoteClick(note.id) }
+        private val binding: ItemNoteBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(note: Note) = with(binding) {
+            itemNoteTitleTextView.text = note.title
+            itemNoteDateTextView.text = simpleDateFormat.format(note.dateModified.toJvmDate())
+            root.setOnClickListener { clickListener?.onNoteClick(note.id) }
         }
     }
 
