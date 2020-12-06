@@ -11,8 +11,8 @@ import SwiftUI
 struct LoadingView: View {
     var body: some View {
         VStack {
-            Text("Loading…")
             ActivityIndicator(isAnimating: .constant(true), style: .large)
+            Text("Loading…")
         }
     }
 }

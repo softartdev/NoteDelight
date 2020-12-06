@@ -19,6 +19,8 @@
 		7555FF96242A565B00829871 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF95242A565B00829871 /* iosAppTests.swift */; };
 		7555FFA1242A565B00829871 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FFA0242A565B00829871 /* iosAppUITests.swift */; };
 		7560FCD2257C70BE000CB380 /* NoteDelightApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7560FCD1257C70BE000CB380 /* NoteDelightApp.swift */; };
+		7560FDDB257D094D000CB380 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7560FDDA257D094D000CB380 /* SplashView.swift */; };
+		7560FDE0257D108D000CB380 /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7560FDDF257D108D000CB380 /* SplashViewModel.swift */; };
 		7597CB17254F1223002A90FE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7597CB16254F1223002A90FE /* SignInView.swift */; };
 		759AF7482505548C0020EF40 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759AF7472505548C0020EF40 /* LoadingView.swift */; };
 		759AF74A25057DB70020EF40 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759AF74925057DB70020EF40 /* ContentViewModel.swift */; };
@@ -65,6 +67,8 @@
 		7555FFA2242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7555FFB1242A642300829871 /* shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = shared.framework; path = "../shared/build/xcode-frameworks/shared.framework"; sourceTree = "<group>"; };
 		7560FCD1257C70BE000CB380 /* NoteDelightApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDelightApp.swift; sourceTree = "<group>"; };
+		7560FDDA257D094D000CB380 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		7560FDDF257D108D000CB380 /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
 		7597CB16254F1223002A90FE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		759AF7472505548C0020EF40 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		759AF74925057DB70020EF40 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
@@ -195,6 +199,8 @@
 		7597CB1A254F9D90002A90FE /* Splash */ = {
 			isa = PBXGroup;
 			children = (
+				7560FDDA257D094D000CB380 /* SplashView.swift */,
+				7560FDDF257D108D000CB380 /* SplashViewModel.swift */,
 			);
 			path = Splash;
 			sourceTree = "<group>";
@@ -397,11 +403,13 @@
 				75A416B124FC04930081B551 /* TextView.swift in Sources */,
 				751F6C0F24C4FA66002D3F07 /* Data.swift in Sources */,
 				7560FCD2257C70BE000CB380 /* NoteDelightApp.swift in Sources */,
+				7560FDE0257D108D000CB380 /* SplashViewModel.swift in Sources */,
 				759AF74A25057DB70020EF40 /* ContentViewModel.swift in Sources */,
 				753045DC24BE4ED700105886 /* NoteRow.swift in Sources */,
 				751F6C1124C4FD79002D3F07 /* MasterView.swift in Sources */,
 				759AF74E2505E2E60020EF40 /* DetailViewModel.swift in Sources */,
 				759AF7482505548C0020EF40 /* LoadingView.swift in Sources */,
+				7560FDDB257D094D000CB380 /* SplashView.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				753045DE24BE53A800105886 /* DetailView.swift in Sources */,
 				759AF74C250580380020EF40 /* ErrorView.swift in Sources */,

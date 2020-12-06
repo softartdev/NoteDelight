@@ -21,6 +21,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+                implementation 'co.touchlab:sqliter:0.4.1'
                 implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
                 api "org.jetbrains.kotlinx:kotlinx-datetime:0.1.1"
             }
