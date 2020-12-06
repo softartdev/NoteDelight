@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.multiplatform'
+    id 'org.jetbrains.kotlin.native.cocoapods'
     id 'com.squareup.sqldelight'
     id 'com.android.library'
 }
@@ -10,13 +11,7 @@ sqldelight {
 }
 kotlin {
     android()
-    ios {
-        binaries {
-            framework {
-                baseName = 'shared'
-            }
-        }
-    }
+    ios()
     sourceSets {
         all {
             languageSettings {
@@ -65,28 +60,17 @@ kotlin {
             dependencies {
                 implementation "com.squareup.sqldelight:native-driver:$sqldelight_version"
             }
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(it)
-            iosArm64Main.dependsOn(it)
         }
         iosTest {
         }
     }
+    cocoapods {
+        summary = "Common library for the NoteDelight app"
+        homepage = "https://github.com/softartdev/NoteDelight"
+        ios.deploymentTarget = "14.0"
+        podfile = project.file("../iosApp/Podfile")
+    }
 }
-task(packForXcode, type: Sync) {
-    group = 'build'
-    def mode = System.getenv('CONFIGURATION') ?: 'DEBUG'
-    def sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
-    def targetName = "ios${sdkName.startsWith("iphoneos") ? "Arm64" : "X64"}"
-    def framework = kotlin.targets.getByName(targetName).binaries.getFramework(mode)
-    inputs.property('mode', mode)
-    dependsOn(framework.linkTask)
-    def targetDir = new File(buildDir, 'xcode-frameworks')
-    from({ framework.outputDirectory })
-    into(targetDir)
-}
-tasks.getByName('build').dependsOn(packForXcode)
-
 android {
     compileSdkVersion 30
     defaultConfig {
