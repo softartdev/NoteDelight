@@ -1,0 +1,16 @@
+PODS:
+  - shared (1.0-SNAPSHOT)
+
+DEPENDENCIES:
+  - shared (from `../shared/`)
+
+EXTERNAL SOURCES:
+  shared:
+    :path: "../shared/"
+
+SPEC CHECKSUMS:
+  shared: 47510a3ace14790467d3b8f096fe399dfcaabaec
+
+PODFILE CHECKSUM: 97123fa393c0edceaafe3d1d11ead996c31ef968
+
+COCOAPODS: 1.8.3

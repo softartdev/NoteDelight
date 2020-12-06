@@ -26,9 +26,6 @@ jobs:
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
           echo $default | cat >default
           echo Using default scheme: $default
-      - name: Scheme list
-        working-directory: ${{env.working-directory}}
-        run: xcodebuild -list
       - name: Build
         env:
           scheme: ${{ 'default' }}
