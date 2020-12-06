@@ -27,6 +27,7 @@ jobs:
           echo $default | cat >default
           echo Using default scheme: $default
       - name: Scheme list
+        working-directory: ${{env.working-directory}}
         run: xcodebuild -list
       - name: Build
         env:
