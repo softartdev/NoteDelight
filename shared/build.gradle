@@ -12,7 +12,8 @@ sqldelight {
 }
 kotlin {
     android()
-    ios()
+    // Revert to just ios() when gradle plugin can properly resolve it
+    System.getenv('SDK_NAME')?.startsWith("iphoneos") ? iosArm64("ios") : iosX64("ios")
     sourceSets {
         all {
             languageSettings {
