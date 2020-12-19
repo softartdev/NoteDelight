@@ -34,7 +34,7 @@ Pod::Spec.new do |spec|
             :script => <<-SCRIPT
                 set -ev
                 REPO_ROOT="$PODS_TARGET_SRCROOT"
-                "$REPO_ROOT/../../../../../private/var/folders/1_/q_cwfb5965755wvbrl128bt40000gn/T/wraploc/gradlew" -p "$REPO_ROOT" :shared:syncFramework \
+                "$REPO_ROOT/../gradlew" -p "$REPO_ROOT" :shared:syncFramework \
                     -Pkotlin.native.cocoapods.target=$KOTLIN_TARGET \
                     -Pkotlin.native.cocoapods.configuration=$CONFIGURATION \
                     -Pkotlin.native.cocoapods.cflags="$OTHER_CFLAGS" \
