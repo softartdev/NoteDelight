@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.shared.database
 
 import platform.Foundation.NSFileManager
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -26,6 +27,7 @@ class IosCipherUtilsTest {
         assertEquals(exp, act)
     }
 
+    @Ignore
     @Test
     fun checkKeyTest() {
         IosCipherUtils.deleteDatabase()
