@@ -4,6 +4,7 @@ import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
 import cocoapods.SQLCipher.*
 import kotlinx.cinterop.*
+import okio.IOException
 import platform.Foundation.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
@@ -64,6 +65,119 @@ object IosCipherUtils {
             sqlite3_close(db.value)
         }
         return result
+    }
+
+    @Throws(IOException::class)
+    fun encrypt(password: String?, dbName: String) {
+        val dbPath = getDatabasePath(dbName)
+        val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
+        println("db file is exist = $dbFileIsExist")
+
+        val newPath = getDatabasePath("sqlcipherutils.tmp")
+        println("new file path = $newPath")
+        val newFileIsExist = nsFileManager.fileExistsAtPath(newPath)
+        println("new file is exist = $newFileIsExist")
+        if (!newFileIsExist) {
+            nsFileManager.createFileAtPath(newPath, null, null)
+        }
+        if (dbFileIsExist) memScoped {
+            val db = allocPointerTo<sqlite3>()
+            var rc: Int = sqlite3_open(dbPath, db.ptr)
+            if (rc != SQLITE_OK) printError("Error opening database", db)
+            val stmt = allocPointerTo<sqlite3_stmt>()
+            // Compile statement
+            rc = sqlite3_prepare(db.value, "PRAGMA user_version;", -1, stmt.ptr, null)
+            if (rc != SQLITE_OK) printError("Error preparing database", db)
+            rc = sqlite3_step(stmt.value)
+            if (rc == SQLITE_ROW) {
+                val verPointer = sqlite3_column_text(stmt.value, 0)
+                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                println("user_version: $version")
+                sqlite3_close(db.value)
+
+                rc = sqlite3_open(newPath, db.ptr)
+                if (rc != SQLITE_OK) printError("Error opening database", db)
+                val key = password?.cstr
+                rc = sqlite3_key(db.value, key?.ptr, key?.size ?: 0)
+                if (rc != SQLITE_OK) printError("Error key database", db)
+
+                rc = sqlite3_prepare(db.value, "ATTACH DATABASE ? AS plaintext KEY ''", -1, stmt.ptr, null)
+                if (rc != SQLITE_OK) printError("Error preparing database", db)
+                rc = sqlite3_bind_text16(stmt.value, 1, dbPath.wcstr, newPath.length, null)
+                if (rc != SQLITE_OK) printError("Error bind text", db)
+                // Execute the statement
+                rc = sqlite3_step(stmt.value)
+                if (rc != SQLITE_OK) printError("Error executing statement", db)
+                rc = sqlite3_exec(db.value, "SELECT sqlcipher_export('main', 'plaintext')", null, null, null)
+                if (rc != SQLITE_OK) printError("Error executing sql", db)
+                rc = sqlite3_exec(db.value, "DETACH DATABASE plaintext", null, null, null)
+                if (rc != SQLITE_OK) printError("Error executing sql", db)
+
+                rc = sqlite3_exec(db.value, "PRAGMA user_version = $version", null, null, null)
+                if (rc != SQLITE_OK) printError("Error executing sql", db)
+
+                sqlite3_finalize(stmt.value)
+                sqlite3_close(db.value)
+
+                nsFileManager.removeItemAtPath(dbPath, null)
+                nsFileManager.moveItemAtPath(newPath, dbPath, null)
+            } else printError("Error retrieving database", db)
+        } else throw IOException("$dbName not found")
+    }
+
+    @Throws(IOException::class)
+    fun decrypt(password: String?, dbName: String) {
+        val dbPath = getDatabasePath(dbName)
+        val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
+        println("db file is exist = $dbFileIsExist")
+
+        val newPath = getDatabasePath("sqlcipherutils.tmp")
+        println("new file path = $newPath")
+        val newFileIsExist = nsFileManager.fileExistsAtPath(newPath)
+        println("new file is exist = $newFileIsExist")
+        if (!newFileIsExist) {
+            nsFileManager.createFileAtPath(newPath, null, null)
+        }
+        if (dbFileIsExist) memScoped {
+            val db = allocPointerTo<sqlite3>()
+            var rc: Int = sqlite3_open(dbPath, db.ptr)
+            if (rc != SQLITE_OK) printError("Error opening database", db)
+            val key = password?.cstr
+            rc = sqlite3_key(db.value, key?.ptr, key?.size ?: 0)
+            if (rc != SQLITE_OK) printError("Error key database", db)
+            val stmt = allocPointerTo<sqlite3_stmt>()
+            // Compile statement
+            rc = sqlite3_prepare(db.value, "ATTACH DATABASE ? AS plaintext KEY ''", -1, stmt.ptr, null)
+            if (rc != SQLITE_OK) printError("Error preparing database", db)
+            rc = sqlite3_bind_text16(stmt.value, 1, newPath.wcstr, newPath.length, null)
+            if (rc != SQLITE_OK) printError("Error bind text", db)
+            // Execute the statement
+            rc = sqlite3_step(stmt.value)
+            if (rc != SQLITE_OK) printError("Error executing statement", db)
+            rc = sqlite3_exec(db.value, "SELECT sqlcipher_export('plaintext')", null, null, null)
+            if (rc != SQLITE_OK) printError("Error executing sql", db)
+            rc = sqlite3_exec(db.value, "DETACH DATABASE plaintext", null, null, null)
+            if (rc != SQLITE_OK) printError("Error executing sql", db)
+            rc = sqlite3_prepare(db.value, "PRAGMA user_version;", -1, stmt.ptr, null)
+            if (rc != SQLITE_OK) printError("Error preparing database", db)
+            rc = sqlite3_step(stmt.value)
+            sqlite3_finalize(stmt.value)
+            sqlite3_close(db.value)
+            if (rc == SQLITE_ROW) {
+                val verPointer = sqlite3_column_text(stmt.value, 0)
+                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                println("user_version: $version")
+
+                rc = sqlite3_open(newPath, db.ptr)
+                if (rc != SQLITE_OK) printError("Error opening database", db)
+                rc = sqlite3_exec(db.value, "PRAGMA user_version = $version", null, null, null)
+                if (rc != SQLITE_OK) printError("Error executing sql", db)
+                sqlite3_close(db.value)
+
+                nsFileManager.removeItemAtPath(dbPath, null)
+                nsFileManager.moveItemAtPath(newPath, dbPath, null)
+            } else printError("Error retrieving database", db)
+        } else throw IOException("$dbName not found")
     }
 
     private fun printError(title: String = "Error", db: CPointerVarOf<CPointer<sqlite3>>) {

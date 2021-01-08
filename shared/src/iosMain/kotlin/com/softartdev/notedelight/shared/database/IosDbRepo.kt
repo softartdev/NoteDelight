@@ -6,7 +6,7 @@ import kotlin.native.concurrent.freeze
 
 class IosDbRepo : DatabaseRepo() {
 
-    private var dbHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var dbHolder: DatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
         get() = IosCipherUtils.getDatabaseState(DB_NAME)
@@ -28,9 +28,8 @@ class IosDbRepo : DatabaseRepo() {
 
     override fun decrypt(oldPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseHolder(
-            key = oldPass.toString()
-        ).freeze()
+        IosCipherUtils.decrypt(oldPass.toString(), DB_NAME)
+        dbHolder = IosDatabaseHolder().freeze()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
@@ -43,8 +42,9 @@ class IosDbRepo : DatabaseRepo() {
 
     override fun encrypt(newPass: CharSequence) {
         closeDatabase()
+        IosCipherUtils.encrypt(newPass.toString(), DB_NAME)
         dbHolder = IosDatabaseHolder(
-            rekey = newPass.toString()
+            key = newPass.toString()
         ).freeze()
     }
 

@@ -1,12 +1,13 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.BaseTest
+import com.softartdev.notedelight.shared.data.CryptUseCase
 import platform.Foundation.NSFileManager
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class IosCipherUtilsTest {
+class IosCipherUtilsTest : BaseTest() {
 
     @Test
     fun getDatabaseStateTest() {
@@ -27,9 +28,8 @@ class IosCipherUtilsTest {
         assertEquals(exp, act)
     }
 
-    @Ignore
     @Test
-    fun checkKeyTest() {
+    fun checkKeyTest() = runTest {
         IosCipherUtils.deleteDatabase()
         IosDatabaseHolder().close()
 
@@ -45,7 +45,8 @@ class IosCipherUtilsTest {
         assertEquals(exp, act, "incorrect pass")
 
         exp = true
-        act = IosCipherUtils.checkKey("password", DatabaseRepo.DB_NAME)
+//        act = IosCipherUtils.checkKey("password", DatabaseRepo.DB_NAME)
+        act = CryptUseCase(dbRepo).checkPassword("password")
         assertEquals(exp, act, "correct pass")
     }
 
