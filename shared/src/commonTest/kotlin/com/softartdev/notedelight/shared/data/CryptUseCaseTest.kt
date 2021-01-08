@@ -3,6 +3,7 @@ package com.softartdev.notedelight.shared.data
 import com.softartdev.notedelight.shared.BaseTest
 import kotlin.test.*
 
+@Ignore
 class CryptUseCaseTest : BaseTest() {
 
     private var cryptUseCase = CryptUseCase(dbRepo)
