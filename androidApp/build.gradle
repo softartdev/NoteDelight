@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: "com.slack.keeper"
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -54,7 +55,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-test-rules.pro'
             signingConfig signingConfigs.config
-            debuggable true
+//            debuggable true
         }
     }
     compileOptions {
