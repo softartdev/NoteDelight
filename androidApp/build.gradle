@@ -79,6 +79,9 @@ android {
         pickFirst "META-INF/LGPL2.1"
     }
     testBuildType "release"
+    keeper {
+        enableL8RuleSharing = true
+    }
 }
 
 dependencies {
