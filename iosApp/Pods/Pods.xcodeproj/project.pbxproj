@@ -9,12 +9,12 @@
 /* Begin PBXAggregateTarget section */
 		8777C9F6889E59EFFD631D80AEE9048B /* shared */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 1AA496C844EA4C3A91693B89D8E1F2FA /* Build configuration list for PBXAggregateTarget "shared" */;
+			buildConfigurationList = 838121D2AE1F436D99E23CEA4BA29559 /* Build configuration list for PBXAggregateTarget "shared" */;
 			buildPhases = (
-				98DBA1AC162A9CCF52EDD9B74F89D3C6 /* [CP-User] Build shared */,
+				110BD73798FDEAC7836583B373B9C0D8 /* [CP-User] Build shared */,
 			);
 			dependencies = (
-				ECC905A942A4D4D17686CF211E5CA738 /* PBXTargetDependency */,
+				3701FAE1401DDABB975190ECC0FAF42B /* PBXTargetDependency */,
 			);
 			name = shared;
 		};
@@ -40,7 +40,7 @@
 			remoteGlobalIDString = 8777C9F6889E59EFFD631D80AEE9048B;
 			remoteInfo = shared;
 		};
-		A38A194845EFC208CCE281CC021B90A8 /* PBXContainerItemProxy */ = {
+		5BEFDFCD1F101A8BFDD240882F339EDD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -365,7 +365,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		98DBA1AC162A9CCF52EDD9B74F89D3C6 /* [CP-User] Build shared */ = {
+		110BD73798FDEAC7836583B373B9C0D8 /* [CP-User] Build shared */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -398,6 +398,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3701FAE1401DDABB975190ECC0FAF42B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SQLCipher;
+			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
+			targetProxy = 5BEFDFCD1F101A8BFDD240882F339EDD /* PBXContainerItemProxy */;
+		};
 		54AD747119406B911AF457AAEF5A749E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = shared;
@@ -410,33 +416,9 @@
 			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
 			targetProxy = E116FE726CB0FAF0C04E3AE996D52A47 /* PBXContainerItemProxy */;
 		};
-		ECC905A942A4D4D17686CF211E5CA738 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SQLCipher;
-			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
-			targetProxy = A38A194845EFC208CCE281CC021B90A8 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		14388B7806EA6300D54C19154297D583 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35548E3BD8DA30925E8FE97E67B84868 /* shared.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		25AE5D7213CD883C855EBD3181B69E13 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFE434E808F4ACDAD53CAD2893B9A8DE /* SQLCipher.release.xcconfig */;
@@ -609,6 +591,23 @@
 			};
 			name = Debug;
 		};
+		734345B02A30CDB59C7CC11266EFB7F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 95B09EA82E7AF9ACCCCAF3E55C859116 /* shared.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		8B5A46FF8D3C1289CDEE3BAFACABCD2A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -671,23 +670,6 @@
 			};
 			name = Release;
 		};
-		9804078882DDD28ECEF3B7F9484A5073 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 95B09EA82E7AF9ACCCCAF3E55C859116 /* shared.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		99CB34FB08E1B20E08C156E6BCF8B142 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */;
@@ -726,18 +708,27 @@
 			};
 			name = Release;
 		};
+		B29AB23C1B12EB5054126E50FA898711 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35548E3BD8DA30925E8FE97E67B84868 /* shared.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1AA496C844EA4C3A91693B89D8E1F2FA /* Build configuration list for PBXAggregateTarget "shared" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9804078882DDD28ECEF3B7F9484A5073 /* Debug */,
-				14388B7806EA6300D54C19154297D583 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -761,6 +752,15 @@
 			buildConfigurations = (
 				30EB25DDF97F4C2940FCA02A0E411056 /* Debug */,
 				25AE5D7213CD883C855EBD3181B69E13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		838121D2AE1F436D99E23CEA4BA29559 /* Build configuration list for PBXAggregateTarget "shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				734345B02A30CDB59C7CC11266EFB7F1 /* Debug */,
+				B29AB23C1B12EB5054126E50FA898711 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
