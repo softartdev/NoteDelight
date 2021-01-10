@@ -1,12 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.android.gms.oss-licenses-plugin'
+    id 'com.slack.keeper'
 }
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
-apply plugin: "com.slack.keeper"
-
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -33,11 +32,6 @@ android {
         testInstrumentationRunnerArgument "listener", "leakcanary.FailTestOnLeakRunListener"
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en', 'ru'
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.incremental": "true"]
-            }
-        }
     }
     buildFeatures {
         viewBinding true
@@ -53,10 +47,12 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-test-rules.pro'
             signingConfig signingConfigs.config
-//            debuggable true
         }
+    }
+    packagingOptions {
+        pickFirst "META-INF/AL2.0"
+        pickFirst "META-INF/LGPL2.1"
     }
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -74,14 +70,10 @@ android {
         unitTests.returnDefaultValues = true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
-    packagingOptions {
-        pickFirst "META-INF/AL2.0"
-        pickFirst "META-INF/LGPL2.1"
-    }
-    testBuildType "release"
     keeper {
         enableL8RuleSharing = true
     }
+    testBuildType "release"
 }
 
 dependencies {
