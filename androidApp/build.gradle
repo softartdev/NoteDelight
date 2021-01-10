@@ -24,8 +24,8 @@ android {
         applicationId "com.softartdev.noteroom"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 63
-        versionName "6.3"
+        versionCode 64
+        versionName "6.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
