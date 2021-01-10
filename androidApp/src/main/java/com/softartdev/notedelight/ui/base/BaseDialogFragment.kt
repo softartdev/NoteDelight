@@ -70,6 +70,11 @@ abstract class BaseDialogFragment(
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_FIRST_USER, null)
     }
 
+    override fun onDestroy() {
+        scope.close()
+        super.onDestroy()
+    }
+
     inline fun <reified T : ViewModel> viewModel(
         qualifier: Qualifier? = null,
         noinline state: BundleDefinition? = null,
