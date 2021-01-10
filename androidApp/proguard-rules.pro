@@ -36,6 +36,10 @@
 -keep class com.google.firebase.crashlytics.* { *; }
 -dontwarn com.google.firebase.crashlytics.**
 
+-keep class com.softartdev.notedelight.shared.database.TestSchema { *; }
+
+-keepclassmembers class com.commonsware.cwac.saferoom.SafeHelperFactory { *; }
+
 -keepclassmembers class androidx.arch.core.executor.ArchTaskExecutor { *; }
 
 -keepclassmembers class net.sqlcipher.CursorWindow { *; }
@@ -44,6 +48,7 @@
 -keepclassmembers class net.sqlcipher.database.SQLiteQuery { *; }
 -keepclassmembers class net.sqlcipher.database.SQLiteStatement { *; }
 
+-keep interface kotlinx.coroutines.Delay { *; }
 -keepclassmembers class kotlin.coroutines.jvm.internal.Boxing { *; }
 -keepclassmembers class kotlinx.coroutines.Job { *; }
 -keepclassmembers class kotlinx.coroutines.BuildersKt { *; }
