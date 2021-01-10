@@ -19,8 +19,6 @@ jobs:
         run: ./.github/scripts/decrypt_secret.sh
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-      - name: Build Kotlin Multiplatform shared module
-        run: ./gradlew packForXcode
       - name: Set Default Scheme
         working-directory: ${{env.working-directory}}
         run: |

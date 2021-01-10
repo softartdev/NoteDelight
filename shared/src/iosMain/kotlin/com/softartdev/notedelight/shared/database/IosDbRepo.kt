@@ -9,7 +9,10 @@ class IosDbRepo : DatabaseRepo() {
     private var dbHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
 
     override val databaseState: PlatformSQLiteState
-        get() = TODO("Not yet implemented")
+        get() = when (dbHolder) { //TODO implement check
+            null -> PlatformSQLiteState.DOES_NOT_EXIST
+            else -> PlatformSQLiteState.UNENCRYPTED
+        }
 
     override val noteQueries: NoteQueries
         get() = dbHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
