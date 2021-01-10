@@ -29,6 +29,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
+        testInstrumentationRunnerArgument "listener", "leakcanary.FailTestOnLeakRunListener"
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en', 'ru'
         javaCompileOptions {
@@ -129,5 +130,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
     androidTestImplementation "androidx.arch.core:core-testing:$arch_version"
     androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation "com.squareup.leakcanary:leakcanary-android-instrumentation:$leak_canary_version"
     androidTestUtil 'androidx.test:orchestrator:1.3.0'
 }
