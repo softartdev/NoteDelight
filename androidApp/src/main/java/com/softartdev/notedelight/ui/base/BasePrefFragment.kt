@@ -23,6 +23,11 @@ abstract class BasePrefFragment : PreferenceFragmentCompat(), KoinScopeComponent
         getKoin().logger.debug("Open Fragment Scope: $scope")
     }
 
+    override fun onDestroy() {
+        scope.close()
+        super.onDestroy()
+    }
+
     inline fun <reified T : ViewModel> viewModel(
         qualifier: Qualifier? = null,
         noinline state: BundleDefinition? = null,

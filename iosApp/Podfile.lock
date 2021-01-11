@@ -1,27 +1,16 @@
 PODS:
-  - shared (1.0-SNAPSHOT):
-    - SQLCipher (~> 4.0)
-  - SQLCipher (4.4.2):
-    - SQLCipher/standard (= 4.4.2)
-  - SQLCipher/common (4.4.2)
-  - SQLCipher/standard (4.4.2):
-    - SQLCipher/common
+  - shared (1.0-SNAPSHOT)
 
 DEPENDENCIES:
   - shared (from `../shared/`)
-
-SPEC REPOS:
-  trunk:
-    - SQLCipher
 
 EXTERNAL SOURCES:
   shared:
     :path: "../shared/"
 
 SPEC CHECKSUMS:
-  shared: 73f49fb5e4a01bd8c9f3d537c4bbd385109e4c3a
-  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
+  shared: 97d36c9cedae90d3bbd8e6bb3d4f41d172dfbd88
 
 PODFILE CHECKSUM: 97123fa393c0edceaafe3d1d11ead996c31ef968
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1
