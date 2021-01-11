@@ -73,14 +73,14 @@ kotlin {
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", "~> 4.0")
+//        pod("SQLCipher", "~> 4.0")
         useLibraries()
     }
 }
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-        linkSqlite = false
+//        linkSqlite = false
     }
 }
 android {
