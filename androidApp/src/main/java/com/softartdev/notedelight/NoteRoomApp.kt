@@ -18,6 +18,7 @@ class NoteRoomApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        if (isInLeakCanaryAnalyzerProcess) return
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else CrashlyticsTree())
         startKoin {
