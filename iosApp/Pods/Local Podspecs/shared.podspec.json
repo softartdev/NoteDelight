@@ -10,11 +10,16 @@
   "license": "",
   "summary": "Common library for the NoteDelight app",
   "static_framework": true,
-  "vendored_frameworks": "build/cocoapods/framework/shared.framework",
+  "vendored_frameworks": "build/cocoapods/framework/SharedCode.framework",
   "libraries": "c++",
   "module_name": "shared_umbrella",
   "platforms": {
     "ios": "14.0"
+  },
+  "dependencies": {
+    "SQLCipher": [
+      "~> 4.0"
+    ]
   },
   "pod_target_xcconfig": {
     "KOTLIN_TARGET[sdk=iphonesimulator*]": "ios_x64",
