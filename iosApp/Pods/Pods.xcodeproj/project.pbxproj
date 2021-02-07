@@ -9,9 +9,9 @@
 /* Begin PBXAggregateTarget section */
 		8777C9F6889E59EFFD631D80AEE9048B /* shared */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 8CAC1BD9FFF358870E12D74FD0D7C495 /* Build configuration list for PBXAggregateTarget "shared" */;
+			buildConfigurationList = FE7F1B058CC88B893703063BFC238FDF /* Build configuration list for PBXAggregateTarget "shared" */;
 			buildPhases = (
-				2E7CB791D88161BB0A8E807EEA475AEF /* [CP-User] Build shared */,
+				079DB71EBB31E9C31625E02C9DD64BCC /* [CP-User] Build shared */,
 			);
 			dependencies = (
 			);
@@ -241,7 +241,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2E7CB791D88161BB0A8E807EEA475AEF /* [CP-User] Build shared */ = {
+		079DB71EBB31E9C31625E02C9DD64BCC /* [CP-User] Build shared */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -249,7 +249,7 @@
 			name = "[CP-User] Build shared";
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "                set -ev\n                REPO_ROOT=\"$PODS_TARGET_SRCROOT\"\n                \"$REPO_ROOT/../../../../../private/var/folders/1_/q_cwfb5965755wvbrl128bt40000gn/T/wraploc/gradlew\" -p \"$REPO_ROOT\" :shared:syncFramework                     -Pkotlin.native.cocoapods.target=$KOTLIN_TARGET                     -Pkotlin.native.cocoapods.configuration=$CONFIGURATION                     -Pkotlin.native.cocoapods.cflags=\"$OTHER_CFLAGS\"                     -Pkotlin.native.cocoapods.paths.headers=\"$HEADER_SEARCH_PATHS\"                     -Pkotlin.native.cocoapods.paths.frameworks=\"$FRAMEWORK_SEARCH_PATHS\"\n";
+			shellScript = "                set -ev\n                REPO_ROOT=\"$PODS_TARGET_SRCROOT\"\n                \"$REPO_ROOT/../gradlew\" -p \"$REPO_ROOT\" :shared:syncFramework                     -Pkotlin.native.cocoapods.target=$KOTLIN_TARGET                     -Pkotlin.native.cocoapods.configuration=$CONFIGURATION                     -Pkotlin.native.cocoapods.cflags=\"$OTHER_CFLAGS\"                     -Pkotlin.native.cocoapods.paths.headers=\"$HEADER_SEARCH_PATHS\"                     -Pkotlin.native.cocoapods.paths.frameworks=\"$FRAMEWORK_SEARCH_PATHS\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -274,24 +274,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		2016E9E9B4B62FD4F6CC3C1A3FA0D710 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35548E3BD8DA30925E8FE97E67B84868 /* shared.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		2ABCA4785D70D15D7C2CA1178D095C6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A2FB55B5C37861BC78ECD1420D818C3 /* Pods-iosApp.release.xcconfig */;
@@ -458,7 +440,25 @@
 			};
 			name = Release;
 		};
-		8D485F54127943CC3274875BEFF2CB82 /* Debug */ = {
+		B02F3C9C74D5291330A45CA51C8BB3A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35548E3BD8DA30925E8FE97E67B84868 /* shared.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C697CBB083F543C9446391AF6735CF03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 95B09EA82E7AF9ACCCCAF3E55C859116 /* shared.debug.xcconfig */;
 			buildSettings = {
@@ -524,20 +524,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8CAC1BD9FFF358870E12D74FD0D7C495 /* Build configuration list for PBXAggregateTarget "shared" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8D485F54127943CC3274875BEFF2CB82 /* Debug */,
-				2016E9E9B4B62FD4F6CC3C1A3FA0D710 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		ADD6EF48792A689B82F024EED67757F9 /* Build configuration list for PBXNativeTarget "Pods-iosApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C756D25ADFE601DB915CED5A717799D5 /* Debug */,
 				2ABCA4785D70D15D7C2CA1178D095C6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE7F1B058CC88B893703063BFC238FDF /* Build configuration list for PBXAggregateTarget "shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C697CBB083F543C9446391AF6735CF03 /* Debug */,
+				B02F3C9C74D5291330A45CA51C8BB3A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
