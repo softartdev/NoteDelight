@@ -72,7 +72,7 @@ kotlin {
         val iosTest by getting
     }
     cocoapods {
-        frameworkName = "SharedCode"
+//        frameworkName = "SharedCode"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"

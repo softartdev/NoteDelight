@@ -17,6 +17,7 @@
 				3701FAE1401DDABB975190ECC0FAF42B /* PBXTargetDependency */,
 			);
 			name = shared;
+			productName = shared;
 		};
 /* End PBXAggregateTarget section */
 
@@ -59,7 +60,7 @@
 /* Begin PBXFileReference section */
 		0187F135D5F61750CD24C3E04B6E8B64 /* Pods-iosApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-frameworks.sh"; sourceTree = "<group>"; };
 		13A2872E600E9A746D096C16F2EBCBCA /* SQLCipher-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SQLCipher-umbrella.h"; sourceTree = "<group>"; };
-		1FD5F5B0E4809A3AE2ECDE142F44A6BB /* SQLCipher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SQLCipher.framework; path = SQLCipher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FD5F5B0E4809A3AE2ECDE142F44A6BB /* SQLCipher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLCipher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35548E3BD8DA30925E8FE97E67B84868 /* shared.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = shared.release.xcconfig; sourceTree = "<group>"; };
 		3ECD5041F27CC497ED97A9B292B3F0BC /* SQLCipher-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SQLCipher-prefix.pch"; sourceTree = "<group>"; };
 		3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -67,23 +68,23 @@
 		4769AA64068661236B3D136F70EEB862 /* SQLCipher-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SQLCipher-dummy.m"; sourceTree = "<group>"; };
 		54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iosApp-dummy.m"; sourceTree = "<group>"; };
 		5AC974169B09D4545F741E9A2147610E /* Pods-iosApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-Info.plist"; sourceTree = "<group>"; };
+		73D4D08B8C9FAD17B10E8E5C0EB49A76 /* shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = shared.framework; path = build/cocoapods/framework/shared.framework; sourceTree = "<group>"; };
 		8B524AABE529FB8A2D151B05321336E0 /* Pods-iosApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iosApp.modulemap"; sourceTree = "<group>"; };
-		8E304A28A42503752DEBF9E1B66E07AB /* SharedCode.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SharedCode.framework; path = build/cocoapods/framework/SharedCode.framework; sourceTree = "<group>"; };
 		952925E838A0DE4D7BDC4EE54022633D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		95B09EA82E7AF9ACCCCAF3E55C859116 /* shared.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = shared.debug.xcconfig; sourceTree = "<group>"; };
 		9BB0B8B698D4C35D4F9A07EF70910170 /* Pods-iosApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-acknowledgements.plist"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9F1FFC8B10F4D7D4F37606E8959B3F29 /* Pods-iosApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iosApp-acknowledgements.markdown"; sourceTree = "<group>"; };
 		9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		AF73D48D694B262EA8800D1CA5A7A175 /* SQLCipher-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SQLCipher-Info.plist"; sourceTree = "<group>"; };
-		B097DD7534E741D5C41838011D755842 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_iosApp.framework; path = "Pods-iosApp.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B097DD7534E741D5C41838011D755842 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B2A0B779CE31153B2C0D8A7F8DC7FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		E2ACA340E697922AEC7D81820FD63046 /* sqlite3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		EFE434E808F4ACDAD53CAD2893B9A8DE /* SQLCipher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.release.xcconfig; sourceTree = "<group>"; };
 		F1DBEF6B264AD5F07660CCEDCB9E0F82 /* SQLCipher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.debug.xcconfig; sourceTree = "<group>"; };
 		F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iosApp-umbrella.h"; sourceTree = "<group>"; };
-		FB1BF8BE937671FB0F330C2D28634477 /* shared.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = shared.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		FC29DBE0409C118D71AA46627E3967DF /* sqlite3.c */ = {isa = PBXFileReference; includeInIndex = 1; path = sqlite3.c; sourceTree = "<group>"; };
+		FB1BF8BE937671FB0F330C2D28634477 /* shared.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = shared.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		FC29DBE0409C118D71AA46627E3967DF /* sqlite3.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,14 +190,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		778D21FA831222D0DAB2982D201022E5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				8E304A28A42503752DEBF9E1B66E07AB /* SharedCode.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		7CE426AC267333500FABE7BA0A5A42A0 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,6 +197,14 @@
 				C3B2A0B779CE31153B2C0D8A7F8DC7FE /* Security.framework */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		7DBF81461E18ACE1B4BD971BAC841CF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73D4D08B8C9FAD17B10E8E5C0EB49A76 /* shared.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		8CC7165FC5AD4520FA5AC9882B124AF0 /* Products */ = {
@@ -233,7 +234,6 @@
 				EEA4CB4DFE16543549476985A542D6C6 /* common */,
 				4F56363B58525BCB3F7D2228EF3BFCA6 /* Support Files */,
 			);
-			name = SQLCipher;
 			path = SQLCipher;
 			sourceTree = "<group>";
 		};
@@ -249,7 +249,7 @@
 		EEF3277DCE2E4B31CF76A57AB68C2BA1 /* shared */ = {
 			isa = PBXGroup;
 			children = (
-				778D21FA831222D0DAB2982D201022E5 /* Frameworks */,
+				7DBF81461E18ACE1B4BD971BAC841CF7 /* Frameworks */,
 				569B56E5B05425CAE32676C6049DC8CB /* Pod */,
 				5CB66AAACA3977B45E9869C360E9F289 /* Support Files */,
 			);
@@ -325,7 +325,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1240;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 9.3";
@@ -434,7 +434,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SQLCipher/SQLCipher-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SQLCipher/SQLCipher-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -469,7 +469,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SQLCipher/SQLCipher-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SQLCipher/SQLCipher-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

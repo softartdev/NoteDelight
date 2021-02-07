@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
     spec.summary                  = 'Common library for the NoteDelight app'
 
     spec.static_framework         = true
-    spec.vendored_frameworks      = "build/cocoapods/framework/SharedCode.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/shared.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 
