@@ -16,6 +16,11 @@
   "platforms": {
     "ios": "14.0"
   },
+  "dependencies": {
+    "SQLCipher": [
+      "~> 4.0"
+    ]
+  },
   "pod_target_xcconfig": {
     "KOTLIN_TARGET[sdk=iphonesimulator*]": "ios_x64",
     "KOTLIN_TARGET[sdk=iphoneos*]": "ios_arm",

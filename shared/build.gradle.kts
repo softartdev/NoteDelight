@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -10,13 +12,7 @@ group = "com.softartdev.notedelight.shared"
 version = "1.0-SNAPSHOT"
 kotlin {
     android()
-    // Revert to just ios() when gradle plugin can properly resolve it
-    val onPhone = System.getenv("SDK_NAME")?.startsWith("iphoneos") ?: false
-    if (onPhone) {
-        iosArm64("ios")
-    } else {
-        iosX64("ios")
-    }
+    ios()
     sourceSets {
         all {
             languageSettings.apply {
@@ -66,18 +62,31 @@ kotlin {
             dependencies {
                 implementation("co.touchlab:sqliter:0.7.1")
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
+                implementation("co.touchlab:sqliter:0.7.1") {
+                    version {
+                        strictly("0.7.1")
+                    }
+                }
             }
         }
         val iosTest by getting
     }
     cocoapods {
+//        frameworkName = "SharedCode"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-//        pod("SQLCipher", "~> 4.0")
-        useLibraries()
+        pod("SQLCipher", "~> 4.0")
+//        useLibraries()
     }
+    targets.filterIsInstance<KotlinNativeTarget>()
+        .map(KotlinNativeTarget::binaries)
+        .filterIsInstance<Framework>()
+        .forEach {
+            it.isStatic = false
+            it.linkerOpts.add("-lsqlite3")
+        }
 }
 sqldelight {
     database("NoteDb") {
