@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
+import com.softartdev.notedelight.databinding.ActivityMainBinding
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.note.NoteActivity
@@ -14,35 +16,33 @@ import com.softartdev.notedelight.util.autoCleared
 import com.softartdev.notedelight.util.gone
 import com.softartdev.notedelight.util.tintIcon
 import com.softartdev.notedelight.util.visible
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.view_error.view.*
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(
         contentLayoutId = R.layout.activity_main
 ), MainAdapter.ClickListener, Observer<NoteListResult> {
 
-    private val mainViewModel by lifecycleScope.viewModel<MainViewModel>(this)
+    private val mainViewModel by viewModel<MainViewModel>()
+    private val binding by viewBinding(ActivityMainBinding::bind, android.R.id.content)
     private var mainAdapter by autoCleared<MainAdapter>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        main_swipe_refresh.apply {
+        binding.mainSwipeRefresh.apply {
             setProgressBackgroundColorSchemeResource(R.color.secondary)
             setColorSchemeResources(R.color.on_secondary)
             setOnRefreshListener { mainViewModel.updateNotes() }
         }
         mainAdapter = MainAdapter()
         mainAdapter.clickListener = this
-        notes_recycler_view.apply {
+        binding.notesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mainAdapter
         }
-        add_note_fab.setOnClickListener {
+        binding.addNoteFab.setOnClickListener {
             startActivity(NoteActivity.getStartIntent(this, 0L))
         }
-        main_error_view.button_reload.setOnClickListener { mainViewModel.updateNotes() }
+        binding.mainErrorView.reloadButton.setOnClickListener { mainViewModel.updateNotes() }
         mainViewModel.resultLiveData.observe(this, this)
         mainViewModel.updateNotes()
     }
@@ -70,21 +70,21 @@ class MainActivity : BaseActivity(
     }
 
     private fun showProgress(show: Boolean) {
-        if (main_swipe_refresh.isRefreshing) {
-            main_swipe_refresh.isRefreshing = show
+        if (binding.mainSwipeRefresh.isRefreshing) {
+            binding.mainSwipeRefresh.isRefreshing = show
         } else {
-            main_progress_view.apply { if (show) visible() else gone() }
+            binding.mainProgressView.apply { if (show) visible() else gone() }
         }
     }
 
     private fun showEmpty(show: Boolean) {
-        main_empty_view.apply { if (show) visible() else gone() }
+        binding.mainEmptyView.apply { if (show) visible() else gone() }
     }
 
     private fun showError(message: String?) {
-        main_error_view.apply {
+        binding.mainErrorView.apply {
             visible()
-            text_error_message.text = message
+            messageTextView.text = message
         }
     }
 

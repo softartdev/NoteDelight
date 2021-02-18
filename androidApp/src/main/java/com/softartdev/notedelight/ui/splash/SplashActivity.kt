@@ -3,15 +3,14 @@ package com.softartdev.notedelight.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity
-import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SplashActivity : AppCompatActivity(), Observer<SplashResult> {
-    private val splashViewModel by lifecycleScope.viewModel<SplashViewModel>(this)
+class SplashActivity : BaseActivity(), Observer<SplashResult> {
+    private val splashViewModel by viewModel<SplashViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,0 +1,27 @@
+PODS:
+  - shared (1.0-SNAPSHOT):
+    - SQLCipher (~> 4.0)
+  - SQLCipher (4.4.2):
+    - SQLCipher/standard (= 4.4.2)
+  - SQLCipher/common (4.4.2)
+  - SQLCipher/standard (4.4.2):
+    - SQLCipher/common
+
+DEPENDENCIES:
+  - shared (from `../shared/`)
+
+SPEC REPOS:
+  trunk:
+    - SQLCipher
+
+EXTERNAL SOURCES:
+  shared:
+    :path: "../shared/"
+
+SPEC CHECKSUMS:
+  shared: e304709d84327deafa3a0d2e9d457a9a28183e2c
+  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
+
+PODFILE CHECKSUM: 97123fa393c0edceaafe3d1d11ead996c31ef968
+
+COCOAPODS: 1.10.1

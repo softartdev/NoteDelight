@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.database.TestSchema
+import com.squareup.sqldelight.internal.Atomic
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlin.test.*
@@ -15,7 +16,9 @@ class NoteUseCaseTest : BaseTest() {
     @BeforeTest
     fun setUp() = runTest {
         val noteDb = dbRepo.buildDatabaseInstanceIfNeed().noteDb
-        notes.forEach(noteDb.noteQueries::insert)
+        noteDb.noteQueries.transaction {
+            notes.forEach(noteDb.noteQueries::insert)
+        }
     }
 
     @AfterTest
@@ -39,6 +42,19 @@ class NoteUseCaseTest : BaseTest() {
     }
 
     @Test
+    fun launchNotes() {
+        val count = Atomic(0)
+        noteUseCase.launchNotes(onSuccess = { actNotes ->
+            count.set(count.get() + 1)
+            println("launchNotes - #${count.get()} onSuccess = $actNotes")
+            if (actNotes.isNotEmpty()) {
+                println("launchNotes - #${count.get()} assertEquals")
+                assertEquals(notes, actNotes)
+            }
+        }, onFailure = { throwable -> throw throwable })
+    }
+
+    @Test
     fun createNote() = runTest {
         assertEquals(notes.last().id.inc(), noteUseCase.createNote())
     }
@@ -48,7 +64,7 @@ class NoteUseCaseTest : BaseTest() {
         val id: Long = 2
         val newTitle = "new title"
         val newText = "new text"
-        assertEquals(1, noteUseCase.saveNote(id, newTitle, newText))
+        noteUseCase.saveNote(id, newTitle, newText)
         val updatedNote = noteUseCase.loadNote(id)
         assertEquals(newTitle, updatedNote.title)
         assertEquals(newText, updatedNote.text)

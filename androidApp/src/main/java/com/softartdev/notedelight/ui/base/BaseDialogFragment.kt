@@ -10,13 +10,25 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.lifecycle.ViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.scope.fragmentScope
+import org.koin.androidx.viewmodel.ViewModelOwner
+import org.koin.androidx.viewmodel.ViewModelOwnerDefinition
+import org.koin.androidx.viewmodel.scope.BundleDefinition
+import org.koin.androidx.viewmodel.scope.getViewModel
+import org.koin.core.parameter.ParametersDefinition
+import org.koin.core.qualifier.Qualifier
+import org.koin.core.scope.KoinScopeComponent
+import org.koin.core.scope.Scope
 
 abstract class BaseDialogFragment(
         @StringRes private val titleStringRes: Int,
         @LayoutRes private val dialogLayoutRes: Int
-) : AppCompatDialogFragment() {
+) : AppCompatDialogFragment(), KoinScopeComponent {
+
+    override val scope: Scope by lazy { fragmentScope() }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
             MaterialAlertDialogBuilder(requireActivity())
@@ -32,6 +44,11 @@ abstract class BaseDialogFragment(
             val okButton = requireDialog().findViewById<Button>(android.R.id.button1)
             okButton.setOnClickListener { onOkClicked() }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getKoin().logger.debug("Open Fragment Scope: $scope")
     }
 
     abstract fun onOkClicked()
@@ -51,6 +68,20 @@ abstract class BaseDialogFragment(
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_FIRST_USER, null)
+    }
+
+    override fun onDestroy() {
+        scope.close()
+        super.onDestroy()
+    }
+
+    inline fun <reified T : ViewModel> viewModel(
+        qualifier: Qualifier? = null,
+        noinline state: BundleDefinition? = null,
+        noinline owner: ViewModelOwnerDefinition = { ViewModelOwner.from(this, this) },
+        noinline parameters: ParametersDefinition? = null
+    ): Lazy<T> = lazy(LazyThreadSafetyMode.NONE) {
+        scope.getViewModel(qualifier, state, owner, T::class, parameters)
     }
 
     companion object {
