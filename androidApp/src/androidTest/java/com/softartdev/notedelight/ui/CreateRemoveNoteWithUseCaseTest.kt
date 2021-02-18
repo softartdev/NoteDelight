@@ -5,10 +5,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
@@ -34,9 +34,8 @@ class CreateRemoveNoteWithUseCaseTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Rule
-    @JvmField
-    var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+    @get:Rule
+    var activityScenarioRule = activityScenarioRule<SplashActivity>()
 
     private val noteUseCase by inject(NoteUseCase::class.java)
 
