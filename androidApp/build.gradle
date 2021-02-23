@@ -49,14 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
-        staging {
-            initWith release
-            matchingFallbacks = ['release']
-            testProguardFile('test-rules.pro')
-            debuggable true
-        }
     }
-    sourceSets.staging.java.srcDirs += 'src/release/java'
     packagingOptions {
         pickFirst "META-INF/AL2.0"
         pickFirst "META-INF/LGPL2.1"
@@ -81,7 +74,7 @@ android {
         enableL8RuleSharing = true
         enableAssertions.set(false)
     }
-    testBuildType "staging"
+    testBuildType "release"
 }
 
 dependencies {

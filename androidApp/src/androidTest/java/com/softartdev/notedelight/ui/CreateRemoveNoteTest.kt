@@ -9,9 +9,9 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
@@ -28,8 +28,9 @@ class CreateRemoveNoteTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    @get:Rule
-    var activityScenarioRule = activityScenarioRule<SplashActivity>()
+    @Rule
+    @JvmField
+    var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
     @Before
     fun registerIdlingResource() {
