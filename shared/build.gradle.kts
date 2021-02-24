@@ -11,6 +11,40 @@ plugins {
 }
 group = "com.softartdev.notedelight.shared"
 version = "1.0"
+
+android {
+    compileSdkVersion(30)
+    defaultConfig {
+        minSdkVersion(16)
+        targetSdkVersion(30)
+        versionCode = 1
+        versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.freeCompilerArgs += "-Xopt-in=org.mylibrary.OptInAnnotation"
+        kotlinOptions.useIR = true
+    }
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+        exclude("**/attach_hotspot_windows.dll")
+        exclude("META-INF/licenses/**")
+        pickFirst("META-INF/AL2.0")
+        pickFirst("META-INF/LGPL2.1")
+    }
+}
 kotlin {
     android()
     ios()
@@ -78,7 +112,7 @@ kotlin {
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", "~> 4.0")
+//        pod("SQLCipher", "~> 4.4.2")
         framework {
             isStatic = false
 //            export(Deps.kermit)
@@ -98,39 +132,6 @@ sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
-    }
-}
-android {
-    compileSdkVersion(30)
-    defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs += "-Xopt-in=org.mylibrary.OptInAnnotation"
-        kotlinOptions.useIR = true
-    }
-    packagingOptions {
-        exclude("META-INF/*.kotlin_module")
-        exclude("**/attach_hotspot_windows.dll")
-        exclude("META-INF/licenses/**")
-        pickFirst("META-INF/AL2.0")
-        pickFirst("META-INF/LGPL2.1")
     }
 }
 
