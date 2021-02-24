@@ -1,20 +1,21 @@
+import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.native.cocoapods")
+    kotlin("native.cocoapods")
     id("com.squareup.sqldelight")
     id("com.android.library")
 }
 group = "com.softartdev.notedelight.shared"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 android {
     configurations {
-        create("androidTestApi")
-        create("androidTestDebugApi")
-        create("androidTestReleaseApi")
+//        create("androidTestApi")
+//        create("androidTestDebugApi")
+//        create("androidTestReleaseApi")
         create("testApi")
         create("testDebugApi")
         create("testReleaseApi")
@@ -88,6 +89,11 @@ kotlin {
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
         pod("SQLCipher", "~> 4.0")
+        framework {
+            isStatic = false
+//            export(Deps.kermit)
+            transitiveExport = true
+        }
 //        useLibraries()
     }
     targets.filterIsInstance<KotlinNativeTarget>()
@@ -134,5 +140,13 @@ android {
         exclude("META-INF/licenses/**")
         pickFirst("META-INF/AL2.0")
         pickFirst("META-INF/LGPL2.1")
+    }
+}
+
+fun CocoapodsExtension.framework(configuration: Framework.() -> Unit) {
+    kotlin.targets.withType<KotlinNativeTarget> {
+        binaries.withType<Framework> {
+            configuration()
+        }
     }
 }
