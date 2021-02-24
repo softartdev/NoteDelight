@@ -11,16 +11,6 @@ plugins {
 }
 group = "com.softartdev.notedelight.shared"
 version = "1.0"
-android {
-    configurations {
-//        create("androidTestApi")
-//        create("androidTestDebugApi")
-//        create("androidTestReleaseApi")
-        create("testApi")
-        create("testDebugApi")
-        create("testReleaseApi")
-    }
-}
 kotlin {
     android()
     ios()
@@ -133,6 +123,7 @@ android {
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "1.8"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=org.mylibrary.OptInAnnotation"
+        kotlinOptions.useIR = true
     }
     packagingOptions {
         exclude("META-INF/*.kotlin_module")
