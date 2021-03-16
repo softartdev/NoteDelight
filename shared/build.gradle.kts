@@ -47,7 +47,8 @@ android {
 }
 kotlin {
     android()
-    ios()
+//    ios()
+    iosX64("ios")
     sourceSets {
         all {
             languageSettings.apply {
@@ -111,8 +112,8 @@ kotlin {
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
-        podfile = project.file("../iosApp/Podfile")
-//        pod("SQLCipher", "~> 4.4.2")
+//        podfile = project.file("../iosApp/Podfile")
+        pod("SQLCipher", "~> 4.0")
         framework {
             isStatic = false
 //            export(Deps.kermit)
@@ -131,7 +132,7 @@ kotlin {
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-//        linkSqlite = false
+        linkSqlite = false
     }
 }
 
