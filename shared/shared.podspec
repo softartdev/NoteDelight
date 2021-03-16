@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'shared'
-    spec.version                  = '1.0-SNAPSHOT'
+    spec.version                  = '1.0'
     spec.homepage                 = 'https://github.com/softartdev/NoteDelight'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
@@ -14,12 +14,12 @@ Pod::Spec.new do |spec|
 
     spec.ios.deployment_target = '14.0'
 
-    spec.dependency 'SQLCipher', '~> 4.0'
+                
 
     spec.pod_target_xcconfig = {
         'KOTLIN_TARGET[sdk=iphonesimulator*]' => 'ios_x64',
         'KOTLIN_TARGET[sdk=iphoneos*]' => 'ios_arm',
-        'KOTLIN_TARGET[sdk=watchsimulator*]' => 'watchos_x86',
+        'KOTLIN_TARGET[sdk=watchsimulator*]' => 'watchos_x64',
         'KOTLIN_TARGET[sdk=watchos*]' => 'watchos_arm',
         'KOTLIN_TARGET[sdk=appletvsimulator*]' => 'tvos_x64',
         'KOTLIN_TARGET[sdk=appletvos*]' => 'tvos_arm64',
