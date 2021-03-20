@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
 }
 group = "com.softartdev"
 version = "0.1"
