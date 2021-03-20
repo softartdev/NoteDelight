@@ -6,11 +6,13 @@ group = "com.softartdev"
 version = "0.1"
 
 kotlin {
+    jvm()
     ios()
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                api("com.squareup.okio:okio-multiplatform:2.9.0")
             }
         }
         val commonTest by getting {
@@ -26,6 +28,9 @@ kotlin {
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "13.5"
         pod("SQLCipher", "~> 4.4.2")
-        useLibraries()
+//        pod("pod_sql_cipher") {
+//            version = "4.4.2"
+//            source = path(project.file("pod_sql_cipher"))
+//        }
     }
 }

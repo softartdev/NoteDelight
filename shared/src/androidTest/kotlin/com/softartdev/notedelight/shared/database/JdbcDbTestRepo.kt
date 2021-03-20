@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.cipherdelight.PlatformSQLiteState
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 

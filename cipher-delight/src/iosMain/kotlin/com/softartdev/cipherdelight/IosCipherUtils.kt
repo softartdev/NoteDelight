@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.cipherdelight
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt

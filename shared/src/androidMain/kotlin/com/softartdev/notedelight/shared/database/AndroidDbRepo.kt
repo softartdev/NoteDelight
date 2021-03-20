@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
+import com.softartdev.cipherdelight.PlatformSQLiteState
 import com.softartdev.notedelight.shared.db.NoteQueries
 
 class AndroidDbRepo(

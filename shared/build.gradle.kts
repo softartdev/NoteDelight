@@ -47,8 +47,7 @@ android {
 }
 kotlin {
     android()
-//    ios()
-    iosX64("ios")
+    ios()
     sourceSets {
         all {
             languageSettings.apply {
@@ -57,10 +56,10 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
+                api(project(":cipher-delight"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
-                api("com.squareup.okio:okio-multiplatform:2.9.0")
             }
         }
         val commonTest by getting {
@@ -97,13 +96,12 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 api(project(":cipher-delight"))
-                implementation("co.touchlab:sqliter:0.7.1")
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-                implementation("co.touchlab:sqliter:0.7.1") {
-                    version {
-                        strictly("0.7.1")
-                    }
-                }
+//                implementation("co.touchlab:sqliter:0.7.1") {
+//                    version {
+//                        strictly("0.7.1")
+//                    }
+//                }
             }
         }
         val iosTest by getting
@@ -113,13 +111,13 @@ kotlin {
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
-//        podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", "~> 4.0")
-        framework {
-            isStatic = false
+        podfile = project.file("../iosApp/Podfile")
+//        pod("SQLCipher", "~> 4.0")
+//        framework {
+//            isStatic = false
 //            export(Deps.kermit)
-            transitiveExport = true
-        }
+//            transitiveExport = true
+//        }
 //        useLibraries()
     }
     targets.filterIsInstance<KotlinNativeTarget>()
@@ -133,7 +131,7 @@ kotlin {
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-        linkSqlite = false
+//        linkSqlite = false
     }
 }
 

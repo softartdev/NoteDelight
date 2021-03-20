@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.data
 
+import com.softartdev.cipherdelight.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.DatabaseRepo
-import com.softartdev.notedelight.shared.database.PlatformSQLiteState
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.firstOrNull

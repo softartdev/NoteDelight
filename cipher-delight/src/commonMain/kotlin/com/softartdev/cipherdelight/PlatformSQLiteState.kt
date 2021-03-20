@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.cipherdelight
 
 enum class PlatformSQLiteState {
     DOES_NOT_EXIST,
