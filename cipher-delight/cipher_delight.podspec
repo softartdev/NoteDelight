@@ -1,18 +1,18 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'cipher_delight'
     spec.version                  = '0.1'
-    spec.homepage                 = ''
+    spec.homepage                 = 'https://github.com/softartdev/NoteDelight'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = ''
+    spec.summary                  = 'Cipher library for the apps with SQLDelight'
 
     spec.static_framework         = true
-    spec.vendored_frameworks      = "build/cocoapods/framework/cipher_delight.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/CipherDelight.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 
-                
+    spec.ios.deployment_target = '14.0'
 
                 
 

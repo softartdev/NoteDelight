@@ -20,4 +20,12 @@ kotlin {
             }
         }
     }
+    cocoapods {
+        frameworkName = "CipherDelight"
+        summary = "Cipher library for the apps with SQLDelight"
+        homepage = "https://github.com/softartdev/NoteDelight"
+        ios.deploymentTarget = "14.0"
+//        pod("SQLCipher", "~> 4.4.2")
+        useLibraries()
+    }
 }
