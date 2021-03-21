@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -97,48 +94,26 @@ kotlin {
             dependencies {
                 api(project(":cipher-delight"))
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-//                implementation("co.touchlab:sqliter:0.7.1") {
-//                    version {
-//                        strictly("0.7.1")
-//                    }
-//                }
+                implementation("co.touchlab:sqliter:0.7.1") {
+                    version {
+                        strictly("0.7.1")
+                    }
+                }
             }
         }
         val iosTest by getting
     }
     cocoapods {
-//        frameworkName = "SharedCode"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-//        pod("SQLCipher", "~> 4.0")
-//        framework {
-//            isStatic = false
-//            export(Deps.kermit)
-//            transitiveExport = true
-//        }
-//        useLibraries()
+        useLibraries()
     }
-    targets.filterIsInstance<KotlinNativeTarget>()
-        .map(KotlinNativeTarget::binaries)
-        .filterIsInstance<Framework>()
-        .forEach {
-            it.isStatic = false
-            it.linkerOpts.add("-lsqlite3")
-        }
 }
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
-    }
-}
-
-fun CocoapodsExtension.framework(configuration: Framework.() -> Unit) {
-    kotlin.targets.withType<KotlinNativeTarget> {
-        binaries.withType<Framework> {
-            configuration()
-        }
     }
 }

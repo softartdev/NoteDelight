@@ -27,10 +27,6 @@ kotlin {
         summary = "Cipher library for the apps with SQLDelight"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "13.5"
-        pod("SQLCipher", "~> 4.4.2")
-//        pod("pod_sql_cipher") {
-//            version = "4.4.2"
-//            source = path(project.file("pod_sql_cipher"))
-//        }
+        pod("SQLCipher", "~> 4.0")
     }
 }
