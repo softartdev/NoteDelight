@@ -146,6 +146,7 @@
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
 				00B089D8AA7C3EAF3412845A /* Pods */,
+				75F8A9712615DC5F00E3340A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -257,6 +258,14 @@
 			children = (
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		75F8A9712615DC5F00E3340A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				952FAD1252588A602DE76E7F /* Pods_iosApp.framework */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -676,7 +685,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iosApp.app/iosApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Note Delight.app/Note Delight";
 			};
 			name = Debug;
 		};
@@ -697,7 +706,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iosApp.app/iosApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Note Delight.app/Note Delight";
 			};
 			name = Release;
 		};
