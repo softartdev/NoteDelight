@@ -6,7 +6,7 @@ buildscript {
         lifecycle_version = '2.2.0'
         timber_version = '4.7.1'
         junit_version = '4.13.2'
-        mockito_version = '3.8.0'
+        mockito_version = '3.9.0'
     }
     repositories {
         google()
