@@ -22,7 +22,7 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                api("io.github.softartdev:sqlcipher-ktn-pod:0.6")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.0")
             }
         }
     }
