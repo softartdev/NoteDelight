@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -56,10 +53,10 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
+                api(project(":cipher-delight"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
-                api("com.squareup.okio:okio-multiplatform:2.9.0")
             }
         }
         val commonTest by getting {
@@ -95,7 +92,7 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                implementation("co.touchlab:sqliter:0.7.1")
+                api(project(":cipher-delight"))
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
                 implementation("co.touchlab:sqliter:0.7.1") {
                     version {
@@ -107,38 +104,16 @@ kotlin {
         val iosTest by getting
     }
     cocoapods {
-//        frameworkName = "SharedCode"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-//        pod("SQLCipher", "~> 4.4.2")
-        framework {
-            isStatic = false
-//            export(Deps.kermit)
-            transitiveExport = true
-        }
-//        useLibraries()
+        useLibraries()
     }
-    targets.filterIsInstance<KotlinNativeTarget>()
-        .map(KotlinNativeTarget::binaries)
-        .filterIsInstance<Framework>()
-        .forEach {
-            it.isStatic = false
-            it.linkerOpts.add("-lsqlite3")
-        }
 }
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
-    }
-}
-
-fun CocoapodsExtension.framework(configuration: Framework.() -> Unit) {
-    kotlin.targets.withType<KotlinNativeTarget> {
-        binaries.withType<Framework> {
-            configuration()
-        }
     }
 }
