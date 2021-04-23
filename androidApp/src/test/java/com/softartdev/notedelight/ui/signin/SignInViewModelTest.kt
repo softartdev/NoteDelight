@@ -1,13 +1,14 @@
 package com.softartdev.notedelight.ui.signin
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.StubEditable
 import com.softartdev.notedelight.shared.test.util.anyObject
-import com.softartdev.notedelight.shared.test.util.assertValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -25,46 +26,48 @@ class SignInViewModelTest {
     private val signInViewModel = SignInViewModel(cryptUseCase)
 
     @Test
-    fun navMain() = mainCoroutineRule.runBlockingTest {
-        val pass = StubEditable("pass")
-        Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
-        signInViewModel.resultLiveData.assertValues(
-                SignInResult.ShowProgress,
-                SignInResult.NavMain
-        ) {
+    fun navMain() = runBlocking {
+        signInViewModel.resultStateFlow.test {
+            val pass = StubEditable("pass")
+            Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
             signInViewModel.signIn(pass)
+            assertEquals(SignInResult.ShowProgress, expectItem())
+            assertEquals(SignInResult.NavMain, expectItem())
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun showEmptyPassError() = signInViewModel.resultLiveData.assertValues(
-            SignInResult.ShowProgress,
-            SignInResult.ShowEmptyPassError
-    ) {
-        signInViewModel.signIn(pass = StubEditable(""))
-    }
-
-    @Test
-    fun showIncorrectPassError() = mainCoroutineRule.runBlockingTest {
-        val pass = StubEditable("pass")
-        Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
-        signInViewModel.resultLiveData.assertValues(
-                SignInResult.ShowProgress,
-                SignInResult.ShowIncorrectPassError
-        ) {
-            signInViewModel.signIn(pass)
+    fun showEmptyPassError() = runBlocking {
+        signInViewModel.resultStateFlow.test {
+            signInViewModel.signIn(pass = StubEditable(""))
+            assertEquals(SignInResult.ShowProgress, expectItem())
+            assertEquals(SignInResult.ShowEmptyPassError, expectItem())
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun showError() = mainCoroutineRule.runBlockingTest {
-        val throwable = Throwable()
-        Mockito.`when`(cryptUseCase.checkPassword(anyObject())).then { throw throwable }
-        signInViewModel.resultLiveData.assertValues(
-                SignInResult.ShowProgress,
-                SignInResult.ShowError(throwable)
-        ) {
+    fun showIncorrectPassError() = runBlocking {
+        signInViewModel.resultStateFlow.test {
+            val pass = StubEditable("pass")
+            Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
+            signInViewModel.signIn(pass)
+            assertEquals(SignInResult.ShowProgress, expectItem())
+            assertEquals(SignInResult.ShowIncorrectPassError, expectItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun showError() = runBlocking {
+        signInViewModel.resultStateFlow.test {
+            val throwable = Throwable()
+            Mockito.`when`(cryptUseCase.checkPassword(anyObject())).then { throw throwable }
             signInViewModel.signIn(StubEditable("pass"))
+            assertEquals(SignInResult.ShowProgress, expectItem())
+            assertEquals(SignInResult.ShowError(throwable), expectItem())
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

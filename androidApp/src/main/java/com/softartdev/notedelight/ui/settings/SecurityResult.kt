@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui.settings
 
 sealed class SecurityResult {
+    object Loading : SecurityResult()
     data class EncryptEnable(val encryption: Boolean) : SecurityResult()
     object PasswordDialog : SecurityResult()
     object SetPasswordDialog : SecurityResult()

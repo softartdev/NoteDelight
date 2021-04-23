@@ -2,14 +2,17 @@ package com.softartdev.notedelight.ui.settings.security.confirm
 
 import android.os.Bundle
 import android.widget.ProgressBar
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.addRepeatingJob
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 class ConfirmPasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_conform_password,
@@ -35,7 +38,9 @@ class ConfirmPasswordDialog : BaseDialogFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        confirmViewModel.resultLiveData.observe(this as LifecycleOwner, this)
+        viewLifecycleOwner.addRepeatingJob(Lifecycle.State.STARTED) {
+            confirmViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
     }
 
     override fun onOkClicked() = confirmViewModel.conformCheck(

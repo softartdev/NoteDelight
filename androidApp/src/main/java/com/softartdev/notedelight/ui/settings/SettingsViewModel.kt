@@ -8,6 +8,8 @@ class SettingsViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<SecurityResult>() {
 
+    override val loadingResult: SecurityResult = SecurityResult.Loading
+
     fun checkEncryption() = launch {
         val isEncrypted = cryptUseCase.dbIsEncrypted()
         SecurityResult.EncryptEnable(isEncrypted)
