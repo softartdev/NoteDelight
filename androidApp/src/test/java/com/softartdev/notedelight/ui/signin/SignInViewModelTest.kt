@@ -9,6 +9,7 @@ import com.softartdev.notedelight.shared.test.util.anyObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -23,16 +24,32 @@ class SignInViewModelTest {
     val mainCoroutineRule = MainCoroutineRule()
 
     private val cryptUseCase = Mockito.mock(CryptUseCase::class.java)
-    private val signInViewModel = SignInViewModel(cryptUseCase)
+    private lateinit var signInViewModel: SignInViewModel
+
+    @Before
+    fun setUp() {
+        signInViewModel = SignInViewModel(cryptUseCase)
+    }
+
+    @Test
+    fun showSignInForm() = runBlocking {
+        signInViewModel.resultStateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, expectItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
     @Test
     fun navMain() = runBlocking {
         signInViewModel.resultStateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, expectItem())
+
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
             signInViewModel.signIn(pass)
             assertEquals(SignInResult.ShowProgress, expectItem())
             assertEquals(SignInResult.NavMain, expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -40,9 +57,12 @@ class SignInViewModelTest {
     @Test
     fun showEmptyPassError() = runBlocking {
         signInViewModel.resultStateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, expectItem())
+
             signInViewModel.signIn(pass = StubEditable(""))
             assertEquals(SignInResult.ShowProgress, expectItem())
             assertEquals(SignInResult.ShowEmptyPassError, expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -50,11 +70,14 @@ class SignInViewModelTest {
     @Test
     fun showIncorrectPassError() = runBlocking {
         signInViewModel.resultStateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, expectItem())
+
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
             signInViewModel.signIn(pass)
             assertEquals(SignInResult.ShowProgress, expectItem())
             assertEquals(SignInResult.ShowIncorrectPassError, expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -62,11 +85,14 @@ class SignInViewModelTest {
     @Test
     fun showError() = runBlocking {
         signInViewModel.resultStateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, expectItem())
+
             val throwable = Throwable()
             Mockito.`when`(cryptUseCase.checkPassword(anyObject())).then { throw throwable }
             signInViewModel.signIn(StubEditable("pass"))
             assertEquals(SignInResult.ShowProgress, expectItem())
             assertEquals(SignInResult.ShowError(throwable), expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }

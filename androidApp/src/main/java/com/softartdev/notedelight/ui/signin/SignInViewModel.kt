@@ -11,7 +11,10 @@ class SignInViewModel (
 
     override val loadingResult: SignInResult = SignInResult.ShowProgress
 
-    fun showInitialForm() = launch { SignInResult.ShowSignInForm }
+    init {
+        // workaround for change loading state by base class logic
+        launch { SignInResult.ShowSignInForm }
+    }
 
     fun signIn(pass: Editable) = launch {
         if (pass.isNotEmpty()) {
