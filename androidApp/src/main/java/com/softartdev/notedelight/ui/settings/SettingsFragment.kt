@@ -59,8 +59,8 @@ class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListen
         versionPreference?.summary = createMultiplatformMessage()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.addRepeatingJob(Lifecycle.State.STARTED) {
             settingsViewModel.resultStateFlow.onEach(::onChanged).collect()
         }
