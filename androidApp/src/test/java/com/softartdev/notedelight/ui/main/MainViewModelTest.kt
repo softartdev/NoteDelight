@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import net.sqlcipher.database.SQLiteException
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -25,7 +26,12 @@ class MainViewModelTest {
     val mainCoroutineRule = MainCoroutineRule()
 
     private val noteUseCase = Mockito.mock(NoteUseCase::class.java)
-    private val mainViewModel = MainViewModel(noteUseCase)
+    private lateinit var mainViewModel: MainViewModel
+
+    @Before
+    fun setUp() {
+        mainViewModel = MainViewModel(noteUseCase)
+    }
 
     @Test
     fun success() = runBlocking {
