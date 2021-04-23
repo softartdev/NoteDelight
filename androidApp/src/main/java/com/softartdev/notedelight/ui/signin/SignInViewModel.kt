@@ -11,6 +11,8 @@ class SignInViewModel (
 
     override val loadingResult: SignInResult = SignInResult.ShowProgress
 
+    fun showInitialForm() = launch { SignInResult.ShowSignInForm }
+
     fun signIn(pass: Editable) = launch {
         if (pass.isNotEmpty()) {
             when (cryptUseCase.checkPassword(pass)) {

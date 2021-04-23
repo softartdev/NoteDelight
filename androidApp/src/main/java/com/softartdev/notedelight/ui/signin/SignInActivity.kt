@@ -34,6 +34,7 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
         addRepeatingJob(Lifecycle.State.STARTED) {
             signInViewModel.resultStateFlow.onEach(::onChanged).collect()
         }
+        signInViewModel.showInitialForm()
     }
 
     private fun attemptSignIn() {
@@ -43,6 +44,7 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
     }
 
     override fun onChanged(signInResult: SignInResult) = when (signInResult) {
+        SignInResult.ShowSignInForm -> showSignIn()
         is SignInResult.ShowProgress -> {
             binding.signInProgressView.visible()
             binding.signInLayout.gone()
