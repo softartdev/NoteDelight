@@ -34,6 +34,7 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
         addRepeatingJob(Lifecycle.State.STARTED) {
             signInViewModel.resultStateFlow.onEach(::onChanged).collect()
         }
+        signInViewModel.showInitialForm()
     }
 
     private fun attemptSignIn() {
