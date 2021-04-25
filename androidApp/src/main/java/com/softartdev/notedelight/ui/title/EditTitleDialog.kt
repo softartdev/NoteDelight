@@ -1,15 +1,19 @@
 package com.softartdev.notedelight.ui.title
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.ProgressBar
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class EditTitleDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_title,
@@ -30,9 +34,11 @@ class EditTitleDialog : BaseDialogFragment(
     private val editText: TextInputEditText
         get() = requireDialog().findViewById(R.id.edit_title_text_input)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        editTitleViewModel.resultLiveData.observe(this as LifecycleOwner, this)
+    override fun onShow(dialog: DialogInterface?) {
+        super.onShow(dialog)
+        lifecycleStateFlowJob = lifecycleScope.launch {
+            editTitleViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
         editTitleViewModel.loadTitle(noteId)
     }
 

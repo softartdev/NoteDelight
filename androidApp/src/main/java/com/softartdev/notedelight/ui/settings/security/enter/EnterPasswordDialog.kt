@@ -1,15 +1,18 @@
 package com.softartdev.notedelight.ui.settings.security.enter
 
-import android.os.Bundle
+import android.content.DialogInterface
 import android.widget.ProgressBar
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class EnterPasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_enter_password,
@@ -27,9 +30,11 @@ class EnterPasswordDialog : BaseDialogFragment(
     private val passwordTextInputLayout: TextInputLayout
         get() = requireDialog().findViewById(R.id.enter_password_text_input_layout)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        enterViewModel.resultLiveData.observe(this as LifecycleOwner, this)
+    override fun onShow(dialog: DialogInterface?) {
+        super.onShow(dialog)
+        lifecycleStateFlowJob = lifecycleScope.launch {
+            enterViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
     }
 
     override fun onOkClicked() = enterViewModel.enterCheck(
@@ -40,6 +45,7 @@ class EnterPasswordDialog : BaseDialogFragment(
         progressBar.invisible()
         passwordTextInputLayout.error = null
         when (enterResult) {
+            EnterResult.InitState -> Unit
             EnterResult.Loading -> progressBar.visible()
             EnterResult.Success -> dismiss()
             is EnterResult.EmptyPasswordError -> {

@@ -9,6 +9,7 @@ class SignInViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<SignInResult>() {
 
+    override var initResult: SignInResult? = SignInResult.ShowSignInForm
     override val loadingResult: SignInResult = SignInResult.ShowProgress
 
     fun signIn(pass: Editable) = launch {

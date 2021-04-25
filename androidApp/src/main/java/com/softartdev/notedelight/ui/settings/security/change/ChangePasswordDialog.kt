@@ -1,15 +1,18 @@
 package com.softartdev.notedelight.ui.settings.security.change
 
-import android.os.Bundle
+import android.content.DialogInterface
 import android.widget.ProgressBar
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class ChangePasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_password,
@@ -39,9 +42,11 @@ class ChangePasswordDialog : BaseDialogFragment(
     private val repeatPasswordTextInputLayout: TextInputLayout
         get() = requireDialog().findViewById(R.id.repeat_new_password_text_input_layout)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        changeViewModel.resultLiveData.observe(this as LifecycleOwner, this)
+    override fun onShow(dialog: DialogInterface?) {
+        super.onShow(dialog)
+        lifecycleStateFlowJob = lifecycleScope.launch {
+            changeViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
     }
 
     override fun onOkClicked() = changeViewModel.checkChange(
@@ -56,6 +61,7 @@ class ChangePasswordDialog : BaseDialogFragment(
         newPasswordTextInputLayout.error = null
         repeatPasswordTextInputLayout.error = null
         when (changeResult) {
+            ChangeResult.InitState -> Unit
             ChangeResult.Loading -> progressBar.visible()
             ChangeResult.Success -> dismiss()
             ChangeResult.OldEmptyPasswordError -> {

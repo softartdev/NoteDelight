@@ -2,8 +2,8 @@ name: Fastlane CI/CD Android
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   ui_test_job:

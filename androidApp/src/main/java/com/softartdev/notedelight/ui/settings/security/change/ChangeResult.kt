@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui.settings.security.change
 
 sealed class ChangeResult {
+    object InitState: ChangeResult()
     object Loading: ChangeResult()
     object Success: ChangeResult()
     object OldEmptyPasswordError: ChangeResult()

@@ -9,6 +9,7 @@ class ConfirmViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<ConfirmResult>() {
 
+    override var initResult: ConfirmResult? = ConfirmResult.InitState
     override val loadingResult: ConfirmResult = ConfirmResult.Loading
 
     fun conformCheck(password: Editable, repeatPassword: Editable) = launch {

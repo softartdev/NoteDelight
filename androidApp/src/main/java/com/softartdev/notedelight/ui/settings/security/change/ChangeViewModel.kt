@@ -9,6 +9,7 @@ class ChangeViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<ChangeResult>() {
 
+    override var initResult: ChangeResult? = ChangeResult.InitState
     override val loadingResult: ChangeResult = ChangeResult.Loading
 
     fun checkChange(

@@ -24,8 +24,8 @@ android {
         applicationId "com.softartdev.noteroom"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 69
-        versionName "6.9"
+        versionCode 70
+        versionName "7.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -61,7 +61,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
+        freeCompilerArgs += [
+                '-Xuse-experimental=kotlin.Experimental',
+                '-Xopt-in=kotlin.time.ExperimentalTime',
+        ]
         useIR = true
     }
     lintOptions {
@@ -89,10 +92,10 @@ dependencies {
     implementation "androidx.vectordrawable:vectordrawable:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.activity:activity-ktx:1.2.2'
-    implementation 'androidx.fragment:fragment-ktx:1.3.2'
+    implementation 'androidx.fragment:fragment-ktx:1.3.3'
     implementation 'androidx.multidex:multidex:2.0.1'
     def arch_version = "2.1.0"
     implementation "androidx.arch.core:core-common:$arch_version"
@@ -109,7 +112,7 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation platform('com.google.firebase:firebase-bom:27.0.0')
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
@@ -122,6 +125,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
+    testImplementation 'app.cash.turbine:turbine:0.4.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
     androidTestImplementation 'androidx.test:rules:1.3.0'
