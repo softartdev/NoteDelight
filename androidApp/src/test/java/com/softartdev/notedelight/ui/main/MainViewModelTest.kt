@@ -35,34 +35,40 @@ class MainViewModelTest {
 
     @Test
     fun success() = runBlocking {
-        val notes = emptyList<Note>()
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flowOf(notes))
-        mainViewModel.updateNotes()
         mainViewModel.resultStateFlow.test {
             assertEquals(NoteListResult.Loading, expectItem())
+
+            val notes = emptyList<Note>()
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flowOf(notes))
+            mainViewModel.updateNotes()
             assertEquals(NoteListResult.Success(notes), expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun navMain() = runBlocking {
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
-        mainViewModel.updateNotes()
         mainViewModel.resultStateFlow.test {
             assertEquals(NoteListResult.Loading, expectItem())
+
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
+            mainViewModel.updateNotes()
             assertEquals(NoteListResult.NavMain, expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun error() = runBlocking {
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw Throwable() })
-        mainViewModel.updateNotes()
         mainViewModel.resultStateFlow.test {
             assertEquals(NoteListResult.Loading, expectItem())
+
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw Throwable() })
+            mainViewModel.updateNotes()
             assertEquals(NoteListResult.Error(null), expectItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
