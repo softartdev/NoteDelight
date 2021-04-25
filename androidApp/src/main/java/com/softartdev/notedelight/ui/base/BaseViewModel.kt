@@ -10,9 +10,10 @@ import timber.log.Timber
 
 abstract class BaseViewModel<T> : ViewModel() {
 
+    open var initResult: T? = null
     abstract val loadingResult: T
 
-    private val _resultStateFlow by lazy { MutableStateFlow(loadingResult) }
+    private val _resultStateFlow by lazy { MutableStateFlow(initResult ?: loadingResult) }
     val resultStateFlow: StateFlow<T> by lazy { _resultStateFlow.asStateFlow() }
 
     fun launch(

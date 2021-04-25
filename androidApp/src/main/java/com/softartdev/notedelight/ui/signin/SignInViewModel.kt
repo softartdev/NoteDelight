@@ -9,10 +9,8 @@ class SignInViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<SignInResult>() {
 
+    override var initResult: SignInResult? = SignInResult.ShowSignInForm
     override val loadingResult: SignInResult = SignInResult.ShowProgress
-
-    // workaround for change loading state by base class logic
-    fun showInitialForm() = launch { SignInResult.ShowSignInForm }
 
     fun signIn(pass: Editable) = launch {
         if (pass.isNotEmpty()) {

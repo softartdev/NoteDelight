@@ -29,7 +29,6 @@ class SignInViewModelTest {
     @Before
     fun setUp() {
         signInViewModel = SignInViewModel(cryptUseCase)
-        signInViewModel.showInitialForm()
     }
 
     @Test
