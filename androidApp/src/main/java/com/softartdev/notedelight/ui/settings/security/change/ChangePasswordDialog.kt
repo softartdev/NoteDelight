@@ -61,6 +61,7 @@ class ChangePasswordDialog : BaseDialogFragment(
         newPasswordTextInputLayout.error = null
         repeatPasswordTextInputLayout.error = null
         when (changeResult) {
+            ChangeResult.InitState -> Unit
             ChangeResult.Loading -> progressBar.visible()
             ChangeResult.Success -> dismiss()
             ChangeResult.OldEmptyPasswordError -> {

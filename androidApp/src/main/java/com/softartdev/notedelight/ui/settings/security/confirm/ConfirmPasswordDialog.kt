@@ -53,6 +53,7 @@ class ConfirmPasswordDialog : BaseDialogFragment(
         passwordTextInputLayout.error = null
         repeatPasswordTextInputLayout.error = null
         when (confirmResult) {
+            ConfirmResult.InitState -> Unit
             ConfirmResult.Loading -> progressBar.visible()
             ConfirmResult.Success -> dismiss()
             is ConfirmResult.EmptyPasswordError -> {

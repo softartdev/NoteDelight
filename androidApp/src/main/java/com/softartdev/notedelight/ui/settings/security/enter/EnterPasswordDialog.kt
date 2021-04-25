@@ -45,6 +45,7 @@ class EnterPasswordDialog : BaseDialogFragment(
         progressBar.invisible()
         passwordTextInputLayout.error = null
         when (enterResult) {
+            EnterResult.InitState -> Unit
             EnterResult.Loading -> progressBar.visible()
             EnterResult.Success -> dismiss()
             is EnterResult.EmptyPasswordError -> {

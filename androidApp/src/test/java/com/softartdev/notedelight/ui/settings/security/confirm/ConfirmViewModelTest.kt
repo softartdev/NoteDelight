@@ -25,27 +25,39 @@ class ConfirmViewModelTest {
     @Test
     fun conformCheckPasswordsNoMatchError() = runBlocking {
         confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
             confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("new pass"))
             assertEquals(ConfirmResult.Loading, expectItem())
             assertEquals(ConfirmResult.PasswordsNoMatchError, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun conformCheckEmptyPasswordError() = runBlocking {
         confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
             confirmViewModel.conformCheck(StubEditable(""), StubEditable(""))
             assertEquals(ConfirmResult.Loading, expectItem())
             assertEquals(ConfirmResult.EmptyPasswordError, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun conformCheckSuccess() = runBlocking {
         confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
             confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("pass"))
             assertEquals(ConfirmResult.Loading, expectItem())
             assertEquals(ConfirmResult.Success, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

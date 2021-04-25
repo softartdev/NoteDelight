@@ -27,11 +27,12 @@ class EnterViewModelTest {
     @Test
     fun enterCheckSuccess() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.Loading, expectItem())
+            assertEquals(EnterResult.InitState, expectItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
             enterViewModel.enterCheck(pass)
+            assertEquals(EnterResult.Loading, expectItem())
             assertEquals(EnterResult.Success, expectItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -41,11 +42,12 @@ class EnterViewModelTest {
     @Test
     fun enterCheckIncorrectPasswordError() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.Loading, expectItem())
+            assertEquals(EnterResult.InitState, expectItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
             enterViewModel.enterCheck(pass)
+            assertEquals(EnterResult.Loading, expectItem())
             assertEquals(EnterResult.IncorrectPasswordError, expectItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -55,9 +57,10 @@ class EnterViewModelTest {
     @Test
     fun enterCheckEmptyPasswordError() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.Loading, expectItem())
+            assertEquals(EnterResult.InitState, expectItem())
 
             enterViewModel.enterCheck(StubEditable(""))
+            assertEquals(EnterResult.Loading, expectItem())
             assertEquals(EnterResult.EmptyPasswordError, expectItem())
 
             cancelAndIgnoreRemainingEvents()

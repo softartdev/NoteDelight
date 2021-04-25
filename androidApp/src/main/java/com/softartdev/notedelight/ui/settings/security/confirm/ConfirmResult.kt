@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui.settings.security.confirm
 
 sealed class ConfirmResult {
+    object InitState: ConfirmResult()
     object Loading: ConfirmResult()
     object Success: ConfirmResult()
     object PasswordsNoMatchError: ConfirmResult()
