@@ -9,6 +9,7 @@ class EnterViewModel (
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<EnterResult>() {
 
+    override var initResult: EnterResult? = EnterResult.InitState
     override val loadingResult: EnterResult = EnterResult.Loading
 
     fun enterCheck(password: Editable) = launch {

@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.ui.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
-import com.softartdev.notedelight.shared.test.util.assertValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
@@ -48,131 +48,170 @@ class NoteViewModelTest {
 
     @After
     fun tearDown() = mainCoroutineRule.runBlockingTest {
-        noteViewModel.resultLiveData.value = null
+        noteViewModel.resetLoadingResult()
     }
 
     @Test
-    fun createNote() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.Created(id)
-    ) {
-        noteViewModel.createNote()
+    fun createNote() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.createNote()
+            assertEquals(NoteResult.Created(id), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun loadNote() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.Loaded(note)
-    ) {
-        noteViewModel.loadNote(id)
+    fun loadNote() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.loadNote(id)
+            assertEquals(NoteResult.Loaded(note), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun saveNoteEmpty() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.Empty
-    ) {
-        noteViewModel.saveNote("", "")
+    fun saveNoteEmpty() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.saveNote("", "")
+            assertEquals(NoteResult.Empty, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun saveNote() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.Saved(title)
-    ) {
-        noteViewModel.setIdForTest(id)
-        noteViewModel.saveNote(title, text)
+    fun saveNote() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.setIdForTest(id)
+            noteViewModel.saveNote(title, text)
+            assertEquals(NoteResult.Saved(title), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun editTitle() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.NavEditTitle(id),
-            NoteResult.TitleUpdated(title)
-    ) {
-        noteViewModel.setIdForTest(id)
-        noteViewModel.editTitle()
-        runBlocking { titleChannel.send(title) }
+    fun editTitle() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.setIdForTest(id)
+            noteViewModel.editTitle()
+            assertEquals(NoteResult.NavEditTitle(id), expectItem())
+
+            titleChannel.send(title)
+            assertEquals(NoteResult.TitleUpdated(title), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun deleteNote() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.Deleted
-    ) {
-        noteViewModel.setIdForTest(id)
-        noteViewModel.deleteNote()
+    fun deleteNote() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.setIdForTest(id)
+            noteViewModel.deleteNote()
+            assertEquals(NoteResult.Deleted, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun checkSaveChange() = mainCoroutineRule.runBlockingTest {
+    fun checkSaveChange() = runBlocking {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(true)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
-        noteViewModel.resultLiveData.assertValues(
-                NoteResult.Loading,
-                NoteResult.CheckSaveChange
-        ) {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
+            assertEquals(NoteResult.CheckSaveChange, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun checkSaveChangeNavBack() = mainCoroutineRule.runBlockingTest {
+    fun checkSaveChangeNavBack() = runBlocking {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
-        noteViewModel.resultLiveData.assertValues(
-                NoteResult.Loading,
-                NoteResult.NavBack
-        ) {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
+            assertEquals(NoteResult.NavBack, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun checkSaveChangeDeleted() = mainCoroutineRule.runBlockingTest {
+    fun checkSaveChangeDeleted() = runBlocking {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
-        noteViewModel.resultLiveData.assertValues(
-                NoteResult.Loading,
-                NoteResult.Deleted
-        ) {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
+            assertEquals(NoteResult.Deleted, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun saveNoteAndNavBack() = noteViewModel.resultLiveData.assertValues(
-            NoteResult.Loading,
-            NoteResult.NavBack
-    ) {
-        noteViewModel.setIdForTest(id)
-        noteViewModel.saveNoteAndNavBack(title, text)
+    fun saveNoteAndNavBack() = runBlocking {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
+            noteViewModel.setIdForTest(id)
+            noteViewModel.saveNoteAndNavBack(title, text)
+            assertEquals(NoteResult.NavBack, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun doNotSaveAndNavBack() = mainCoroutineRule.runBlockingTest {
+    fun doNotSaveAndNavBack() = runBlocking {
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
-        noteViewModel.resultLiveData.assertValues(
-                NoteResult.Loading,
-                NoteResult.NavBack
-        ) {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
             noteViewModel.setIdForTest(id)
             noteViewModel.doNotSaveAndNavBack()
+            assertEquals(NoteResult.NavBack, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun doNotSaveAndNavBackDeleted() = mainCoroutineRule.runBlockingTest {
+    fun doNotSaveAndNavBackDeleted() = runBlocking {
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
-        noteViewModel.resultLiveData.assertValues(
-                NoteResult.Loading,
-                NoteResult.Deleted
-        ) {
+        noteViewModel.resultStateFlow.test {
+            assertEquals(NoteResult.Loading, expectItem())
+
             noteViewModel.setIdForTest(id)
             noteViewModel.doNotSaveAndNavBack()
+            assertEquals(NoteResult.Deleted, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

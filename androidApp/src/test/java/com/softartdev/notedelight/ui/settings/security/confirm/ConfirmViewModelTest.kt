@@ -1,10 +1,11 @@
 package com.softartdev.notedelight.ui.settings.security.confirm
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.StubEditable
-import com.softartdev.notedelight.shared.test.util.assertValues
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -22,27 +23,42 @@ class ConfirmViewModelTest {
     private val confirmViewModel = ConfirmViewModel(cryptUseCase)
 
     @Test
-    fun conformCheckPasswordsNoMatchError() = confirmViewModel.resultLiveData.assertValues(
-            ConfirmResult.Loading,
-            ConfirmResult.PasswordsNoMatchError
-    ) {
-        confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("new pass"))
+    fun conformCheckPasswordsNoMatchError() = runBlocking {
+        confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
+            confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("new pass"))
+            assertEquals(ConfirmResult.Loading, expectItem())
+            assertEquals(ConfirmResult.PasswordsNoMatchError, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun conformCheckEmptyPasswordError() = confirmViewModel.resultLiveData.assertValues(
-            ConfirmResult.Loading,
-            ConfirmResult.EmptyPasswordError
-    ) {
-        confirmViewModel.conformCheck(StubEditable(""), StubEditable(""))
+    fun conformCheckEmptyPasswordError() = runBlocking {
+        confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
+            confirmViewModel.conformCheck(StubEditable(""), StubEditable(""))
+            assertEquals(ConfirmResult.Loading, expectItem())
+            assertEquals(ConfirmResult.EmptyPasswordError, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun conformCheckSuccess() = confirmViewModel.resultLiveData.assertValues(
-            ConfirmResult.Loading,
-            ConfirmResult.Success
-    ) {
-        confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("pass"))
+    fun conformCheckSuccess() = runBlocking {
+        confirmViewModel.resultStateFlow.test {
+            assertEquals(ConfirmResult.InitState, expectItem())
+
+            confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("pass"))
+            assertEquals(ConfirmResult.Loading, expectItem())
+            assertEquals(ConfirmResult.Success, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

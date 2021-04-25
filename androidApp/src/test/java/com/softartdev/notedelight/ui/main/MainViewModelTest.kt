@@ -1,15 +1,17 @@
 package com.softartdev.notedelight.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
-import com.softartdev.notedelight.shared.test.util.assertValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import net.sqlcipher.database.SQLiteException
+import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -24,39 +26,50 @@ class MainViewModelTest {
     val mainCoroutineRule = MainCoroutineRule()
 
     private val noteUseCase = Mockito.mock(NoteUseCase::class.java)
-    private val mainViewModel = MainViewModel(noteUseCase)
+    private lateinit var mainViewModel: MainViewModel
+
+    @Before
+    fun setUp() {
+        mainViewModel = MainViewModel(noteUseCase)
+    }
 
     @Test
-    fun success() = mainCoroutineRule.runBlockingTest {
-        val notes = emptyList<Note>()
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flowOf(notes))
-        mainViewModel.resultLiveData.assertValues(
-                NoteListResult.Loading,
-                NoteListResult.Success(notes)
-        ) {
+    fun success() = runBlocking {
+        mainViewModel.resultStateFlow.test {
+            assertEquals(NoteListResult.Loading, expectItem())
+
+            val notes = emptyList<Note>()
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flowOf(notes))
             mainViewModel.updateNotes()
+            assertEquals(NoteListResult.Success(notes), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun navMain() = mainCoroutineRule.runBlockingTest {
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
-        mainViewModel.resultLiveData.assertValues(
-                NoteListResult.Loading,
-                NoteListResult.NavMain
-        ){
+    fun navMain() = runBlocking {
+        mainViewModel.resultStateFlow.test {
+            assertEquals(NoteListResult.Loading, expectItem())
+
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
+            assertEquals(NoteListResult.NavMain, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun error() = mainCoroutineRule.runBlockingTest {
-        Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw Throwable() })
-        mainViewModel.resultLiveData.assertValues(
-                NoteListResult.Loading,
-                NoteListResult.Error(null)
-        ) {
+    fun error() = runBlocking {
+        mainViewModel.resultStateFlow.test {
+            assertEquals(NoteListResult.Loading, expectItem())
+
+            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw Throwable() })
             mainViewModel.updateNotes()
+            assertEquals(NoteListResult.Error(null), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.ui.title
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
-import com.softartdev.notedelight.shared.test.util.assertValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
@@ -46,34 +46,46 @@ class EditTitleViewModelTest {
 
     @After
     fun tearDown() = mainCoroutineRule.runBlockingTest {
-        editTitleViewModel.resultLiveData.value = null
+        editTitleViewModel.resetLoadingResult()
     }
 
     @Test
-    fun loadTitle() = editTitleViewModel.resultLiveData.assertValues(
-            EditTitleResult.Loading,
-            EditTitleResult.Loaded(title)
-    ) {
-        editTitleViewModel.loadTitle(id)
+    fun loadTitle() = runBlocking {
+        editTitleViewModel.resultStateFlow.test {
+            assertEquals(EditTitleResult.Loading, expectItem())
+
+            editTitleViewModel.loadTitle(id)
+            assertEquals(EditTitleResult.Loaded(title), expectItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun editTitleSuccess() = editTitleViewModel.resultLiveData.assertValues(
-            EditTitleResult.Loading,
-            EditTitleResult.Success
-    ) {
-        val exp = "new title"
-        editTitleViewModel.editTitle(id, exp)
-        val act = runBlocking { titleChannel.receive() }
-        assertEquals(exp, act)
+    fun editTitleSuccess() = runBlocking {
+        editTitleViewModel.resultStateFlow.test {
+            assertEquals(EditTitleResult.Loading, expectItem())
+
+            val exp = "new title"
+            editTitleViewModel.editTitle(id, exp)
+            val act = titleChannel.receive()
+            assertEquals(exp, act)
+
+            assertEquals(EditTitleResult.Success, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun editTitleEmptyTitleError() = editTitleViewModel.resultLiveData.assertValues(
-            EditTitleResult.Loading,
-            EditTitleResult.EmptyTitleError
-    ) {
-        editTitleViewModel.editTitle(id, "")
+    fun editTitleEmptyTitleError() = runBlocking {
+        editTitleViewModel.resultStateFlow.test {
+            assertEquals(EditTitleResult.Loading, expectItem())
+
+            editTitleViewModel.editTitle(id, "")
+            assertEquals(EditTitleResult.EmptyTitleError, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

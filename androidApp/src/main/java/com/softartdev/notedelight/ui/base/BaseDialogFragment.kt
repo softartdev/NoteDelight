@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Job
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.ViewModelOwnerDefinition
@@ -26,29 +27,29 @@ import org.koin.core.scope.Scope
 abstract class BaseDialogFragment(
         @StringRes private val titleStringRes: Int,
         @LayoutRes private val dialogLayoutRes: Int
-) : AppCompatDialogFragment(), KoinScopeComponent {
+) : AppCompatDialogFragment(), KoinScopeComponent, DialogInterface.OnShowListener {
 
     override val scope: Scope by lazy { fragmentScope() }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle(titleStringRes)
-                    .setView(dialogLayoutRes)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .create()
+    internal var lifecycleStateFlowJob: Job? = null
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        requireDialog().setOnShowListener {
-            val okButton = requireDialog().findViewById<Button>(android.R.id.button1)
-            okButton.setOnClickListener { onOkClicked() }
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getKoin().logger.debug("Open Fragment Scope: $scope")
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        getKoin().logger.debug("Open Fragment Scope: $scope")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(titleStringRes)
+            .setView(dialogLayoutRes)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .also { it.setOnShowListener(this@BaseDialogFragment) }
+
+    override fun onShow(dialog: DialogInterface?) {
+        val okButton = requireDialog().findViewById<Button>(android.R.id.button1)
+        okButton.setOnClickListener { onOkClicked() }
     }
 
     abstract fun onOkClicked()
@@ -65,14 +66,26 @@ abstract class BaseDialogFragment(
             .makeText(requireContext(), text, Toast.LENGTH_LONG)
             .show()
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        cancelLifecycleJobIfNeed()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_FIRST_USER, null)
+        cancelLifecycleJobIfNeed()
     }
 
     override fun onDestroy() {
         scope.close()
         super.onDestroy()
+        cancelLifecycleJobIfNeed()
+    }
+
+    private fun cancelLifecycleJobIfNeed() {
+        lifecycleStateFlowJob?.cancel()
+        lifecycleStateFlowJob = null
     }
 
     inline fun <reified T : ViewModel> viewModel(

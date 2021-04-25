@@ -3,7 +3,9 @@ package com.softartdev.notedelight.ui.signin
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.addRepeatingJob
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.databinding.ActivitySignInBinding
@@ -12,6 +14,8 @@ import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.util.gone
 import com.softartdev.notedelight.util.hideKeyboard
 import com.softartdev.notedelight.util.visible
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInResult> {
@@ -27,7 +31,9 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
             true
         }
         binding.signInButton.setOnClickListener { attemptSignIn() }
-        signInViewModel.resultLiveData.observe(this, this)
+        addRepeatingJob(Lifecycle.State.STARTED) {
+            signInViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
     }
 
     private fun attemptSignIn() {
@@ -37,6 +43,7 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
     }
 
     override fun onChanged(signInResult: SignInResult) = when (signInResult) {
+        SignInResult.ShowSignInForm -> showSignIn()
         is SignInResult.ShowProgress -> {
             binding.signInProgressView.visible()
             binding.signInLayout.gone()

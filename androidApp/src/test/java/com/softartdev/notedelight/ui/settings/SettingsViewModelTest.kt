@@ -1,10 +1,11 @@
 package com.softartdev.notedelight.ui.settings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
-import com.softartdev.notedelight.shared.test.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -28,44 +29,80 @@ class SettingsViewModelTest {
     @Test
     fun checkEncryptionFalse() = assertEncryption(false)
 
-    private fun assertEncryption(encryption: Boolean) {
+    private fun assertEncryption(encryption: Boolean) = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(encryption)
-        settingsViewModel.checkEncryption()
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.EncryptEnable(encryption))
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.checkEncryption()
+            assertEquals(SecurityResult.EncryptEnable(encryption), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun changeEncryptionSetPasswordDialog() {
-        settingsViewModel.changeEncryption(true)
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.SetPasswordDialog)
+    fun changeEncryptionSetPasswordDialog() = runBlocking {
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.changeEncryption(true)
+            assertEquals(SecurityResult.SetPasswordDialog, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun changeEncryptionPasswordDialog() {
+    fun changeEncryptionPasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
-        settingsViewModel.changeEncryption(false)
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.PasswordDialog)
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.changeEncryption(false)
+            assertEquals(SecurityResult.PasswordDialog, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun changeEncryptionEncryptEnableFalse() {
+    fun changeEncryptionEncryptEnableFalse() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
-        settingsViewModel.changeEncryption(false)
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.EncryptEnable(false))
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.changeEncryption(false)
+            assertEquals(SecurityResult.EncryptEnable(false), expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun changePasswordChangePasswordDialog() {
+    fun changePasswordChangePasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
-        settingsViewModel.changePassword()
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.ChangePasswordDialog)
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.changePassword()
+            assertEquals(SecurityResult.ChangePasswordDialog, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun changePasswordSetPasswordDialog() {
+    fun changePasswordSetPasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
-        settingsViewModel.changePassword()
-        assertEquals(settingsViewModel.resultLiveData.getOrAwaitValue(), SecurityResult.SetPasswordDialog)
+        settingsViewModel.resultStateFlow.test {
+            assertEquals(SecurityResult.Loading, expectItem())
+
+            settingsViewModel.changePassword()
+            assertEquals(SecurityResult.SetPasswordDialog, expectItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

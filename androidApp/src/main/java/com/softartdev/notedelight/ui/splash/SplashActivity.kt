@@ -3,10 +3,14 @@ package com.softartdev.notedelight.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.addRepeatingJob
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashActivity : BaseActivity(), Observer<SplashResult> {
@@ -14,10 +18,14 @@ class SplashActivity : BaseActivity(), Observer<SplashResult> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        splashViewModel.resultLiveData.observe(this, this)
+        addRepeatingJob(Lifecycle.State.STARTED) {
+            splashViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
+        splashViewModel.checkEncryption()
     }
 
     override fun onChanged(splashResult: SplashResult) = when (splashResult) {
+        SplashResult.Loading -> Unit//TODO: progress bar
         SplashResult.NavSignIn -> navSignIn()
         SplashResult.NavMain -> navMain()
         is SplashResult.ShowError -> showError(splashResult.message)
