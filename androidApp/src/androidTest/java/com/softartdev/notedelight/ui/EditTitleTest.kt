@@ -12,9 +12,9 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
@@ -30,9 +30,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class EditTitleTest {
 
-    @Rule
-    @JvmField
-    var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+    @get:Rule
+    var activityScenarioRule = activityScenarioRule<SplashActivity>()
 
     @Before
     fun registerIdlingResource() {

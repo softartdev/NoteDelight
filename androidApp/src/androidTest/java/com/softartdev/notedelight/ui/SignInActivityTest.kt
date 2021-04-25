@@ -2,6 +2,8 @@ package com.softartdev.notedelight.ui
 
 
 import android.text.SpannableStringBuilder
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
@@ -9,7 +11,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.PlatformSQLiteState
@@ -17,7 +18,6 @@ import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent.inject
@@ -26,31 +26,32 @@ import timber.log.Timber
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SignInActivityTest {
-    private val password = "password"
 
-    @Rule
-    @JvmField
-    var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
-        override fun beforeActivityLaunched() {
-            val safeRepo by inject(DatabaseRepo::class.java)
-            while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
-                safeRepo.buildDatabaseInstanceIfNeed()
-                Thread.sleep(1000)
-                Timber.d("databaseState = %s", safeRepo.databaseState.name)
-            }
-            safeRepo.encrypt(SpannableStringBuilder(password))
-            safeRepo.closeDatabase()
+    private val password = "password"
+    private lateinit var scenario: ActivityScenario<SplashActivity>
+
+    private fun prepareEncryptedDatabase() {
+        val safeRepo by inject(DatabaseRepo::class.java)
+        while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
+            safeRepo.buildDatabaseInstanceIfNeed()
+            Thread.sleep(1000)
             Timber.d("databaseState = %s", safeRepo.databaseState.name)
         }
+        safeRepo.encrypt(SpannableStringBuilder(password))
+        safeRepo.closeDatabase()
+        Timber.d("databaseState = %s", safeRepo.databaseState.name)
     }
 
     @Before
     fun registerIdlingResource() {
+        prepareEncryptedDatabase()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        scenario = launchActivity()
     }
 
     @After
     fun unregisterIdlingResource() {
+        scenario.close()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 
