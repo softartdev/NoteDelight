@@ -78,7 +78,7 @@ android {
         enableL8RuleSharing = true
         enableAssertions.set(false)
     }
-    testBuildType "release"
+    testBuildType = project.hasProperty("testBuildType") ? project.property("testBuildType") : "release"
 }
 
 dependencies {
