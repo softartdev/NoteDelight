@@ -7,11 +7,9 @@ class SplashViewModel(
         private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<SplashResult>() {
 
-    init {
-        checkEncryption()
-    }
+    override val loadingResult: SplashResult = SplashResult.Loading
 
-    private fun checkEncryption() = launch {
+    fun checkEncryption() = launch {
         when (cryptUseCase.dbIsEncrypted()) {
             true -> SplashResult.NavSignIn
             false -> SplashResult.NavMain

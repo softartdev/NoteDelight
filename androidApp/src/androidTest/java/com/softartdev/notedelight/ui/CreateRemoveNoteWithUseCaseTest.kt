@@ -38,7 +38,7 @@ class CreateRemoveNoteWithUseCaseTest {
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
-    private val noteUseCase by inject(NoteUseCase::class.java)
+    private val noteUseCase: NoteUseCase by inject(NoteUseCase::class.java)
 
     private val title = "Test title"
     private val text = "Test text"

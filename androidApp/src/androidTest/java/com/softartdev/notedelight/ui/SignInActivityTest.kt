@@ -32,7 +32,7 @@ class SignInActivityTest {
     @JvmField
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
         override fun beforeActivityLaunched() {
-            val safeRepo by inject(DatabaseRepo::class.java)
+            val safeRepo: DatabaseRepo by inject(DatabaseRepo::class.java)
             while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
                 safeRepo.buildDatabaseInstanceIfNeed()
                 Thread.sleep(1000)

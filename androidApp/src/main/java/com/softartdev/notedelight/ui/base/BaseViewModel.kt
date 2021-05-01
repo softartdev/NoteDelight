@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.ui.base
 
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.util.EspressoIdlingResource
@@ -10,9 +10,11 @@ import timber.log.Timber
 
 abstract class BaseViewModel<T> : ViewModel() {
 
-    val resultLiveData = MutableLiveData<T>()
+    open var initResult: T? = null
+    abstract val loadingResult: T
 
-    open val loadingResult: T? = null
+    private val _resultStateFlow by lazy { MutableStateFlow(initResult ?: loadingResult) }
+    val resultStateFlow: StateFlow<T> by lazy { _resultStateFlow.asStateFlow() }
 
     fun launch(
             useIdling: Boolean = true,
@@ -52,8 +54,13 @@ abstract class BaseViewModel<T> : ViewModel() {
     }
 
     private suspend inline fun onResult(result: T) = withContext(Dispatchers.Main) {
-        resultLiveData.value = result
+        _resultStateFlow.value = result
     }
 
     abstract fun errorResult(throwable: Throwable): T
+
+    @VisibleForTesting
+    fun resetLoadingResult() {
+        _resultStateFlow.value = loadingResult
+    }
 }

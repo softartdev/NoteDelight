@@ -3,9 +3,12 @@ package com.softartdev.notedelight.ui.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.addRepeatingJob
 import androidx.preference.*
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -16,6 +19,8 @@ import com.softartdev.notedelight.ui.settings.security.confirm.ConfirmPasswordDi
 import com.softartdev.notedelight.ui.settings.security.enter.EnterPasswordDialog
 import com.softartdev.notedelight.util.ThemeHelper
 import com.softartdev.notedelight.util.tintIcon
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 @SuppressLint("InflateParams")
@@ -54,13 +59,16 @@ class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListen
         versionPreference?.summary = createMultiplatformMessage()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        settingsViewModel.resultLiveData.observe(this, this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.addRepeatingJob(Lifecycle.State.STARTED) {
+            settingsViewModel.resultStateFlow.onEach(::onChanged).collect()
+        }
         settingsViewModel.checkEncryption()
     }
 
     override fun onChanged(securityResult: SecurityResult) = when (securityResult) {
+        is SecurityResult.Loading -> Unit //TODO: progress bar
         is SecurityResult.EncryptEnable -> showEncryptEnable(securityResult.encryption)
         is SecurityResult.PasswordDialog -> showDialogFragment(EnterPasswordDialog())
         is SecurityResult.SetPasswordDialog -> showDialogFragment(ConfirmPasswordDialog())
