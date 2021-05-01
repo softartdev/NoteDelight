@@ -23,8 +23,10 @@ class IosDatabaseTestHolder(
             wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
         },
         inMemory = true,
-        key = key,
-        rekey = rekey
+        encryptionConfig = DatabaseConfiguration.Encryption(
+            key = key,
+            rekey = rekey,
+        )
     )
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
     override val noteDb: NoteDb = createQueryWrapper(driver)
