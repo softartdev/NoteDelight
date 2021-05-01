@@ -7,14 +7,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.koin.android.ext.koin.androidContext
-import org.koin.test.AutoCloseKoinTest
+import org.koin.test.KoinTest
 import org.koin.test.category.CheckModuleTest
 import org.koin.test.check.checkModules
 import org.koin.test.mock.MockProviderRule
 import org.mockito.Mockito.mock
 
 @Category(CheckModuleTest::class)
-class ModuleCheckTest : AutoCloseKoinTest() {
+class ModuleCheckTest : KoinTest {
 
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceFragmentCompat
+import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.ViewModelOwnerDefinition
@@ -11,21 +12,15 @@ import org.koin.androidx.viewmodel.scope.BundleDefinition
 import org.koin.androidx.viewmodel.scope.getViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
-import org.koin.core.scope.KoinScopeComponent
 import org.koin.core.scope.Scope
 
-abstract class BasePrefFragment : PreferenceFragmentCompat(), KoinScopeComponent {
+abstract class BasePrefFragment : PreferenceFragmentCompat(), AndroidScopeComponent {
 
-    override val scope: Scope by lazy { fragmentScope() }
+    override val scope: Scope by fragmentScope()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getKoin().logger.debug("Open Fragment Scope: $scope")
-    }
-
-    override fun onDestroy() {
-        scope.close()
-        super.onDestroy()
+        scope.logger.debug("Open Fragment Scope: $scope")
     }
 
     inline fun <reified T : ViewModel> viewModel(

@@ -14,7 +14,7 @@ import org.koin.java.KoinJavaComponent.inject
 @RunWith(AndroidJUnit4::class)
 class CryptInstrumentedTest {
 
-    private val dbRepo by inject(DatabaseRepo::class.java)
+    private val dbRepo: DatabaseRepo by inject(DatabaseRepo::class.java)
     private val password = "password"
 
     @Test
