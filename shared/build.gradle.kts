@@ -44,7 +44,7 @@ android {
 }
 kotlin {
     android()
-    ios()
+    iosX64("ios")
     sourceSets {
         all {
             languageSettings.apply {

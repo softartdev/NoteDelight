@@ -2,7 +2,7 @@ package com.softartdev.cipherdelight
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
+import sqlite3.*
 import kotlinx.cinterop.*
 import okio.IOException
 import platform.Foundation.*
