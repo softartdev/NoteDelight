@@ -94,11 +94,6 @@ kotlin {
             dependencies {
                 api(project(":cipher-delight"))
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-                implementation("co.touchlab:sqliter:0.7.1") {
-                    version {
-                        strictly("0.7.1")
-                    }
-                }
             }
         }
         val iosTest by getting

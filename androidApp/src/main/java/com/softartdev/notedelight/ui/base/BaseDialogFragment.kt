@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
+import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.ViewModelOwnerDefinition
@@ -21,21 +22,20 @@ import org.koin.androidx.viewmodel.scope.BundleDefinition
 import org.koin.androidx.viewmodel.scope.getViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
-import org.koin.core.scope.KoinScopeComponent
 import org.koin.core.scope.Scope
 
 abstract class BaseDialogFragment(
         @StringRes private val titleStringRes: Int,
         @LayoutRes private val dialogLayoutRes: Int
-) : AppCompatDialogFragment(), KoinScopeComponent, DialogInterface.OnShowListener {
+) : AppCompatDialogFragment(), AndroidScopeComponent, DialogInterface.OnShowListener {
 
-    override val scope: Scope by lazy { fragmentScope() }
+    override val scope: Scope by fragmentScope()
 
     internal var lifecycleStateFlowJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getKoin().logger.debug("Open Fragment Scope: $scope")
+        scope.logger.debug("Open Fragment Scope: $scope")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -78,7 +78,6 @@ abstract class BaseDialogFragment(
     }
 
     override fun onDestroy() {
-        scope.close()
         super.onDestroy()
         cancelLifecycleJobIfNeed()
     }

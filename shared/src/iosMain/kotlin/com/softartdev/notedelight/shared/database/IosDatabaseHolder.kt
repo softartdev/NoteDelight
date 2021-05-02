@@ -22,8 +22,10 @@ class IosDatabaseHolder(
         upgrade = { connection, oldVersion, newVersion ->
             wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
         },
-        key = key,
-        rekey = rekey
+        encryptionConfig = DatabaseConfiguration.Encryption(
+            key = key,
+            rekey = rekey,
+        )
     )
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
     override val noteDb: NoteDb = createQueryWrapper(driver)
