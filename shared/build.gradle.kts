@@ -109,6 +109,6 @@ kotlin {
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-//        linkSqlite = false
+        linkSqlite = false
     }
 }
