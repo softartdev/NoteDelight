@@ -2,6 +2,8 @@ package = sqlite3
 headers = sqlite3.h
 headerFilter = sqlite3*.h
 
+compilerOpts = -DSQLITE_HAS_CODEC=1
+
 linkerOpts.linux_x64 = -lpthread -ldl
 linkerOpts.macos_x64 = -lpthread -ldl
 
