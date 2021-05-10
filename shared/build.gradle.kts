@@ -44,7 +44,7 @@ android {
 }
 kotlin {
     android()
-    ios()
+    iosX64("ios")
     sourceSets {
         all {
             languageSettings.apply {
@@ -109,6 +109,6 @@ kotlin {
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-//        linkSqlite = false
+        linkSqlite = false
     }
 }

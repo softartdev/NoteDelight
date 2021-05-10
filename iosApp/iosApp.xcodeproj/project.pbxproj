@@ -615,17 +615,20 @@
 					"$(inherited)",
 					"\"${PODS_ROOT}/../../shared/build/cocoapods/framework\"",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"SQLITE_HAS_CODEC=1",
+				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = (
-					"$(inherited)",
 					"-ObjC",
 					"-l\"c++\"",
-					"-framework",
-					"\"shared\"",
 					"-lsqlite3",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight;
@@ -648,17 +651,20 @@
 					"$(inherited)",
 					"\"${PODS_ROOT}/../../shared/build/cocoapods/framework\"",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"SQLITE_HAS_CODEC=1",
+				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = (
-					"$(inherited)",
 					"-ObjC",
 					"-l\"c++\"",
-					"-framework",
-					"\"shared\"",
 					"-lsqlite3",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight;
