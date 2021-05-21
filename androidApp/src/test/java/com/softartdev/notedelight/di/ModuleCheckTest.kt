@@ -7,6 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.logger.Level
 import org.koin.test.KoinTest
 import org.koin.test.category.CheckModuleTest
 import org.koin.test.check.checkModules
@@ -30,7 +31,9 @@ class ModuleCheckTest : KoinTest {
     private val mockContext = mock(Context::class.java)
 
     @Test
-    fun checkModules() = checkModules {
+    fun checkModules() = checkModules(
+        level = Level.DEBUG
+    ) {
         androidContext(mockContext)
         modules(testModule + mvvmModule)
     }
