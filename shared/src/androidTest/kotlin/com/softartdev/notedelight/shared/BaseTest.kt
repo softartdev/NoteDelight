@@ -15,4 +15,8 @@ actual abstract class BaseTest {
     actual fun <T> runTest(block: suspend CoroutineScope.() -> T) {
         runBlocking { block() }
     }
+
+    actual fun deleteDb() {
+        TODO()
+    }
 }

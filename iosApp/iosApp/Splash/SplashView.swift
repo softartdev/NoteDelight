@@ -18,7 +18,7 @@ struct SplashView: View {
         splashView()
             .navigationTitle("Note Delight")
             .onAppear(perform: {
-                self.viewModel.check()
+                self.viewModel.check(dbRepo: dbRepo)
             })
     }
     

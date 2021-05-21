@@ -1,18 +1,17 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.PlatformSQLiteState
+import com.softartdev.notedelight.shared.IosCipherUtils
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 import kotlin.native.concurrent.freeze
 
 class IosDbRepo : DatabaseRepo() {
 
-    private var dbHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var dbHolder: DatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
-        get() = when (dbHolder) { //TODO implement check
-            null -> PlatformSQLiteState.DOES_NOT_EXIST
-            else -> PlatformSQLiteState.UNENCRYPTED
-        }
+        get() = IosCipherUtils.getDatabaseState(DB_NAME)
 
     override val noteQueries: NoteQueries
         get() = dbHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
@@ -31,9 +30,8 @@ class IosDbRepo : DatabaseRepo() {
 
     override fun decrypt(oldPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseHolder(
-            key = oldPass.toString()
-        ).freeze()
+        IosCipherUtils.decrypt(oldPass.toString(), DB_NAME)
+        dbHolder = IosDatabaseHolder().freeze()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
@@ -46,8 +44,9 @@ class IosDbRepo : DatabaseRepo() {
 
     override fun encrypt(newPass: CharSequence) {
         closeDatabase()
+        IosCipherUtils.encrypt(newPass.toString(), DB_NAME)
         dbHolder = IosDatabaseHolder(
-            rekey = newPass.toString()
+            key = newPass.toString()
         ).freeze()
     }
 

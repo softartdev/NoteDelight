@@ -3,12 +3,10 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         google()
-        jcenter()
     }
 }
 rootProject.name = 'NoteDelight'
 
-include ':cipher-delight'
 include ':shared-android-test-util'
 include ':shared'
 include ':androidApp'

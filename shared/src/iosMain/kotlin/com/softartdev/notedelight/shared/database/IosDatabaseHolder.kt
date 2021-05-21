@@ -13,23 +13,32 @@ class IosDatabaseHolder(
     name: String = DatabaseRepo.DB_NAME,
     schema: SqlDriver.Schema = NoteDb.Schema
 ) : DatabaseHolder() {
-    private val configuration = DatabaseConfiguration(
-        name = name,
-        version = schema.version,
-        create = { connection ->
-            wrapConnection(connection) { schema.create(it) }
-        },
-        upgrade = { connection, oldVersion, newVersion ->
-            wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
-        },
-        encryptionConfig = DatabaseConfiguration.Encryption(
-            key = key,
-            rekey = rekey,
-        )
-    )
+    private val configuration = createDatabaseConfiguration(name, schema, key, rekey)
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries: NoteQueries = noteDb.noteQueries
 
     override fun close() = driver.close()
+
+    companion object {
+        fun createDatabaseConfiguration(
+            name: String = DatabaseRepo.DB_NAME,
+            schema: SqlDriver.Schema = NoteDb.Schema,
+            key: String? = null,
+            rekey: String? = null
+        ): DatabaseConfiguration = DatabaseConfiguration(
+            name = name,
+            version = schema.version,
+            create = { connection ->
+                wrapConnection(connection) { schema.create(it) }
+            },
+            upgrade = { connection, oldVersion, newVersion ->
+                wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+            },
+            encryptionConfig = DatabaseConfiguration.Encryption(
+                key = key,
+                rekey = rekey,
+            )
+        )
+    }
 }
