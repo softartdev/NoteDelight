@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.cipherdelight.PlatformSQLiteState
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.shared.database.createQueryWrapper
 import com.softartdev.notedelight.shared.db.NoteDb

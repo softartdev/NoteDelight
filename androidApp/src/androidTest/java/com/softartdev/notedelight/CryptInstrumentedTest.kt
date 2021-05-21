@@ -3,7 +3,7 @@ package com.softartdev.notedelight
 import android.text.SpannableStringBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.softartdev.cipherdelight.PlatformSQLiteState
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.DatabaseRepo
 import org.junit.Assert.assertEquals
 import org.junit.Test
