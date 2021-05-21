@@ -24,7 +24,7 @@ kotlin {
         homepage = "Link to the Shared Module homepage"
         ios.deploymentTarget = "14.1"
         frameworkName = "cryptdb"
-        // set path to your ios project podfile, e.g. podfile = project.file("../iosApp/Podfile")
+        podfile = project.file("../iosApp/Podfile")
     }
     
     sourceSets {
