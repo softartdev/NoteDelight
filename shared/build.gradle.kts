@@ -53,7 +53,7 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                api(project(":cipher-delight"))
+                api(project(":cryptdb"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
@@ -92,7 +92,6 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                api(project(":cipher-delight"))
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
             }
         }

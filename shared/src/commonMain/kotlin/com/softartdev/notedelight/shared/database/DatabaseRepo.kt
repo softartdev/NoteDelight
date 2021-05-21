@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
-import com.softartdev.cipherdelight.PlatformSQLiteState
+import com.softartdev.cryptdb.PlatformSQLiteState
 import com.softartdev.notedelight.shared.db.NoteQueries
 
 abstract class DatabaseRepo {

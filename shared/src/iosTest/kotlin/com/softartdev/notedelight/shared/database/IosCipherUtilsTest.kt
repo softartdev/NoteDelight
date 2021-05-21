@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.database
 
-import com.softartdev.cipherdelight.IosCipherUtils
-import com.softartdev.cipherdelight.PlatformSQLiteState
+import com.softartdev.cryptdb.IosCipherUtils
+import com.softartdev.cryptdb.PlatformSQLiteState
 import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import platform.Foundation.NSFileManager
