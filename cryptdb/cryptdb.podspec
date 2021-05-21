@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
 
     spec.ios.deployment_target = '14.1'
 
-    spec.dependency 'SQLCipher', '~> 4.4.2'
+                
 
     spec.pod_target_xcconfig = {
         'KOTLIN_TARGET[sdk=iphonesimulator*]' => 'ios_x64',

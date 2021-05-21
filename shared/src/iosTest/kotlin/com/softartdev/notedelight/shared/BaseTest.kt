@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared
 
-import com.softartdev.cryptdb.IosCipherUtils
+import com.softartdev.notedelight.shared.IosCipherUtils
 import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.IosDbRepo
 import kotlinx.coroutines.CoroutineScope

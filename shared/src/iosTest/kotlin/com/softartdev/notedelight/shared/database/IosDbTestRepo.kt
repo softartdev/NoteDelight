@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
-import com.softartdev.cryptdb.PlatformSQLiteState
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 import kotlin.native.concurrent.freeze

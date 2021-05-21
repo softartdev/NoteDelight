@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.data
 
-import com.softartdev.cryptdb.PlatformSQLiteState
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
