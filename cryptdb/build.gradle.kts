@@ -25,6 +25,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         frameworkName = "cryptdb"
         podfile = project.file("../iosApp/Podfile")
+        pod("SQLCipher", "~> 4.4.2")
     }
     
     sourceSets {
