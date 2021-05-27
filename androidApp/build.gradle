@@ -65,7 +65,6 @@ android {
                 '-Xuse-experimental=kotlin.Experimental',
                 '-Xopt-in=kotlin.time.ExperimentalTime',
         ]
-        useIR = true
     }
     lintOptions {
         abortOnError false

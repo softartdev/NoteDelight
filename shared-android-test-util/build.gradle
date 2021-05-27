@@ -25,7 +25,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
-        useIR = true
     }
     packagingOptions {
         exclude "**/attach_hotspot_windows.dll"

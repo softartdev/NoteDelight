@@ -32,7 +32,6 @@ android {
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "1.8"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=org.mylibrary.OptInAnnotation"
-        kotlinOptions.useIR = true
     }
     packagingOptions {
         exclude("META-INF/*.kotlin_module")
