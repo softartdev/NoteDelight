@@ -44,7 +44,7 @@ android {
 }
 kotlin {
     android()
-    ios()
+    iosX64("ios")
     sourceSets {
         all {
             languageSettings.apply {
@@ -53,10 +53,10 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                api(project(":cipher-delight"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+                api("com.squareup.okio:okio-multiplatform:2.9.0")
             }
         }
         val commonTest by getting {
@@ -92,8 +92,8 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                api(project(":cipher-delight"))
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.0")
             }
         }
         val iosTest by getting
@@ -104,6 +104,7 @@ kotlin {
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
         useLibraries()
+//        pod("SQLCipher", "~> 4.4.2")
     }
 }
 sqldelight {

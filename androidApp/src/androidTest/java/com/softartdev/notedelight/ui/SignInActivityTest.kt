@@ -10,9 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.database.DatabaseRepo
-import com.softartdev.notedelight.shared.database.PlatformSQLiteState
 import com.softartdev.notedelight.ui.splash.SplashActivity
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import org.junit.After

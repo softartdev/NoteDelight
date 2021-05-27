@@ -8,4 +8,6 @@ expect abstract class BaseTest() {
     val dbRepo: DatabaseRepo
 
     fun <T> runTest(block: suspend CoroutineScope.() -> T)
+
+    fun deleteDb()
 }

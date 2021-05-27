@@ -17,7 +17,8 @@ class SplashViewModel: ObservableObject {
         self.cryptUseCase = cryptUseCase
     }
     
-    func check() {
+    func check(dbRepo: DatabaseRepo) {
+        dbRepo.buildDatabaseInstanceIfNeed(passphrase: "")
         self.state = SplashViewState.loading
         self.cryptUseCase.isDbEncrypted(completionHandler: { encrypted, error in
             if let isEncrypted = encrypted {
