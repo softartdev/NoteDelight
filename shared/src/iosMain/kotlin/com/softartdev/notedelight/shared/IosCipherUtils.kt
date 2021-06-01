@@ -5,7 +5,7 @@ import cnames.structs.sqlite3_stmt
 import kotlinx.cinterop.*
 import okio.IOException
 import platform.Foundation.*
-import co.touchlab.sqliter.sqlite3.*
+import sqlite3.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 @OptIn(ExperimentalUnsignedTypes::class)

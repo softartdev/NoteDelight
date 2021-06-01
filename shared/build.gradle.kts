@@ -99,12 +99,12 @@ kotlin {
             dependencies {
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
 //                api("io.github.softartdev:sqlcipher-ktn-pod:1.1")
-                val sqliterVersion = "1.0.3-fork"
-                implementation("co.touchlab:sqliter-driver:$sqliterVersion") {
-                    version {
-                        strictly("$sqliterVersion")
-                    }
-                }
+//                val sqliterVersion = "1.0.3-fork"
+//                implementation("co.touchlab:sqliter-driver:$sqliterVersion") {
+//                    version {
+//                        strictly("$sqliterVersion")
+//                    }
+//                }
             }
         }
         val iosTest by getting
@@ -115,7 +115,10 @@ kotlin {
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
 //        useLibraries()
-//        pod("SQLCipher", "~> 4.4.2")
+        pod("SQLCipher") {
+            version = "~> 4.4.2"
+            packageName = "sqlite3"
+        }
     }
     // Configure the framework which is generated internally by cocoapods plugin
     targets.withType<KotlinNativeTarget> {
@@ -129,6 +132,6 @@ kotlin {
 sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
-//        linkSqlite = false
+        linkSqlite = false
     }
 }
