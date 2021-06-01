@@ -39,7 +39,7 @@ object IosCipherUtils {
             if (rc == SQLITE_ROW) {
                 result = PlatformSQLiteState.UNENCRYPTED
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
             } else printError("Error retrieving database", db)
             sqlite3_finalize(stmt.value)
@@ -92,7 +92,7 @@ object IosCipherUtils {
             rc = sqlite3_step(stmt.value)
             if (rc == SQLITE_ROW) {
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
                 sqlite3_close(db.value)
 
@@ -102,14 +102,26 @@ object IosCipherUtils {
                 rc = sqlite3_key(db.value, key?.ptr, key?.size ?: 0)
                 if (rc != SQLITE_OK) printError("Error key database", db)
 
-                rc = sqlite3_prepare(db.value, "ATTACH DATABASE ? AS plaintext KEY ''", -1, stmt.ptr, null)
+                rc = sqlite3_prepare(
+                    db.value,
+                    "ATTACH DATABASE ? AS plaintext KEY ''",
+                    -1,
+                    stmt.ptr,
+                    null
+                )
                 if (rc != SQLITE_OK) printError("Error preparing database", db)
                 rc = sqlite3_bind_text16(stmt.value, 1, dbPath.wcstr, newPath.length, null)
                 if (rc != SQLITE_OK) printError("Error bind text", db)
                 // Execute the statement
                 rc = sqlite3_step(stmt.value)
                 if (rc != SQLITE_OK) printError("Error executing statement", db)
-                rc = sqlite3_exec(db.value, "SELECT sqlcipher_export('main', 'plaintext')", null, null, null)
+                rc = sqlite3_exec(
+                    db.value,
+                    "SELECT sqlcipher_export('main', 'plaintext')",
+                    null,
+                    null,
+                    null
+                )
                 if (rc != SQLITE_OK) printError("Error executing sql", db)
                 rc = sqlite3_exec(db.value, "DETACH DATABASE plaintext", null, null, null)
                 if (rc != SQLITE_OK) printError("Error executing sql", db)
@@ -166,7 +178,7 @@ object IosCipherUtils {
             sqlite3_close(db.value)
             if (rc == SQLITE_ROW) {
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
 
                 rc = sqlite3_open(newPath, db.ptr)
