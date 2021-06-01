@@ -2,10 +2,10 @@ package com.softartdev.notedelight.shared
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
 import kotlinx.cinterop.*
 import okio.IOException
 import platform.Foundation.*
+import sqlite3.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -39,7 +39,7 @@ object IosCipherUtils {
             if (rc == SQLITE_ROW) {
                 result = PlatformSQLiteState.UNENCRYPTED
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
             } else printError("Error retrieving database", db)
             sqlite3_finalize(stmt.value)
@@ -91,7 +91,7 @@ object IosCipherUtils {
             rc = sqlite3_step(stmt.value)
             if (rc == SQLITE_ROW) {
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
                 sqlite3_close(db.value)
 
@@ -165,7 +165,7 @@ object IosCipherUtils {
             sqlite3_close(db.value)
             if (rc == SQLITE_ROW) {
                 val verPointer = sqlite3_column_text(stmt.value, 0)
-                val version = verPointer?.pointed?.value?.toByte()?.toChar()
+                val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
                 println("user_version: $version")
 
                 rc = sqlite3_open(newPath, db.ptr)

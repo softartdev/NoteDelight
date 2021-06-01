@@ -1,11 +1,10 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.IosCipherUtils
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import platform.Foundation.NSFileManager
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,27 +12,31 @@ import kotlin.test.assertEquals
 class IosCipherUtilsTest : BaseTest() {
 
     @Test
-    @Ignore
     fun getDatabaseStateTest() {
         IosCipherUtils.deleteDatabase()
         var exp = PlatformSQLiteState.DOES_NOT_EXIST
         var act = IosCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
         assertEquals(exp, act)
 
-        IosDatabaseHolder().close()
+        val iosDbRepo = IosDbRepo()
+        var iosDatabaseHolder: DatabaseHolder = iosDbRepo.buildDatabaseInstanceIfNeed()
+        TestSchema.insertTestNotes(iosDatabaseHolder.noteQueries)
+        println("notes.size = ${iosDatabaseHolder.noteQueries.getAll().executeAsList().size}")
+        iosDbRepo.closeDatabase()
         exp = PlatformSQLiteState.UNENCRYPTED
         act = IosCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
         assertEquals(exp, act)
 
-        IosCipherUtils.deleteDatabase()
-        IosDatabaseHolder(key = "password").close()
+        iosDbRepo.encrypt(newPass = "password")
+        iosDatabaseHolder = iosDbRepo.buildDatabaseInstanceIfNeed("password")
+        println("notes = ${iosDatabaseHolder.noteQueries.getAll().executeAsList()}")
+        iosDatabaseHolder.close()
         exp = PlatformSQLiteState.ENCRYPTED
         act = IosCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
         assertEquals(exp, act)
     }
 
     @Test
-    @Ignore
     fun checkKeyTest() = runTest {
         IosCipherUtils.deleteDatabase()
         IosDatabaseHolder().close()
