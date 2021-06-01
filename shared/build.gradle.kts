@@ -45,7 +45,11 @@ android {
 }
 kotlin {
     android()
-    iosX64("ios")
+    val knTarget = iosX64("ios")
+
+    val test by knTarget.compilations.getting
+    test.kotlinOptions.freeCompilerArgs += listOf("-linker-options", "-lsqlite3")
+
     sourceSets {
         all {
             languageSettings.apply {
@@ -94,7 +98,13 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.0")
+//                api("io.github.softartdev:sqlcipher-ktn-pod:1.1")
+                val sqliterVersion = "1.0.3-fork"
+                implementation("co.touchlab:sqliter-driver:$sqliterVersion") {
+                    version {
+                        strictly("$sqliterVersion")
+                    }
+                }
             }
         }
         val iosTest by getting

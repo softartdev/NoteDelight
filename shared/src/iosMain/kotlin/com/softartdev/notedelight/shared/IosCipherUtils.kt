@@ -2,10 +2,10 @@ package com.softartdev.notedelight.shared
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
 import kotlinx.cinterop.*
 import okio.IOException
 import platform.Foundation.*
+import co.touchlab.sqliter.sqlite3.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -79,6 +79,7 @@ object IosCipherUtils {
         println("new file is exist = $newFileIsExist")
         if (!newFileIsExist) {
             nsFileManager.createFileAtPath(newPath, null, null)
+            println("new file created = ${nsFileManager.fileExistsAtPath(newPath)}")
         }
         if (dbFileIsExist) memScoped {
             val db = allocPointerTo<sqlite3>()
