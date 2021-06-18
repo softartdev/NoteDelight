@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
@@ -19,7 +20,7 @@ import com.softartdev.notedelight.util.gone
 import com.softartdev.notedelight.util.tintIcon
 import com.softartdev.notedelight.util.visible
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(
@@ -47,8 +48,10 @@ class MainActivity : BaseActivity(
             startActivity(NoteActivity.getStartIntent(this, 0L))
         }
         binding.mainErrorView.reloadButton.setOnClickListener { mainViewModel.updateNotes() }
-        addRepeatingJob(Lifecycle.State.STARTED) {
-            mainViewModel.resultStateFlow.onEach(::onChanged).collect()
+        lifecycleScope.launch {
+            mainViewModel.resultStateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect(::onChanged)
         }
         mainViewModel.updateNotes()
     }

@@ -5,12 +5,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashActivity : BaseActivity(), Observer<SplashResult> {
@@ -18,8 +19,10 @@ class SplashActivity : BaseActivity(), Observer<SplashResult> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addRepeatingJob(Lifecycle.State.STARTED) {
-            splashViewModel.resultStateFlow.onEach(::onChanged).collect()
+        lifecycleScope.launch {
+            splashViewModel.resultStateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect(::onChanged)
         }
         splashViewModel.checkEncryption()
     }

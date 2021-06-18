@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.*
 import androidx.preference.*
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -20,7 +18,7 @@ import com.softartdev.notedelight.ui.settings.security.enter.EnterPasswordDialog
 import com.softartdev.notedelight.util.ThemeHelper
 import com.softartdev.notedelight.util.tintIcon
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @SuppressLint("InflateParams")
@@ -61,8 +59,10 @@ class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.addRepeatingJob(Lifecycle.State.STARTED) {
-            settingsViewModel.resultStateFlow.onEach(::onChanged).collect()
+        lifecycleScope.launch {
+            settingsViewModel.resultStateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect(::onChanged)
         }
         settingsViewModel.checkEncryption()
     }
