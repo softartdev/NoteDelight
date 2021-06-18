@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.text.Editable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.databinding.ActivitySignInBinding
@@ -15,7 +16,7 @@ import com.softartdev.notedelight.util.gone
 import com.softartdev.notedelight.util.hideKeyboard
 import com.softartdev.notedelight.util.visible
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInResult> {
@@ -31,8 +32,10 @@ class SignInActivity : BaseActivity(R.layout.activity_sign_in), Observer<SignInR
             true
         }
         binding.signInButton.setOnClickListener { attemptSignIn() }
-        addRepeatingJob(Lifecycle.State.STARTED) {
-            signInViewModel.resultStateFlow.onEach(::onChanged).collect()
+        lifecycleScope.launch {
+            signInViewModel.resultStateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect(::onChanged)
         }
     }
 

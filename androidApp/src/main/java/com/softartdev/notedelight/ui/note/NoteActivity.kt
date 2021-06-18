@@ -9,7 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.softartdev.notedelight.R
@@ -18,7 +19,7 @@ import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.title.EditTitleDialog
 import com.softartdev.notedelight.util.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> {
@@ -52,8 +53,10 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
             0L -> noteViewModel.createNote()
             else -> noteViewModel.loadNote(noteId)
         }
-        addRepeatingJob(Lifecycle.State.STARTED) {
-            noteViewModel.resultStateFlow.onEach(::onChanged).collect()
+        lifecycleScope.launch {
+            noteViewModel.resultStateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect(::onChanged)
         }
     }
 
