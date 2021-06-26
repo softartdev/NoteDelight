@@ -1,9 +1,7 @@
 name: iOS starter workflow
 
-on: # Trigger the workflow on push, as well as pull request events
+on:
   push:
-  pull_request:
-    branches: [ master ] # This configuration does not affect the push event above
 
 jobs:
   build:
@@ -18,10 +16,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '11'
-      - name: Decrypt large secret
-        run: ./.github/scripts/decrypt_secret.sh
-        env:
-          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
       - name: Set Default Scheme
         working-directory: ${{env.working-directory}}
         run: |
