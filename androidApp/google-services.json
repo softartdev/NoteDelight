@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "936732740110-22hdd7gug10mdh096lnp584vvpqf1ke1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softartdev.noteroom",
+            "certificate_hash": "35a2463372adfc4a54827915dc0ccdbc76a3fe9b"
+          }
+        },
+        {
           "client_id": "936732740110-l7svv0u9dtt3t64m36hohthoplih0c51.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
