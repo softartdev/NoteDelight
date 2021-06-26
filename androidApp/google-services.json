@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "936732740110",
+    "firebase_url": "https://noteroom-3ba13.firebaseio.com",
+    "project_id": "noteroom-3ba13",
+    "storage_bucket": "noteroom-3ba13.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936732740110:android:c93ab423c78ce920",
+        "android_client_info": {
+          "package_name": "com.softartdev.noteroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936732740110-l7svv0u9dtt3t64m36hohthoplih0c51.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softartdev.noteroom",
+            "certificate_hash": "4645da0e252b23d9ceaf1e87fd07172728f16b2b"
+          }
+        },
+        {
+          "client_id": "936732740110-m7ld0qha2kp62ndt321qkjafk4ajm2tg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnfCQndckLCYCs51LKSUxECaZ_9_CvFAc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936732740110-m7ld0qha2kp62ndt321qkjafk4ajm2tg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

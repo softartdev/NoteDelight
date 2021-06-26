@@ -45,7 +45,8 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+# These keys will be hardcoded in APK's xml-resources, so no point to hide them.
+#google-services.json
 
 /fastlane/api-7350020584032910214-328107-d8d3807d1e1a.json
 /fastlane/metadata/android/
