@@ -77,4 +77,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: '**/build/'
+          path: |
+            androidApp/build/outputs
+            androidApp/build/reports
