@@ -2,8 +2,10 @@ name: iOS starter workflow
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
-      - '*'
+      - '**'
 
 jobs:
   build:

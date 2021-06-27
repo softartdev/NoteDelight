@@ -2,8 +2,10 @@ name: Kotlin Multiplatform CI
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
-      - '*'
+      - '**'
 
 jobs:
   build_job:

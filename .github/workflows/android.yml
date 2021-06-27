@@ -3,7 +3,7 @@ name: Fastlane CI/CD Android
 on:
   push:
     tags:
-      - '*'
+      - '**'
 
 jobs:
   ui_test_job:
