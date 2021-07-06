@@ -12,6 +12,7 @@
 		751F6C1124C4FD79002D3F07 /* MasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F6C1024C4FD79002D3F07 /* MasterView.swift */; };
 		753045DC24BE4ED700105886 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753045DB24BE4ED700105886 /* NoteRow.swift */; };
 		753045DE24BE53A800105886 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753045DD24BE53A800105886 /* DetailView.swift */; };
+		753C20962694FA7C00CD90AE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753C20952694FA7C00CD90AE /* SignInViewModel.swift */; };
 		7542003C25E72BF200678656 /* Pods_iosApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 952FAD1252588A602DE76E7F /* Pods_iosApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		7555FF85242A565B00829871 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7555FF84242A565B00829871 /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 		751F6C1024C4FD79002D3F07 /* MasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterView.swift; sourceTree = "<group>"; };
 		753045DB24BE4ED700105886 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
 		753045DD24BE53A800105886 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		753C20952694FA7C00CD90AE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* Note Delight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Note Delight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF84242A565B00829871 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				7597CB16254F1223002A90FE /* SignInView.swift */,
+				753C20952694FA7C00CD90AE /* SignInViewModel.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				753045DE24BE53A800105886 /* DetailView.swift in Sources */,
 				759AF74C250580380020EF40 /* ErrorView.swift in Sources */,
 				7597CB17254F1223002A90FE /* SignInView.swift in Sources */,
+				753C20962694FA7C00CD90AE /* SignInViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
