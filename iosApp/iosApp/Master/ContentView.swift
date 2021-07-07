@@ -10,20 +10,28 @@ struct ContentView: View {
                 .navigationBarTitle(Text("Notes"))
                 .navigationBarItems(
                     leading: EditButton(),
-                    trailing: Button(
-                        action: {
-                            withAnimation {
-                                self.viewModel.createNote()
+                    trailing: HStack {
+                        Button(
+                            action: {
+                                withAnimation {
+                                    self.viewModel.createNote()
+                                }
                             }
+                        ) {
+                            Image(systemName: "plus")
                         }
-                    ) {
-                        Image(systemName: "plus")
+                        Spacer(minLength: 20)
+                        Button(action: {
+                            //TODO
+                        }, label: {
+                            Image(systemName: "lock")
+                        })
                     })
             DetailView(noteId: nil, viewModel: DetailViewModel(noteUseCase: self.viewModel.noteUseCase))
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
-            .onAppear(perform: {
-                self.viewModel.loadNotes()
-            })
+        .onAppear(perform: {
+            self.viewModel.loadNotes()
+        })
     }
     
     private func listView() -> AnyView {
