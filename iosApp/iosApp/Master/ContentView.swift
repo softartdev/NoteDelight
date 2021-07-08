@@ -3,7 +3,6 @@ import shared
 
 struct ContentView: View {
     @ObservedObject private(set) var viewModel: ContentViewModel
-    @State private var showingAlert = false
     
     var body: some View {
         NavigationView {
@@ -12,25 +11,22 @@ struct ContentView: View {
                 .navigationBarItems(
                     leading: EditButton(),
                     trailing: HStack {
-                        Button(
-                            action: {
-                                withAnimation {
-                                    self.viewModel.createNote()
-                                }
+                        Button(action: {
+                            withAnimation {
+                                self.viewModel.createNote()
                             }
-                        ) {
+                        }, label: {
                             Image(systemName: "plus")
-                        }
+                        })
                         Spacer(minLength: 20)
                         Button(action: {
-                            showingAlert = true
+                            withAnimation {
+                                self.viewModel.openSettings()
+                            }
                         }, label: {
                             Image(systemName: "lock")
                         })
                     })
-                .alert(isPresented: $showingAlert, content: {
-                    Alert(title: Text("title text"), message: Text("title msg"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Destruct")))
-                })
             DetailView(noteId: nil, viewModel: DetailViewModel(noteUseCase: self.viewModel.noteUseCase))
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
         .onAppear(perform: {
@@ -44,6 +40,8 @@ struct ContentView: View {
                 return AnyView(LoadingView())
             case .result(let notes):
                 return AnyView(MasterView(notes: .constant(notes), viewModel: self.viewModel))
+            case .settings:
+                return AnyView(SettingsView())
             case .error(let description):
                 return AnyView(ErrorView(message: description))
         }
