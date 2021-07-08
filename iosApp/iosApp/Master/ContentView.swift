@@ -3,6 +3,7 @@ import shared
 
 struct ContentView: View {
     @ObservedObject private(set) var viewModel: ContentViewModel
+    @State private var showingAlert = false
     
     var body: some View {
         NavigationView {
@@ -22,11 +23,14 @@ struct ContentView: View {
                         }
                         Spacer(minLength: 20)
                         Button(action: {
-                            //TODO
+                            showingAlert = true
                         }, label: {
                             Image(systemName: "lock")
                         })
                     })
+                .alert(isPresented: $showingAlert, content: {
+                    Alert(title: Text("title text"), message: Text("title msg"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Destruct")))
+                })
             DetailView(noteId: nil, viewModel: DetailViewModel(noteUseCase: self.viewModel.noteUseCase))
         }.navigationViewStyle(DoubleColumnNavigationViewStyle())
         .onAppear(perform: {
