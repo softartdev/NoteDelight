@@ -1,9 +1,9 @@
 buildscript {
     ext {
-        kotlin_version = '1.5.20'
-        coroutines_version = '1.5.0-native-mt'
-        sqldelight_version = '1.5.0'
-        timber_version = '4.7.1'
+        kotlin_version = '1.5.21'
+        coroutines_version = '1.5.1-native-mt'
+        sqldelight_version = '1.5.1'
+        timber_version = '5.0.0'
         junit_version = '4.13.2'
         mockito_version = '3.11.2'
     }
@@ -15,11 +15,11 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath 'com.android.tools.build:gradle:4.2.2'
-        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
-        classpath "com.slack.keeper:keeper:0.10.0"
+        classpath "com.slack.keeper:keeper:0.11.0"
     }
 }
 
