@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlin_version = '1.5.21'
+        kotlin_version = '1.5.30'
         coroutines_version = '1.5.1-native-mt'
         sqldelight_version = '1.5.1'
         timber_version = '5.0.1'
