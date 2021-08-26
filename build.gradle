@@ -5,7 +5,7 @@ buildscript {
         sqldelight_version = '1.5.1'
         timber_version = '5.0.1'
         junit_version = '4.13.2'
-        mockito_version = '3.12.3'
+        mockito_version = '3.12.4'
     }
     repositories {
         google()
