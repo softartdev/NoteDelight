@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlin_version = '1.5.30'
+        kotlin_version = '1.5.21'
         coroutines_version = '1.5.1-native-mt'
         sqldelight_version = '1.5.1'
         timber_version = '4.7.1'
@@ -31,6 +31,7 @@ allprojects {
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
         maven { url "https://kotlin.bintray.com/kotlinx/" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://maven.pkg.jetbrains.space/public/p/compose/dev' }
     }
     group = 'com.softartdev.notedelight'
     version = '1.0-SNAPSHOT'
