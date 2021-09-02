@@ -46,6 +46,7 @@ android {
 kotlin {
     android()
     iosX64("ios")
+    jvm()
     sourceSets {
         all {
             languageSettings.apply {
@@ -98,6 +99,17 @@ kotlin {
             }
         }
         val iosTest by getting
+        val jvmMain by getting {
+            dependencies {
+                implementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+            }
+        }
     }
     cocoapods {
         summary = "Common library for the NoteDelight app"
