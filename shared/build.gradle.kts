@@ -10,12 +10,10 @@ group = "com.softartdev.notedelight.shared"
 version = "1.0"
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 16
+        targetSdk = 30
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -33,12 +31,16 @@ android {
         kotlinOptions.jvmTarget = "1.8"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=org.mylibrary.OptInAnnotation"
     }
-    packagingOptions {
-        exclude("META-INF/*.kotlin_module")
-        exclude("**/attach_hotspot_windows.dll")
-        exclude("META-INF/licenses/**")
-        pickFirst("META-INF/AL2.0")
-        pickFirst("META-INF/LGPL2.1")
+    packagingOptions.resources {
+        excludes.addAll(listOf(
+            "META-INF/*.kotlin_module",
+            "**/attach_hotspot_windows.dll",
+            "META-INF/licenses/**"
+        ))
+        pickFirsts.addAll(listOf(
+            "META-INF/AL2.0",
+            "META-INF/LGPL2.1"
+        ))
     }
 }
 kotlin {
