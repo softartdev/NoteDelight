@@ -5,11 +5,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.softartdev.notedelight.shared.database.TestSchema
 
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Compose for Desktop",
+        title = "Note Delight",
         state = rememberWindowState(width = 300.dp, height = 300.dp)
     ) {
         App()
@@ -19,7 +20,12 @@ fun main() = application {
 @Composable
 fun App() {
     MaterialTheme {
-        HelloWorld()
+        NoteList(
+            noteList = listOf(TestSchema.firstNote,
+                TestSchema.secondNote,
+                TestSchema.thirdNote),//TODO replace with real
+            onItemClicked = {}//TODO replace with real
+        )
     }
 }
 
