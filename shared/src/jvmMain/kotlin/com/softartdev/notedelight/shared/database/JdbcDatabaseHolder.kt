@@ -10,5 +10,9 @@ class JdbcDatabaseHolder: DatabaseHolder() {
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries = noteDb.noteQueries
 
+    init {
+        if (NoteDb.Schema.version == 0) NoteDb.Schema.create(driver)
+    }
+
     override fun close() = driver.close()
 }
