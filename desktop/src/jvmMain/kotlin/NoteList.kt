@@ -29,7 +29,9 @@ fun NoteList(
 @Preview
 @Composable
 fun PreviewNoteList() {
-    val testNotes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
+    val lorem = StringBuilder().apply { repeat(100) { append("lorem ipsum ") } }.toString()
+    val longTitleNote = TestSchema.secondNote.copy(title = lorem)
+    val testNotes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote, longTitleNote)
     val onItemClicked: (id: Long) -> Unit = {}
     NoteList(testNotes, onItemClicked)
 }
