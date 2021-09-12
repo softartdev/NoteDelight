@@ -70,7 +70,7 @@ fun App(
                 }
                 is UiState.Error -> Error(err = uiState.exception.message ?: "Error")
             }
-            else -> NoteDetail(noteId, onLoadNote)
+            else -> NoteDetail(noteId, onLoadNote, currentNoteIdState)
         }
     }
 }
