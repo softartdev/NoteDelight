@@ -22,7 +22,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Note Delight",
-        state = rememberWindowState(width = 300.dp, height = 300.dp)
+        state = rememberWindowState(width = 320.dp, height = 480.dp)
     ) {
         val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
         val noteListUiState: MutableState<UiState<List<Note>>> = uiStateFrom(null) { callback ->
@@ -61,12 +61,7 @@ fun App(
                 is UiState.Loading -> Loader()
                 is UiState.Success -> when {
                     uiState.data.isEmpty() -> Empty()
-                    else -> NoteList(
-                        noteList = uiState.data,
-                        onItemClicked = { id ->
-                            currentNoteIdState.value = id
-                        }
-                    )
+                    else -> NotesMain(uiState.data, currentNoteIdState)
                 }
                 is UiState.Error -> Error(err = uiState.exception.message ?: "Error")
             }
