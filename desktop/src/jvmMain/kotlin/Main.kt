@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -22,7 +23,8 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Note Delight",
-        state = rememberWindowState(width = 320.dp, height = 480.dp)
+        state = rememberWindowState(width = 320.dp, height = 480.dp),
+        icon = painterResource(resourcePath = "app_icon.png")
     ) {
         val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
         val noteListUiState: MutableState<UiState<List<Note>>> = uiStateFrom(null) { callback ->
