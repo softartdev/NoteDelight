@@ -37,7 +37,10 @@ fun main() = application {
         }
         val onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit = { noteId, callback ->
             val stateResult: StateResult<Note> = try {
-                val note: Note = noteUseCase.loadNote(noteId)
+                val note: Note = noteUseCase.loadNote(noteId = when (noteId) {
+                    0L -> noteUseCase.createNote()
+                    else -> noteId
+                })
                 StateResult.Success(note)
             } catch (e: Exception) {
                 e.printStackTrace()
