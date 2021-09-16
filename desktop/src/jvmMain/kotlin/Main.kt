@@ -64,10 +64,7 @@ fun App(
         when (val noteId: Long? = currentNoteIdState.value) {
             null -> when (val uiState: UiState<List<Note>> = noteListState.value) {
                 is UiState.Loading -> Loader()
-                is UiState.Success -> when {
-                    uiState.data.isEmpty() -> Empty()
-                    else -> NotesMain(uiState.data, currentNoteIdState)
-                }
+                is UiState.Success -> NotesMain(uiState.data, currentNoteIdState)
                 is UiState.Error -> Error(err = uiState.exception.message ?: "Error")
             }
             else -> NoteDetail(noteId, onLoadNote, currentNoteIdState)

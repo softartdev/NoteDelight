@@ -21,12 +21,15 @@ fun NotesMain(
     modifier: Modifier = Modifier.fillMaxHeight(),
 ) {
     Box(modifier = modifier) {
-        NoteList(
-            noteList = notes,
-            onItemClicked = { id ->
-                currentNoteIdState.value = id
-            }
-        )
+        when {
+            notes.isEmpty() -> Empty()
+            else -> NoteList(
+                noteList = notes,
+                onItemClicked = { id ->
+                    currentNoteIdState.value = id
+                }
+            )
+        }
         FloatingActionButton(
             onClick = { currentNoteIdState.value = 0 },
             modifier = Modifier.align(Alignment.BottomEnd)
