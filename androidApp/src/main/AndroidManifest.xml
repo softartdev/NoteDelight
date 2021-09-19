@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.softartdev.notedelight">
 
+    <uses-sdk tools:overrideLibrary="androidx.core.splashscreen" />
+
     <application
         android:name=".NoteRoomApp"
         android:allowBackup="false"
