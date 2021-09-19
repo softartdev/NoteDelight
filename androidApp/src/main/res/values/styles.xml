@@ -3,8 +3,7 @@
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/on_secondary</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenAnimationDuration">200</item>  # Required for animated icons
-        <item name="postSplashScreenTheme">@style/AppTheme</item>  # Required.
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
 
     <!-- Base application theme. -->

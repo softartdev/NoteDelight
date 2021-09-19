@@ -21,6 +21,9 @@ class SplashActivity : BaseActivity(), Observer<SplashResult> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
+        splashScreen.setKeepVisibleCondition {
+            splashViewModel.resultStateFlow.value == SplashResult.Loading
+        }
         lifecycleScope.launch {
             splashViewModel.resultStateFlow
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
