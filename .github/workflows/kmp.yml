@@ -33,11 +33,11 @@ jobs:
           java-version: 11
       - name: Build
         run: ./gradlew build
-      - name: Archive output artifacts
+      - name: Archive build-output artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: output-artifacts
+          name: output-build-artifacts
           path: |
             androidApp/build/outputs
             androidApp/build/reports
@@ -75,3 +75,11 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: google_apis
           script: ./gradlew :androidApp:connectedCheck
+      - name: Archive ui-tests-output artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-ui-tests-artifacts
+          path: |
+            androidApp/build/outputs
+            androidApp/build/reports
