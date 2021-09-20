@@ -3,6 +3,7 @@ package com.softartdev.notedelight.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
@@ -19,6 +20,10 @@ class SplashActivity : BaseActivity(), Observer<SplashResult> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepVisibleCondition {
+            splashViewModel.resultStateFlow.value == SplashResult.Loading
+        }
         lifecycleScope.launch {
             splashViewModel.resultStateFlow
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
