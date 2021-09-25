@@ -13,7 +13,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 
 fun togglePasswordVisibility(textInputLayoutResId: Int) {
@@ -35,7 +35,7 @@ fun withError(expectedErrorText: String): Matcher<View> = object : TypeSafeMatch
     override fun matchesSafely(item: View): Boolean = when (item) {
         is TextInputLayout -> {
             val actualErrorText = item.error.toString()
-            Timber.d("Actual error text: $actualErrorText")
+            Napier.d("Actual error text: $actualErrorText")
             expectedErrorText == actualErrorText
         }
         else -> false

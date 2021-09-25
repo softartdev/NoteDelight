@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.util.EspressoIdlingResource
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 abstract class BaseViewModel<T> : ViewModel() {
 
@@ -28,7 +28,7 @@ abstract class BaseViewModel<T> : ViewModel() {
                 }
                 onResult(block())
             } catch (e: Throwable) {
-                Timber.e(e)
+                Napier.e("❌", e)
                 onResult(errorResult(e))
             } finally {
                 if (useIdling) EspressoIdlingResource.decrement()
@@ -47,7 +47,7 @@ abstract class BaseViewModel<T> : ViewModel() {
                 onResult(result)
                 if (result == loadingResult) EspressoIdlingResource.decrement()
             }.catch { throwable ->
-                Timber.e(throwable)
+                Napier.e("❌", throwable)
                 onResult(errorResult(throwable))
             }.launchIn(this)
         }.start()

@@ -6,13 +6,14 @@ import com.softartdev.notedelight.di.appModule
 import com.softartdev.notedelight.di.mvvmModule
 import com.softartdev.notedelight.util.PreferencesHelper
 import com.softartdev.notedelight.util.ThemeHelper
-import com.softartdev.notedelight.util.log.CrashlyticsTree
-import com.softartdev.notedelight.util.log.TimberKoinLogger
+import com.softartdev.notedelight.util.log.CrashlyticsAntilog
+import com.softartdev.notedelight.util.log.NapierKoinLogger
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import timber.log.Timber
 
 class NoteRoomApp : MultiDexApplication() {
 
@@ -20,9 +21,9 @@ class NoteRoomApp : MultiDexApplication() {
         super.onCreate()
         if (isInLeakCanaryAnalyzerProcess) return
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
-        Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else CrashlyticsTree())
+        Napier.base(antilog = if (BuildConfig.DEBUG) DebugAntilog() else CrashlyticsAntilog())
         startKoin {
-            logger(TimberKoinLogger(Level.DEBUG))
+            logger(NapierKoinLogger(Level.DEBUG))
             androidContext(this@NoteRoomApp)
             modules(appModule + mvvmModule)
         }

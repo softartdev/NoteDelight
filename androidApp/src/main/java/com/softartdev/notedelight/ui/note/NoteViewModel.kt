@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.ui.base.BaseViewModel
 import com.softartdev.notedelight.util.createTitle
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 
 class NoteViewModel (
@@ -22,14 +22,14 @@ class NoteViewModel (
     fun createNote() = launch {
         val note = noteUseCase.createNote()
         noteId = note
-        Timber.d("Created note with id=$noteId")
+        Napier.d("Created note with id=$noteId")
         NoteResult.Created(note)
     }
 
     fun loadNote(id: Long) = launch {
         val note = noteUseCase.loadNote(id)
         noteId = note.id
-        Timber.d("Loaded note with id=$noteId")
+        Napier.d("Loaded note with id=$noteId")
         NoteResult.Loaded(note)
     }
 
@@ -39,7 +39,7 @@ class NoteViewModel (
         } else {
             val noteTitle = title ?: createTitle(text)
             noteUseCase.saveNote(noteId, noteTitle, text)
-            Timber.d("Saved note with id=$noteId")
+            Napier.d("Saved note with id=$noteId")
             NoteResult.Saved(noteTitle)
         }
     }
@@ -65,7 +65,7 @@ class NoteViewModel (
     fun saveNoteAndNavBack(title: String?, text: String) = launch {
         val noteTitle = title ?: createTitle(text)
         noteUseCase.saveNote(noteId, noteTitle, text)
-        Timber.d("Saved and nav back")
+        Napier.d("Saved and nav back")
         NoteResult.NavBack
     }
 
@@ -74,14 +74,14 @@ class NoteViewModel (
         if (noteIsEmpty) {
             deleteNoteForResult()
         } else {
-            Timber.d("Don't save and nav back")
+            Napier.d("Don't save and nav back")
             NoteResult.NavBack
         }
     }
 
     private suspend fun deleteNoteForResult(): NoteResult {
         noteUseCase.deleteNote(noteId)
-        Timber.d("Deleted note with id=$noteId")
+        Napier.d("Deleted note with id=$noteId")
         return NoteResult.Deleted
     }
 

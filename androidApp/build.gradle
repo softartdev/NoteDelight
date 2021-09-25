@@ -103,7 +103,6 @@ dependencies {
     implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.4.7'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    implementation "com.jakewharton.timber:timber:$timber_version"
     def leak_canary_version = '2.7'
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
     implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"

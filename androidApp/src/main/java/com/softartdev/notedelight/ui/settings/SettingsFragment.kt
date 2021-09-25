@@ -19,7 +19,7 @@ import com.softartdev.notedelight.util.ThemeHelper
 import com.softartdev.notedelight.util.tintIcon
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 @SuppressLint("InflateParams")
 class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListener, Observer<SecurityResult> {
@@ -80,7 +80,7 @@ class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListen
         onPreferenceChangeListener = null
         isChecked = encryption
         onPreferenceChangeListener = this@SettingsFragment
-    } ?: Timber.e("Security switch preference is null")
+    } ?: Napier.e("Security switch preference is null")
 
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean = when (preference?.key) {
         getString(R.string.theme_key) -> {

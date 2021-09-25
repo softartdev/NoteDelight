@@ -59,6 +59,7 @@ kotlin {
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
                 api("com.squareup.okio:okio-multiplatform:2.9.0")
+                api("io.github.aakira:napier:${rootProject.extra["napierVersion"]}")
             }
         }
         val commonTest by getting {
@@ -77,7 +78,6 @@ kotlin {
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
                 api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
-                implementation("com.jakewharton.timber:timber:${rootProject.extra["timber_version"]}")
             }
         }
         val androidTest by getting {

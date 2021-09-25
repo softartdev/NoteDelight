@@ -21,7 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent.inject
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -36,11 +36,11 @@ class SignInActivityTest {
             while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
                 safeRepo.buildDatabaseInstanceIfNeed()
                 Thread.sleep(1000)
-                Timber.d("databaseState = %s", safeRepo.databaseState.name)
+                Napier.d("databaseState = ${safeRepo.databaseState.name}")
             }
             safeRepo.encrypt(SpannableStringBuilder(password))
             safeRepo.closeDatabase()
-            Timber.d("databaseState = %s", safeRepo.databaseState.name)
+            Napier.d("databaseState = ${safeRepo.databaseState.name}")
         }
     }
 
