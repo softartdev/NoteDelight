@@ -19,13 +19,13 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.softartdev.noteroom"
         minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 74
-        versionName "7.4"
+        targetSdkVersion 31
+        versionCode 75
+        versionName "7.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -91,8 +91,9 @@ dependencies {
     implementation "androidx.vectordrawable:vectordrawable:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-beta01"
     implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
     implementation 'androidx.activity:activity-ktx:1.3.1'
     implementation 'androidx.fragment:fragment-ktx:1.3.6'
     implementation 'androidx.multidex:multidex:2.0.1'

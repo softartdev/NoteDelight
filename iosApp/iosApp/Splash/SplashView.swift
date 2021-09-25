@@ -10,15 +10,13 @@ import SwiftUI
 import shared
 
 struct SplashView: View {
-    let dbRepo: DatabaseRepo
-    let cryptUseCase: CryptUseCase
     @ObservedObject var viewModel: SplashViewModel
     
     var body: some View {
         splashView()
             .navigationTitle("Note Delight")
             .onAppear(perform: {
-                self.viewModel.check(dbRepo: dbRepo)
+                self.viewModel.check()
             })
     }
     
@@ -28,9 +26,9 @@ struct SplashView: View {
                 return AnyView(LoadingView())
             case .result(let dbIsEncrypted):
                 if dbIsEncrypted {
-                    return AnyView(SignInView())
+                    return AnyView(SignInView(viewModel: SignInViewModel(cryptUseCase: viewModel.cryptUseCase, noteUseCase: viewModel.noteUseCase)))
                 } else {
-                    return AnyView(ContentView(viewModel: ContentViewModel(noteUseCase: NoteUseCase(dbRepo: self.dbRepo))))
+                    return AnyView(ContentView(viewModel: ContentViewModel(noteUseCase: viewModel.noteUseCase)))
                 }
             case .error(let description):
                 return AnyView(ErrorView(message: description))
@@ -40,9 +38,10 @@ struct SplashView: View {
 
 struct SplashView_Previews: PreviewProvider {
     static let repo = IosDbRepo()
-    static let useCae = CryptUseCase(dbRepo: repo)
-    static let viewModel = SplashViewModel(cryptUseCase: useCae)
+    static let cryptUseCase = CryptUseCase(dbRepo: repo)
+    static let noteUseCase = NoteUseCase(dbRepo: repo)
+    static let viewModel = SplashViewModel(dbRepo: repo, cryptUseCase: cryptUseCase, noteUseCase: noteUseCase)
     static var previews: some View {
-        SplashView(dbRepo: self.repo, cryptUseCase: self.useCae, viewModel: self.viewModel)
+        SplashView(viewModel: self.viewModel)
     }
 }
