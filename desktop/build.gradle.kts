@@ -19,6 +19,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${rootProject.extra["coroutines_version"]}")
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)

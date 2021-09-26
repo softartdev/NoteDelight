@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.ui.splash
 
 import com.softartdev.notedelight.shared.data.CryptUseCase
-import com.softartdev.notedelight.ui.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseViewModel
 
 class SplashViewModel(
         private val cryptUseCase: CryptUseCase

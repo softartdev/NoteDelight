@@ -1,14 +1,10 @@
-package com.softartdev.notedelight.ui.base
+package com.softartdev.notedelight.shared.base
 
-import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.softartdev.notedelight.util.EspressoIdlingResource
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import io.github.aakira.napier.Napier
 
-abstract class BaseViewModel<T> : ViewModel() {
+abstract class BaseViewModel<T> : KmmViewModel() {
 
     open var initResult: T? = null
     abstract val loadingResult: T
@@ -20,10 +16,10 @@ abstract class BaseViewModel<T> : ViewModel() {
             useIdling: Boolean = true,
             block: suspend CoroutineScope.() -> T
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 if (useIdling) {
-                    EspressoIdlingResource.increment()
+                    IdlingResource.increment()
                     loadingResult?.let { loading -> onResult(loading) }
                 }
                 onResult(block())
@@ -31,21 +27,21 @@ abstract class BaseViewModel<T> : ViewModel() {
                 Napier.e("❌", e)
                 onResult(errorResult(e))
             } finally {
-                if (useIdling) EspressoIdlingResource.decrement()
+                if (useIdling) IdlingResource.decrement()
             }
         }.start()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun launch(flow: Flow<T>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             flow.onStart {
                 loadingResult ?: return@onStart
-                EspressoIdlingResource.increment()
+                IdlingResource.increment()
                 emit(loadingResult!!)
             }.onEach { result ->
                 onResult(result)
-                if (result == loadingResult) EspressoIdlingResource.decrement()
+                if (result == loadingResult) IdlingResource.decrement()
             }.catch { throwable ->
                 Napier.e("❌", throwable)
                 onResult(errorResult(throwable))
@@ -59,7 +55,7 @@ abstract class BaseViewModel<T> : ViewModel() {
 
     abstract fun errorResult(throwable: Throwable): T
 
-    @VisibleForTesting
+//    @androidx.annotation.VisibleForTesting
     fun resetLoadingResult() {
         _resultStateFlow.value = loadingResult
     }

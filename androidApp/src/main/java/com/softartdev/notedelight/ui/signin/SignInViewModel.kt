@@ -2,7 +2,7 @@ package com.softartdev.notedelight.ui.signin
 
 import android.text.Editable
 import com.softartdev.notedelight.shared.data.CryptUseCase
-import com.softartdev.notedelight.ui.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseViewModel
 
 
 class SignInViewModel (

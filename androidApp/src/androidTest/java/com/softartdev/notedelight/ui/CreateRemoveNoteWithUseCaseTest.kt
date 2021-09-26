@@ -13,7 +13,7 @@ import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.ui.splash.SplashActivity
-import com.softartdev.notedelight.util.EspressoIdlingResource
+import com.softartdev.notedelight.shared.base.IdlingResource as EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

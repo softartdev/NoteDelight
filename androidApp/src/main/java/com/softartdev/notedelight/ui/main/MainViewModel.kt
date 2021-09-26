@@ -2,7 +2,7 @@ package com.softartdev.notedelight.ui.main
 
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.ui.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseViewModel
 import kotlinx.coroutines.flow.map
 import net.sqlcipher.database.SQLiteException
 

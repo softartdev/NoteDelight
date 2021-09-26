@@ -2,7 +2,7 @@ package com.softartdev.notedelight.ui.note
 
 import androidx.annotation.VisibleForTesting
 import com.softartdev.notedelight.shared.data.NoteUseCase
-import com.softartdev.notedelight.ui.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseViewModel
 import com.softartdev.notedelight.util.createTitle
 import io.github.aakira.napier.Napier
 

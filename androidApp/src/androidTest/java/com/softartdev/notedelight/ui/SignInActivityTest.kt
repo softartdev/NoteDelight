@@ -14,7 +14,7 @@ import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.ui.splash.SplashActivity
-import com.softartdev.notedelight.util.EspressoIdlingResource
+import com.softartdev.notedelight.shared.base.IdlingResource as EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

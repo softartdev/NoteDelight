@@ -71,7 +71,6 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
-                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
                 api("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
                 val sqliteVersion = "2.1.0"
                 implementation("androidx.sqlite:sqlite:$sqliteVersion")
@@ -79,6 +78,8 @@ kotlin {
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
                 api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+                implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
             }
         }
         val androidTest by getting {
