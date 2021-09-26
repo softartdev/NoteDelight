@@ -9,20 +9,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.presentation.note.NoteResult
+import di.AppModule
 
 @Composable
 fun NoteDetail(
     noteId: Long,
-    onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit,
-    currentNoteIdState: MutableState<Long?>
+    currentNoteIdState: MutableState<Long?>,
+    appModule: AppModule
 ) {
-    val noteUiState: MutableState<UiState<Note>> = uiStateFrom(noteId) { callback: (StateResult<Note>) -> Unit ->
-        onLoadNote(noteId, callback)
+    val noteViewModel = appModule.noteViewModel
+    when (noteId) {
+        0L -> noteViewModel.createNote()
+        else -> noteViewModel.loadNote(noteId)
     }
-    when (val uiState: UiState<Note> = noteUiState.value) {
-        is UiState.Loading -> Loader()
-        is UiState.Success -> NoteDetailBody(uiState.data, currentNoteIdState)
-        is UiState.Error -> Error(err = uiState.exception.message ?: "Error")
+    val noteState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
+    when (val noteResult: NoteResult = noteState.value) {
+        is NoteResult.Loading -> Loader()
+        is NoteResult.Loaded -> NoteDetailBody(noteResult.result, currentNoteIdState)
+        is NoteResult.Error -> Error(err = noteResult.message ?: "Error")
+        is NoteResult.CheckSaveChange -> TODO()
+        is NoteResult.Created -> TODO()
+        is NoteResult.Deleted -> TODO()
+        is NoteResult.Empty -> TODO()
+        is NoteResult.NavBack -> TODO()
+        is NoteResult.NavEditTitle -> TODO()
+        is NoteResult.Saved -> TODO()
+        is NoteResult.TitleUpdated -> TODO()
     }
 }
 
