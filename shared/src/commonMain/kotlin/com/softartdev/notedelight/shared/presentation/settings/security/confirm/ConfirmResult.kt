@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.settings.security.confirm
+package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
 sealed class ConfirmResult {
     object InitState: ConfirmResult()

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.settings.security.enter
+package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
 sealed class EnterResult {
     object InitState: EnterResult()

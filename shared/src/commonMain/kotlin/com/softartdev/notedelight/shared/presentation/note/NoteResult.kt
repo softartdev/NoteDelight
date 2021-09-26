@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.note
+package com.softartdev.notedelight.shared.presentation.note
 
 import com.softartdev.notedelight.shared.db.Note
 

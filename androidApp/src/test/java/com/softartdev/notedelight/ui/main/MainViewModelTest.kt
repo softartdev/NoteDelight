@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.presentation.main.MainViewModel
+import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow

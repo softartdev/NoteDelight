@@ -10,6 +10,8 @@ import androidx.lifecycle.*
 import androidx.preference.*
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.createMultiplatformMessage
+import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
+import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.ui.base.BasePrefFragment
 import com.softartdev.notedelight.ui.settings.security.change.ChangePasswordDialog

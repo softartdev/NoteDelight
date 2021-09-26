@@ -1,6 +1,5 @@
-package com.softartdev.notedelight.ui.settings.security.enter
+package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
-import android.text.Editable
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
 
@@ -12,7 +11,7 @@ class EnterViewModel (
     override var initResult: EnterResult? = EnterResult.InitState
     override val loadingResult: EnterResult = EnterResult.Loading
 
-    fun enterCheck(password: Editable) = launch {
+    fun enterCheck(password: CharSequence) = launch {
         if (password.isNotEmpty()) {
             when (cryptUseCase.checkPassword(password)) {
                 true -> {

@@ -3,6 +3,8 @@ package com.softartdev.notedelight.ui.signin
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.presentation.signin.SignInResult
+import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.StubEditable
 import com.softartdev.notedelight.shared.test.util.anyObject

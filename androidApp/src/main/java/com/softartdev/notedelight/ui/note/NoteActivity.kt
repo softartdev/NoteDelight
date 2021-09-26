@@ -15,6 +15,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.databinding.ActivityNoteBinding
+import com.softartdev.notedelight.shared.presentation.note.NoteResult
+import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.title.EditTitleDialog
 import com.softartdev.notedelight.util.*
@@ -63,7 +65,7 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
     override fun onChanged(noteResult: NoteResult) {
         binding.noteProgressBar.invisible()
         when (noteResult) {
-            NoteResult.Loading -> binding.noteProgressBar.visible()
+            is NoteResult.Loading -> binding.noteProgressBar.visible()
             is NoteResult.Created -> binding.noteEditText.showKeyboard()
             is NoteResult.Loaded -> {
                 noteTitle = noteResult.result.title
@@ -80,15 +82,15 @@ class NoteActivity : BaseActivity(R.layout.activity_note), Observer<NoteResult> 
             is NoteResult.TitleUpdated -> {
                 noteTitle = noteResult.title
             }
-            NoteResult.Empty -> {
+            is NoteResult.Empty -> {
                 Snackbar.make(binding.noteEditText, R.string.note_empty, Snackbar.LENGTH_LONG).show()
             }
-            NoteResult.Deleted -> {
+            is NoteResult.Deleted -> {
                 Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_LONG).show()
                 onNavBack()
             }
-            NoteResult.CheckSaveChange -> onCheckSaveChange()
-            NoteResult.NavBack -> onNavBack()
+            is NoteResult.CheckSaveChange -> onCheckSaveChange()
+            is NoteResult.NavBack -> onNavBack()
             is NoteResult.Error -> showError(noteResult.message)
         }
     }

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.settings
+package com.softartdev.notedelight.shared.presentation.settings
 
 sealed class SecurityResult {
     object Loading : SecurityResult()

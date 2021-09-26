@@ -8,6 +8,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.softartdev.notedelight.shared.presentation.splash.SplashResult
+import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity

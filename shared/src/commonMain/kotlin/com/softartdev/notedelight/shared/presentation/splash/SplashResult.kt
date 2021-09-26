@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.splash
+package com.softartdev.notedelight.shared.presentation.splash
 
 sealed class SplashResult {
     object Loading : SplashResult()

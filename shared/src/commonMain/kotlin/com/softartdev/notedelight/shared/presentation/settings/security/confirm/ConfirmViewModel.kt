@@ -1,6 +1,5 @@
-package com.softartdev.notedelight.ui.settings.security.confirm
+package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
-import android.text.Editable
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
 
@@ -12,7 +11,7 @@ class ConfirmViewModel (
     override var initResult: ConfirmResult? = ConfirmResult.InitState
     override val loadingResult: ConfirmResult = ConfirmResult.Loading
 
-    fun conformCheck(password: Editable, repeatPassword: Editable) = launch {
+    fun conformCheck(password: CharSequence, repeatPassword: CharSequence) = launch {
         when {
             password.toString() != repeatPassword.toString() -> ConfirmResult.PasswordsNoMatchError
             password.isEmpty() -> ConfirmResult.EmptyPasswordError

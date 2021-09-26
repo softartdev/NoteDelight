@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.splash
+package com.softartdev.notedelight.shared.presentation.splash
 
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel

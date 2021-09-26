@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.title
+package com.softartdev.notedelight.shared.presentation.title
 
 sealed class EditTitleResult {
     object Loading: EditTitleResult()

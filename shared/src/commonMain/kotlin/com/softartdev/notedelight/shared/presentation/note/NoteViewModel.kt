@@ -1,9 +1,7 @@
-package com.softartdev.notedelight.ui.note
+package com.softartdev.notedelight.shared.presentation.note
 
-import androidx.annotation.VisibleForTesting
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
-import com.softartdev.notedelight.util.createTitle
 import io.github.aakira.napier.Napier
 
 
@@ -92,8 +90,27 @@ class NoteViewModel (
 
     override fun errorResult(throwable: Throwable): NoteResult = NoteResult.Error(throwable.message)
 
-    @VisibleForTesting
+//    @androidx.annotation.VisibleForTesting
     fun setIdForTest(id: Long) {
         noteId = id
+    }
+
+    private fun createTitle(text: String): String {
+        // Get the note's length
+        val length = text.length
+
+        // Sets the title by getting a substring of the text that is 31 characters long
+        // or the number of characters in the note plus one, whichever is smaller.
+        var title = text.substring(0, 30.coerceAtMost(length))
+
+        // If the resulting length is more than 30 characters, chops off any
+        // trailing spaces
+        if (length > 30) {
+            val lastSpace: Int = title.lastIndexOf(' ')
+            if (lastSpace > 0) {
+                title = title.substring(0, lastSpace)
+            }
+        }
+        return title
     }
 }

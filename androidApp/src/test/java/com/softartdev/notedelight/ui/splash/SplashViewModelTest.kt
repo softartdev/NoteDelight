@@ -3,6 +3,8 @@ package com.softartdev.notedelight.ui.splash
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.presentation.splash.SplashResult
+import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.settings
+package com.softartdev.notedelight.shared.presentation.settings
 
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel

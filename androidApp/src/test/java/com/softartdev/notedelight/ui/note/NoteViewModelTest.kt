@@ -5,6 +5,8 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.presentation.note.NoteResult
+import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

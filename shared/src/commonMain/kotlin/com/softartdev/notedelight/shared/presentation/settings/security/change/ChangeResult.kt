@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.settings.security.change
+package com.softartdev.notedelight.shared.presentation.settings.security.change
 
 sealed class ChangeResult {
     object InitState: ChangeResult()

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.signin
+package com.softartdev.notedelight.shared.presentation.signin
 
 sealed class SignInResult {
     object ShowSignInForm : SignInResult()

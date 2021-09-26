@@ -12,6 +12,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.databinding.ActivityMainBinding
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.presentation.main.MainViewModel
+import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.note.NoteActivity
 import com.softartdev.notedelight.ui.signin.SignInActivity
@@ -57,7 +59,7 @@ class MainActivity : BaseActivity(
     }
 
     override fun onChanged(noteListResult: NoteListResult) = when (noteListResult) {
-        NoteListResult.Loading -> showProgress(true)
+        is NoteListResult.Loading -> showProgress(true)
         is NoteListResult.Success -> {
             showProgress(false)
             onUpdateNotes(noteListResult.result)
@@ -67,7 +69,7 @@ class MainActivity : BaseActivity(
             showProgress(false)
             showError(noteListResult.error)
         }
-        NoteListResult.NavMain -> navSignIn()
+        is NoteListResult.NavMain -> navSignIn()
     }
 
     private fun onUpdateNotes(noteList: List<Note>) {

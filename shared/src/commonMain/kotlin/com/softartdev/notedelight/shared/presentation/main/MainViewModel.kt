@@ -1,14 +1,13 @@
-package com.softartdev.notedelight.ui.main
+package com.softartdev.notedelight.shared.presentation.main
 
+import com.softartdev.notedelight.shared.base.BaseViewModel
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.base.BaseViewModel
 import kotlinx.coroutines.flow.map
-import net.sqlcipher.database.SQLiteException
 
 
-class MainViewModel (
-        private val noteUseCase: NoteUseCase
+class MainViewModel(
+    private val noteUseCase: NoteUseCase,
 ) : BaseViewModel<NoteListResult>() {
 
     override val loadingResult: NoteListResult = NoteListResult.Loading
@@ -18,12 +17,14 @@ class MainViewModel (
     }
 
     fun updateNotes() = launch(
-            flow = noteUseCase.getNotes().map { notes: List<Note> ->
-                NoteListResult.Success(notes)
-            })
+        flow = noteUseCase.getNotes().map { notes: List<Note> ->
+            NoteListResult.Success(notes)
+        })
 
-    override fun errorResult(throwable: Throwable): NoteListResult = when (throwable) {
-        is SQLiteException -> NoteListResult.NavMain
+    override fun errorResult(
+        throwable: Throwable,
+    ): NoteListResult = when (throwable::class.simpleName?.contains("SQLite")) {
+        true -> NoteListResult.NavMain
         else -> NoteListResult.Error(throwable.message)
     }
 

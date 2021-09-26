@@ -8,6 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
+import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.base.BaseDialogFragment
 import com.softartdev.notedelight.util.invisible
 import com.softartdev.notedelight.util.visible

@@ -3,6 +3,8 @@ package com.softartdev.notedelight.ui.settings
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
+import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

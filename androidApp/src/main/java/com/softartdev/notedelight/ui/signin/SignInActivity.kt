@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.databinding.ActivitySignInBinding
+import com.softartdev.notedelight.shared.presentation.signin.SignInResult
+import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.base.BaseActivity
 import com.softartdev.notedelight.ui.main.MainActivity
 import com.softartdev.notedelight.util.gone

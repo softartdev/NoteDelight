@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui.title
+package com.softartdev.notedelight.shared.presentation.title
 
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel

@@ -3,6 +3,8 @@ package com.softartdev.notedelight.ui.settings.security.confirm
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
+import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import com.softartdev.notedelight.shared.test.util.StubEditable
 import kotlinx.coroutines.runBlocking
