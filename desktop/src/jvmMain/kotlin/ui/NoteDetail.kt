@@ -1,5 +1,7 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -10,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
+import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import di.AppModule
 
 @Composable
@@ -18,18 +21,21 @@ fun NoteDetail(
     currentNoteIdState: MutableState<Long?>,
     appModule: AppModule
 ) {
-    val noteViewModel = appModule.noteViewModel
-    when (noteId) {
-        0L -> noteViewModel.createNote()
-        else -> noteViewModel.loadNote(noteId)
-    }
+    val noteViewModel: NoteViewModel = remember(noteId, appModule::noteViewModel)
     val noteState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
+    DisposableEffect(noteId) {
+        when (noteId) {
+            0L -> noteViewModel.createNote()
+            else -> noteViewModel.loadNote(noteId)
+        }
+        onDispose(noteViewModel::onCleared)
+    }
     when (val noteResult: NoteResult = noteState.value) {
         is NoteResult.Loading -> Loader()
+        is NoteResult.Created -> NoteDetailBody(null, currentNoteIdState)
         is NoteResult.Loaded -> NoteDetailBody(noteResult.result, currentNoteIdState)
         is NoteResult.Error -> Error(err = noteResult.message ?: "Error")
         is NoteResult.CheckSaveChange -> TODO()
-        is NoteResult.Created -> TODO()
         is NoteResult.Deleted -> TODO()
         is NoteResult.Empty -> TODO()
         is NoteResult.NavBack -> TODO()
@@ -41,12 +47,12 @@ fun NoteDetail(
 
 @Composable
 fun NoteDetailBody(
-    note: Note,
+    note: Note?,
     currentNoteIdState: MutableState<Long?>,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(
-            title = { Text(note.title) },
+            title = { Text(note?.title.orEmpty()) },
             navigationIcon = {
                 IconButton(onClick = { currentNoteIdState.value = null }) {
                     Icon(
@@ -56,7 +62,7 @@ fun NoteDetailBody(
                 }
             }
         )
-        var text by remember { mutableStateOf(note.text) }
+        var text by remember { mutableStateOf(note?.text.orEmpty()) }
         TextField(
             value = text,
             onValueChange = { text = it },
