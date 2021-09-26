@@ -1,9 +1,6 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -14,11 +11,17 @@ import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.softartdev.notedelight.shared.database.JdbcDbRepo
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
-import kotlinx.coroutines.flow.collect
+import com.softartdev.notedelight.shared.presentation.main.MainViewModel
+import com.softartdev.notedelight.shared.presentation.main.NoteListResult
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 
 fun main() = application {
+    Napier.base(antilog = DebugAntilog())
+
     val dbRepo: DatabaseRepo = JdbcDbRepo()
     val noteUseCase = NoteUseCase(dbRepo)
+    val mainViewModel = MainViewModel(noteUseCase)
 
     Window(
         onCloseRequest = ::exitApplication,
@@ -27,16 +30,6 @@ fun main() = application {
         icon = painterResource(resourcePath = "app_icon.png")
     ) {
         val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
-        val noteListUiState: MutableState<UiState<List<Note>>> = uiStateFrom(null) { callback ->
-            try {
-                noteUseCase.getNotes().collect { notes: List<Note> ->
-                    callback(StateResult.Success(notes))
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                callback(StateResult.Error(e))
-            }
-        }
         val onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit = { noteId, callback ->
             val stateResult: StateResult<Note> = try {
                 val note: Note = noteUseCase.loadNote(noteId = when (noteId) {
@@ -50,22 +43,34 @@ fun main() = application {
             }
             callback(stateResult)
         }
-        App(currentNoteIdState, noteListUiState, onLoadNote)
+        App(currentNoteIdState, mainViewModel, onLoadNote)
     }
 }
 
 @Composable
 fun App(
     currentNoteIdState: MutableState<Long?>,
-    noteListState: MutableState<UiState<List<Note>>>,
+    mainViewModel: MainViewModel,
+    onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit,
+) {
+    val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
+    mainViewModel.updateNotes()
+    MainScreen(currentNoteIdState, noteListState, onLoadNote)
+}
+
+@Composable
+fun MainScreen(
+    currentNoteIdState: MutableState<Long?>,
+    noteListState: State<NoteListResult>,
     onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit,
 ) {
     MaterialTheme {
         when (val noteId: Long? = currentNoteIdState.value) {
-            null -> when (val uiState: UiState<List<Note>> = noteListState.value) {
-                is UiState.Loading -> Loader()
-                is UiState.Success -> NotesMain(uiState.data, currentNoteIdState)
-                is UiState.Error -> Error(err = uiState.exception.message ?: "Error")
+            null -> when (val noteListResult = noteListState.value) {
+                is NoteListResult.Loading -> Loader()
+                is NoteListResult.Success -> NotesMain(noteListResult.result, currentNoteIdState)
+                is NoteListResult.NavMain -> TODO()
+                is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
             else -> NoteDetail(noteId, onLoadNote, currentNoteIdState)
         }
@@ -77,8 +82,8 @@ fun App(
 fun PreviewMain() {
     val testNotes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
     val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
-    val noteListState: MutableState<UiState<List<Note>>> = remember {
-        mutableStateOf(UiState.Success(testNotes))
+    val noteListState: MutableState<NoteListResult> = remember {
+        mutableStateOf(NoteListResult.Success(testNotes))
     }
     val onLoadNote: suspend (Long, (StateResult<Note>) -> Unit) -> Unit = { noteId, callback ->
         val stateResult = try {
@@ -89,5 +94,5 @@ fun PreviewMain() {
         }
         callback(stateResult)
     }
-    App(currentNoteIdState, noteListState, onLoadNote)
+    MainScreen(currentNoteIdState, noteListState, onLoadNote)
 }
