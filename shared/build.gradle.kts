@@ -71,6 +71,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
                 api("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
                 val sqliteVersion = "2.1.0"
                 implementation("androidx.sqlite:sqlite:$sqliteVersion")
