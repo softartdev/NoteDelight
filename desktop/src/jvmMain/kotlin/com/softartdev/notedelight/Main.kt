@@ -1,10 +1,13 @@
+package com.softartdev.notedelight
+
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import di.AppModule
-import di.AppModuleImpl
+import com.softartdev.notedelight.di.AppModule
+import com.softartdev.notedelight.di.AppModuleImpl
+import com.softartdev.notedelight.ui.App
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 

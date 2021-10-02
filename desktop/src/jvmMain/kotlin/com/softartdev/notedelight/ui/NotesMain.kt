@@ -1,3 +1,5 @@
+package com.softartdev.notedelight.ui
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight

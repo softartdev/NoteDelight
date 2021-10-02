@@ -1,11 +1,13 @@
+package com.softartdev.notedelight.ui
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import com.softartdev.notedelight.di.AppModule
+import com.softartdev.notedelight.di.AppModuleStub
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
-import di.AppModule
-import di.AppModuleStub
 
 @Composable
 fun App(

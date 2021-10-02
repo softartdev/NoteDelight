@@ -1,3 +1,5 @@
+package com.softartdev.notedelight.ui
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +15,7 @@ import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
-import di.AppModule
+import com.softartdev.notedelight.di.AppModule
 
 @Composable
 fun NoteDetail(

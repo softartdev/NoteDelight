@@ -1,4 +1,4 @@
-package di
+package com.softartdev.notedelight.di
 
 import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.data.NoteUseCase
