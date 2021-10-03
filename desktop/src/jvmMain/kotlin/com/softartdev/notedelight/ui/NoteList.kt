@@ -22,7 +22,6 @@ fun NoteList(
                 note = it,
                 onItemClicked = onItemClicked,
             )
-
             Divider()
         }
     }

@@ -11,16 +11,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
-import com.softartdev.notedelight.di.AppModule
 
 @Composable
 fun NoteDetail(
     noteId: Long,
-    currentNoteIdState: MutableState<Long?>,
+    onBackClick: () -> Unit,
     appModule: AppModule
 ) {
     val noteViewModel: NoteViewModel = remember(noteId, appModule::noteViewModel)
@@ -34,8 +34,8 @@ fun NoteDetail(
     }
     when (val noteResult: NoteResult = noteState.value) {
         is NoteResult.Loading -> Loader()
-        is NoteResult.Created -> NoteDetailBody(null, currentNoteIdState)
-        is NoteResult.Loaded -> NoteDetailBody(noteResult.result, currentNoteIdState)
+        is NoteResult.Created -> NoteDetailBody(null, onBackClick)
+        is NoteResult.Loaded -> NoteDetailBody(noteResult.result, onBackClick)
         is NoteResult.Error -> Error(err = noteResult.message ?: "Error")
         is NoteResult.CheckSaveChange -> TODO()
         is NoteResult.Deleted -> TODO()
@@ -50,13 +50,13 @@ fun NoteDetail(
 @Composable
 fun NoteDetailBody(
     note: Note?,
-    currentNoteIdState: MutableState<Long?>,
+    onBackClick: () -> Unit,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(
             title = { Text(note?.title.orEmpty()) },
             navigationIcon = {
-                IconButton(onClick = { currentNoteIdState.value = null }) {
+                IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = null
@@ -77,6 +77,6 @@ fun NoteDetailBody(
 @Preview
 @Composable
 fun PreviewNoteDetailBody() {
-    val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
-    NoteDetailBody(TestSchema.firstNote, currentNoteIdState)
+    val onBackClick = {}
+    NoteDetailBody(TestSchema.firstNote, onBackClick)
 }

@@ -8,18 +8,15 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 
 @Composable
-fun NotesMain(
+fun NotesBox(
     notes: List<Note>,
-    currentNoteIdState: MutableState<Long?>,
+    onItemClicked: (id: Long) -> Unit, // Called on item click
     modifier: Modifier = Modifier.fillMaxHeight(),
 ) {
     Box(modifier = modifier) {
@@ -27,13 +24,11 @@ fun NotesMain(
             notes.isEmpty() -> Empty()
             else -> NoteList(
                 noteList = notes,
-                onItemClicked = { id ->
-                    currentNoteIdState.value = id
-                }
+                onItemClicked = onItemClicked
             )
         }
         FloatingActionButton(
-            onClick = { currentNoteIdState.value = 0 },
+            onClick = { onItemClicked(0) },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Icon(Icons.Default.Add, contentDescription = "Add note")
@@ -43,8 +38,8 @@ fun NotesMain(
 
 @Preview
 @Composable
-fun PreviewNotesMain() {
+fun PreviewNotesBox() {
     val testNotes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
-    val currentNoteIdState: MutableState<Long?> = remember { mutableStateOf(null) }
-    NotesMain(testNotes, currentNoteIdState, Modifier.fillMaxHeight(fraction = 0.5f))
+    val onItemClicked: (id: Long) -> Unit = {}
+    NotesBox(testNotes, onItemClicked, Modifier.fillMaxHeight(fraction = 0.5f))
 }
