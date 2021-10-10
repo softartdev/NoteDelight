@@ -5,6 +5,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.squareup.sqldelight")
     id("com.android.library")
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 group = "com.softartdev.notedelight.shared"
 version = "1.0"
@@ -60,6 +61,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
                 api("com.squareup.okio:okio-multiplatform:2.9.0")
                 api("io.github.aakira:napier:${rootProject.extra["napierVersion"]}")
+                api("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
             }
         }
         val commonTest by getting {
@@ -120,6 +122,10 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         useLibraries()
 //        pod("SQLCipher", "~> 4.4.2")
+        framework {
+//            isStatic = false
+            export("dev.icerock.moko:resources-iosx64:${rootProject.extra["moko_resources_version"]}")
+        }
     }
 }
 sqldelight {
@@ -127,4 +133,7 @@ sqldelight {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
     }
+}
+multiplatformResources {
+    multiplatformResourcesPackage = "com.softartdev.notedelight" // required
 }

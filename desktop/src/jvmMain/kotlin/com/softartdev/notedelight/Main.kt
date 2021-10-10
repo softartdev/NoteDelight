@@ -11,6 +11,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
 import com.softartdev.notedelight.di.AppModuleImpl
+import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
@@ -19,7 +20,7 @@ fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Note Delight",
+        title = MR.strings.app_name.desc().localized(),
         state = rememberWindowState(width = 320.dp, height = 480.dp),
         icon = painterResource(resourcePath = "app_icon.png")
     ) {
