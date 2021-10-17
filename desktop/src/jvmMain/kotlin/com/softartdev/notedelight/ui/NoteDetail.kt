@@ -40,7 +40,7 @@ fun NoteDetail(
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val noteResult: NoteResult = noteResultState.value) {
-        is NoteResult.Loading -> Loader()
+        is NoteResult.Loading -> Unit
         is NoteResult.Created -> {
             noteState.value = null
         }
@@ -71,6 +71,7 @@ fun NoteDetail(
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = noteViewModel::deleteNote,
         onSettingsClick = ::TODO, // nav to settings
+        showLoaing = noteResultState.value == NoteResult.Loading,
         deleteDialogState = deleteDialogState,
         snackbarHostState = snackbarHostState
     )
@@ -85,6 +86,7 @@ fun NoteDetailBody(
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    showLoaing: Boolean = true,
     deleteDialogState: MutableState<Boolean> = mutableStateOf(false),
     snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) = Box {
@@ -116,6 +118,7 @@ fun NoteDetailBody(
                 }
             }
         )
+        if (showLoaing) LinearProgressIndicator()
         TextField(
             value = text,
             onValueChange = { text = it },
@@ -143,7 +146,4 @@ fun NoteDetailBody(
 
 @Preview
 @Composable
-fun PreviewNoteDetailBody() {
-    val onBackClick = {}
-    NoteDetailBody(TestSchema.firstNote, onBackClick)
-}
+fun PreviewNoteDetailBody() = NoteDetailBody(TestSchema.firstNote)
