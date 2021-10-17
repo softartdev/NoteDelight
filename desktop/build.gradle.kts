@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -24,6 +25,8 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.desktop.currentOs)
+                implementation("org.jetbrains.compose.material:material:$composeVersion")
+                implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
                 val decomposeVersion = "0.3.1"
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
