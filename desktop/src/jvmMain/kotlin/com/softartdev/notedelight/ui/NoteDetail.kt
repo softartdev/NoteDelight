@@ -35,9 +35,7 @@ fun NoteDetail(
     val titleState: MutableState<String> = mutableStateOf(noteState.value?.title.orEmpty())
     val textState: MutableState<String> = mutableStateOf(noteState.value?.text.orEmpty())
 
-    var showDialog: Boolean by remember { mutableStateOf(false) }
-    val dismissDialog = { showDialog = false }
-    var dialogContent: @Composable () -> Unit = {}
+    val noteDialog: NoteDialog = remember { NoteDialog() }
 
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -49,32 +47,21 @@ fun NoteDetail(
         is NoteResult.Loaded -> {
             noteState.value = noteResult.result
         }
-        is NoteResult.Error -> {
-            dialogContent = { errorDialog(noteResult.message, dismissDialog) }
-            showDialog = true
-        }
-        is NoteResult.CheckSaveChange -> {
-            dialogContent = {
-                saveDialog(
-                    saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
-                    doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
-                    onDismiss = dismissDialog)
-            }
-            showDialog = true
-        }
+        is NoteResult.Error -> noteDialog.showError(noteResult.message)
+        is NoteResult.CheckSaveChange -> noteDialog.showSaveChanges(
+            saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
+            doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
+        )
         is NoteResult.Deleted -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
-            dismissDialog()
+            noteDialog.dismissDialog()
             onBackClick()
         }
         is NoteResult.Empty -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
         }
         is NoteResult.NavBack -> onBackClick()
-        is NoteResult.NavEditTitle -> {
-            dialogContent = { EditTitleDialog(noteResult.noteId, dismissDialog, appModule) }
-            showDialog = true
-        }
+        is NoteResult.NavEditTitle -> noteDialog.showEditTitle(noteId, appModule)
         is NoteResult.Saved -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_saved.localized())
         }
@@ -86,13 +73,10 @@ fun NoteDetail(
         onBackClick = onBackClick,
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
-        onDeleteClick = {
-            dialogContent = { deleteDialog(noteViewModel::deleteNote, dismissDialog) }
-            showDialog = true
-        },
+        onDeleteClick = { noteDialog.showDelete(onDeleteClick = noteViewModel::deleteNote) },
         onSettingsClick = ::TODO, // nav to settings
         showLoaing = noteResultState.value == NoteResult.Loading,
-        showDialogIfNeed = { if (showDialog) dialogContent() },
+        showDialogIfNeed = noteDialog.showDialogIfNeed,
         snackbarHostState = snackbarHostState
     )
 }
@@ -147,47 +131,6 @@ fun NoteDetailBody(
     showDialogIfNeed()
     SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
 }
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun saveDialog(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
-    title = { Text(MR.strings.note_changes_not_saved_dialog_title.localized()) },
-    text = { Text(MR.strings.note_save_change_dialog_message.localized()) },
-    buttons = {
-        Row {
-            Button(onClick = onDismiss) { Text(MR.strings.cancel.localized()) }
-            Button(onClick = doNotSaveAndNavBack) { Text(MR.strings.no.localized()) }
-            Button(onClick = saveNoteAndNavBack) { Text(MR.strings.yes.localized()) }
-        }
-    },
-    onDismissRequest = onDismiss,
-)
-
-@Composable
-fun deleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = showDialog(
-    title = MR.strings.action_delete_note.localized(),
-    text = MR.strings.note_delete_dialog_message.localized(),
-    onConfirm = onDeleteClick,
-    onDismiss = onDismiss
-)
-
-@Composable
-fun errorDialog(message: String?, dismissDialog: () -> Unit) = showDialog(
-    title = MR.strings.error_title.localized(),
-    text = message,
-    onConfirm = dismissDialog,
-    onDismiss = dismissDialog
-)
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun showDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
-    title = { Text(title) },
-    text = text?.let { { Text(it) } },
-    confirmButton = { Button(onClick = onConfirm) { Text(MR.strings.yes.localized()) } },
-    dismissButton = { Button(onClick = onDismiss) { Text(MR.strings.cancel.localized()) } },
-    onDismissRequest = onDismiss,
-)
 
 @Preview
 @Composable
