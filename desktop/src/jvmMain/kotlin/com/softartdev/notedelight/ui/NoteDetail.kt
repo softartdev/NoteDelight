@@ -36,7 +36,11 @@ fun NoteDetail(
         onDispose(noteViewModel::onCleared)
     }
     val noteState: MutableState<Note?> = remember { mutableStateOf(null) }
-    val deleteDialogState = remember { mutableStateOf(false) }
+
+    var showDialog: Boolean by remember { mutableStateOf(false) }
+    val dismissDialog = { showDialog = false }
+    var dialogContent: @Composable () -> Unit = {}
+
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val noteResult: NoteResult = noteResultState.value) {
@@ -51,7 +55,7 @@ fun NoteDetail(
         is NoteResult.CheckSaveChange -> TODO("Not implemented yet: $noteResult")
         is NoteResult.Deleted -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
-            deleteDialogState.value = false
+            dismissDialog()
             onBackClick()
         }
         is NoteResult.Empty -> coroutineScope.launch {
@@ -69,15 +73,17 @@ fun NoteDetail(
         onBackClick = onBackClick,
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
-        onDeleteClick = noteViewModel::deleteNote,
+        onDeleteClick = {
+            dialogContent = { showDialogIfNeed(dismissDialog, noteViewModel::deleteNote) }
+            showDialog = true
+        },
         onSettingsClick = ::TODO, // nav to settings
         showLoaing = noteResultState.value == NoteResult.Loading,
-        deleteDialogState = deleteDialogState,
+        showDialogIfNeed = { if (showDialog) dialogContent() },
         snackbarHostState = snackbarHostState
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoteDetailBody(
     note: Note?,
@@ -87,8 +93,8 @@ fun NoteDetailBody(
     onDeleteClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     showLoaing: Boolean = true,
-    deleteDialogState: MutableState<Boolean> = mutableStateOf(false),
-    snackbarHostState: SnackbarHostState = SnackbarHostState()
+    showDialogIfNeed: @Composable () -> Unit = {},
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) = Box {
     val title by remember { mutableStateOf(note?.title.orEmpty()) }
     var text by remember { mutableStateOf(note?.text.orEmpty()) }
@@ -110,7 +116,7 @@ fun NoteDetailBody(
                 IconButton(onClick = onEditClick) {
                     Icon(Icons.Default.Title, contentDescription = MR.strings.action_edit_title.localized())
                 }
-                IconButton(onClick = { deleteDialogState.value = true }) {
+                IconButton(onClick = onDeleteClick) {
                     Icon(Icons.Default.Delete, contentDescription = MR.strings.action_delete_note.localized())
                 }
                 IconButton(onClick = onSettingsClick) {
@@ -126,23 +132,30 @@ fun NoteDetailBody(
             label = { Text("Type text here") },
         )
     }
-    if (deleteDialogState.value) AlertDialog(
-        title = { Text(MR.strings.action_delete_note.localized()) },
-        text = { Text(MR.strings.note_delete_dialog_message.localized()) },
-        onDismissRequest = { deleteDialogState.value = false },
-        confirmButton = {
-            Button(onClick = onDeleteClick) {
-                Text(MR.strings.yes.localized())
-            }
-        },
-        dismissButton = {
-            Button(onClick = { deleteDialogState.value = false }) {
-                Text(MR.strings.cancel.localized())
-            }
-        }
-    )
+    showDialogIfNeed()
     SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun showDialogIfNeed(
+    onDismiss: () -> Unit,
+    onDeleteClick: () -> Unit,
+) = AlertDialog(
+    title = { Text(MR.strings.action_delete_note.localized()) },
+    text = { Text(MR.strings.note_delete_dialog_message.localized()) },
+    onDismissRequest = onDismiss,
+    confirmButton = {
+        Button(onClick = onDeleteClick) {
+            Text(MR.strings.yes.localized())
+        }
+    },
+    dismissButton = {
+        Button(onClick = onDismiss) {
+            Text(MR.strings.cancel.localized())
+        }
+    }
+)
 
 @Preview
 @Composable
