@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 fun NoteDetail(
     noteId: Long,
     onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     appModule: AppModule,
 ) {
     val noteViewModel: NoteViewModel = remember(noteId, appModule::noteViewModel)
@@ -74,7 +75,7 @@ fun NoteDetail(
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = { noteDialog.showDelete(onDeleteClick = noteViewModel::deleteNote) },
-        onSettingsClick = ::TODO, // nav to settings
+        onSettingsClick = onSettingsClick,
         showLoaing = noteResultState.value == NoteResult.Loading,
         showDialogIfNeed = noteDialog.showDialogIfNeed,
         snackbarHostState = snackbarHostState

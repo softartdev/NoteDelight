@@ -3,7 +3,12 @@ package com.softartdev.notedelight
 import androidx.compose.desktop.DesktopTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -24,10 +29,11 @@ fun main() = application {
         state = rememberWindowState(width = 320.dp, height = 480.dp),
         icon = painterResource(resourcePath = "app_icon.png")
     ) {
-        Surface {
-            MaterialTheme {
+        val darkThemeState: MutableState<Boolean> = remember { mutableStateOf(false) }
+        MaterialTheme(colors = if (darkThemeState.value) darkColors() else lightColors()) {
+            Surface {
                 DesktopTheme {
-                    RootUi(root()) // Render the Root and its children
+                    RootUi(root(darkThemeState)) // Render the Root and its children
                 }
             }
         }
@@ -35,11 +41,12 @@ fun main() = application {
 }
 
 @Composable
-private fun root(): Root =
+private fun root(darkThemeState: MutableState<Boolean>): Root =
     // The rememberRootComponent function provides the root ComponentContext and remembers the instance or Root
     rememberRootComponent { componentContext ->
         Root(
             componentContext = componentContext,
-            appModule = AppModuleImpl() // Supply dependencies
+            appModule = AppModuleImpl(), // Supply dependencies
+            darkThemeState = darkThemeState
         )
     }

@@ -12,7 +12,7 @@ class JdbcDbRepo : DatabaseRepo() {
     private var databaseHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
 
     override val databaseState: PlatformSQLiteState
-        get() = TODO("Not yet implemented")
+        get() = PlatformSQLiteState.UNENCRYPTED // TODO
 
     override val noteQueries: NoteQueries
         get() = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
