@@ -38,7 +38,8 @@ fun NoteDetail(
 
     val noteDialog: NoteDialog = remember { NoteDialog() }
 
-    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val snackbarHostState: SnackbarHostState = scaffoldState.snackbarHostState
     val coroutineScope = rememberCoroutineScope()
     when (val noteResult: NoteResult = noteResultState.value) {
         is NoteResult.Loading -> Unit
@@ -54,9 +55,9 @@ fun NoteDetail(
             doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
         )
         is NoteResult.Deleted -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
             noteDialog.dismissDialog()
             onBackClick()
+            snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
         }
         is NoteResult.Empty -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
@@ -69,6 +70,7 @@ fun NoteDetail(
         is NoteResult.TitleUpdated -> Unit
     }
     NoteDetailBody(
+        scaffoldState = scaffoldState,
         titleState = titleState,
         textState = textState,
         onBackClick = onBackClick,
@@ -77,13 +79,13 @@ fun NoteDetail(
         onDeleteClick = { noteDialog.showDelete(onDeleteClick = noteViewModel::deleteNote) },
         onSettingsClick = onSettingsClick,
         showLoaing = noteResultState.value == NoteResult.Loading,
-        showDialogIfNeed = noteDialog.showDialogIfNeed,
-        snackbarHostState = snackbarHostState
+        showDialogIfNeed = noteDialog.showDialogIfNeed
     )
 }
 
 @Composable
 fun NoteDetailBody(
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     titleState: MutableState<String> = mutableStateOf("Title"),
     textState: MutableState<String> = mutableStateOf("Text"),
     onBackClick: () -> Unit = {},
@@ -93,9 +95,9 @@ fun NoteDetailBody(
     onSettingsClick: () -> Unit = {},
     showLoaing: Boolean = true,
     showDialogIfNeed: @Composable () -> Unit = {},
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) = Box {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+) = Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
         TopAppBar(
             title = { Text(titleState.value) },
             navigationIcon = {
@@ -121,16 +123,19 @@ fun NoteDetailBody(
                 }
             }
         )
-        if (showLoaing) LinearProgressIndicator()
-        TextField(
-            value = textState.value,
-            onValueChange = { textState.value = it },
-            modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
-            label = { Text(MR.strings.type_text.localized()) },
-        )
+    }) {
+    Box {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            if (showLoaing) LinearProgressIndicator()
+            TextField(
+                value = textState.value,
+                onValueChange = { textState.value = it },
+                modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
+                label = { Text(MR.strings.type_text.localized()) },
+            )
+        }
+        showDialogIfNeed()
     }
-    showDialogIfNeed()
-    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
 }
 
 @Preview

@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -74,7 +75,7 @@ fun SettingsScreenBody(
             title = MR.strings.choose_theme.localized(),
             vector = Icons.Default.SettingsBrightness,
             secondaryText = { Text(MR.strings.system_default.localized()) },//TODO show current
-            trailing = {
+            trailing = { // TODO change by dialog
                 Switch(checked = darkThemeState.value, onCheckedChange = { darkThemeState.value = it })
             }
         )
@@ -108,9 +109,11 @@ fun PreferenceCategory(title: String, vector: ImageVector) = ListItem(
 fun Preference(
     title: String,
     vector: ImageVector,
+    onClick: () -> Unit = {},
     secondaryText: @Composable (() -> Unit)? = null,
     trailing: @Composable (() -> Unit)? = null,
 ) = ListItem(
+    modifier = Modifier.clickable(onClick = onClick),
     icon = { Icon(imageVector = vector, contentDescription = title) },
     text = { Text(text = title) },
     secondaryText = secondaryText,

@@ -78,6 +78,4 @@ fun ShowEditTitleDialog(
 
 @Preview
 @Composable
-fun PreviewEditTitleDialog() = NoteDetailBody(
-    showDialogIfNeed = { ShowEditTitleDialog() }
-)
+fun PreviewEditTitleDialog() = NoteDetailBody { ShowEditTitleDialog() }

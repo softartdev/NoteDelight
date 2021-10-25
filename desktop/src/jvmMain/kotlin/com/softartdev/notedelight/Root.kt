@@ -17,15 +17,13 @@ typealias Content = @Composable () -> Unit
 class Root(
     componentContext: ComponentContext, // In Decompose each component has its own ComponentContext
     private val appModule: AppModule, // Accept the AppModule as dependency,
-    private val darkThemeState: MutableState<Boolean>
+    private val darkThemeState: MutableState<Boolean>,
 ) : ComponentContext by componentContext {
 
-    private val router =
-        router<Configuration, Content>(
-            initialConfiguration = Configuration.List, // Starting with List
-            childFactory = ::createChild // The Router calls this function, providing the child Configuration and ComponentContext
-        )
-
+    private val router = router<Configuration, Content>(
+        initialConfiguration = Configuration.List, // Starting with List
+        childFactory = ::createChild // The Router calls this function, providing the child Configuration and ComponentContext
+    )
     val routerState = router.state
 
     private fun createChild(configuration: Configuration, context: ComponentContext): Content =
@@ -38,7 +36,8 @@ class Root(
     private fun noteList(): Content = {
         MainScreen(
             appModule = appModule, // Supply dependencies
-            onItemClicked = { router.push(Configuration.Details(itemId = it)) } // Push Details on item click
+            onItemClicked = { router.push(Configuration.Details(itemId = it)) }, // Push Details on item click
+            onSettingsClick = { router.push(Configuration.Settings) },
         )
     }
 
