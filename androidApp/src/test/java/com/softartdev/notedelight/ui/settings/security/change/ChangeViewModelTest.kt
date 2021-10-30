@@ -29,13 +29,13 @@ class ChangeViewModelTest {
     @Test
     fun checkChangeOldEmptyPasswordError() = runBlocking {
         changeViewModel.resultStateFlow.test {
-            assertEquals(ChangeResult.InitState, expectItem())
+            assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("")
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
-            assertEquals(ChangeResult.Loading, expectItem())
-            assertEquals(ChangeResult.OldEmptyPasswordError, expectItem())
+            assertEquals(ChangeResult.Loading, awaitItem())
+            assertEquals(ChangeResult.OldEmptyPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -44,13 +44,13 @@ class ChangeViewModelTest {
     @Test
     fun checkChangeNewEmptyPasswordError() = runBlocking {
         changeViewModel.resultStateFlow.test {
-            assertEquals(ChangeResult.InitState, expectItem())
+            assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
             val new = StubEditable("")
             changeViewModel.checkChange(old, new, new)
-            assertEquals(ChangeResult.Loading, expectItem())
-            assertEquals(ChangeResult.NewEmptyPasswordError, expectItem())
+            assertEquals(ChangeResult.Loading, awaitItem())
+            assertEquals(ChangeResult.NewEmptyPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -59,14 +59,14 @@ class ChangeViewModelTest {
     @Test
     fun checkChangePasswordsNoMatchError() = runBlocking {
         changeViewModel.resultStateFlow.test {
-            assertEquals(ChangeResult.InitState, expectItem())
+            assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
             val new = StubEditable("new")
             val rep = StubEditable("rep")
             changeViewModel.checkChange(old, new, rep)
-            assertEquals(ChangeResult.Loading, expectItem())
-            assertEquals(ChangeResult.PasswordsNoMatchError, expectItem())
+            assertEquals(ChangeResult.Loading, awaitItem())
+            assertEquals(ChangeResult.PasswordsNoMatchError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -75,14 +75,14 @@ class ChangeViewModelTest {
     @Test
     fun checkChangeSuccess() = runBlocking {
         changeViewModel.resultStateFlow.test {
-            assertEquals(ChangeResult.InitState, expectItem())
+            assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
             Mockito.`when`(cryptUseCase.checkPassword(old)).thenReturn(true)
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
-            assertEquals(ChangeResult.Loading, expectItem())
-            assertEquals(ChangeResult.Success, expectItem())
+            assertEquals(ChangeResult.Loading, awaitItem())
+            assertEquals(ChangeResult.Success, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -91,14 +91,14 @@ class ChangeViewModelTest {
     @Test
     fun checkChangeIncorrectPasswordError() = runBlocking {
         changeViewModel.resultStateFlow.test {
-            assertEquals(ChangeResult.InitState, expectItem())
+            assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
             Mockito.`when`(cryptUseCase.checkPassword(old)).thenReturn(false)
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
-            assertEquals(ChangeResult.Loading, expectItem())
-            assertEquals(ChangeResult.IncorrectPasswordError, expectItem())
+            assertEquals(ChangeResult.Loading, awaitItem())
+            assertEquals(ChangeResult.IncorrectPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

@@ -27,10 +27,10 @@ class SplashViewModelTest {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
         val splashViewModel = SplashViewModel(cryptUseCase)
         splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, expectItem())
+            assertEquals(SplashResult.Loading, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.NavSignIn, expectItem())
+            assertEquals(SplashResult.NavSignIn, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -41,10 +41,10 @@ class SplashViewModelTest {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
         val splashViewModel = SplashViewModel(cryptUseCase)
         splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, expectItem())
+            assertEquals(SplashResult.Loading, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.NavMain, expectItem())
+            assertEquals(SplashResult.NavMain, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -55,10 +55,10 @@ class SplashViewModelTest {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenThrow(RuntimeException::class.java)
         val splashViewModel = SplashViewModel(cryptUseCase)
         splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, expectItem())
+            assertEquals(SplashResult.Loading, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.ShowError(null), expectItem())
+            assertEquals(SplashResult.ShowError(null), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
