@@ -52,10 +52,10 @@ class EditTitleViewModelTest {
     @Test
     fun loadTitle() = runBlocking {
         editTitleViewModel.resultStateFlow.test {
-            assertEquals(EditTitleResult.Loading, expectItem())
+            assertEquals(EditTitleResult.Loading, awaitItem())
 
             editTitleViewModel.loadTitle(id)
-            assertEquals(EditTitleResult.Loaded(title), expectItem())
+            assertEquals(EditTitleResult.Loaded(title), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -63,14 +63,14 @@ class EditTitleViewModelTest {
     @Test
     fun editTitleSuccess() = runBlocking {
         editTitleViewModel.resultStateFlow.test {
-            assertEquals(EditTitleResult.Loading, expectItem())
+            assertEquals(EditTitleResult.Loading, awaitItem())
 
             val exp = "new title"
             editTitleViewModel.editTitle(id, exp)
             val act = titleChannel.receive()
             assertEquals(exp, act)
 
-            assertEquals(EditTitleResult.Success, expectItem())
+            assertEquals(EditTitleResult.Success, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -79,10 +79,10 @@ class EditTitleViewModelTest {
     @Test
     fun editTitleEmptyTitleError() = runBlocking {
         editTitleViewModel.resultStateFlow.test {
-            assertEquals(EditTitleResult.Loading, expectItem())
+            assertEquals(EditTitleResult.Loading, awaitItem())
 
             editTitleViewModel.editTitle(id, "")
-            assertEquals(EditTitleResult.EmptyTitleError, expectItem())
+            assertEquals(EditTitleResult.EmptyTitleError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

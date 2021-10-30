@@ -54,10 +54,10 @@ class NoteViewModelTest {
     @Test
     fun createNote() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.createNote()
-            assertEquals(NoteResult.Created(id), expectItem())
+            assertEquals(NoteResult.Created(id), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -66,10 +66,10 @@ class NoteViewModelTest {
     @Test
     fun loadNote() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.loadNote(id)
-            assertEquals(NoteResult.Loaded(note), expectItem())
+            assertEquals(NoteResult.Loaded(note), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -78,10 +78,10 @@ class NoteViewModelTest {
     @Test
     fun saveNoteEmpty() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.saveNote("", "")
-            assertEquals(NoteResult.Empty, expectItem())
+            assertEquals(NoteResult.Empty, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -90,11 +90,11 @@ class NoteViewModelTest {
     @Test
     fun saveNote() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.saveNote(title, text)
-            assertEquals(NoteResult.Saved(title), expectItem())
+            assertEquals(NoteResult.Saved(title), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -103,14 +103,14 @@ class NoteViewModelTest {
     @Test
     fun editTitle() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.editTitle()
-            assertEquals(NoteResult.NavEditTitle(id), expectItem())
+            assertEquals(NoteResult.NavEditTitle(id), awaitItem())
 
             titleChannel.send(title)
-            assertEquals(NoteResult.TitleUpdated(title), expectItem())
+            assertEquals(NoteResult.TitleUpdated(title), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -119,11 +119,11 @@ class NoteViewModelTest {
     @Test
     fun deleteNote() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.deleteNote()
-            assertEquals(NoteResult.Deleted, expectItem())
+            assertEquals(NoteResult.Deleted, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -134,11 +134,11 @@ class NoteViewModelTest {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(true)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
-            assertEquals(NoteResult.CheckSaveChange, expectItem())
+            assertEquals(NoteResult.CheckSaveChange, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -149,11 +149,11 @@ class NoteViewModelTest {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
-            assertEquals(NoteResult.NavBack, expectItem())
+            assertEquals(NoteResult.NavBack, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -164,11 +164,11 @@ class NoteViewModelTest {
         Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.checkSaveChange(title, text)
-            assertEquals(NoteResult.Deleted, expectItem())
+            assertEquals(NoteResult.Deleted, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -177,11 +177,11 @@ class NoteViewModelTest {
     @Test
     fun saveNoteAndNavBack() = runBlocking {
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.saveNoteAndNavBack(title, text)
-            assertEquals(NoteResult.NavBack, expectItem())
+            assertEquals(NoteResult.NavBack, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -191,11 +191,11 @@ class NoteViewModelTest {
     fun doNotSaveAndNavBack() = runBlocking {
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.doNotSaveAndNavBack()
-            assertEquals(NoteResult.NavBack, expectItem())
+            assertEquals(NoteResult.NavBack, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -205,11 +205,11 @@ class NoteViewModelTest {
     fun doNotSaveAndNavBackDeleted() = runBlocking {
         Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
         noteViewModel.resultStateFlow.test {
-            assertEquals(NoteResult.Loading, expectItem())
+            assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
             noteViewModel.doNotSaveAndNavBack()
-            assertEquals(NoteResult.Deleted, expectItem())
+            assertEquals(NoteResult.Deleted, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

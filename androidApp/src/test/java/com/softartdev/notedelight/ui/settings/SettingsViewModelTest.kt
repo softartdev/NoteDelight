@@ -32,10 +32,10 @@ class SettingsViewModelTest {
     private fun assertEncryption(encryption: Boolean) = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(encryption)
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.checkEncryption()
-            assertEquals(SecurityResult.EncryptEnable(encryption), expectItem())
+            assertEquals(SecurityResult.EncryptEnable(encryption), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -44,10 +44,10 @@ class SettingsViewModelTest {
     @Test
     fun changeEncryptionSetPasswordDialog() = runBlocking {
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.changeEncryption(true)
-            assertEquals(SecurityResult.SetPasswordDialog, expectItem())
+            assertEquals(SecurityResult.SetPasswordDialog, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -57,10 +57,10 @@ class SettingsViewModelTest {
     fun changeEncryptionPasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.changeEncryption(false)
-            assertEquals(SecurityResult.PasswordDialog, expectItem())
+            assertEquals(SecurityResult.PasswordDialog, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -70,10 +70,10 @@ class SettingsViewModelTest {
     fun changeEncryptionEncryptEnableFalse() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.changeEncryption(false)
-            assertEquals(SecurityResult.EncryptEnable(false), expectItem())
+            assertEquals(SecurityResult.EncryptEnable(false), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -83,10 +83,10 @@ class SettingsViewModelTest {
     fun changePasswordChangePasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.changePassword()
-            assertEquals(SecurityResult.ChangePasswordDialog, expectItem())
+            assertEquals(SecurityResult.ChangePasswordDialog, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -96,10 +96,10 @@ class SettingsViewModelTest {
     fun changePasswordSetPasswordDialog() = runBlocking {
         Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
         settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, expectItem())
+            assertEquals(SecurityResult.Loading, awaitItem())
 
             settingsViewModel.changePassword()
-            assertEquals(SecurityResult.SetPasswordDialog, expectItem())
+            assertEquals(SecurityResult.SetPasswordDialog, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

@@ -25,11 +25,11 @@ class ConfirmViewModelTest {
     @Test
     fun conformCheckPasswordsNoMatchError() = runBlocking {
         confirmViewModel.resultStateFlow.test {
-            assertEquals(ConfirmResult.InitState, expectItem())
+            assertEquals(ConfirmResult.InitState, awaitItem())
 
             confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("new pass"))
-            assertEquals(ConfirmResult.Loading, expectItem())
-            assertEquals(ConfirmResult.PasswordsNoMatchError, expectItem())
+            assertEquals(ConfirmResult.Loading, awaitItem())
+            assertEquals(ConfirmResult.PasswordsNoMatchError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -38,11 +38,11 @@ class ConfirmViewModelTest {
     @Test
     fun conformCheckEmptyPasswordError() = runBlocking {
         confirmViewModel.resultStateFlow.test {
-            assertEquals(ConfirmResult.InitState, expectItem())
+            assertEquals(ConfirmResult.InitState, awaitItem())
 
             confirmViewModel.conformCheck(StubEditable(""), StubEditable(""))
-            assertEquals(ConfirmResult.Loading, expectItem())
-            assertEquals(ConfirmResult.EmptyPasswordError, expectItem())
+            assertEquals(ConfirmResult.Loading, awaitItem())
+            assertEquals(ConfirmResult.EmptyPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -51,11 +51,11 @@ class ConfirmViewModelTest {
     @Test
     fun conformCheckSuccess() = runBlocking {
         confirmViewModel.resultStateFlow.test {
-            assertEquals(ConfirmResult.InitState, expectItem())
+            assertEquals(ConfirmResult.InitState, awaitItem())
 
             confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("pass"))
-            assertEquals(ConfirmResult.Loading, expectItem())
-            assertEquals(ConfirmResult.Success, expectItem())
+            assertEquals(ConfirmResult.Loading, awaitItem())
+            assertEquals(ConfirmResult.Success, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

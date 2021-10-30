@@ -27,13 +27,13 @@ class EnterViewModelTest {
     @Test
     fun enterCheckSuccess() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, expectItem())
+            assertEquals(EnterResult.InitState, awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
             enterViewModel.enterCheck(pass)
-            assertEquals(EnterResult.Loading, expectItem())
-            assertEquals(EnterResult.Success, expectItem())
+            assertEquals(EnterResult.Loading, awaitItem())
+            assertEquals(EnterResult.Success, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -42,13 +42,13 @@ class EnterViewModelTest {
     @Test
     fun enterCheckIncorrectPasswordError() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, expectItem())
+            assertEquals(EnterResult.InitState, awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
             enterViewModel.enterCheck(pass)
-            assertEquals(EnterResult.Loading, expectItem())
-            assertEquals(EnterResult.IncorrectPasswordError, expectItem())
+            assertEquals(EnterResult.Loading, awaitItem())
+            assertEquals(EnterResult.IncorrectPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -57,11 +57,11 @@ class EnterViewModelTest {
     @Test
     fun enterCheckEmptyPasswordError() = runBlocking {
         enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, expectItem())
+            assertEquals(EnterResult.InitState, awaitItem())
 
             enterViewModel.enterCheck(StubEditable(""))
-            assertEquals(EnterResult.Loading, expectItem())
-            assertEquals(EnterResult.EmptyPasswordError, expectItem())
+            assertEquals(EnterResult.Loading, awaitItem())
+            assertEquals(EnterResult.EmptyPasswordError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
