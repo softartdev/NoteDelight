@@ -11,6 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
+import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
+import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
+import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 
 @Stable
 class DialogHolder {
@@ -34,6 +37,18 @@ class DialogHolder {
 
     fun showDelete(onDeleteClick: () -> Unit) = showDialog {
         DeleteDialog(onDeleteClick, dismissDialog)
+    }
+
+    fun showEnterPassword(appModule: AppModule) = showDialog {
+        EnterPasswordDialog(dismissDialog, appModule)
+    }
+
+    fun showConfirmPassword(appModule: AppModule) = showDialog {
+        ConfirmPasswordDialog(dismissDialog, appModule)
+    }
+
+    fun showChangePassword(appModule: AppModule) = showDialog {
+        ChangePasswordDialog(dismissDialog, appModule)
     }
 
     fun showError(message: String?) = showDialog {

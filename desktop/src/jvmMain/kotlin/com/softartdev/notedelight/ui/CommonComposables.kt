@@ -2,16 +2,21 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.MR
 
 @Composable
 fun Loader() {
@@ -52,38 +57,55 @@ fun Error(err: String) {
     }
 }
 
-@Preview
 @Composable
-fun PreviewLoader() {
-    Loader()
+fun PasswordField(
+    passwordState: MutableState<String> = mutableStateOf("password"),
+    label: String = MR.strings.enter_password.localized(),
+    isError: Boolean = true,
+) {
+    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
+    TextField(
+        value = passwordState.value,
+        onValueChange = { passwordState.value = it },
+        label = { Text(label) },
+        isError = isError,
+        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        leadingIcon = {
+            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                Icon(imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    contentDescription = "Password visibility")
+            }
+        }
+    )
 }
 
 @Preview
 @Composable
-fun PreviewEmpty() {
-    Empty()
-}
+fun PreviewPasswordField() = PasswordField()
 
 @Preview
 @Composable
-fun PreviewError() {
-    Error(err = "Mock error")
-}
+fun PreviewLoader() = Loader()
 
 @Preview
 @Composable
-fun PreviewCommons() {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        PreviewLoader()
+fun PreviewEmpty() = Empty()
 
-        Divider()
+@Preview
+@Composable
+fun PreviewError() = Error(err = "Mock error")
 
-        PreviewEmpty()
+@Preview
+@Composable
+fun PreviewCommons() = Column(modifier = Modifier.fillMaxWidth()) {
+    PreviewLoader()
 
-        Divider()
+    Divider()
 
-        PreviewError()
-    }
+    PreviewEmpty()
+
+    Divider()
+
+    PreviewError()
 }
