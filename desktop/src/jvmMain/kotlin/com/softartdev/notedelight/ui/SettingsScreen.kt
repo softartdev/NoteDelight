@@ -31,11 +31,11 @@ fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState
         settingsViewModel.checkEncryption()
         onDispose(settingsViewModel::onCleared)
     }
+    val encryptionState = mutableStateOf(false)
     when (val securityResult = securityResultState.value) {
-        is SecurityResult.Loading -> Napier.d("loading: $securityResult")
+        is SecurityResult.Loading -> Unit
         is SecurityResult.EncryptEnable -> {
-            Napier.d("encrypt enable: ${securityResult.encryption}")
-            //TODO show
+            encryptionState.value = securityResult.encryption
         }
         is SecurityResult.PasswordDialog -> TODO()
         is SecurityResult.SetPasswordDialog -> TODO()
@@ -46,7 +46,7 @@ fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState
         }
     }
     val showLoading = securityResultState.value is SecurityResult.Loading
-    SettingsScreenBody(onBackClick, showLoading, darkThemeState)
+    SettingsScreenBody(onBackClick, showLoading, darkThemeState, encryptionState, settingsViewModel::changeEncryption)
 }
 
 @Composable
@@ -55,6 +55,7 @@ fun SettingsScreenBody(
     showLoading: Boolean = true,
     darkThemeState: MutableState<Boolean> = mutableStateOf(isSystemInDarkTheme()),
     encryptionState: MutableState<Boolean> = mutableStateOf(false),
+    changeEncryption: (Boolean) -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -86,7 +87,7 @@ fun SettingsScreenBody(
             title = MR.strings.pref_title_enable_encryption.localized(),
             vector = Icons.Default.Lock,
             trailing = {
-                Switch(checked = encryptionState.value, onCheckedChange = { encryptionState.value = it })
+                Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
             }
         )
         Preference(MR.strings.pref_title_set_password.localized(), Icons.Default.Password)
