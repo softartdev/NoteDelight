@@ -14,6 +14,7 @@ import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
+import com.softartdev.notedelight.ui.dialog.DialogHolder
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,7 +37,7 @@ fun NoteDetail(
     val titleState: MutableState<String> = mutableStateOf(noteState.value?.title.orEmpty())
     val textState: MutableState<String> = mutableStateOf(noteState.value?.text.orEmpty())
 
-    val noteDialog: NoteDialog = remember { NoteDialog() }
+    val dialogHolder: DialogHolder = remember { DialogHolder() }
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val snackbarHostState: SnackbarHostState = scaffoldState.snackbarHostState
@@ -49,13 +50,13 @@ fun NoteDetail(
         is NoteResult.Loaded -> {
             noteState.value = noteResult.result
         }
-        is NoteResult.Error -> noteDialog.showError(noteResult.message)
-        is NoteResult.CheckSaveChange -> noteDialog.showSaveChanges(
+        is NoteResult.Error -> dialogHolder.showError(noteResult.message)
+        is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
             saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
             doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
         )
         is NoteResult.Deleted -> coroutineScope.launch {
-            noteDialog.dismissDialog()
+            dialogHolder.dismissDialog()
             onBackClick()
             snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
         }
@@ -63,7 +64,7 @@ fun NoteDetail(
             snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
         }
         is NoteResult.NavBack -> onBackClick()
-        is NoteResult.NavEditTitle -> noteDialog.showEditTitle(noteId, appModule)
+        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId, appModule)
         is NoteResult.Saved -> coroutineScope.launch {
             snackbarHostState.showSnackbar(MR.strings.note_saved.localized())
         }
@@ -76,10 +77,10 @@ fun NoteDetail(
         onBackClick = onBackClick,
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
-        onDeleteClick = { noteDialog.showDelete(onDeleteClick = noteViewModel::deleteNote) },
+        onDeleteClick = { dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote) },
         onSettingsClick = onSettingsClick,
         showLoaing = noteResultState.value == NoteResult.Loading,
-        showDialogIfNeed = noteDialog.showDialogIfNeed
+        showDialogIfNeed = dialogHolder.showDialogIfNeed
     )
 }
 

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -10,9 +10,9 @@ import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
 import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
+import com.softartdev.notedelight.ui.NoteDetailBody
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun EditTitleDialog(noteId: Long, dismissDialog: () -> Unit, appModule: AppModule) {
@@ -28,9 +28,13 @@ fun EditTitleDialog(noteId: Long, dismissDialog: () -> Unit, appModule: AppModul
     val coroutineScope = rememberCoroutineScope()
     when (val editTitleResult: EditTitleResult = editTitleResultState.value) {
         is EditTitleResult.Loading -> Napier.d("🔁 $editTitleResult")
-        is EditTitleResult.Loaded -> { textState.value = editTitleResult.title }
+        is EditTitleResult.Loaded -> {
+            textState.value = editTitleResult.title
+        }
         is EditTitleResult.Success -> dismissDialog()
-        is EditTitleResult.EmptyTitleError -> { label = MR.strings.empty_title.localized() }
+        is EditTitleResult.EmptyTitleError -> {
+            label = MR.strings.empty_title.localized()
+        }
         is EditTitleResult.Error -> coroutineScope.launch {
             snackbarHostState.showSnackbar(editTitleResult.message ?: MR.strings.error_title.localized())
         }
@@ -55,26 +59,24 @@ fun ShowEditTitleDialog(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     dismissDialog: () -> Unit = {},
     onEditClick: () -> Unit = {},
-) {
-    AlertDialog(
-        title = { Text(text = MR.strings.dialog_title_change_title.localized()) },
-        text = {
-            Column {
-                if (showLoaing) LinearProgressIndicator()
-                TextField(
-                    value = textState.value,
-                    onValueChange = { textState.value = it },
-                    label = { Text(label) },
-                    isError = isError
-                )
-                SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-        },
-        confirmButton = { Button(onClick = onEditClick) { Text(MR.strings.yes.localized()) } },
-        dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.localized()) } },
-        onDismissRequest = dismissDialog,
-    )
-}
+) = AlertDialog(
+    title = { Text(text = MR.strings.dialog_title_change_title.localized()) },
+    text = {
+        Column {
+            if (showLoaing) LinearProgressIndicator()
+            TextField(
+                value = textState.value,
+                onValueChange = { textState.value = it },
+                label = { Text(label) },
+                isError = isError
+            )
+            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
+    },
+    confirmButton = { Button(onClick = onEditClick) { Text(MR.strings.yes.localized()) } },
+    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.localized()) } },
+    onDismissRequest = dismissDialog,
+)
 
 @Preview
 @Composable
