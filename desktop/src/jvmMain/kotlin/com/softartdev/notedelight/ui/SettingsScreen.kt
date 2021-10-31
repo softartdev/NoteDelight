@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
@@ -5,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,10 +32,7 @@ fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState
         onDispose(settingsViewModel::onCleared)
     }
     when (val securityResult = securityResultState.value) {
-        is SecurityResult.Loading -> {
-            Napier.d("loading: $securityResult")
-            //TODO show
-        }
+        is SecurityResult.Loading -> Napier.d("loading: $securityResult")
         is SecurityResult.EncryptEnable -> {
             Napier.d("encrypt enable: ${securityResult.encryption}")
             //TODO show
@@ -45,13 +45,14 @@ fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState
             //TODO show
         }
     }
-    SettingsScreenBody(onBackClick, darkThemeState)
+    val showLoading = securityResultState.value is SecurityResult.Loading
+    SettingsScreenBody(onBackClick, showLoading, darkThemeState)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreenBody(
     onBackClick: () -> Unit = {},
+    showLoading: Boolean = true,
     darkThemeState: MutableState<Boolean> = mutableStateOf(isSystemInDarkTheme()),
     encryptionState: MutableState<Boolean> = mutableStateOf(false),
 ) = Scaffold(
@@ -70,6 +71,7 @@ fun SettingsScreenBody(
     }
 ) {
     Column {
+        if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
         PreferenceCategory(MR.strings.theme.localized(), Icons.Default.Brightness4)
         Preference(
             title = MR.strings.choose_theme.localized(),
@@ -93,7 +95,6 @@ fun SettingsScreenBody(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PreferenceCategory(title: String, vector: ImageVector) = ListItem(
     icon = { Icon(imageVector = vector, contentDescription = title) },
@@ -104,7 +105,6 @@ fun PreferenceCategory(title: String, vector: ImageVector) = ListItem(
     }
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Preference(
     title: String,
