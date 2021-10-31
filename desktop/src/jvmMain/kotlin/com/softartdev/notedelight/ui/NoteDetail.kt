@@ -1,7 +1,10 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -11,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
@@ -33,9 +35,8 @@ fun NoteDetail(
         }
         onDispose(noteViewModel::onCleared)
     }
-    val noteState: MutableState<Note?> = remember { mutableStateOf(null) }
-    val titleState: MutableState<String> = mutableStateOf(noteState.value?.title.orEmpty())
-    val textState: MutableState<String> = mutableStateOf(noteState.value?.text.orEmpty())
+    val titleState: MutableState<String> = remember { mutableStateOf("") }
+    val textState: MutableState<String> = remember { mutableStateOf("") }
 
     val dialogHolder: DialogHolder = remember { DialogHolder() }
 
@@ -43,38 +44,41 @@ fun NoteDetail(
     val snackbarHostState: SnackbarHostState = scaffoldState.snackbarHostState
     val coroutineScope = rememberCoroutineScope()
     when (val noteResult: NoteResult = noteResultState.value) {
-        is NoteResult.Loading -> Unit
-        is NoteResult.Created -> {
-            noteState.value = null
-        }
+        is NoteResult.Loading,
+        is NoteResult.Created -> Unit
         is NoteResult.Loaded -> {
-            noteState.value = noteResult.result
+            titleState.value = noteResult.result.title
+            textState.value = noteResult.result.text
         }
-        is NoteResult.Error -> dialogHolder.showError(noteResult.message)
-        is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
-            saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
-            doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
-        )
+        is NoteResult.Saved -> coroutineScope.launch {
+            titleState.value = noteResult.title
+            val noteSaved = MR.strings.note_saved.localized() + ": " + noteResult.title
+            snackbarHostState.showSnackbar(noteSaved)
+        }
+        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId, appModule)
+        is NoteResult.TitleUpdated -> {
+            titleState.value = noteResult.title
+        }
+        is NoteResult.Empty -> coroutineScope.launch {
+            snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
+        }
         is NoteResult.Deleted -> coroutineScope.launch {
             dialogHolder.dismissDialog()
             onBackClick()
             snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
         }
-        is NoteResult.Empty -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
-        }
+        is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
+            saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
+            doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
+        )
         is NoteResult.NavBack -> onBackClick()
-        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId, appModule)
-        is NoteResult.Saved -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(MR.strings.note_saved.localized())
-        }
-        is NoteResult.TitleUpdated -> Unit
+        is NoteResult.Error -> dialogHolder.showError(noteResult.message)
     }
     NoteDetailBody(
         scaffoldState = scaffoldState,
         titleState = titleState,
         textState = textState,
-        onBackClick = onBackClick,
+        onBackClick = { noteViewModel.checkSaveChange(titleState.value, textState.value) },
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = { dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote) },
@@ -100,7 +104,7 @@ fun NoteDetailBody(
     scaffoldState = scaffoldState,
     topBar = {
         TopAppBar(
-            title = { Text(titleState.value) },
+            title = { Text(text = titleState.value, maxLines = 1) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(

@@ -5,8 +5,8 @@ import com.softartdev.notedelight.shared.base.BaseViewModel
 import io.github.aakira.napier.Napier
 
 
-class NoteViewModel (
-        private val noteUseCase: NoteUseCase
+class NoteViewModel(
+    private val noteUseCase: NoteUseCase,
 ) : BaseViewModel<NoteResult>() {
 
     private var noteId: Long = 0
@@ -35,7 +35,7 @@ class NoteViewModel (
         if (title.isNullOrEmpty() && text.isEmpty()) {
             NoteResult.Empty
         } else {
-            val noteTitle = title ?: createTitle(text)
+            val noteTitle = createTitleIfNeed(title, text)
             noteUseCase.saveNote(noteId, noteTitle, text)
             Napier.d("Saved note with id=$noteId")
             NoteResult.Saved(noteTitle)
@@ -50,7 +50,7 @@ class NoteViewModel (
     fun deleteNote() = launch { deleteNoteForResult() }
 
     fun checkSaveChange(title: String?, text: String) = launch {
-        val noteTitle = title ?: createTitle(text)
+        val noteTitle = createTitleIfNeed(title, text)
         val changed = noteUseCase.isChanged(noteId, noteTitle, text)
         val empty = noteUseCase.isEmpty(noteId)
         when {
@@ -61,7 +61,7 @@ class NoteViewModel (
     }
 
     fun saveNoteAndNavBack(title: String?, text: String) = launch {
-        val noteTitle = title ?: createTitle(text)
+        val noteTitle = createTitleIfNeed(title, text)
         noteUseCase.saveNote(noteId, noteTitle, text)
         Napier.d("Saved and nav back")
         NoteResult.NavBack
@@ -90,10 +90,13 @@ class NoteViewModel (
 
     override fun errorResult(throwable: Throwable): NoteResult = NoteResult.Error(throwable.message)
 
-//    @androidx.annotation.VisibleForTesting
+    // @androidx.annotation.VisibleForTesting
     fun setIdForTest(id: Long) {
         noteId = id
     }
+
+    private fun createTitleIfNeed(title: String?, text: String) =
+        if (title.isNullOrEmpty()) createTitle(text) else title
 
     private fun createTitle(text: String): String {
         // Get the note's length
