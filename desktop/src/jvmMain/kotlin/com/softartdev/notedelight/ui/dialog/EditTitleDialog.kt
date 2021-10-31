@@ -10,7 +10,6 @@ import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
 import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
-import com.softartdev.notedelight.ui.NoteDetailBody
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
@@ -80,4 +79,4 @@ fun ShowEditTitleDialog(
 
 @Preview
 @Composable
-fun PreviewEditTitleDialog() = NoteDetailBody { ShowEditTitleDialog() }
+fun PreviewEditTitleDialog() = PreviewDialog { ShowEditTitleDialog() }

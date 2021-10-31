@@ -1,14 +1,16 @@
 package com.softartdev.notedelight.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
-import com.softartdev.notedelight.ui.NoteDetailBody
 
 @Stable
 class DialogHolder {
@@ -59,4 +61,9 @@ fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: (
 
 @Preview
 @Composable
-fun PreviewErrorDialog() = NoteDetailBody { ErrorDialog("preview err") {} }
+fun PreviewErrorDialog() = PreviewDialog { ErrorDialog("preview err") {} }
+
+@Preview
+@Composable
+fun PreviewDialog(dialogContent: @Composable () -> Unit) =
+    Box(modifier = Modifier.fillMaxSize()) { dialogContent() }

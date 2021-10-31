@@ -2,13 +2,17 @@ package com.softartdev.notedelight.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.ui.NoteDetailBody
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -16,9 +20,11 @@ fun SaveDialog(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit, 
     title = { Text(MR.strings.note_changes_not_saved_dialog_title.localized()) },
     text = { Text(MR.strings.note_save_change_dialog_message.localized()) },
     buttons = {
-        Row {
+        Row(Modifier.padding(horizontal = 8.dp)) {
             Button(onClick = onDismiss) { Text(MR.strings.cancel.localized()) }
+            Spacer(Modifier.width(8.dp))
             Button(onClick = doNotSaveAndNavBack) { Text(MR.strings.no.localized()) }
+            Spacer(Modifier.width(8.dp))
             Button(onClick = saveNoteAndNavBack) { Text(MR.strings.yes.localized()) }
         }
     },
@@ -35,8 +41,8 @@ fun DeleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = ShowDialog(
 
 @Preview
 @Composable
-fun PreviewSaveDialog() = NoteDetailBody { SaveDialog({}, {}, {}) }
+fun PreviewSaveDialog() = PreviewDialog { SaveDialog({}, {}, {}) }
 
 @Preview
 @Composable
-fun PreviewDeleteDialog() = NoteDetailBody { DeleteDialog({}, {}) }
+fun PreviewDeleteDialog() = PreviewDialog { DeleteDialog({}, {}) }
