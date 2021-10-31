@@ -6,7 +6,6 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose") version "1.0.0-beta5"
 }
-
 group = "com.softartdev"
 version = "1.0"
 
@@ -17,6 +16,9 @@ kotlin {
         }
     }
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
+        }
         val jvmMain by getting {
             dependencies {
                 implementation(project(":shared"))
