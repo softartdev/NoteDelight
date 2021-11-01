@@ -19,9 +19,12 @@ fun MainScreen(
     onItemClicked: (id: Long) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    val mainViewModel: MainViewModel = appModule.mainViewModel
+    val mainViewModel: MainViewModel = remember(appModule::mainViewModel)
     val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
-    mainViewModel.updateNotes()
+    DisposableEffect(mainViewModel) {
+        mainViewModel.updateNotes()
+        onDispose(mainViewModel::onCleared)
+    }
     MainScreen(noteListState, onItemClicked, onSettingsClick)
 }
 
