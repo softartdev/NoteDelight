@@ -110,7 +110,7 @@ dependencies {
     def koin_version= '3.1.3'
     implementation "io.insert-koin:koin-android:$koin_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
