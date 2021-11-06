@@ -4,6 +4,7 @@ import com.softartdev.notedelight.shared.JvmCipherUtils
 import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
+import java.util.*
 
 /**
  * Encryption functions are mocked
@@ -23,7 +24,9 @@ class JdbcDbRepo : DatabaseRepo() {
     ): DatabaseHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
-            instance = JdbcDatabaseHolder()
+            val properties = Properties()
+            if (passphrase.isNotEmpty()) properties["password"] = StringBuilder(passphrase).toString()
+            instance = JdbcDatabaseHolder(properties)
             databaseHolder = instance
         }
         return instance
@@ -31,19 +34,24 @@ class JdbcDbRepo : DatabaseRepo() {
 
     override fun decrypt(oldPass: CharSequence) {
         closeDatabase()
-        // TODO
+        JvmCipherUtils.decrypt(
+            password = StringBuilder(oldPass).toString(),
+            dbName = DB_NAME
+        )
         buildDatabaseInstanceIfNeed()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
-        closeDatabase()
-        // TODO
-        buildDatabaseInstanceIfNeed(newPass)
+        decrypt(oldPass)
+        encrypt(newPass)
     }
 
     override fun encrypt(newPass: CharSequence) {
         closeDatabase()
-        // TODO
+        JvmCipherUtils.encrypt(
+            password = StringBuilder(newPass).toString(),
+            dbName = DB_NAME
+        )
         buildDatabaseInstanceIfNeed(newPass)
     }
 

@@ -4,10 +4,12 @@ import com.softartdev.notedelight.shared.db.NoteDb
 import com.squareup.sqldelight.db.SqlCursor
 import com.squareup.sqldelight.db.use
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import java.util.*
 
-class JdbcDatabaseHolder : DatabaseHolder() {
+class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
     override val driver = JdbcSqliteDriver(
-        url = JdbcSqliteDriver.IN_MEMORY + DatabaseRepo.DB_NAME // jdbc:sqlite:notes.db
+        url = JdbcSqliteDriver.IN_MEMORY + DatabaseRepo.DB_NAME, // jdbc:sqlite:notes.db
+        properties = props
     )
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries = noteDb.noteQueries
