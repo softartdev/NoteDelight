@@ -18,8 +18,8 @@ internal class JvmCipherUtilsTest {
 
     @Test
     fun getDatabaseState() {
-        var exp = PlatformSQLiteState.UNENCRYPTED
-        var act = JvmCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
+        val exp = PlatformSQLiteState.DOES_NOT_EXIST
+        val act = JvmCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
         assertEquals(exp, act)
     }
 }
