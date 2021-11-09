@@ -36,12 +36,12 @@ fun Empty() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "The list is empty",
+            text = MR.strings.label_empty_result.localized(),
             style = MaterialTheme.typography.h5,
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = "Press + to add a note.",
+            text = MR.strings.press_add_note.localized(),
             style = MaterialTheme.typography.subtitle1,
         )
     }

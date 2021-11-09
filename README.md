@@ -2,6 +2,7 @@
 ![Kotlin Multiplatform CI](https://github.com/softartdev/NoteDelight/workflows/Kotlin%20Multiplatform%20CI/badge.svg)
 ![Fastlane CI/CD Android](https://github.com/softartdev/NoteDelight/workflows/Fastlane%20CI/CD%20Android/badge.svg)
 ![iOS starter workflow](https://github.com/softartdev/NoteDelight/workflows/iOS%20starter%20workflow/badge.svg)
+[![Desktop Java CI/CD](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml)
 
 [Kotlin Multiplatform](https://kotlinlang.org/lp/mobile/) application for create notes in SQLite database with [SQLDelight](https://github.com/cashapp/sqldelight) library, and encrypt it with [Cipher](https://www.zetetic.net/sqlcipher/).
 
