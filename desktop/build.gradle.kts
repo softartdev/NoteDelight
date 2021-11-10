@@ -47,7 +47,7 @@ compose.desktop {
         mainClass = "MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "jvm"
+            packageName = "com.softartdev.notedelight"
             packageVersion = "1.0.0"
         }
     }

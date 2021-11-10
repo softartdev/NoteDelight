@@ -35,15 +35,17 @@ fun Empty() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         Text(
             text = MR.strings.label_empty_result.localized(),
             style = MaterialTheme.typography.h5,
         )
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.weight(0.5f))
         Text(
             text = MR.strings.press_add_note.localized(),
             style = MaterialTheme.typography.subtitle1,
         )
+        Spacer(modifier = Modifier.weight(3f))
     }
 }
 
