@@ -1,16 +1,14 @@
 package com.softartdev.notedelight.di
 
-import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.logger.Level
 import org.koin.test.KoinTest
 import org.koin.test.category.CheckModuleTest
-import org.koin.test.check.checkModules
+import org.koin.test.check.checkKoinModules
 import org.koin.test.mock.MockProviderRule
 import org.mockito.Mockito.mock
 
@@ -28,13 +26,9 @@ class ModuleCheckTest : KoinTest {
         mock(clazz.java)
     }
 
-    private val mockContext = mock(Context::class.java)
-
     @Test
-    fun checkModules() = checkModules(
-        level = Level.DEBUG
-    ) {
-        androidContext(mockContext)
-        modules(testModule + mvvmModule)
-    }
+    fun checkModules() = checkKoinModules(
+        modules = testModule + mvvmModule,
+        logLevel = Level.ERROR // TODO revert to Level.DEBUG after update Koin version above 3.1.3
+    )
 }

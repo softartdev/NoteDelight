@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.softartdev.notedelight">
 
-    <uses-sdk tools:overrideLibrary="androidx.core.splashscreen" />
+    <uses-sdk tools:overrideLibrary="androidx.core.splashscreen, com.google.firebase.firebase_analytics, com.google.firebase.measurement, com.google.android.gms.measurement.sdk, com.google.firebase.measurement_impl, com.google.android.gms.measurement.api, com.google.android.gms.measurement.sdk.api, com.google.android.gms.measurement_base" />
 
     <application
         android:name=".NoteRoomApp"

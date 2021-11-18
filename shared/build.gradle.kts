@@ -58,7 +58,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
                 api("com.squareup.okio:okio-multiplatform:2.9.0")
                 api("io.github.aakira:napier:${rootProject.extra["napierVersion"]}")
                 api("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
