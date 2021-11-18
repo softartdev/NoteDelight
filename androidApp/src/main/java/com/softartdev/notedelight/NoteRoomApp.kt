@@ -22,7 +22,7 @@ class NoteRoomApp : MultiDexApplication() {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else CrashlyticsTree())
         startKoin {
-            logger(TimberKoinLogger(Level.DEBUG))
+            logger(TimberKoinLogger(Level.ERROR))//TODO revert to Level.DEBUG after update Koin version above 3.1.3
             androidContext(this@NoteRoomApp)
             modules(appModule + mvvmModule)
         }
