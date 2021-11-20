@@ -15,7 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    continue-on-error: true
     steps:
       - name: Check out
         uses: actions/checkout@v2
