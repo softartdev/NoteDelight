@@ -9,6 +9,7 @@ pluginManagement {
 rootProject.name = 'NoteDelight'
 
 include ':shared-android-test-util'
+include ':shared-compose-ui'
 include ':shared'
 include ':androidApp'
 include ':desktop'

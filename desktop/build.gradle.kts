@@ -1,4 +1,3 @@
-import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -22,16 +21,9 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                implementation(project(":shared-compose-ui"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${rootProject.extra["coroutines_version"]}")
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
                 implementation(compose.desktop.currentOs)
-                implementation("org.jetbrains.compose.material:material:$composeVersion")
-                implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
-                val decomposeVersion = "0.3.1"
-                implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
             }
         }
         val jvmTest by getting {
