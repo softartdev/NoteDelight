@@ -17,16 +17,16 @@ import com.softartdev.notedelight.di.AppModule
 @Composable
 fun MainRootUI(appModule: AppModule) {
     val darkThemeState: MutableState<Boolean> = remember { mutableStateOf(false) }
-
+    val root = remember {
+        Root(
+            componentContext = DefaultComponentContext(lifecycle = LifecycleRegistry()),
+            appModule = appModule, // Supply dependencies
+            darkThemeState = darkThemeState
+        )
+    }
     MaterialTheme(colors = if (darkThemeState.value) darkColors() else lightColors()) {
         Surface {
-            RootUi(
-                root = Root(
-                    componentContext = DefaultComponentContext(lifecycle = LifecycleRegistry()),
-                    appModule = appModule, // Supply dependencies
-                    darkThemeState = darkThemeState
-                )
-            ) // Render the Root and its children
+            RootUi(root) // Render the Root and its children
         }
     }
 }
