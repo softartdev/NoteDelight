@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.note.NoteResult

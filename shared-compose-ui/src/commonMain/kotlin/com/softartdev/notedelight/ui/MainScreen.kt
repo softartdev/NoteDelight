@@ -1,11 +1,12 @@
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import com.softartdev.annotation.Preview
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.database.TestSchema

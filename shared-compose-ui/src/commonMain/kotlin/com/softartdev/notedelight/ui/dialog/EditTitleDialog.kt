@@ -1,15 +1,17 @@
 package com.softartdev.notedelight.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
 import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
+import com.softartdev.notedelight.util.AlertDialog
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 

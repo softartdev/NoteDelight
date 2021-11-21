@@ -80,7 +80,7 @@ kotlin {
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
                 api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
-                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+                api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
                 implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
             }
         }

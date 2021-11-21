@@ -1,19 +1,19 @@
 package com.softartdev.notedelight.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.softartdev.annotation.Preview
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
+import com.softartdev.notedelight.util.AlertDialog
 
 @Stable
 class DialogHolder {
@@ -64,7 +64,6 @@ fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
     onDismiss = dismissDialog
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
     title = { Text(title) },

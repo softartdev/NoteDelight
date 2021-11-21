@@ -2,7 +2,7 @@
 
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import com.softartdev.annotation.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.createMultiplatformMessage

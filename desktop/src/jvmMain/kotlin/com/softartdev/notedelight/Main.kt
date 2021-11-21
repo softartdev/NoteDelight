@@ -1,5 +1,6 @@
 package com.softartdev.notedelight
 
+import androidx.compose.desktop.DesktopTheme
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -21,6 +22,8 @@ fun main() = application {
         state = rememberWindowState(width = 320.dp, height = 480.dp),
         icon = painterResource(resourcePath = "app_icon.png")
     ) {
-        MainRootUI(appModule)
+        DesktopTheme {
+            MainRootUI(appModule)
+        }
     }
 }

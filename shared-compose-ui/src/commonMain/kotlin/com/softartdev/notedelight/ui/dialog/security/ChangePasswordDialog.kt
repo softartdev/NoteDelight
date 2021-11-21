@@ -1,17 +1,19 @@
 package com.softartdev.notedelight.ui.dialog.security
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.softartdev.mr.localized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeResult
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
+import com.softartdev.notedelight.util.AlertDialog
 import kotlinx.coroutines.launch
 
 @Composable
