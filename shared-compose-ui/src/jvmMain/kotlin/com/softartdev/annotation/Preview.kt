@@ -1,3 +1,3 @@
 package com.softartdev.annotation
 
-actual annotation class Preview actual constructor()
+actual typealias Preview = androidx.compose.desktop.ui.tooling.preview.Preview
