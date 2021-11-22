@@ -7,7 +7,7 @@ buildscript {
         moko_resources_version = '0.17.2'
         junit_version = '4.13.2'
         mockito_version = '4.0.0'
-        compose_version = '1.0.1'
+        compose_version = '1.0.5'
     }
     repositories {
         google()
