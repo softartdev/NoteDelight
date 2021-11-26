@@ -6,7 +6,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
+import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
@@ -23,7 +24,7 @@ fun EditTitleDialog(noteId: Long, dismissDialog: () -> Unit, appModule: AppModul
         editTitleViewModel.loadTitle(noteId)
         onDispose(editTitleViewModel::onCleared)
     }
-    var label = MR.strings.enter_title.localized()
+    var label = MR.strings.enter_title.composeLocalized()
     val textState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -34,10 +35,10 @@ fun EditTitleDialog(noteId: Long, dismissDialog: () -> Unit, appModule: AppModul
         }
         is EditTitleResult.Success -> dismissDialog()
         is EditTitleResult.EmptyTitleError -> {
-            label = MR.strings.empty_title.localized()
+            label = MR.strings.empty_title.composeLocalized()
         }
         is EditTitleResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(editTitleResult.message ?: MR.strings.error_title.localized())
+            snackbarHostState.showSnackbar(editTitleResult.message ?: MR.strings.error_title.contextLocalized())
         }
     }
     ShowEditTitleDialog(
@@ -61,7 +62,7 @@ fun ShowEditTitleDialog(
     dismissDialog: () -> Unit = {},
     onEditClick: () -> Unit = {},
 ) = AlertDialog(
-    title = { Text(text = MR.strings.dialog_title_change_title.localized()) },
+    title = { Text(text = MR.strings.dialog_title_change_title.composeLocalized()) },
     text = {
         Column {
             if (showLoaing) LinearProgressIndicator()
@@ -74,8 +75,8 @@ fun ShowEditTitleDialog(
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     },
-    confirmButton = { Button(onClick = onEditClick) { Text(MR.strings.yes.localized()) } },
-    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.localized()) } },
+    confirmButton = { Button(onClick = onEditClick) { Text(MR.strings.yes.composeLocalized()) } },
+    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.composeLocalized()) } },
     onDismissRequest = dismissDialog,
 )
 

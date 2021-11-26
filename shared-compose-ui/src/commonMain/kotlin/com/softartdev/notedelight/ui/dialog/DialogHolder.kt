@@ -7,7 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.softartdev.annotation.Preview
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
@@ -58,7 +58,7 @@ class DialogHolder {
 
 @Composable
 fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
-    title = MR.strings.error_title.localized(),
+    title = MR.strings.error_title.composeLocalized(),
     text = message,
     onConfirm = dismissDialog,
     onDismiss = dismissDialog
@@ -68,8 +68,8 @@ fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
 fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
     title = { Text(title) },
     text = text?.let { { Text(it) } },
-    confirmButton = { Button(onClick = onConfirm) { Text(MR.strings.yes.localized()) } },
-    dismissButton = { Button(onClick = onDismiss) { Text(MR.strings.cancel.localized()) } },
+    confirmButton = { Button(onClick = onConfirm) { Text(MR.strings.yes.composeLocalized()) } },
+    dismissButton = { Button(onClick = onDismiss) { Text(MR.strings.cancel.composeLocalized()) } },
     onDismissRequest = onDismiss,
 )
 

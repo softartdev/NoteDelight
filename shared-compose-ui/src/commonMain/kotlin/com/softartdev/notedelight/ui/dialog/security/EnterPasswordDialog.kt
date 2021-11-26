@@ -6,7 +6,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
+import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterResult
@@ -23,7 +24,7 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
     DisposableEffect(enterViewModel) {
         onDispose(enterViewModel::onCleared)
     }
-    var label = MR.strings.enter_password.localized()
+    var label = MR.strings.enter_password.composeLocalized()
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -32,15 +33,15 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
         is EnterResult.InitState, is EnterResult.Loading -> Unit
         is EnterResult.Success -> dismissDialog()
         is EnterResult.EmptyPasswordError -> {
-            label = MR.strings.empty_password.localized()
+            label = MR.strings.empty_password.composeLocalized()
             error = true
         }
         is EnterResult.IncorrectPasswordError -> {
-            label = MR.strings.incorrect_password.localized()
+            label = MR.strings.incorrect_password.composeLocalized()
             error = true
         }
         is EnterResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(enterResult.message ?: MR.strings.error_title.localized())
+            snackbarHostState.showSnackbar(enterResult.message ?: MR.strings.error_title.contextLocalized())
         }
     }
     ShowEnterPasswordDialog(
@@ -58,13 +59,13 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
 fun ShowEnterPasswordDialog(
     showLoaing: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.localized(),
+    label: String = MR.strings.enter_password.composeLocalized(),
     isError: Boolean = true,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     dismissDialog: () -> Unit = {},
     onConfirmClick: () -> Unit = {},
 ) = AlertDialog(
-    title = { Text(text = MR.strings.dialog_title_enter_password.localized()) },
+    title = { Text(text = MR.strings.dialog_title_enter_password.composeLocalized()) },
     text = {
         Column {
             if (showLoaing) LinearProgressIndicator()
@@ -76,8 +77,8 @@ fun ShowEnterPasswordDialog(
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     },
-    confirmButton = { Button(onClick = onConfirmClick) { Text(MR.strings.yes.localized()) } },
-    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.localized()) } },
+    confirmButton = { Button(onClick = onConfirmClick) { Text(MR.strings.yes.composeLocalized()) } },
+    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.composeLocalized()) } },
     onDismissRequest = dismissDialog,
 )
 

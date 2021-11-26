@@ -12,7 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
+import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
@@ -53,7 +54,7 @@ fun NoteDetail(
         }
         is NoteResult.Saved -> coroutineScope.launch {
             titleState.value = noteResult.title
-            val noteSaved = MR.strings.note_saved.localized() + ": " + noteResult.title
+            val noteSaved = MR.strings.note_saved.contextLocalized() + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
         is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId, appModule)
@@ -61,12 +62,12 @@ fun NoteDetail(
             titleState.value = noteResult.title
         }
         is NoteResult.Empty -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(MR.strings.note_empty.localized())
+            snackbarHostState.showSnackbar(MR.strings.note_empty.contextLocalized())
         }
         is NoteResult.Deleted -> coroutineScope.launch {
             dialogHolder.dismissDialog()
             onBackClick()
-            snackbarHostState.showSnackbar(MR.strings.note_deleted.localized())
+            snackbarHostState.showSnackbar(MR.strings.note_deleted.contextLocalized())
         }
         is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
             saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
@@ -116,16 +117,16 @@ fun NoteDetailBody(
             },
             actions = {
                 IconButton(onClick = { onSaveClick(titleState.value, textState.value) }) {
-                    Icon(Icons.Default.Save, contentDescription = MR.strings.action_save_note.localized())
+                    Icon(Icons.Default.Save, contentDescription = MR.strings.action_save_note.composeLocalized())
                 }
                 IconButton(onClick = onEditClick) {
-                    Icon(Icons.Default.Title, contentDescription = MR.strings.action_edit_title.localized())
+                    Icon(Icons.Default.Title, contentDescription = MR.strings.action_edit_title.composeLocalized())
                 }
                 IconButton(onClick = onDeleteClick) {
-                    Icon(Icons.Default.Delete, contentDescription = MR.strings.action_delete_note.localized())
+                    Icon(Icons.Default.Delete, contentDescription = MR.strings.action_delete_note.composeLocalized())
                 }
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.localized())
+                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.composeLocalized())
                 }
             }
         )
@@ -137,7 +138,7 @@ fun NoteDetailBody(
                 value = textState.value,
                 onValueChange = { textState.value = it },
                 modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
-                label = { Text(MR.strings.type_text.localized()) },
+                label = { Text(MR.strings.type_text.composeLocalized()) },
             )
         }
         showDialogIfNeed()

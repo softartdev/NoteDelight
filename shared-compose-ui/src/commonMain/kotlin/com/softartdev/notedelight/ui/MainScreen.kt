@@ -6,7 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.database.TestSchema
@@ -37,10 +37,10 @@ fun MainScreen(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.app_name.localized()) },
+            title = { Text(MR.strings.app_name.composeLocalized()) },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.localized())
+                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.composeLocalized())
                 }
             })
     }, content = {
@@ -55,9 +55,9 @@ fun MainScreen(
         }
     }, floatingActionButton = {
         ExtendedFloatingActionButton(
-            text = { Text(MR.strings.create_note.localized()) },
+            text = { Text(MR.strings.create_note.composeLocalized()) },
             onClick = { onItemClicked(0) },
-            icon = { Icon(Icons.Default.Add, contentDescription = MR.strings.create_note.localized()) }
+            icon = { Icon(Icons.Default.Add, contentDescription = MR.strings.create_note.composeLocalized()) }
         )
     })
 

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 
 @Composable
@@ -38,12 +38,12 @@ fun Empty() {
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = MR.strings.label_empty_result.localized(),
+            text = MR.strings.label_empty_result.composeLocalized(),
             style = MaterialTheme.typography.h5,
         )
         Spacer(modifier = Modifier.weight(0.5f))
         Text(
-            text = MR.strings.press_add_note.localized(),
+            text = MR.strings.press_add_note.composeLocalized(),
             style = MaterialTheme.typography.subtitle1,
         )
         Spacer(modifier = Modifier.weight(3f))
@@ -63,7 +63,7 @@ fun Error(err: String) {
 @Composable
 fun PasswordField(
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.localized(),
+    label: String = MR.strings.enter_password.composeLocalized(),
     isError: Boolean = true,
 ) {
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }

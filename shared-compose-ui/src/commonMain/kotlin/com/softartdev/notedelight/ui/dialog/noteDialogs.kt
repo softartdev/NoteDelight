@@ -11,22 +11,22 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.util.AlertDialog
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SaveDialog(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
-    title = { Text(MR.strings.note_changes_not_saved_dialog_title.localized()) },
-    text = { Text(MR.strings.note_save_change_dialog_message.localized()) },
+    title = { Text(MR.strings.note_changes_not_saved_dialog_title.composeLocalized()) },
+    text = { Text(MR.strings.note_save_change_dialog_message.composeLocalized()) },
     buttons = {
         Row(Modifier.padding(horizontal = 8.dp)) {
-            Button(onClick = onDismiss) { Text(MR.strings.cancel.localized()) }
+            Button(onClick = onDismiss) { Text(MR.strings.cancel.composeLocalized()) }
             Spacer(Modifier.width(8.dp))
-            Button(onClick = doNotSaveAndNavBack) { Text(MR.strings.no.localized()) }
+            Button(onClick = doNotSaveAndNavBack) { Text(MR.strings.no.composeLocalized()) }
             Spacer(Modifier.width(8.dp))
-            Button(onClick = saveNoteAndNavBack) { Text(MR.strings.yes.localized()) }
+            Button(onClick = saveNoteAndNavBack) { Text(MR.strings.yes.composeLocalized()) }
         }
     },
     onDismissRequest = onDismiss,
@@ -34,8 +34,8 @@ fun SaveDialog(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit, 
 
 @Composable
 fun DeleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = ShowDialog(
-    title = MR.strings.action_delete_note.localized(),
-    text = MR.strings.note_delete_dialog_message.localized(),
+    title = MR.strings.action_delete_note.composeLocalized(),
+    text = MR.strings.note_delete_dialog_message.composeLocalized(),
     onConfirm = onDeleteClick,
     onDismiss = onDismiss
 )

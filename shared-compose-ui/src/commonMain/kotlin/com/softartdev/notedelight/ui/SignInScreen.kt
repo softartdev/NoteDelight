@@ -6,7 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
@@ -20,7 +20,7 @@ fun SignInScreen(appModule: AppModule, navMain: () -> Unit) {
     DisposableEffect(signInViewModel) {
         onDispose(signInViewModel::onCleared)
     }
-    var label = MR.strings.enter_password.localized()
+    var label = MR.strings.enter_password.composeLocalized()
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val dialogHolder: DialogHolder = remember { DialogHolder() }
@@ -28,11 +28,11 @@ fun SignInScreen(appModule: AppModule, navMain: () -> Unit) {
         is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
         is SignInResult.NavMain -> navMain()
         is SignInResult.ShowEmptyPassError -> {
-            label = MR.strings.empty_password.localized()
+            label = MR.strings.empty_password.composeLocalized()
             error = true
         }
         is SignInResult.ShowIncorrectPassError -> {
-            label = MR.strings.incorrect_password.localized()
+            label = MR.strings.incorrect_password.composeLocalized()
             error = true
         }
         is SignInResult.ShowError -> dialogHolder.showError(signInResult.error.message)
@@ -50,14 +50,14 @@ fun SignInScreen(appModule: AppModule, navMain: () -> Unit) {
 fun SignInScreenBody(
     showLoaing: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.localized(),
+    label: String = MR.strings.enter_password.composeLocalized(),
     isError: Boolean = false,
     showDialogIfNeed: @Composable () -> Unit = {},
     onSignInClick: () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.app_name.localized()) },
+            title = { Text(MR.strings.app_name.composeLocalized()) },
         )
     }
 ) {
@@ -77,7 +77,7 @@ fun SignInScreenBody(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp)
-            ) { Text(MR.strings.sign_in.localized()) }
+            ) { Text(MR.strings.sign_in.composeLocalized()) }
         }
         showDialogIfNeed()
     }

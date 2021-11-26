@@ -6,7 +6,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
+import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
@@ -23,9 +24,9 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
     DisposableEffect(confirmViewModel) {
         onDispose(confirmViewModel::onCleared)
     }
-    var label = MR.strings.enter_password.localized()
+    var label = MR.strings.enter_password.composeLocalized()
     var error by remember { mutableStateOf(false) }
-    var repeatLabel = MR.strings.confirm_password.localized()
+    var repeatLabel = MR.strings.confirm_password.composeLocalized()
     var repeatError by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val repeatPasswordState: MutableState<String> = remember { mutableStateOf("") }
@@ -35,15 +36,15 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
         is ConfirmResult.InitState, is ConfirmResult.Loading -> Unit
         is ConfirmResult.Success -> dismissDialog()
         is ConfirmResult.EmptyPasswordError -> {
-            label = MR.strings.empty_password.localized()
+            label = MR.strings.empty_password.composeLocalized()
             error = true
         }
         is ConfirmResult.PasswordsNoMatchError -> {
-            repeatLabel = MR.strings.passwords_do_not_match.localized()
+            repeatLabel = MR.strings.passwords_do_not_match.composeLocalized()
             repeatError = true
         }
         is ConfirmResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(confirmResult.message ?: MR.strings.error_title.localized())
+            snackbarHostState.showSnackbar(confirmResult.message ?: MR.strings.error_title.contextLocalized())
         }
     }
     ShowConfirmPasswordDialog(
@@ -65,15 +66,15 @@ fun ShowConfirmPasswordDialog(
     showLoaing: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
     repeatPasswordState: MutableState<String> = mutableStateOf("repeat password"),
-    label: String = MR.strings.enter_password.localized(),
-    repeatLabel: String = MR.strings.confirm_password.localized(),
+    label: String = MR.strings.enter_password.composeLocalized(),
+    repeatLabel: String = MR.strings.confirm_password.composeLocalized(),
     isError: Boolean = false,
     isRepeatError: Boolean = true,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     dismissDialog: () -> Unit = {},
     onConfirmClick: () -> Unit = {},
 ) = AlertDialog(
-    title = { Text(text = MR.strings.dialog_title_conform_password.localized()) },
+    title = { Text(text = MR.strings.dialog_title_conform_password.composeLocalized()) },
     text = {
         Column {
             if (showLoaing) LinearProgressIndicator()
@@ -90,8 +91,8 @@ fun ShowConfirmPasswordDialog(
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     },
-    confirmButton = { Button(onClick = onConfirmClick) { Text(MR.strings.yes.localized()) } },
-    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.localized()) } },
+    confirmButton = { Button(onClick = onConfirmClick) { Text(MR.strings.yes.composeLocalized()) } },
+    dismissButton = { Button(onClick = dismissDialog) { Text(MR.strings.cancel.composeLocalized()) } },
     onDismissRequest = dismissDialog,
 )
 

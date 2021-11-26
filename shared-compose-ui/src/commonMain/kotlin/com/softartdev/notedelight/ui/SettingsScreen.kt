@@ -13,7 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.localized
+import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -64,7 +64,7 @@ fun SettingsScreenBody(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.settings.localized()) },
+            title = { Text(MR.strings.settings.composeLocalized()) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
@@ -79,24 +79,24 @@ fun SettingsScreenBody(
     Box {
         Column {
             if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
-            PreferenceCategory(MR.strings.theme.localized(), Icons.Default.Brightness4)
+            PreferenceCategory(MR.strings.theme.composeLocalized(), Icons.Default.Brightness4)
             Preference(
-                title = MR.strings.choose_theme.localized(),
+                title = MR.strings.choose_theme.composeLocalized(),
                 vector = Icons.Default.SettingsBrightness,
-                secondaryText = { Text(MR.strings.system_default.localized()) },//TODO show current
+                secondaryText = { Text(MR.strings.system_default.composeLocalized()) },//TODO show current
                 trailing = { // TODO change by dialog
                     Switch(checked = darkThemeState.value, onCheckedChange = { darkThemeState.value = it })
                 }
             )
-            PreferenceCategory(MR.strings.security.localized(), Icons.Default.Security)
+            PreferenceCategory(MR.strings.security.composeLocalized(), Icons.Default.Security)
             Preference(
-                title = MR.strings.pref_title_enable_encryption.localized(),
+                title = MR.strings.pref_title_enable_encryption.composeLocalized(),
                 vector = Icons.Default.Lock,
                 trailing = {
                     Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
                 }
             )
-            Preference(MR.strings.pref_title_set_password.localized(), Icons.Default.Password, changePassword)
+            Preference(MR.strings.pref_title_set_password.composeLocalized(), Icons.Default.Password, changePassword)
             Spacer(Modifier.height(32.dp))
             ListItem(text = {}, icon = {}, secondaryText = { Text(createMultiplatformMessage()) })
         }
