@@ -9,11 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.annotation.Preview
+import com.softartdev.mr.painterResource
+import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
-import com.softartdev.notedelight.util.appIcon
 
 @Composable
 fun SplashScreen(appModule: AppModule, navSignIn: () -> Unit, navMain: () -> Unit) {
@@ -38,7 +39,7 @@ fun SplashScreenBody(
     showDialogIfNeed: @Composable () -> Unit = {},
 ) = Box(modifier = Modifier.fillMaxSize()) {
     Image(
-        painter = appIcon(),
+        painter = painterResource(MR.images.app_icon),
         contentDescription = null,
         modifier = Modifier
             .align(Alignment.Center)
