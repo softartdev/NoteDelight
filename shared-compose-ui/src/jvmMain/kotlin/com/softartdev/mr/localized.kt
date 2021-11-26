@@ -1,5 +1,7 @@
 package com.softartdev.mr
 
-import dev.icerock.moko.resources.StringResource
+import androidx.compose.runtime.Composable
+import dev.icerock.moko.resources.desc.StringDesc
 
-actual fun StringResource.localized(): String = localized()
+@Composable
+actual fun StringDesc.asString(): String = this.localized()
