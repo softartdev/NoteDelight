@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
@@ -26,9 +25,8 @@ fun NoteDetail(
     noteId: Long,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    appModule: AppModule,
+    noteViewModel: NoteViewModel,
 ) {
-    val noteViewModel: NoteViewModel = remember(noteId, appModule::noteViewModel)
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
     DisposableEffect(noteId) {
         when (noteId) {
@@ -57,7 +55,7 @@ fun NoteDetail(
             val noteSaved = MR.strings.note_saved.contextLocalized() + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
-        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId, appModule)
+        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId)
         is NoteResult.TitleUpdated -> {
             titleState.value = noteResult.title
         }

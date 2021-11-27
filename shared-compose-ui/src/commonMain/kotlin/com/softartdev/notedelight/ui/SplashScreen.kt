@@ -11,14 +11,12 @@ import androidx.compose.ui.Modifier
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.painterResource
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
 
 @Composable
-fun SplashScreen(appModule: AppModule, navSignIn: () -> Unit, navMain: () -> Unit) {
-    val splashViewModel: SplashViewModel = remember(appModule::splashViewModel)
+fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {
     val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
     DisposableEffect(splashViewModel) {
         splashViewModel.checkEncryption()

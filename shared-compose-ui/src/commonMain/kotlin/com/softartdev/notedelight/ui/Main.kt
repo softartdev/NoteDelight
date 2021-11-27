@@ -12,15 +12,13 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.softartdev.notedelight.Root
 import com.softartdev.notedelight.RootUi
-import com.softartdev.notedelight.di.AppModule
 
 @Composable
-fun MainRootUI(appModule: AppModule) {
+fun MainRootUI() {
     val darkThemeState: MutableState<Boolean> = remember { mutableStateOf(false) }
     val root = remember {
         Root(
             componentContext = DefaultComponentContext(lifecycle = LifecycleRegistry()),
-            appModule = appModule, // Supply dependencies
             darkThemeState = darkThemeState
         )
     }

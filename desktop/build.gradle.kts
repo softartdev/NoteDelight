@@ -24,6 +24,7 @@ kotlin {
                 implementation(project(":shared-compose-ui"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${rootProject.extra["coroutines_version"]}")
                 implementation(compose.desktop.currentOs)
+                implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
             }
         }
         val jvmTest by getting {

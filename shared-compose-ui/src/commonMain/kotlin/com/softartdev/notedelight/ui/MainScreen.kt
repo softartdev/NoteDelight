@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
@@ -16,11 +15,10 @@ import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 
 @Composable
 fun MainScreen(
-    appModule: AppModule,
+    mainViewModel: MainViewModel,
     onItemClicked: (id: Long) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    val mainViewModel: MainViewModel = remember(appModule::mainViewModel)
     val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
     DisposableEffect(mainViewModel) {
         mainViewModel.updateNotes()

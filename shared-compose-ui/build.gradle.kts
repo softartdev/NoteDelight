@@ -23,6 +23,12 @@ kotlin {
                 val decomposeVersion = "0.3.1"
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
+                implementation("io.insert-koin:koin-core:${rootProject.extra["koin_version"]}")
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation("io.insert-koin:koin-androidx-compose:${rootProject.extra["koin_version"]}")
             }
         }
     }

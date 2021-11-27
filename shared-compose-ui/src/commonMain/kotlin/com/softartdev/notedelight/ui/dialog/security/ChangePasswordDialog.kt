@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeResult
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -18,8 +17,7 @@ import com.softartdev.notedelight.util.AlertDialog
 import kotlinx.coroutines.launch
 
 @Composable
-fun ChangePasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
-    val changeViewModel: ChangeViewModel = remember(appModule::changeViewModel)
+fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewModel) {
     val changeResultState: State<ChangeResult> = changeViewModel.resultStateFlow.collectAsState()
     DisposableEffect(changeViewModel) {
         onDispose(changeViewModel::onCleared)

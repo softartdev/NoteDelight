@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
 import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.util.AlertDialog
@@ -17,8 +16,11 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditTitleDialog(noteId: Long, dismissDialog: () -> Unit, appModule: AppModule) {
-    val editTitleViewModel: EditTitleViewModel = remember(noteId, appModule::editTitleViewModel)
+fun EditTitleDialog(
+    noteId: Long,
+    dismissDialog: () -> Unit,
+    editTitleViewModel: EditTitleViewModel
+) {
     val editTitleResultState: State<EditTitleResult> = editTitleViewModel.resultStateFlow.collectAsState()
     DisposableEffect(noteId) {
         editTitleViewModel.loadTitle(noteId)

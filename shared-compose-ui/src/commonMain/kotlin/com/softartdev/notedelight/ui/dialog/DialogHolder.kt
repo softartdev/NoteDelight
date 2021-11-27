@@ -9,7 +9,11 @@ import androidx.compose.ui.Modifier
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
+import com.softartdev.notedelight.di.getViewModel
+import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
+import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
+import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterViewModel
+import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
@@ -31,24 +35,28 @@ class DialogHolder {
         SaveDialog(saveNoteAndNavBack, doNotSaveAndNavBack, dismissDialog)
     }
 
-    fun showEditTitle(noteId: Long, appModule: AppModule) = showDialog {
-        EditTitleDialog(noteId, dismissDialog, appModule)
+    fun showEditTitle(noteId: Long) = showDialog {
+        val editTitleViewModel: EditTitleViewModel = getViewModel()
+        EditTitleDialog(noteId, dismissDialog, editTitleViewModel)
     }
 
     fun showDelete(onDeleteClick: () -> Unit) = showDialog {
         DeleteDialog(onDeleteClick, dismissDialog)
     }
 
-    fun showEnterPassword(appModule: AppModule) = showDialog {
-        EnterPasswordDialog(dismissDialog, appModule)
+    fun showEnterPassword() = showDialog {
+        val enterViewModel: EnterViewModel = getViewModel()
+        EnterPasswordDialog(dismissDialog, enterViewModel)
     }
 
-    fun showConfirmPassword(appModule: AppModule) = showDialog {
-        ConfirmPasswordDialog(dismissDialog, appModule)
+    fun showConfirmPassword() = showDialog {
+        val confirmViewModel: ConfirmViewModel = getViewModel()
+        ConfirmPasswordDialog(dismissDialog, confirmViewModel)
     }
 
-    fun showChangePassword(appModule: AppModule) = showDialog {
-        ChangePasswordDialog(dismissDialog, appModule)
+    fun showChangePassword() = showDialog {
+        val changeViewModel: ChangeViewModel = getViewModel()
+        ChangePasswordDialog(dismissDialog, changeViewModel)
     }
 
     fun showError(message: String?) = showDialog {

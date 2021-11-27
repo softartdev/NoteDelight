@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -18,8 +17,7 @@ import com.softartdev.notedelight.util.AlertDialog
 import kotlinx.coroutines.launch
 
 @Composable
-fun ConfirmPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
-    val confirmViewModel: ConfirmViewModel = remember(appModule::confirmViewModel)
+fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmViewModel) {
     val confirmResultState: State<ConfirmResult> = confirmViewModel.resultStateFlow.collectAsState()
     DisposableEffect(confirmViewModel) {
         onDispose(confirmViewModel::onCleared)

@@ -8,14 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
 import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
 
 @Composable
-fun SignInScreen(appModule: AppModule, navMain: () -> Unit) {
-    val signInViewModel: SignInViewModel = remember(appModule::signInViewModel)
+fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     val signInResultState: State<SignInResult> = signInViewModel.resultStateFlow.collectAsState()
     DisposableEffect(signInViewModel) {
         onDispose(signInViewModel::onCleared)

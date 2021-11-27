@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterResult
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -18,8 +17,7 @@ import com.softartdev.notedelight.util.AlertDialog
 import kotlinx.coroutines.launch
 
 @Composable
-fun EnterPasswordDialog(dismissDialog: () -> Unit, appModule: AppModule) {
-    val enterViewModel: EnterViewModel = remember(appModule::enterViewModel)
+fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewModel) {
     val enterResultState: State<EnterResult> = enterViewModel.resultStateFlow.collectAsState()
     DisposableEffect(enterViewModel) {
         onDispose(enterViewModel::onCleared)

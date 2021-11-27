@@ -15,15 +15,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.di.AppModule
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.dialog.DialogHolder
 
 @Composable
-fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState: MutableState<Boolean>) {
-    val settingsViewModel: SettingsViewModel = remember(appModule::settingsViewModel)
+fun SettingsScreen(
+    onBackClick: () -> Unit,
+    settingsViewModel: SettingsViewModel,
+    darkThemeState: MutableState<Boolean>
+) {
     val securityResultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
     DisposableEffect(settingsViewModel) {
         settingsViewModel.checkEncryption()
@@ -36,9 +38,9 @@ fun SettingsScreen(onBackClick: () -> Unit, appModule: AppModule, darkThemeState
         is SecurityResult.EncryptEnable -> {
             encryptionState.value = securityResult.encryption
         }
-        is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword(appModule)
-        is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword(appModule)
-        is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword(appModule)
+        is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword()
+        is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword()
+        is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword()
         is SecurityResult.Error -> dialogHolder.showError(securityResult.message)
     }
     SettingsScreenBody(

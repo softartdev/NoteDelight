@@ -6,16 +6,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.softartdev.notedelight.di.AppModuleImpl
+import com.softartdev.notedelight.di.allModules
 import com.softartdev.notedelight.ui.MainRootUI
 import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
+import org.koin.core.context.startKoin
 
 fun main() = application {
     Napier.base(antilog = DebugAntilog())
-    val appModule = AppModuleImpl()
-
+    startKoin {
+        printLogger()
+        modules(allModules)
+    }
     Window(
         onCloseRequest = ::exitApplication,
         title = MR.strings.app_name.desc().localized(),
@@ -23,7 +26,7 @@ fun main() = application {
         icon = painterResource(resourcePath = "app_icon.png")
     ) {
         DesktopTheme {
-            MainRootUI(appModule)
+            MainRootUI()
         }
     }
 }
