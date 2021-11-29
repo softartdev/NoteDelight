@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.softartdev.notedelight.di.allModules
+import com.softartdev.notedelight.shared.di.allModules
 import com.softartdev.notedelight.ui.MainRootUI
 import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog

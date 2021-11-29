@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.compose
 
 import android.app.Application
-import com.softartdev.notedelight.di.allModules
+import com.softartdev.notedelight.shared.di.allModules
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext
