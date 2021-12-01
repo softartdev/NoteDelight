@@ -1,34 +1,40 @@
 package com.softartdev.notedelight.di
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
+import android.content.Context
+import com.softartdev.notedelight.util.PreferencesHelper
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.koin.core.logger.Level
 import org.koin.test.KoinTest
+import org.koin.test.KoinTestRule
 import org.koin.test.category.CheckModuleTest
-import org.koin.test.check.checkKoinModules
+import org.koin.test.check.checkModules
 import org.koin.test.mock.MockProviderRule
+import org.koin.test.mock.declareMock
 import org.mockito.Mockito.mock
 
 @Category(CheckModuleTest::class)
 class ModuleCheckTest : KoinTest {
 
     @get:Rule
-    val taskExecutorRule = InstantTaskExecutorRule()
-
-    @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val koinTestRule = KoinTestRule.create {
+        printLogger(level = Level.DEBUG)
+        modules(allAndroidModules)
+    }
 
     @get:Rule
     val mockProvider = MockProviderRule.create { clazz ->
         mock(clazz.java)
     }
 
+    @Before
+    fun setUp() {
+        declareMock<Context>()
+        declareMock<PreferencesHelper>()
+    }
+
     @Test
-    fun checkModules() = checkKoinModules(
-        modules = testModule + mvvmModule,
-        logLevel = Level.ERROR // TODO revert to Level.DEBUG after update Koin version above 3.1.3
-    )
+    fun `check Koin modules`() = koinTestRule.koin.checkModules()
 }

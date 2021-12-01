@@ -16,7 +16,9 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val allModules: List<Module>
-    get() = repoModule + useCaseModule + viewModelModule
+    get() = prefModule + repoModule + useCaseModule + viewModelModule
+
+val prefModule: Module = module { /*TODO expect all platforms*/ }
 
 /**
 Provide the [DatabaseRepo]

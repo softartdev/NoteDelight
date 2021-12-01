@@ -2,8 +2,7 @@ package com.softartdev.notedelight
 
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.softartdev.notedelight.di.appModule
-import com.softartdev.notedelight.di.mvvmModule
+import com.softartdev.notedelight.di.allAndroidModules
 import com.softartdev.notedelight.util.PreferencesHelper
 import com.softartdev.notedelight.util.ThemeHelper
 import com.softartdev.notedelight.util.log.CrashlyticsAntilog
@@ -25,7 +24,7 @@ class NoteRoomApp : MultiDexApplication() {
         startKoin {
             logger(NapierKoinLogger(Level.DEBUG))
             androidContext(this@NoteRoomApp)
-            modules(appModule + mvvmModule)
+            modules(allAndroidModules)
         }
         val preferencesHelper: PreferencesHelper = get()
         ThemeHelper.applyTheme(preferencesHelper.themeEntry, this)
