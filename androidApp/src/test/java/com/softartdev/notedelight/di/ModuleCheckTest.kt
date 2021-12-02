@@ -5,7 +5,6 @@ import com.softartdev.notedelight.shared.test.util.MainCoroutineRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.categories.Category
-import org.koin.core.logger.Level
 import org.koin.test.KoinTest
 import org.koin.test.category.CheckModuleTest
 import org.koin.test.check.checkKoinModules
@@ -27,8 +26,7 @@ class ModuleCheckTest : KoinTest {
     }
 
     @Test
-    fun checkModules() = checkKoinModules(
-        modules = testModule + mvvmModule,
-        logLevel = Level.ERROR // TODO revert to Level.DEBUG after update Koin version above 3.1.3
-    )
+    fun checkModules() = checkKoinModules {
+        modules(testModule + mvvmModule)
+    }
 }
