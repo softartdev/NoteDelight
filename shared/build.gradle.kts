@@ -69,6 +69,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("io.insert-koin:koin-test:${rootProject.extra["koin_version"]}")
             }
         }
         val androidMain by getting {
