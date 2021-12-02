@@ -91,7 +91,7 @@ abstract class BaseDialogFragment(
         noinline owner: ViewModelOwnerDefinition = { ViewModelOwner.from(this, this) },
         noinline parameters: ParametersDefinition? = null
     ): Lazy<T> = lazy(LazyThreadSafetyMode.NONE) {
-        scope.getViewModel(qualifier, owner, T::class, parameters)
+        scope.getViewModel(qualifier, owner, T::class, parameters = parameters)
     }
 
     companion object {
