@@ -1,12 +1,9 @@
 package com.softartdev.notedelight.shared
 
 import com.softartdev.notedelight.shared.database.DatabaseRepo
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.*
 
-internal class JvmCipherUtilsTest {
+class JvmCipherUtilsTest {
 
     @BeforeTest
     fun setUp() {
@@ -16,6 +13,7 @@ internal class JvmCipherUtilsTest {
     fun tearDown() {
     }
 
+    @Ignore("todo")
     @Test
     fun getDatabaseState() {
         val exp = PlatformSQLiteState.DOES_NOT_EXIST
