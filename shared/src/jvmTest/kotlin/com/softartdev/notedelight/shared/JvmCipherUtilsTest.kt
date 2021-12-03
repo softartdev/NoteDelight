@@ -13,11 +13,10 @@ class JvmCipherUtilsTest {
     fun tearDown() {
     }
 
-    @Ignore("todo")
     @Test
     fun getDatabaseState() {
-        val exp = PlatformSQLiteState.DOES_NOT_EXIST
+        val exp = PlatformSQLiteState.ENCRYPTED
         val act = JvmCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
-        assertEquals(exp, act)
+        assertNotEquals(exp, act)
     }
 }
