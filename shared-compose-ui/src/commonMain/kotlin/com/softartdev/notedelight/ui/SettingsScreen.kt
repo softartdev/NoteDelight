@@ -1,10 +1,9 @@
 @file:OptIn(ExperimentalMaterialApi::class)
+@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 
 package com.softartdev.notedelight.ui
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,18 +12,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
-import com.softartdev.notedelight.ui.dialog.DialogHolder
+import com.softartdev.notedelight.ui.dialog.showChangePassword
+import com.softartdev.notedelight.ui.dialog.showConfirmPassword
+import com.softartdev.notedelight.ui.dialog.showEnterPassword
+import com.softartdev.notedelight.ui.dialog.showError
+import com.softartdev.themepref.DialogHolder
+import com.softartdev.themepref.LocalThemePrefs
+import com.softartdev.themepref.ThemePreferenceItem
 
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
     settingsViewModel: SettingsViewModel,
-    darkThemeState: MutableState<Boolean>
 ) {
     val securityResultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
     DisposableEffect(settingsViewModel) {
@@ -32,7 +37,7 @@ fun SettingsScreen(
         onDispose(settingsViewModel::onCleared)
     }
     val encryptionState = remember { mutableStateOf(false) }
-    val dialogHolder: DialogHolder = remember { DialogHolder() }
+    val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
     when (val securityResult = securityResultState.value) {
         is SecurityResult.Loading -> Unit
         is SecurityResult.EncryptEnable -> {
@@ -46,11 +51,9 @@ fun SettingsScreen(
     SettingsScreenBody(
         onBackClick = onBackClick,
         showLoading = securityResultState.value is SecurityResult.Loading,
-        darkThemeState = darkThemeState,
         encryptionState = encryptionState,
         changeEncryption = settingsViewModel::changeEncryption,
         changePassword = settingsViewModel::changePassword,
-        showDialogIfNeed = dialogHolder.showDialogIfNeed
     )
 }
 
@@ -58,11 +61,9 @@ fun SettingsScreen(
 fun SettingsScreenBody(
     onBackClick: () -> Unit = {},
     showLoading: Boolean = true,
-    darkThemeState: MutableState<Boolean> = mutableStateOf(isSystemInDarkTheme()),
     encryptionState: MutableState<Boolean> = mutableStateOf(false),
     changeEncryption: (Boolean) -> Unit = {},
     changePassword: () -> Unit = {},
-    showDialogIfNeed: @Composable () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -82,14 +83,7 @@ fun SettingsScreenBody(
         Column {
             if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(MR.strings.theme.composeLocalized(), Icons.Default.Brightness4)
-            Preference(
-                title = MR.strings.choose_theme.composeLocalized(),
-                vector = Icons.Default.SettingsBrightness,
-                secondaryText = { Text(MR.strings.system_default.composeLocalized()) },//TODO show current
-                trailing = { // TODO change by dialog
-                    Switch(checked = darkThemeState.value, onCheckedChange = { darkThemeState.value = it })
-                }
-            )
+            ThemePreferenceItem()
             PreferenceCategory(MR.strings.security.composeLocalized(), Icons.Default.Security)
             Preference(
                 title = MR.strings.pref_title_enable_encryption.composeLocalized(),
@@ -102,7 +96,7 @@ fun SettingsScreenBody(
             Spacer(Modifier.height(32.dp))
             ListItem(text = {}, icon = {}, secondaryText = { Text(createMultiplatformMessage()) })
         }
-        showDialogIfNeed()
+        LocalThemePrefs.current.showDialogIfNeed()
     }
 }
 

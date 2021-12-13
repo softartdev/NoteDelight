@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.ui
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -16,6 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 

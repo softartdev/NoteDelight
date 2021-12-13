@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
@@ -17,51 +17,39 @@ import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
-import com.softartdev.notedelight.util.AlertDialog
+import com.softartdev.themepref.AlertDialog
+import com.softartdev.themepref.DialogHolder
 
-@Stable
-class DialogHolder {
-    private var showDialog: Boolean by mutableStateOf(false)
-    val dismissDialog = { showDialog = false }
-    var dialogContent: @Composable () -> Unit = {}
-    val showDialogIfNeed: @Composable () -> Unit = { if (showDialog) dialogContent() }
+fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
+    SaveDialog(saveNoteAndNavBack, doNotSaveAndNavBack, ::dismissDialog)
+}
 
-    private fun showDialog(content: @Composable () -> Unit) {
-        dialogContent = content
-        showDialog = true
-    }
+fun DialogHolder.showEditTitle(noteId: Long) = showDialog {
+    val editTitleViewModel: EditTitleViewModel = getViewModel()
+    EditTitleDialog(noteId, ::dismissDialog, editTitleViewModel)
+}
 
-    fun showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
-        SaveDialog(saveNoteAndNavBack, doNotSaveAndNavBack, dismissDialog)
-    }
+fun DialogHolder.showDelete(onDeleteClick: () -> Unit) = showDialog {
+    DeleteDialog(onDeleteClick, ::dismissDialog)
+}
 
-    fun showEditTitle(noteId: Long) = showDialog {
-        val editTitleViewModel: EditTitleViewModel = getViewModel()
-        EditTitleDialog(noteId, dismissDialog, editTitleViewModel)
-    }
+fun DialogHolder.showEnterPassword() = showDialog {
+    val enterViewModel: EnterViewModel = getViewModel()
+    EnterPasswordDialog(::dismissDialog, enterViewModel)
+}
 
-    fun showDelete(onDeleteClick: () -> Unit) = showDialog {
-        DeleteDialog(onDeleteClick, dismissDialog)
-    }
+fun DialogHolder.showConfirmPassword() = showDialog {
+    val confirmViewModel: ConfirmViewModel = getViewModel()
+    ConfirmPasswordDialog(::dismissDialog, confirmViewModel)
+}
 
-    fun showEnterPassword() = showDialog {
-        val enterViewModel: EnterViewModel = getViewModel()
-        EnterPasswordDialog(dismissDialog, enterViewModel)
-    }
+fun DialogHolder.showChangePassword() = showDialog {
+    val changeViewModel: ChangeViewModel = getViewModel()
+    ChangePasswordDialog(::dismissDialog, changeViewModel)
+}
 
-    fun showConfirmPassword() = showDialog {
-        val confirmViewModel: ConfirmViewModel = getViewModel()
-        ConfirmPasswordDialog(dismissDialog, confirmViewModel)
-    }
-
-    fun showChangePassword() = showDialog {
-        val changeViewModel: ChangeViewModel = getViewModel()
-        ChangePasswordDialog(dismissDialog, changeViewModel)
-    }
-
-    fun showError(message: String?) = showDialog {
-        ErrorDialog(message, dismissDialog)
-    }
+fun DialogHolder.showError(message: String?) = showDialog {
+    ErrorDialog(message, ::dismissDialog)
 }
 
 @Composable

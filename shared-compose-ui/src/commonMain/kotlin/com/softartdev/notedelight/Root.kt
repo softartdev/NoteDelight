@@ -1,7 +1,6 @@
 package com.softartdev.notedelight
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import com.arkivanov.decompose.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.softartdev.notedelight.di.getViewModel
@@ -11,7 +10,6 @@ typealias Content = @Composable () -> Unit
 
 class Root(
     componentContext: ComponentContext, // In Decompose each component has its own ComponentContext
-    private val darkThemeState: MutableState<Boolean>,
 ) : ComponentContext by componentContext {
 
     private val router = router<Configuration, Content>(
@@ -65,7 +63,6 @@ class Root(
         SettingsScreen(
             onBackClick = router::pop,
             settingsViewModel = getViewModel(),
-            darkThemeState = darkThemeState
         )
     }
 }

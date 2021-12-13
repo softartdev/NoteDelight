@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.ui
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import com.softartdev.annotation.Preview
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 

@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.ui.dialog
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -11,9 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.util.AlertDialog
+import com.softartdev.themepref.AlertDialog
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

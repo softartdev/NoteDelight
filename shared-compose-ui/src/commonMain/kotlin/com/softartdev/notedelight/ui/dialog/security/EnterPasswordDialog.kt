@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.ui.dialog.security
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
@@ -13,7 +13,7 @@ import com.softartdev.notedelight.shared.presentation.settings.security.enter.En
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import com.softartdev.notedelight.util.AlertDialog
+import com.softartdev.themepref.AlertDialog
 import kotlinx.coroutines.launch
 
 @Composable

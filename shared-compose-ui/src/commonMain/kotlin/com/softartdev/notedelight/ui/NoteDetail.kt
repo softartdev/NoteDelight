@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.ui
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +11,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
-import com.softartdev.notedelight.ui.dialog.DialogHolder
+import com.softartdev.notedelight.ui.dialog.showDelete
+import com.softartdev.notedelight.ui.dialog.showEditTitle
+import com.softartdev.notedelight.ui.dialog.showError
+import com.softartdev.notedelight.ui.dialog.showSaveChanges
+import com.softartdev.themepref.DialogHolder
+import com.softartdev.themepref.LocalThemePrefs
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,7 +43,7 @@ fun NoteDetail(
     val titleState: MutableState<String> = remember { mutableStateOf("") }
     val textState: MutableState<String> = remember { mutableStateOf("") }
 
-    val dialogHolder: DialogHolder = remember { DialogHolder() }
+    val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val snackbarHostState: SnackbarHostState = scaffoldState.snackbarHostState
@@ -84,7 +89,6 @@ fun NoteDetail(
         onDeleteClick = { dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote) },
         onSettingsClick = onSettingsClick,
         showLoaing = noteResultState.value == NoteResult.Loading,
-        showDialogIfNeed = dialogHolder.showDialogIfNeed
     )
 }
 
@@ -99,7 +103,6 @@ fun NoteDetailBody(
     onDeleteClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     showLoaing: Boolean = true,
-    showDialogIfNeed: @Composable () -> Unit = {},
 ) = Scaffold(
     scaffoldState = scaffoldState,
     topBar = {
@@ -139,7 +142,7 @@ fun NoteDetailBody(
                 label = { Text(MR.strings.type_text.composeLocalized()) },
             )
         }
-        showDialogIfNeed()
+        LocalThemePrefs.current.showDialogIfNeed()
     }
 }
 

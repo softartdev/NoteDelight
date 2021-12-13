@@ -1,16 +1,18 @@
 package com.softartdev.notedelight.ui
 
-import com.softartdev.annotation.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
 import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
-import com.softartdev.notedelight.ui.dialog.DialogHolder
+import com.softartdev.notedelight.ui.dialog.showError
+import com.softartdev.themepref.DialogHolder
+import com.softartdev.themepref.LocalThemePrefs
 
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
@@ -21,7 +23,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     var label = MR.strings.enter_password.composeLocalized()
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
-    val dialogHolder: DialogHolder = remember { DialogHolder() }
+    val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
     when (val signInResult: SignInResult = signInResultState.value) {
         is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
         is SignInResult.NavMain -> navMain()
@@ -40,7 +42,6 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
         passwordState = passwordState,
         label = label,
         isError = error,
-        showDialogIfNeed = dialogHolder.showDialogIfNeed
     ) { signInViewModel.signIn(pass = passwordState.value) }
 }
 
@@ -50,7 +51,6 @@ fun SignInScreenBody(
     passwordState: MutableState<String> = mutableStateOf("password"),
     label: String = MR.strings.enter_password.composeLocalized(),
     isError: Boolean = false,
-    showDialogIfNeed: @Composable () -> Unit = {},
     onSignInClick: () -> Unit = {},
 ) = Scaffold(
     topBar = {
@@ -77,7 +77,7 @@ fun SignInScreenBody(
                     .padding(top = 32.dp)
             ) { Text(MR.strings.sign_in.composeLocalized()) }
         }
-        showDialogIfNeed()
+        LocalThemePrefs.current.showDialogIfNeed()
     }
 }
 
