@@ -135,5 +135,5 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$arch_version"
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation "com.squareup.leakcanary:leakcanary-android-instrumentation:$leak_canary_version"
-    androidTestUtil 'androidx.test:orchestrator:1.4.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }
