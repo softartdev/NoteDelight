@@ -45,7 +45,7 @@ android {
 }
 kotlin {
     android()
-    iosX64("ios")
+    iosSimulatorArm64("ios")
     sourceSets {
         all {
             languageSettings.apply {
@@ -57,7 +57,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-                api("com.squareup.okio:okio-multiplatform:2.9.0")
             }
         }
         val commonTest by getting {
@@ -94,7 +93,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.0")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
         val iosTest by getting

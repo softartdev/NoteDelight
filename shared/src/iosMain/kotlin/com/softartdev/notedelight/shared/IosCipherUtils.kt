@@ -2,9 +2,8 @@ package com.softartdev.notedelight.shared
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
+import sqlite3.*
 import kotlinx.cinterop.*
-import okio.IOException
 import platform.Foundation.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
@@ -67,7 +66,7 @@ object IosCipherUtils {
         return result
     }
 
-    @Throws(IOException::class)
+    @Throws(Exception::class)
     fun encrypt(password: String?, dbName: String) {
         val dbPath = getDatabasePath(dbName)
         val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
@@ -122,10 +121,10 @@ object IosCipherUtils {
                 nsFileManager.removeItemAtPath(dbPath, null)
                 nsFileManager.moveItemAtPath(newPath, dbPath, null)
             } else printError("Error retrieving database", db)
-        } else throw IOException("$dbName not found")
+        } else throw Exception("$dbName not found")
     }
 
-    @Throws(IOException::class)
+    @Throws(Exception::class)
     fun decrypt(password: String?, dbName: String) {
         val dbPath = getDatabasePath(dbName)
         val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
@@ -177,7 +176,7 @@ object IosCipherUtils {
                 nsFileManager.removeItemAtPath(dbPath, null)
                 nsFileManager.moveItemAtPath(newPath, dbPath, null)
             } else printError("Error retrieving database", db)
-        } else throw IOException("$dbName not found")
+        } else throw Exception("$dbName not found")
     }
 
     private fun printError(title: String = "Error", db: CPointerVarOf<CPointer<sqlite3>>) {
