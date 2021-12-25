@@ -45,6 +45,7 @@ android {
 }
 kotlin {
     android()
+    ios()
     iosSimulatorArm64("ios")
     sourceSets {
         all {
