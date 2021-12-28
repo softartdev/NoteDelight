@@ -45,9 +45,10 @@ android {
     }
 }
 kotlin {
-    android()
-    iosX64("ios")
     jvm()
+    android()
+    ios()
+    iosSimulatorArm64("ios")
     sourceSets {
         all {
             languageSettings.apply {
@@ -102,7 +103,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.0")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
         val iosTest by getting

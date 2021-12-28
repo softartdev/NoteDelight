@@ -1,14 +1,14 @@
 buildscript {
     ext {
-        kotlin_version = '1.5.31'
-        coroutines_version = '1.5.2-native-mt'
+        kotlin_version = '1.6.10'
+        coroutines_version = '1.6.0-native-mt'
         sqldelight_version = '1.5.3'
         compose_version = '1.0.5'
         koin_version= '3.1.4'
         napierVersion = '2.1.0'
         moko_resources_version = '0.17.2'
         junit_version = '4.13.2'
-        mockito_version = '4.1.0'
+        mockito_version = '4.2.0'
     }
     repositories {
         google()
@@ -18,7 +18,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
