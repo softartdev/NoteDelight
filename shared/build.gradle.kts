@@ -47,8 +47,8 @@ android {
 kotlin {
     jvm()
     android()
-    ios()
-    iosSimulatorArm64("ios")
+    iosX64("ios")
+//  ios() & iosSimulatorArm64("ios") are blocked by moko-resources, TODO: revert after update version above 0.17.3
     sourceSets {
         all {
             languageSettings.apply {
@@ -60,7 +60,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-                api("com.squareup.okio:okio-multiplatform:2.9.0")
                 api("io.github.aakira:napier:${rootProject.extra["napierVersion"]}")
                 api("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
                 implementation("io.insert-koin:koin-core:${rootProject.extra["koin_version"]}")

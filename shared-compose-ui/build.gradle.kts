@@ -7,9 +7,12 @@ plugins {
     id("kotlin-parcelize")
 }
 kotlin {
-    jvm()
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "11"
+        }
+    }
     android()
-
     sourceSets {
         val commonMain by getting {
             dependencies {

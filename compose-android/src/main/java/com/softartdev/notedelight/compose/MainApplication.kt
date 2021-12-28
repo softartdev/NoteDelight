@@ -7,6 +7,7 @@ import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 class MainApplication : Application() {
 
@@ -14,7 +15,7 @@ class MainApplication : Application() {
         super.onCreate()
         Napier.base(antilog = DebugAntilog())
         startKoin {
-            androidLogger()
+            androidLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.4
             androidContext(this@MainApplication)
             modules(allModules)
         }

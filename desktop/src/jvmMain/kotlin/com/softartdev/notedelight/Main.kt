@@ -12,11 +12,12 @@ import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 fun main() = application {
     Napier.base(antilog = DebugAntilog())
     startKoin {
-        printLogger()
+        printLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.4
         modules(allModules)
     }
     Window(
