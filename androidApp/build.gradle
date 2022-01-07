@@ -100,7 +100,7 @@ dependencies {
     def arch_version = "2.1.0"
     implementation "androidx.arch.core:core-common:$arch_version"
     implementation "androidx.arch.core:core-runtime:$arch_version"
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.4'
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "com.jakewharton.timber:timber:$timber_version"
