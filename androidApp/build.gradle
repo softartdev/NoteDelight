@@ -107,7 +107,7 @@ dependencies {
     def leak_canary_version = '2.7'
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
     implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
-    def koin_version= '3.1.4'
+    def koin_version= '3.1.5'
     implementation "io.insert-koin:koin-android:$koin_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
