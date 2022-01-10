@@ -26,7 +26,7 @@ class ModuleCheckTest : KoinTest {
     }
 
     @Test
-    fun checkModules() = checkKoinModules {
-        modules(testModule + mvvmModule)
-    }
+    fun checkModules() = checkKoinModules(
+        modules = testModule + mvvmModule
+    )
 }
