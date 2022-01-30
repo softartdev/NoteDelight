@@ -1,33 +1,32 @@
 package com.softartdev.notedelight
 
-import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.*
-import com.arkivanov.decompose.extensions.compose.jetbrains.Children
+import com.arkivanov.decompose.router.*
+import com.arkivanov.decompose.value.Value
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.ui.*
 
-typealias Content = @Composable () -> Unit
+class RootComponent(
+    componentContext: ComponentContext,
+) : NoteDelightRoot, ComponentContext by componentContext {
 
-class Root(
-    componentContext: ComponentContext, // In Decompose each component has its own ComponentContext
-) : ComponentContext by componentContext {
-
-    private val router = router<Configuration, Content>(
-        initialConfiguration = Configuration.Splash, // Starting with List
-        childFactory = ::createChild // The Router calls this function, providing the child Configuration and ComponentContext
+    private val router = componentContext.router<Configuration, ContentChild>(
+        initialConfiguration = Configuration.Splash,
+        handleBackButton = true,
+        childFactory = ::createChild
     )
-    val routerState = router.state
+    override val routerState: Value<RouterState<Configuration, ContentChild>> = router.state
 
-    private fun createChild(configuration: Configuration, context: ComponentContext): Content =
+    private fun createChild(configuration: Configuration, context: ComponentContext): ContentChild =
         when (configuration) {
             is Configuration.Splash -> splash()
             is Configuration.SignIn -> signIn()
             is Configuration.Main -> mainList()
             is Configuration.Details -> noteDetail(configuration)
             is Configuration.Settings -> settings()
-        } // Configurations are handled exhaustively
+        }
 
-    private fun splash(): Content = {
+    private fun splash(): ContentChild = {
         SplashScreen(
             splashViewModel = getViewModel(),
             navSignIn = { router.replaceCurrent(Configuration.SignIn) },
@@ -35,22 +34,22 @@ class Root(
         )
     }
 
-    private fun signIn(): Content = {
+    private fun signIn(): ContentChild = {
         SignInScreen(
             signInViewModel = getViewModel(),
             navMain = { router.replaceCurrent(Configuration.Main) },
         )
     }
 
-    private fun mainList(): Content = {
+    private fun mainList(): ContentChild = {
         MainScreen(
             mainViewModel = getViewModel(),
-            onItemClicked = { router.push(Configuration.Details(itemId = it)) }, // Push Details on item click
+            onItemClicked = { id -> router.push(Configuration.Details(itemId = id)) },
             onSettingsClick = { router.push(Configuration.Settings) },
         )
     }
 
-    private fun noteDetail(configuration: Configuration.Details): Content = {
+    private fun noteDetail(configuration: Configuration.Details): ContentChild = {
         NoteDetail(
             noteId = configuration.itemId, // Safely pass arguments
             onBackClick = router::pop, // Go back to List
@@ -59,17 +58,10 @@ class Root(
         )
     }
 
-    private fun settings(): Content = {
+    private fun settings(): ContentChild = {
         SettingsScreen(
             onBackClick = router::pop,
             settingsViewModel = getViewModel(),
         )
-    }
-}
-
-@Composable
-fun RootUi(root: Root) {
-    Children(root.routerState) { child ->
-        child.instance()
     }
 }

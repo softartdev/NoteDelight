@@ -24,9 +24,8 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation("org.jetbrains.compose.material:material:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
                 implementation("org.jetbrains.compose.material:material-icons-extended:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
-                val decomposeVersion = "0.3.1"
-                implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
+                implementation("com.arkivanov.decompose:decompose:${rootProject.extra["decompose_version"]}")
+                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:${rootProject.extra["decompose_version"]}")
             }
         }
         val androidMain by getting {

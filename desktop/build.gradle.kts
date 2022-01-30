@@ -22,6 +22,8 @@ kotlin {
             dependencies {
                 implementation(project(":shared"))
                 implementation(project(":shared-compose-ui"))
+                implementation("com.arkivanov.decompose:decompose:${rootProject.extra["decompose_version"]}")
+                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:${rootProject.extra["decompose_version"]}")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${rootProject.extra["coroutines_version"]}")
                 implementation(compose.desktop.currentOs)
                 implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
