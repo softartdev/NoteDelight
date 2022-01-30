@@ -21,6 +21,7 @@ android {
     }
     compileSdkVersion 31
     defaultConfig {
+        testInstrumentationRunnerArguments clearPackageData: 'true', listener: 'leakcanary.FailTestOnLeakRunListener'
         applicationId "com.softartdev.noteroom"
         minSdkVersion 16
         targetSdkVersion 31
@@ -28,8 +29,6 @@ android {
         versionName "7.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
-        testInstrumentationRunnerArgument "listener", "leakcanary.FailTestOnLeakRunListener"
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en', 'ru'
     }
@@ -51,8 +50,9 @@ android {
         }
     }
     packagingOptions {
-        pickFirst "META-INF/AL2.0"
-        pickFirst "META-INF/LGPL2.1"
+        resources {
+            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
     }
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -66,9 +66,6 @@ android {
                 '-Xopt-in=kotlin.time.ExperimentalTime',
         ]
     }
-    lintOptions {
-        abortOnError false
-    }
     testOptions {
         unitTests.returnDefaultValues = true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
@@ -77,7 +74,10 @@ android {
         enableL8RuleSharing = true
         enableAssertions.set(false)
     }
-    testBuildType "release"
+    lint {
+        abortOnError false
+    }
+//    testBuildType "release"
 }
 
 dependencies {

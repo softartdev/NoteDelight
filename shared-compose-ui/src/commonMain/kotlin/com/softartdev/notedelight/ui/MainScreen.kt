@@ -5,6 +5,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
@@ -52,10 +55,12 @@ fun MainScreen(
             is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
         }
     }, floatingActionButton = {
+        val text = MR.strings.create_note.composeLocalized()
         ExtendedFloatingActionButton(
-            text = { Text(MR.strings.create_note.composeLocalized()) },
+            text = { Text(text) },
             onClick = { onItemClicked(0) },
-            icon = { Icon(Icons.Default.Add, contentDescription = MR.strings.create_note.composeLocalized()) }
+            icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
+            modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
     })
 
