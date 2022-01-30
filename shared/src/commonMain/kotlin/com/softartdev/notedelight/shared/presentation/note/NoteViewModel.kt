@@ -90,6 +90,11 @@ class NoteViewModel(
 
     override fun errorResult(throwable: Throwable): NoteResult = NoteResult.Error(throwable.message)
 
+    override fun onCleared() {
+        super.onCleared()
+        resetLoadingResult() // workaround due to koin uses remember function of compose
+    }
+
     // @androidx.annotation.VisibleForTesting
     fun setIdForTest(id: Long) {
         noteId = id

@@ -8,7 +8,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import com.softartdev.mr.mokoResourcesContext
-import io.github.aakira.napier.Napier
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -50,13 +49,8 @@ class CreateRemoveNoteTest {
             .onNodeWithContentDescription(label = context.getString(R.string.create_note))
             .assertIsDisplayed()
             .performClick()
-/*
-        composeTestRule.waitForIdle()
-        runBlocking(Dispatchers.Main) { composeTestRule.awaitIdle() }
-        composeTestRule.onRoot().printToLog("currentLabelExists")
-*/
-        val actualNoteText = UUID.randomUUID().toString()
-        Napier.d("🦄 actualNoteText = $actualNoteText")
+
+        val actualNoteText = UUID.randomUUID().toString().substring(0, 30)
         composeTestRule.onNodeWithText(text = context.getString(R.string.type_text))
             .assertIsDisplayed()
             .performTextInput(actualNoteText)
@@ -69,7 +63,7 @@ class CreateRemoveNoteTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.onNodeWithText(text = actualNoteText)
+        composeTestRule.onNodeWithContentDescription(label = actualNoteText)
             .assertIsDisplayed()
     }
 
