@@ -14,7 +14,7 @@ class MainApplication : Application() {
         super.onCreate()
         Napier.base(antilog = CustomAntilog())
         startKoin {
-            androidLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.4
+            androidLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.5
             androidContext(this@MainApplication)
             modules(allModules)
         }

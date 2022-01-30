@@ -20,7 +20,7 @@ class ModuleCheckTest : KoinTest {
 
     @get:Rule
     val koinTestRule = KoinTestRule.create {
-        printLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.4
+        printLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.5
         modules(allAndroidModules)
     }
 
