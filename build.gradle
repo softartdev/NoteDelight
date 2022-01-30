@@ -5,7 +5,7 @@ buildscript {
         sqldelight_version = '1.5.3'
         decompose_version = "0.5.0"
         koin_version= '3.1.4'
-        napierVersion = '2.1.0'
+        napier_version = '2.4.0'
         moko_resources_version = '0.17.3'
         junit_version = '4.13.2'
         mockito_version = '4.2.0'

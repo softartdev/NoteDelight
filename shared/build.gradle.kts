@@ -60,7 +60,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
                 implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-                api("io.github.aakira:napier:${rootProject.extra["napierVersion"]}")
+                api("io.github.aakira:napier:${rootProject.extra["napier_version"]}")
                 api("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
                 implementation("io.insert-koin:koin-core:${rootProject.extra["koin_version"]}")
             }
