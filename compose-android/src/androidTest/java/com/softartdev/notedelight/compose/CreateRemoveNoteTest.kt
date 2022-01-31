@@ -67,6 +67,18 @@ class CreateRemoveNoteTest {
 
         composeTestRule.onNodeWithContentDescription(label = actualNoteText)
             .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.action_delete_note))
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
+            .assertIsDisplayed()
     }
 
 }
