@@ -7,13 +7,17 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
-import com.softartdev.mr.mokoResourcesContext
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import java.util.*
 
+@LargeTest
+@RunWith(AndroidJUnit4::class)
 class CreateRemoveNoteTest {
 
     @get:Rule
@@ -31,8 +35,6 @@ class CreateRemoveNoteTest {
 
     @Before
     fun registerIdlingResource() {
-        mokoResourcesContext = context
-
         IdlingRegistry.getInstance().register(countingIdlingResource)
         composeTestRule.registerIdlingResource(composeIdlingResource)
     }
