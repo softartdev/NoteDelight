@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.compose
 
 import android.app.Application
+import com.softartdev.mr.MokoResHolder
 import com.softartdev.notedelight.shared.di.allModules
 import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext
@@ -18,5 +19,6 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(allModules)
         }
+        MokoResHolder.init(applicationContext)
     }
 }

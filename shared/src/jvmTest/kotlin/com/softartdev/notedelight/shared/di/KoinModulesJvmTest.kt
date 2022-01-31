@@ -7,7 +7,5 @@ import org.koin.test.check.checkKoinModules
 class KoinModulesJvmTest : KoinTest {
 
     @Test
-    fun checkModulesTest() = checkKoinModules {
-        modules(allModules)
-    }
+    fun checkModulesTest() = checkKoinModules(modules = allModules)
 }

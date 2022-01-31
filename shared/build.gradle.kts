@@ -70,6 +70,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("io.insert-koin:koin-test:${rootProject.extra["koin_version"]}")
+                implementation("dev.icerock.moko:resources-test:0.18.0")
             }
         }
         val androidMain by getting {

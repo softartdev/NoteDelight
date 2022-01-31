@@ -2,20 +2,24 @@ package com.softartdev.mr
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.compose.stringResource
+import dev.icerock.moko.resources.desc.desc
 
-//TODO remove when moko-resources will support compose
-var mokoResourcesContext: Context? = null
+object MokoResHolder {
+    private var appContext: Context? = null
 
-actual fun StringResource.contextLocalized(): String = requireNotNull(mokoResourcesContext) {
-    "Android application context for moko-resources must not be null"
-}.getString(resourceId)
+    fun init(context: Context) {
+        appContext = context
+    }
+
+    fun requireContext(): Context = requireNotNull(appContext) {
+        "Android application context for moko-resources must not be null"
+    }
+}
+
+actual fun StringResource.contextLocalized(): String =
+    desc().toString(context = MokoResHolder.requireContext())
 
 @Composable
-actual fun StringResource.composeLocalized(): String = stringResource(id = this.resourceId)
-
-@Composable
-actual fun StringDesc.asString(): String = toString(context = LocalContext.current)
+actual fun StringResource.composeLocalized(): String = stringResource(resource = this)
