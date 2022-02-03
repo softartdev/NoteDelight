@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'org.jetbrains.compose'
 }
+apply from: "$rootDir/gradle/common-android-sign-conf.gradle"
 def compose_version = org.jetbrains.compose.ComposeBuildConfig.composeVersion
 
 android {
@@ -24,6 +25,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

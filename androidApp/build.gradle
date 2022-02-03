@@ -6,19 +6,9 @@ plugins {
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'com.slack.keeper'
 }
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+apply from: "$rootDir/gradle/common-android-sign-conf.gradle"
 
 android {
-    signingConfigs {
-        config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
     compileSdkVersion 31
     defaultConfig {
         testInstrumentationRunnerArguments clearPackageData: 'true', listener: 'leakcanary.FailTestOnLeakRunListener'
