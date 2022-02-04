@@ -11,9 +11,14 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
+import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
@@ -43,9 +48,9 @@ fun SettingsScreen(
         is SecurityResult.EncryptEnable -> {
             encryptionState.value = securityResult.encryption
         }
-        is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword()
-        is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword()
-        is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword()
+        is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword(doAfterDismiss = settingsViewModel::checkEncryption)
+        is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword(doAfterDismiss = settingsViewModel::checkEncryption)
+        is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword(doAfterDismiss = settingsViewModel::checkEncryption)
         is SecurityResult.Error -> dialogHolder.showError(securityResult.message)
     }
     SettingsScreenBody(
@@ -86,13 +91,21 @@ fun SettingsScreenBody(
             ThemePreferenceItem()
             PreferenceCategory(MR.strings.security.composeLocalized(), Icons.Default.Security)
             Preference(
+                modifier = Modifier.semantics {
+                    contentDescription = MR.strings.pref_title_enable_encryption.contextLocalized()
+                    toggleableState = ToggleableState(encryptionState.value)
+                },
                 title = MR.strings.pref_title_enable_encryption.composeLocalized(),
                 vector = Icons.Default.Lock,
-                trailing = {
-                    Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
-                }
+                onClick = { changeEncryption(!encryptionState.value) }
+            ) {
+                Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
+            }
+            Preference(
+                title = MR.strings.pref_title_set_password.composeLocalized(),
+                vector = Icons.Default.Password,
+                onClick = changePassword
             )
-            Preference(MR.strings.pref_title_set_password.composeLocalized(), Icons.Default.Password, changePassword)
             Spacer(Modifier.height(32.dp))
             ListItem(text = {}, icon = {}, secondaryText = { Text(createMultiplatformMessage()) })
         }
@@ -104,21 +117,24 @@ fun SettingsScreenBody(
 fun PreferenceCategory(title: String, vector: ImageVector) = ListItem(
     icon = { Icon(imageVector = vector, contentDescription = title) },
     text = {
-        Text(text = title,
+        Text(
+            text = title,
             style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme.colors.secondaryVariant)
+            color = MaterialTheme.colors.secondaryVariant
+        )
     }
 )
 
 @Composable
 fun Preference(
+    modifier: Modifier = Modifier,
     title: String,
     vector: ImageVector,
     onClick: () -> Unit = {},
     secondaryText: @Composable (() -> Unit)? = null,
-    trailing: @Composable (() -> Unit)? = null,
+    trailing: @Composable (() -> Unit)? = null
 ) = ListItem(
-    modifier = Modifier.clickable(onClick = onClick),
+    modifier = modifier.clickable(onClick = onClick),
     icon = { Icon(imageVector = vector, contentDescription = title) },
     text = { Text(text = title) },
     secondaryText = secondaryText,

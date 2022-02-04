@@ -77,7 +77,7 @@ fun PasswordField(
         leadingIcon = {
             IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                 Icon(imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = "Password visibility")
+                    contentDescription = Icons.Default.Visibility.name)
             }
         }
     )

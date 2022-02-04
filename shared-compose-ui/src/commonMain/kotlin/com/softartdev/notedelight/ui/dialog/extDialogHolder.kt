@@ -33,19 +33,27 @@ fun DialogHolder.showDelete(onDeleteClick: () -> Unit) = showDialog {
     DeleteDialog(onDeleteClick, ::dismissDialog)
 }
 
-fun DialogHolder.showEnterPassword() = showDialog {
-    val enterViewModel: EnterViewModel = getViewModel()
-    EnterPasswordDialog(::dismissDialog, enterViewModel)
+fun DialogHolder.showEnterPassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
+    val viewModel: EnterViewModel = getViewModel()
+    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    EnterPasswordDialog(dismissCallback, viewModel)
 }
 
-fun DialogHolder.showConfirmPassword() = showDialog {
-    val confirmViewModel: ConfirmViewModel = getViewModel()
-    ConfirmPasswordDialog(::dismissDialog, confirmViewModel)
+fun DialogHolder.showConfirmPassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
+    val viewModel: ConfirmViewModel = getViewModel()
+    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    ConfirmPasswordDialog(dismissCallback, viewModel)
 }
 
-fun DialogHolder.showChangePassword() = showDialog {
-    val changeViewModel: ChangeViewModel = getViewModel()
-    ChangePasswordDialog(::dismissDialog, changeViewModel)
+fun DialogHolder.showChangePassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
+    val viewModel: ChangeViewModel = getViewModel()
+    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    ChangePasswordDialog(dismissCallback, viewModel)
+}
+
+private fun DialogHolder.prepareDismissCallback(doAfterDismiss: (() -> Unit)? = null): () -> Unit = {
+    dismissDialog()
+    doAfterDismiss?.invoke()
 }
 
 fun DialogHolder.showError(message: String?) = showDialog {

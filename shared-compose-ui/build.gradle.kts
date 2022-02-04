@@ -39,6 +39,12 @@ kotlin {
                 implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
             }
         }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
+            }
+        }
     }
 }
 android {
