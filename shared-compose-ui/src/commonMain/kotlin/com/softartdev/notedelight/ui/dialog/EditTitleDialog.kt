@@ -5,6 +5,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
@@ -72,7 +74,8 @@ fun ShowEditTitleDialog(
                 value = textState.value,
                 onValueChange = { textState.value = it },
                 label = { Text(label) },
-                isError = isError
+                isError = isError,
+                modifier = Modifier.semantics { contentDescription = MR.strings.enter_title.contextLocalized() }
             )
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
