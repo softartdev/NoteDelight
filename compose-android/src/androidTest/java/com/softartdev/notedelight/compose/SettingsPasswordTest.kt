@@ -179,9 +179,37 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOn()
+            .performClick()
+
+        val enterPasswordSNI: SemanticsNodeInteraction = composeTestRule
+            .onNodeWithText(text = context.getString(R.string.enter_password))
+            .assertIsDisplayed()
+
+        enterPasswordSNI.onChild().performClick() // toggle password visibility
+
+        val enterYesSNI = composeTestRule
+            .onNodeWithText(text = context.getString(R.string.yes))
+            .assertIsDisplayed()
+            .performClick()
+
+        enterPasswordSNI.assertTextEquals(context.getString(R.string.empty_password), includeEditableText = false)
+
+        enterPasswordSNI.performTextReplacement(text = "1")
+
+        enterYesSNI.performClick()
+
+        enterPasswordSNI.assertTextEquals(context.getString(R.string.incorrect_password), includeEditableText = false)
+
+        enterPasswordSNI.performTextReplacement(text = "2")
+
+        enterYesSNI.performClick()
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+            .assertIsDisplayed()
+            .assertIsToggleable()
+            .assertIsOff()
 
         composeTestRule.onAllNodes(isRoot()).printToLog("🦄", maxDepth = Int.MAX_VALUE)
-        //TODO
     }
 
     private fun waitUntilText(
