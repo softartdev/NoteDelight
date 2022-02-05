@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,7 +72,7 @@ fun PasswordField(
     TextField(
         value = passwordState.value,
         onValueChange = { passwordState.value = it },
-        label = { Text(label) },
+        label = { Text(label, modifier = Modifier.semantics { testTag = "PasswordFieldLabel" }) },
         isError = isError,
         visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

@@ -22,9 +22,9 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
     DisposableEffect(confirmViewModel) {
         onDispose(confirmViewModel::onCleared)
     }
-    var label = MR.strings.enter_password.composeLocalized()
+    var label by remember { mutableStateOf(MR.strings.enter_password.contextLocalized()) }
     var error by remember { mutableStateOf(false) }
-    var repeatLabel = MR.strings.confirm_password.composeLocalized()
+    var repeatLabel by remember { mutableStateOf(MR.strings.confirm_password.contextLocalized()) }
     var repeatError by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val repeatPasswordState: MutableState<String> = remember { mutableStateOf("") }
