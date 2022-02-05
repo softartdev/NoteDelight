@@ -5,7 +5,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdk 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -36,8 +36,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':shared')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "io.insert-koin:koin-core-jvm:$koin_version"
     implementation "junit:junit:$junit_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     implementation "org.mockito:mockito-core:$mockito_version"

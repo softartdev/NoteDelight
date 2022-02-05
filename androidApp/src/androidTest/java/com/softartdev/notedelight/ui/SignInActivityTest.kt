@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.ui
 
 
-import android.text.SpannableStringBuilder
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
@@ -10,38 +9,24 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.R
-import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.ui.splash.SplashActivity
-import com.softartdev.notedelight.shared.base.IdlingResource as EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.java.KoinJavaComponent.inject
-import io.github.aakira.napier.Napier
+import com.softartdev.notedelight.shared.base.IdlingResource as EspressoIdlingResource
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SignInActivityTest {
-    private val password = "password"
 
     @Rule
     @JvmField
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
-        override fun beforeActivityLaunched() {
-            val safeRepo: DatabaseRepo by inject(DatabaseRepo::class.java)
-            while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
-                safeRepo.buildDatabaseInstanceIfNeed()
-                Thread.sleep(1000)
-                Napier.d("databaseState = ${safeRepo.databaseState.name}")
-            }
-            safeRepo.encrypt(SpannableStringBuilder(password))
-            safeRepo.closeDatabase()
-            Napier.d("databaseState = ${safeRepo.databaseState.name}")
-        }
+        override fun beforeActivityLaunched() = Encryptor.encryptDB()
     }
 
     @Before
@@ -73,7 +58,7 @@ class SignInActivityTest {
                 .check(matches(isDisplayed()))
         passwordTextInputLayout.check(matches(withError(R.string.incorrect_password)))
 
-        passwordEditText.perform(scrollTo(), replaceText(password))
+        passwordEditText.perform(scrollTo(), replaceText(Encryptor.PASSWORD))
 
         signInButton.perform(scrollTo(), click())
 
