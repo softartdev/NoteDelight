@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
@@ -62,6 +63,9 @@ fun Error(err: String) {
     }
 }
 
+const val passwordLabelTag = "PasswordFieldLabelTestTag"
+const val passwordVisibilityDesc = "Password visibility"
+
 @Composable
 fun PasswordField(
     passwordState: MutableState<String> = mutableStateOf("password"),
@@ -72,14 +76,14 @@ fun PasswordField(
     TextField(
         value = passwordState.value,
         onValueChange = { passwordState.value = it },
-        label = { Text(label, modifier = Modifier.semantics { testTag = "PasswordFieldLabel" }) },
+        label = { Text(label, modifier = Modifier.semantics { testTag = passwordLabelTag }) },
         isError = isError,
         visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         leadingIcon = {
             IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                 Icon(imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = Icons.Default.Visibility.name)
+                    contentDescription = passwordVisibilityDesc)
             }
         }
     )

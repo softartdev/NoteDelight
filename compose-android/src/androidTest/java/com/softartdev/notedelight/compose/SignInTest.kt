@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.shared.test.util.customAndroidComposeRule
+import com.softartdev.notedelight.ui.passwordLabelTag
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -33,6 +34,7 @@ class SignInTest {
         override val isIdleNow: Boolean
             get() = countingIdlingResource.isIdleNow
     }
+
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(countingIdlingResource)
@@ -47,25 +49,32 @@ class SignInTest {
 
     @Test
     fun signInTest() {
+        composeTestRule.onAllNodes(isRoot(), useUnmergedTree = true)
+            .printToLog("🦄", maxDepth = Int.MAX_VALUE)
+
         val passwordFieldSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.enter_password))
             .assertIsDisplayed()
 
-        passwordFieldSNI.onChild().performClick() // toggle password visibility
+        val passwordLabelSNI: SemanticsNodeInteraction = composeTestRule
+            .onNodeWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertTextEquals(context.getString(R.string.enter_password))
+
+        passwordFieldSNI.togglePasswordVisibility()
 
         val signInButtonSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.sign_in))
             .assertIsDisplayed()
             .performClick()
-        composeTestRule.waitForIdle()
 
-        passwordFieldSNI.assertTextEquals(context.getString(R.string.empty_password), includeEditableText = false)
+        passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         passwordFieldSNI.performTextReplacement(text = "incorrect password")
         Espresso.closeSoftKeyboard()
         signInButtonSNI.performClick()
 
-        passwordFieldSNI.assertTextEquals(context.getString(R.string.incorrect_password), includeEditableText = false)
+        passwordLabelSNI.assertTextEquals(context.getString(R.string.incorrect_password))
 
         passwordFieldSNI.performTextReplacement(text = Encryptor.PASSWORD)
         Espresso.closeSoftKeyboard()
