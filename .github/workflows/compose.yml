@@ -11,6 +11,7 @@ jobs:
   compose_ui_test_job:
     name: Compose UI-tests on Android emulator
     runs-on: macos-latest
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
