@@ -94,6 +94,7 @@ class SettingsPasswordTest {
         Espresso.closeSoftKeyboard()
 
         confirmYesSNI.performClick()
+        composeTestRule.waitForIdle()
         waitUntilText(
             actualSNI = confirmRepeatPasswordSNI,
             expectedText = context.getString(R.string.passwords_do_not_match),

@@ -3,6 +3,7 @@ package com.softartdev.notedelight.compose
 import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
@@ -50,6 +51,8 @@ class SignInTest {
             .onNodeWithText(text = context.getString(R.string.enter_password))
             .assertIsDisplayed()
 
+        passwordFieldSNI.onChild().performClick() // toggle password visibility
+
         val signInButtonSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.sign_in))
             .assertIsDisplayed()
@@ -57,5 +60,18 @@ class SignInTest {
         composeTestRule.waitForIdle()
 
         passwordFieldSNI.assertTextEquals(context.getString(R.string.empty_password), includeEditableText = false)
+
+        passwordFieldSNI.performTextReplacement(text = "incorrect password")
+        Espresso.closeSoftKeyboard()
+        signInButtonSNI.performClick()
+
+        passwordFieldSNI.assertTextEquals(context.getString(R.string.incorrect_password), includeEditableText = false)
+
+        passwordFieldSNI.performTextReplacement(text = Encryptor.PASSWORD)
+        Espresso.closeSoftKeyboard()
+        signInButtonSNI.performClick()
+
+        composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
+            .assertIsDisplayed()
     }
 }
