@@ -8,7 +8,6 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.notedelight.shared.test.util.Encryptor
-import com.softartdev.notedelight.shared.test.util.customAndroidComposeRule
 import com.softartdev.notedelight.ui.passwordLabelTag
 import org.junit.After
 import org.junit.Before
