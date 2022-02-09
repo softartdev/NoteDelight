@@ -66,6 +66,7 @@ fun SignInScreenBody(
         Column {
             if (showLoaing) LinearProgressIndicator()
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 passwordState = passwordState,
                 label = label,
                 isError = isError,

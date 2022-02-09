@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.ui.descTagTriple
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,26 +23,6 @@ class SignInTest {
     )
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-
-    private val countingIdlingResource =
-        com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
-
-    private val composeIdlingResource = object : IdlingResource {
-        override val isIdleNow: Boolean
-            get() = countingIdlingResource.isIdleNow
-    }
-
-    @Before
-    fun registerIdlingResource() {
-        IdlingRegistry.getInstance().register(countingIdlingResource)
-        composeTestRule.registerIdlingResource(composeIdlingResource)
-    }
-
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(countingIdlingResource)
-        composeTestRule.unregisterIdlingResource(composeIdlingResource)
-    }
 
     @Test
     fun signInTest() {

@@ -10,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
+import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
 import com.softartdev.notedelight.ui.descTagTriple
 import org.junit.After
 import org.junit.Before
@@ -26,14 +27,6 @@ class SettingsPasswordTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private val countingIdlingResource =
-        com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
-
-    private val composeIdlingResource = object : IdlingResource {
-        override val isIdleNow: Boolean
-            get() = countingIdlingResource.isIdleNow
-    }
-
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(countingIdlingResource)
@@ -42,8 +35,8 @@ class SettingsPasswordTest {
 
     @After
     fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(countingIdlingResource)
         composeTestRule.unregisterIdlingResource(composeIdlingResource)
+        IdlingRegistry.getInstance().unregister(countingIdlingResource)
     }
 
     @Test
