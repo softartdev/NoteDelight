@@ -21,7 +21,9 @@ import com.softartdev.themepref.AlertDialog
 import com.softartdev.themepref.DialogHolder
 
 fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
-    SaveDialog(saveNoteAndNavBack, doNotSaveAndNavBack, ::dismissDialog)
+    val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
+    val notSaveCallback = prepareDismissCallback(doBefore = doNotSaveAndNavBack)
+    SaveDialog(saveCallback, notSaveCallback, ::dismissDialog)
 }
 
 fun DialogHolder.showEditTitle(noteId: Long) = showDialog {
@@ -30,30 +32,35 @@ fun DialogHolder.showEditTitle(noteId: Long) = showDialog {
 }
 
 fun DialogHolder.showDelete(onDeleteClick: () -> Unit) = showDialog {
-    DeleteDialog(onDeleteClick, ::dismissDialog)
+    val deleteCallback = prepareDismissCallback(doBefore = onDeleteClick)
+    DeleteDialog(deleteCallback, ::dismissDialog)
 }
 
 fun DialogHolder.showEnterPassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
     val viewModel: EnterViewModel = getViewModel()
-    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    val dismissCallback = prepareDismissCallback(doAfter = doAfterDismiss)
     EnterPasswordDialog(dismissCallback, viewModel)
 }
 
 fun DialogHolder.showConfirmPassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
     val viewModel: ConfirmViewModel = getViewModel()
-    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    val dismissCallback = prepareDismissCallback(doAfter = doAfterDismiss)
     ConfirmPasswordDialog(dismissCallback, viewModel)
 }
 
 fun DialogHolder.showChangePassword(doAfterDismiss: (() -> Unit)? = null) = showDialog {
     val viewModel: ChangeViewModel = getViewModel()
-    val dismissCallback = prepareDismissCallback(doAfterDismiss)
+    val dismissCallback = prepareDismissCallback(doAfter = doAfterDismiss)
     ChangePasswordDialog(dismissCallback, viewModel)
 }
 
-private fun DialogHolder.prepareDismissCallback(doAfterDismiss: (() -> Unit)? = null): () -> Unit = {
+private fun DialogHolder.prepareDismissCallback(
+    doBefore: (() -> Unit)? = null,
+    doAfter: (() -> Unit)? = null
+): () -> Unit = {
+    doBefore?.invoke()
     dismissDialog()
-    doAfterDismiss?.invoke()
+    doAfter?.invoke()
 }
 
 fun DialogHolder.showError(message: String?) = showDialog {

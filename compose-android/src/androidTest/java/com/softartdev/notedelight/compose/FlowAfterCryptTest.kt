@@ -14,7 +14,10 @@ import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.base.IdlingResource
 import com.softartdev.notedelight.ui.descTagTriple
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
@@ -26,6 +29,12 @@ class FlowAfterCryptTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val password = "password"
+
+    private val switchSNI: SemanticsNodeInteraction
+        get() = composeTestRule
+            .onNodeWithContentDescription(context.getString(R.string.pref_title_enable_encryption))
+            .assertIsToggleable()
+            .assertIsDisplayed()
 
     @Before
     fun registerIdlingResource() {
@@ -39,37 +48,19 @@ class FlowAfterCryptTest {
         IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
     }
 
-    @Ignore
     @Test
     fun flowAfterCryptTest() {
         //main
-        val fabSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithContentDescription(label = context.getString(R.string.create_note))
-            .assertIsDisplayed()
-        fabSNI.performClick()
-        //note
-        val textFieldSNI = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.type_text))
-            .assertIsDisplayed()
-        val titleText = "Lorem"
-        textFieldSNI.performTextInput(titleText)
-        Espresso.closeSoftKeyboard()
-
-        val settingsSNI = composeTestRule
+        composeTestRule
             .onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
             .assertIsDisplayed()
-        settingsSNI.performClick()
-
+            .performClick()
         //settings
-        val switchSNI = composeTestRule
-            .onNodeWithContentDescription(context.getString(R.string.pref_title_enable_encryption))
-            .assertIsToggleable()
-            .assertIsDisplayed()
         switchSNI.assertIsOff()
         switchSNI.performClick()
 
-        val (confirmLabelTag, confirmVisibilityTag, confirmFieldTag) = MR.strings.enter_password.descTagTriple()
-        val (confirmRepeatLabelTag, confirmRepeatVisibilityTag, confirmRepeatFieldTag) = MR.strings.confirm_password.descTagTriple()
+        val (_, _, confirmFieldTag) = MR.strings.enter_password.descTagTriple()
+        val (_, _, confirmRepeatFieldTag) = MR.strings.confirm_password.descTagTriple()
 
         val confirmPasswordSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithTag(confirmFieldTag, useUnmergedTree = true)
@@ -90,21 +81,32 @@ class FlowAfterCryptTest {
 
         switchSNI.assertIsOn()
 
-        composeTestRule.onRoot().printToLog("🦄", maxDepth = Int.MAX_VALUE)
-
         composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
-        //note
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
-
-        composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
             .performClick()
         //main
-        val listItemSNI = composeTestRule.onNodeWithContentDescription(label = titleText)
+        val fabSNI: SemanticsNodeInteraction = composeTestRule
+            .onNodeWithContentDescription(label = context.getString(R.string.create_note))
+            .assertIsDisplayed()
+        fabSNI.performClick()
+        //note
+        val textFieldSNI = composeTestRule
+            .onNodeWithText(text = context.getString(R.string.type_text))
+            .assertIsDisplayed()
+        val titleText = "Lorem"
+        textFieldSNI.performTextInput(titleText)
+        Espresso.closeSoftKeyboard()
+
+        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule
+            .onNodeWithText(text = context.getString(R.string.yes))
+            .assertIsDisplayed()
+            .performClick()
+        //main
+        composeTestRule.onNodeWithContentDescription(label = titleText)
             .assertIsDisplayed()
 
         composeTestRule
@@ -115,7 +117,7 @@ class FlowAfterCryptTest {
         switchSNI.assertIsOn()
         switchSNI.performClick()
 
-        val (enterLabelTag, enterVisibilityTag, enterFieldTag) = MR.strings.enter_password.descTagTriple()
+        val (_, _, enterFieldTag) = MR.strings.enter_password.descTagTriple()
 
         val enterPasswordSNI = composeTestRule
             .onNodeWithTag(enterFieldTag, useUnmergedTree = true)
@@ -134,7 +136,9 @@ class FlowAfterCryptTest {
             .assertIsDisplayed()
             .performClick()
         //main
-        listItemSNI.performClick()
+        composeTestRule.onNodeWithContentDescription(label = titleText)
+            .assertIsDisplayed()
+            .performClick()
         //note
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.action_delete_note))
             .assertIsDisplayed()

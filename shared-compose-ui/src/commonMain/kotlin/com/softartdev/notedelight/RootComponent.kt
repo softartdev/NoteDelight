@@ -53,7 +53,6 @@ class RootComponent(
         NoteDetail(
             noteId = configuration.itemId, // Safely pass arguments
             onBackClick = router::pop, // Go back to List
-            onSettingsClick = { router.push(Configuration.Settings) },
             noteViewModel = getViewModel(),
         )
     }

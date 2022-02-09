@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 fun NoteDetail(
     noteId: Long,
     onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     noteViewModel: NoteViewModel,
 ) {
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
@@ -87,8 +86,7 @@ fun NoteDetail(
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = { dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote) },
-        onSettingsClick = onSettingsClick,
-        showLoaing = noteResultState.value == NoteResult.Loading,
+        showLoading = noteResultState.value == NoteResult.Loading,
     )
 }
 
@@ -101,8 +99,7 @@ fun NoteDetailBody(
     onSaveClick: (title: String?, text: String) -> Unit = { _, _ -> },
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    showLoaing: Boolean = true,
+    showLoading: Boolean = true,
 ) = Scaffold(
     scaffoldState = scaffoldState,
     topBar = {
@@ -126,15 +123,12 @@ fun NoteDetailBody(
                 IconButton(onClick = onDeleteClick) {
                     Icon(Icons.Default.Delete, contentDescription = MR.strings.action_delete_note.composeLocalized())
                 }
-                IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.composeLocalized())
-                }
             }
         )
     }) {
     Box {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (showLoaing) LinearProgressIndicator()
+            if (showLoading) LinearProgressIndicator()
             TextField(
                 value = textState.value,
                 onValueChange = { textState.value = it },
