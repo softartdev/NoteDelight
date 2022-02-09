@@ -77,7 +77,7 @@ fun SettingsScreenBody(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null
+                        contentDescription = Icons.Default.ArrowBack.name
                     )
                 }
             },

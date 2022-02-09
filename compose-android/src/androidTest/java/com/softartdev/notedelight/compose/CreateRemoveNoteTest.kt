@@ -6,8 +6,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.softartdev.notedelight.shared.base.IdlingResource
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +25,18 @@ class CreateRemoveNoteTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
+
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(IdlingResource.countingIdlingResource)
+        composeTestRule.registerIdlingResource(composeIdlingResource)
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        composeTestRule.unregisterIdlingResource(composeIdlingResource)
+        IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
+    }
 
     @Test
     fun createRemove() {
@@ -57,5 +73,4 @@ class CreateRemoveNoteTest {
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()
     }
-
 }
