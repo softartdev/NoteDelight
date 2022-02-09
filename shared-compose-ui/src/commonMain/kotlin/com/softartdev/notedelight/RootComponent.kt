@@ -3,6 +3,7 @@ package com.softartdev.notedelight
 import com.arkivanov.decompose.*
 import com.arkivanov.decompose.router.*
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.ui.*
 
@@ -22,7 +23,7 @@ class RootComponent(
             is Configuration.Splash -> splash()
             is Configuration.SignIn -> signIn()
             is Configuration.Main -> mainList()
-            is Configuration.Details -> noteDetail(configuration)
+            is Configuration.Details -> noteDetail(configuration, context)
             is Configuration.Settings -> settings()
         }
 
@@ -49,11 +50,16 @@ class RootComponent(
         )
     }
 
-    private fun noteDetail(configuration: Configuration.Details): ContentChild = {
+    private fun noteDetail(configuration: Configuration.Details, context: ComponentContext): ContentChild = {
+        val backWrapper = BackWrapper()
+        context.backPressedHandler.register(backWrapper)
+        context.lifecycle.doOnDestroy { context.backPressedHandler.unregister(backWrapper) }
+
         NoteDetail(
-            noteId = configuration.itemId, // Safely pass arguments
-            onBackClick = router::pop, // Go back to List
             noteViewModel = getViewModel(),
+            noteId = configuration.itemId,
+            backWrapper = backWrapper,
+            navBack = router::pop
         )
     }
 
@@ -62,5 +68,12 @@ class RootComponent(
             onBackClick = router::pop,
             settingsViewModel = getViewModel(),
         )
+    }
+
+    class BackWrapper(var handler: (() -> Unit)? = null): () -> Boolean {
+        override fun invoke(): Boolean {
+            handler?.invoke() ?: return false
+            return true
+        }
     }
 }

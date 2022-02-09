@@ -1,12 +1,11 @@
 package com.softartdev.notedelight.compose
 
 import android.content.Context
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -81,9 +80,7 @@ class FlowAfterCryptTest {
 
         switchSNI.assertIsOn()
 
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
+        pressBack()
         //main
         val fabSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithContentDescription(label = context.getString(R.string.create_note))
@@ -97,9 +94,7 @@ class FlowAfterCryptTest {
         textFieldSNI.performTextInput(titleText)
         Espresso.closeSoftKeyboard()
 
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
+        pressBack()
 
         composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
@@ -132,9 +127,7 @@ class FlowAfterCryptTest {
 
         switchSNI.assertIsOff()
 
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
+        pressBack()
         //main
         composeTestRule.onNodeWithContentDescription(label = titleText)
             .assertIsDisplayed()

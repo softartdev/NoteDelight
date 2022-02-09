@@ -15,6 +15,7 @@ import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
+import com.softartdev.notedelight.RootComponent
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.dialog.showDelete
@@ -27,9 +28,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NoteDetail(
-    noteId: Long,
-    onBackClick: () -> Unit,
     noteViewModel: NoteViewModel,
+    noteId: Long,
+    backWrapper: RootComponent.BackWrapper,
+    navBack: () -> Unit,
 ) {
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
     DisposableEffect(noteId) {
@@ -42,6 +44,7 @@ fun NoteDetail(
     val titleState: MutableState<String> = remember { mutableStateOf("") }
     val textState: MutableState<String> = remember { mutableStateOf("") }
 
+    backWrapper.handler = { noteViewModel.checkSaveChange(titleState.value, textState.value) }
     val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -68,21 +71,21 @@ fun NoteDetail(
         }
         is NoteResult.Deleted -> coroutineScope.launch {
             dialogHolder.dismissDialog()
-            onBackClick()
+            navBack()
             snackbarHostState.showSnackbar(MR.strings.note_deleted.contextLocalized())
         }
         is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
             saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
             doNotSaveAndNavBack = noteViewModel::doNotSaveAndNavBack,
         )
-        is NoteResult.NavBack -> onBackClick()
+        is NoteResult.NavBack -> navBack()
         is NoteResult.Error -> dialogHolder.showError(noteResult.message)
     }
     NoteDetailBody(
         scaffoldState = scaffoldState,
         titleState = titleState,
         textState = textState,
-        onBackClick = { noteViewModel.checkSaveChange(titleState.value, textState.value) },
+        onBackClick = requireNotNull(backWrapper.handler),
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = { dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote) },
