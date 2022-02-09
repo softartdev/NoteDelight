@@ -80,11 +80,13 @@ fun ShowConfirmPasswordDialog(
                 passwordState = passwordState,
                 label = label,
                 isError = isError,
+                contentDescription = MR.strings.enter_password.composeLocalized(),
             )
             PasswordField(
                 passwordState = repeatPasswordState,
                 label = repeatLabel,
                 isError = isRepeatError,
+                contentDescription = MR.strings.confirm_password.composeLocalized(),
             )
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }

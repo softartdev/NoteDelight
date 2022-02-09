@@ -69,6 +69,7 @@ fun SignInScreenBody(
                 passwordState = passwordState,
                 label = label,
                 isError = isError,
+                contentDescription = MR.strings.enter_password.composeLocalized()
             )
             Button(
                 onClick = onSignInClick,

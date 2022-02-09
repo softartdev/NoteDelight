@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.ui.passwordLabelTag
+import com.softartdev.notedelight.ui.descTagTriple
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -58,28 +58,31 @@ class SettingsPasswordTest {
             .assertIsOff()
             .performClick()
 
+        val (confirmLabelTag, confirmVisibilityTag, confirmFieldTag) = MR.strings.enter_password.descTagTriple()
+        val (confirmRepeatLabelTag, confirmRepeatVisibilityTag, confirmRepeatFieldTag) = MR.strings.confirm_password.descTagTriple()
+
         val confirmPasswordSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.enter_password))
+            .onNodeWithTag(confirmFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
             .performClick()
 
         val confirmLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.enter_password)))
+            .onNodeWithTag(confirmLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
-        confirmPasswordSNI.togglePasswordVisibility()
+        composeTestRule.togglePasswordVisibility(confirmVisibilityTag)
+
+        composeTestRule.onAllNodes(isRoot(), true).printToLog("🦄", maxDepth = Int.MAX_VALUE)
 
         val confirmRepeatPasswordSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.confirm_password))
+            .onNodeWithTag(confirmRepeatFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val confirmRepeatLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.confirm_password)))
+            .onNodeWithTag(confirmRepeatLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
-        confirmRepeatPasswordSNI.togglePasswordVisibility()
+        composeTestRule.togglePasswordVisibility(confirmRepeatVisibilityTag)
 
         val confirmYesSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
@@ -93,11 +96,13 @@ class SettingsPasswordTest {
         Espresso.closeSoftKeyboard()
 
         confirmYesSNI.performClick()
-        composeTestRule.waitForIdle()
 
+        confirmRepeatPasswordSNI.performClick()
+        confirmRepeatPasswordSNI.performTextReplacement(text = "2")
+
+        composeTestRule.onAllNodes(isRoot(), true).printToLog("🦄", maxDepth = Int.MAX_VALUE)
         confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
 
-        confirmRepeatPasswordSNI.performTextReplacement(text = "2")
         confirmYesSNI.performClick()
 
         confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
@@ -114,55 +119,54 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
             .performClick()
 
+        val (changeOldLabelTag, changeOldVisibilityTag, changeOldFieldTag) = MR.strings.enter_old_password.descTagTriple()
+        val (changeNewLabelTag, changeNewVisibilityTag, changeNewFieldTag) = MR.strings.enter_new_password.descTagTriple()
+        val (changeRepeatNewLabelTag, changeRepeatNewVisibilityTag, changeRepeatNewFieldTag) = MR.strings.repeat_new_password.descTagTriple()
+
         val changeOldSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.enter_old_password))
+            .onNodeWithTag(changeOldFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val changeOldLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.enter_old_password)))
+            .onNodeWithTag(changeOldLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
+        composeTestRule.togglePasswordVisibility(changeOldVisibilityTag)
+
         val changeNewSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.enter_new_password))
+            .onNodeWithTag(changeNewFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val changeNewLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.enter_new_password)))
+            .onNodeWithTag(changeNewLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
+        composeTestRule.togglePasswordVisibility(changeNewVisibilityTag)
+
         val changeRepeatNewSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.repeat_new_password))
+            .onNodeWithTag(changeRepeatNewFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val changeRepeatLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.repeat_new_password)))
+            .onNodeWithTag(changeRepeatNewLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
-        changeOldSNI.togglePasswordVisibility()
+        composeTestRule.togglePasswordVisibility(changeRepeatNewVisibilityTag)
 
         val changeYesSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
             .performClick()
-        composeTestRule.waitForIdle()
 
         changeOldLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeOldSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        changeNewSNI.onChild().performClick() // toggle password visibility
-
         changeYesSNI.performClick()
-        composeTestRule.waitForIdle()
 
         changeNewLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeNewSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
-
-        changeRepeatNewSNI.togglePasswordVisibility()
 
         changeYesSNI.performClick()
 
@@ -185,16 +189,17 @@ class SettingsPasswordTest {
             .assertIsOn()
             .performClick()
 
+        val (enterLabelTag, enterVisibilityTag, enterFieldTag) = MR.strings.enter_password.descTagTriple()
+
         val enterPasswordSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.enter_password))
+            .onNodeWithTag(enterFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val enterLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onAllNodesWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
-            .filterToOne(hasTextExactly(context.getString(R.string.enter_password)))
+            .onNodeWithTag(enterLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
-        enterPasswordSNI.togglePasswordVisibility()
+        composeTestRule.togglePasswordVisibility(enterVisibilityTag)
 
         val enterYesSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
@@ -217,7 +222,5 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOff()
-
-        composeTestRule.onAllNodes(isRoot()).printToLog("🦄", maxDepth = Int.MAX_VALUE)
     }
 }

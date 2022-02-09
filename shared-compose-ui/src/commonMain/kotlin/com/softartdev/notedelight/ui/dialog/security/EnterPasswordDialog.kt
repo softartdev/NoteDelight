@@ -71,6 +71,7 @@ fun ShowEnterPasswordDialog(
                 passwordState = passwordState,
                 label = label,
                 isError = isError,
+                contentDescription = MR.strings.enter_password.composeLocalized(),
             )
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }

@@ -97,16 +97,19 @@ fun ShowChangePasswordDialog(
                 passwordState = oldPasswordState,
                 label = oldLabel,
                 isError = oldError,
+                contentDescription = MR.strings.enter_old_password.composeLocalized(),
             )
             PasswordField(
                 passwordState = newPasswordState,
                 label = newLabel,
                 isError = newError,
+                contentDescription = MR.strings.enter_new_password.composeLocalized(),
             )
             PasswordField(
                 passwordState = repeatPasswordState,
                 label = repeatLabel,
                 isError = repeatError,
+                contentDescription = MR.strings.repeat_new_password.composeLocalized(),
             )
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }

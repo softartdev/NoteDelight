@@ -7,8 +7,9 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
+import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.test.util.Encryptor
-import com.softartdev.notedelight.ui.passwordLabelTag
+import com.softartdev.notedelight.ui.descTagTriple
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -51,16 +52,18 @@ class SignInTest {
         composeTestRule.onAllNodes(isRoot(), useUnmergedTree = true)
             .printToLog("🦄", maxDepth = Int.MAX_VALUE)
 
+        val (enterLabelTag, enterVisibilityTag, enterFieldTag) = MR.strings.enter_password.descTagTriple()
+
         val passwordFieldSNI = composeTestRule
-            .onNodeWithText(text = context.getString(R.string.enter_password))
+            .onNodeWithTag(enterFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()
 
         val passwordLabelSNI: SemanticsNodeInteraction = composeTestRule
-            .onNodeWithTag(testTag = passwordLabelTag, useUnmergedTree = true)
+            .onNodeWithTag(testTag = enterLabelTag, useUnmergedTree = true)
             .assertIsDisplayed()
             .assertTextEquals(context.getString(R.string.enter_password))
 
-        passwordFieldSNI.togglePasswordVisibility()
+        composeTestRule.togglePasswordVisibility(enterVisibilityTag)
 
         val signInButtonSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.sign_in))

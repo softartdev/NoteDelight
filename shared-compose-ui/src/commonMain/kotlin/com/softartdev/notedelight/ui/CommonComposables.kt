@@ -1,22 +1,12 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
@@ -62,36 +52,6 @@ fun Error(err: String) {
         Text(text = err, style = TextStyle(color = MaterialTheme.colors.error, fontWeight = FontWeight.Bold))
     }
 }
-
-const val passwordLabelTag = "PasswordFieldLabelTestTag"
-const val passwordVisibilityDesc = "Password visibility"
-
-@Composable
-fun PasswordField(
-    passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.composeLocalized(),
-    isError: Boolean = true,
-) {
-    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
-    TextField(
-        value = passwordState.value,
-        onValueChange = { passwordState.value = it },
-        label = { Text(label, modifier = Modifier.semantics { testTag = passwordLabelTag }) },
-        isError = isError,
-        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        leadingIcon = {
-            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                Icon(imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = passwordVisibilityDesc)
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun PreviewPasswordField() = PasswordField()
 
 @Preview
 @Composable
