@@ -88,14 +88,14 @@ class SettingsPasswordTest {
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
 
-        confirmYesSNI.performClick()
+        composeTestRule.advancePerform(confirmYesSNI::performClick)
 
         confirmLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         confirmPasswordSNI.performTextReplacement(text = "1")
         Espresso.closeSoftKeyboard()
 
-        confirmYesSNI.performClick()
+        composeTestRule.advancePerform(confirmYesSNI::performClick)
 
         confirmRepeatPasswordSNI.performClick()
         confirmRepeatPasswordSNI.performTextReplacement(text = "2")
@@ -103,12 +103,12 @@ class SettingsPasswordTest {
         composeTestRule.onAllNodes(isRoot(), true).printToLog("🦄", maxDepth = Int.MAX_VALUE)
         confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
 
-        confirmYesSNI.performClick()
+        composeTestRule.advancePerform(confirmYesSNI::performClick)
 
         confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
 
         confirmRepeatPasswordSNI.performTextReplacement(text = "1")
-        confirmYesSNI.performClick()
+        composeTestRule.advancePerform(confirmYesSNI::performClick)
 
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
@@ -156,26 +156,27 @@ class SettingsPasswordTest {
         val changeYesSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
-            .performClick()
+
+        composeTestRule.advancePerform(changeYesSNI::performClick)
 
         changeOldLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeOldSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        changeYesSNI.performClick()
+        composeTestRule.advancePerform(changeYesSNI::performClick)
 
         changeNewLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeNewSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        changeYesSNI.performClick()
+        composeTestRule.advancePerform(changeYesSNI::performClick)
 
         changeRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
 
         changeRepeatNewSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        changeYesSNI.performClick()
+        composeTestRule.advancePerform(changeYesSNI::performClick)
 
         changeOldLabelSNI.assertTextEquals(context.getString(R.string.incorrect_password))
         changeOldSNI.performTextReplacement(text = "1")
@@ -204,19 +205,20 @@ class SettingsPasswordTest {
         val enterYesSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
-            .performClick()
+
+        composeTestRule.advancePerform(enterYesSNI::performClick)
 
         enterLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         enterPasswordSNI.performTextReplacement(text = "1")
 
-        enterYesSNI.performClick()
+        composeTestRule.advancePerform(enterYesSNI::performClick)
 
         enterLabelSNI.assertTextEquals(context.getString(R.string.incorrect_password))
 
         enterPasswordSNI.performTextReplacement(text = "2")
 
-        enterYesSNI.performClick()
+        composeTestRule.advancePerform(enterYesSNI::performClick)
 
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()

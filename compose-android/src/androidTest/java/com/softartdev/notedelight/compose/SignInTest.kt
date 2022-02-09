@@ -68,19 +68,20 @@ class SignInTest {
         val signInButtonSNI = composeTestRule
             .onNodeWithText(text = context.getString(R.string.sign_in))
             .assertIsDisplayed()
-            .performClick()
+
+        composeTestRule.advancePerform(signInButtonSNI::performClick)
 
         passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         passwordFieldSNI.performTextReplacement(text = "incorrect password")
         Espresso.closeSoftKeyboard()
-        signInButtonSNI.performClick()
+        composeTestRule.advancePerform(signInButtonSNI::performClick)
 
         passwordLabelSNI.assertTextEquals(context.getString(R.string.incorrect_password))
 
         passwordFieldSNI.performTextReplacement(text = Encryptor.PASSWORD)
         Espresso.closeSoftKeyboard()
-        signInButtonSNI.performClick()
+        composeTestRule.advancePerform(signInButtonSNI::performClick)
 
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()

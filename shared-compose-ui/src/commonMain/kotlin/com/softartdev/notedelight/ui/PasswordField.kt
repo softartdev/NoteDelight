@@ -47,7 +47,7 @@ fun PasswordField(
     isError: Boolean = true,
     contentDescription: String = MR.strings.enter_password.composeLocalized(),
 ) {
-    val labelState by remember(label) { mutableStateOf(label) } // workaround for ui-tests
+    val labelState by remember(label, isError) { mutableStateOf(label) } // workaround for ui-tests
     val (labelTag, visibilityTag, fieldTag) = rememberTagTriple(contentDescription)
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     TextField(
