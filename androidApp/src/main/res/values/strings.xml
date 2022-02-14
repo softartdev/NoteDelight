@@ -1,4 +1,5 @@
 <resources>
+    <string name="old_app_name" translatable="false">Old Note Delight</string>
     <string name="light_theme_entry" translatable="false">light</string>
     <string name="dark_theme_entry" translatable="false">dark</string>
     <string name="default_theme_entry" translatable="false">default</string>
