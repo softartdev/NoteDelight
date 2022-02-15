@@ -1,4 +1,4 @@
-name: Compose CI
+name: Android old app CI
 
 on:
   push:
@@ -9,12 +9,12 @@ on:
 
 jobs:
   compose_ui_test_job:
-    name: Compose UI-tests on Android emulator
+    name: Old UI-tests on Android emulator
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
+        api-level: [ 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
     steps:
       - name: Check out
         uses: actions/checkout@v2
@@ -33,12 +33,12 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           target: google_apis
-          script: ./gradlew :compose-android:connectedCheck
+          script: ./gradlew :android-old-app:connectedCheck
       - name: Archive ui-tests-output artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: output-compose-ui-tests-artifacts
           path: |
-            compose-android/build/outputs
-            compose-android/build/reports
+            android-old-app/build/outputs
+            android-old-app/build/reports
