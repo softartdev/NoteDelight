@@ -9,17 +9,15 @@ def compose_version = org.jetbrains.compose.ComposeBuildConfig.composeVersion
 android {
     compileSdk 31
     defaultConfig {
-        applicationId "com.softartdev.notedelight.compose"
+        applicationId "com.softartdev.noteroom"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
-
+        versionCode 75
+        versionName "7.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        vectorDrawables.useSupportLibrary = true
+        resConfigs 'en', 'ru'
     }
     buildTypes {
         release {

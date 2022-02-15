@@ -11,14 +11,14 @@ apply from: "$rootDir/gradle/common-android-sign-conf.gradle"
 android {
     compileSdkVersion 31
     defaultConfig {
-        testInstrumentationRunnerArguments clearPackageData: 'true', listener: 'leakcanary.FailTestOnLeakRunListener'
-        applicationId "com.softartdev.noteroom"
+        applicationId "com.softartdev.notedelight.old"
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdk 31
         versionCode 75
         versionName "7.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true', listener: 'leakcanary.FailTestOnLeakRunListener'
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en', 'ru'
     }
