@@ -16,6 +16,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsInstanceOf
@@ -33,6 +34,9 @@ class FlowAfterCryptTest {
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val password = "password"

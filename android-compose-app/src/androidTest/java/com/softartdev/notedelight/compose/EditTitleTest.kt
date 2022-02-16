@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -14,6 +15,9 @@ class EditTitleTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 

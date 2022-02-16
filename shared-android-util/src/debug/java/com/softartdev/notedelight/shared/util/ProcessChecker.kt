@@ -1,4 +1,4 @@
-package com.softartdev.notedelight
+package com.softartdev.notedelight.shared.util
 
 import android.content.Context
 import leakcanary.LeakCanaryProcess

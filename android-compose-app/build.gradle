@@ -54,6 +54,7 @@ android {
 dependencies {
     implementation project(':shared')
     implementation project(':shared-compose-ui')
+    implementation project(':shared-android-util')
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
@@ -65,6 +66,8 @@ dependencies {
     implementation "com.arkivanov.decompose:decompose:$decompose_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
+    implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation project(path: ':shared-android-test-util')
@@ -72,5 +75,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation "com.squareup.leakcanary:leakcanary-android-instrumentation:$leak_canary_version"
     androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }

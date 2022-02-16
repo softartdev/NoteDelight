@@ -13,6 +13,7 @@ import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.base.IdlingResource
 import com.softartdev.notedelight.ui.descTagTriple
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,9 @@ class FlowAfterCryptTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val password = "password"

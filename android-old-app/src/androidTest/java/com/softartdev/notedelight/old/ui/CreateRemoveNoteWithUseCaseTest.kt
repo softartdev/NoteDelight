@@ -16,6 +16,7 @@ import com.softartdev.notedelight.shared.db.Note
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -37,6 +38,9 @@ class CreateRemoveNoteWithUseCaseTest {
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val noteUseCase: NoteUseCase by inject(NoteUseCase::class.java)
 

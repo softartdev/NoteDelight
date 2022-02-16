@@ -11,6 +11,7 @@ import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.base.IdlingResource
 import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.ui.descTagTriple
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,9 @@ class SignInTest {
     val composeTestRule = customAndroidComposeRule<MainActivity>(
         beforeActivityLaunched = Encryptor::encryptDB
     )
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 

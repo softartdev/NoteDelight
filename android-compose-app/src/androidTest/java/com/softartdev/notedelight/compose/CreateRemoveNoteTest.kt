@@ -10,6 +10,7 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.shared.base.IdlingResource
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -23,6 +24,9 @@ class CreateRemoveNoteTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 

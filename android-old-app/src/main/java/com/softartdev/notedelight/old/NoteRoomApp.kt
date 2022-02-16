@@ -2,12 +2,12 @@ package com.softartdev.notedelight.old
 
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.softartdev.notedelight.isInLeakCanaryAnalyzerProcess
 import com.softartdev.notedelight.old.di.allAndroidModules
 import com.softartdev.notedelight.old.util.PreferencesHelper
 import com.softartdev.notedelight.old.util.ThemeHelper
 import com.softartdev.notedelight.old.util.log.CrashlyticsAntilog
 import com.softartdev.notedelight.old.util.log.NapierKoinLogger
+import com.softartdev.notedelight.shared.util.isInLeakCanaryAnalyzerProcess
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.android.ext.android.get

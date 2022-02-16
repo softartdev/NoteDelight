@@ -14,6 +14,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -31,6 +32,9 @@ class CreateRemoveNoteTest {
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     @Before
     fun registerIdlingResource() {

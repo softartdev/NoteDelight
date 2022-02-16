@@ -12,6 +12,7 @@ import androidx.test.rule.ActivityTestRule
 import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
 import com.softartdev.notedelight.shared.test.util.Encryptor
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -28,6 +29,9 @@ class SignInActivityTest {
     var activityTestRule = object : ActivityTestRule<SplashActivity>(SplashActivity::class.java) {
         override fun beforeActivityLaunched() = Encryptor.encryptDB()
     }
+
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
 
     @Before
     fun registerIdlingResource() {
