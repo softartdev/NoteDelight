@@ -5,7 +5,7 @@
     android:id="@+id/main_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.softartdev.notedelight.ui.main.MainActivity">
+    tools:context="com.softartdev.notedelight.old.ui.main.MainActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/main_swipe_refresh"
@@ -31,19 +31,19 @@
         android:text="@string/create_note"
         app:icon="@drawable/ic_add_black_24dp" />
 
-    <com.softartdev.notedelight.ui.common.ProgressView
+    <com.softartdev.notedelight.old.ui.common.ProgressView
         android:id="@+id/main_progress_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.softartdev.notedelight.ui.common.EmptyView
+    <com.softartdev.notedelight.old.ui.common.EmptyView
         android:id="@+id/main_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.softartdev.notedelight.ui.common.ErrorView
+    <com.softartdev.notedelight.old.ui.common.ErrorView
         android:id="@+id/main_error_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

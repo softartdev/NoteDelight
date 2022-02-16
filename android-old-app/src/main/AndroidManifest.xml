@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.softartdev.notedelight">
+    package="com.softartdev.notedelight.old">
 
     <uses-sdk tools:overrideLibrary="androidx.core.splashscreen, com.google.firebase.firebase_analytics, com.google.firebase.measurement, com.google.android.gms.measurement.sdk, com.google.firebase.measurement_impl, com.google.android.gms.measurement.api, com.google.android.gms.measurement.sdk.api, com.google.android.gms.measurement_base" />
 

@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.softartdev.notedelight.ui.note.NoteActivity"
+              tools:context="com.softartdev.notedelight.old.ui.note.NoteActivity"
               tools:menu="@menu/menu_note">
 
     <ProgressBar
@@ -17,7 +17,7 @@
             android:visibility="invisible"
             tools:visibility="visible"/>
 
-    <com.softartdev.notedelight.ui.widget.LinedEditText
+    <com.softartdev.notedelight.old.ui.widget.LinedEditText
             android:id="@+id/note_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

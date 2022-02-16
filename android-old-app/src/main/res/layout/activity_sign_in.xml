@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.softartdev.notedelight.ui.signin.SignInActivity">
+    tools:context="com.softartdev.notedelight.old.ui.signin.SignInActivity">
     
     <ScrollView
         android:id="@+id/sign_in_layout"
@@ -64,13 +64,13 @@
         
     </ScrollView>
 
-    <com.softartdev.notedelight.ui.common.ProgressView
+    <com.softartdev.notedelight.old.ui.common.ProgressView
         android:id="@+id/sign_in_progress_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.softartdev.notedelight.ui.common.ErrorView
+    <com.softartdev.notedelight.old.ui.common.ErrorView
         android:id="@+id/sign_in_error_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
