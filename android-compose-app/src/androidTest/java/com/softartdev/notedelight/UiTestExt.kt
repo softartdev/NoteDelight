@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule

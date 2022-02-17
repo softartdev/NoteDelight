@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import android.app.Activity
 import androidx.activity.ComponentActivity

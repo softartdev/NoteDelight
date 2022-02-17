@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import android.content.Context
 import androidx.compose.material.icons.Icons

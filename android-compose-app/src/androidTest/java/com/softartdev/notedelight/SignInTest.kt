@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import android.content.Context
 import androidx.compose.ui.test.*
@@ -7,7 +7,6 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.base.IdlingResource
 import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.ui.descTagTriple

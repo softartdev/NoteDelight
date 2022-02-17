@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import android.app.Application
 import com.softartdev.notedelight.shared.di.allModules

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.compose
+package com.softartdev.notedelight
 
 import android.util.Log
 import io.github.aakira.napier.Antilog
