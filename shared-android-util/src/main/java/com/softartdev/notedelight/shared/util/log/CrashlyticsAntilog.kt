@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.old.util.log
+package com.softartdev.notedelight.shared.util.log
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.github.aakira.napier.Antilog

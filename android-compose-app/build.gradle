@@ -65,7 +65,7 @@ dependencies {
     implementation "com.arkivanov.decompose:decompose:$decompose_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"

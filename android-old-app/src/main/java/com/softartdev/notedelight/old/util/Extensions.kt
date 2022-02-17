@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.old.util
 
-import android.R
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -52,7 +51,7 @@ fun View.invisible() {
 
 fun MenuItem.tintIcon(
         context: Context,
-        @ColorInt color: Int = getThemeColor(context, R.attr.textColorPrimary)
+        @ColorInt color: Int = getThemeColor(context, android.R.attr.textColorPrimary)
 ) {
     val drawableWrap = DrawableCompat.wrap(icon).mutate()
     DrawableCompat.setTint(drawableWrap, color)
@@ -61,7 +60,7 @@ fun MenuItem.tintIcon(
 
 fun Preference.tintIcon() {
     val drawableWrap = DrawableCompat.wrap(icon).mutate()
-    val color = getThemeColor(context, R.attr.textColorPrimary)
+    val color = getThemeColor(context, android.R.attr.textColorPrimary)
     DrawableCompat.setTint(drawableWrap, color)
     icon = drawableWrap
 }

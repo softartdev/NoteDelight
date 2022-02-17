@@ -24,6 +24,10 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "io.insert-koin:koin-core-jvm:$koin_version"
+    implementation "io.github.aakira:napier:$napier_version"
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
+    implementation 'com.google.firebase:firebase-crashlytics'
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
