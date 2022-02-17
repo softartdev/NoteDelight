@@ -64,10 +64,7 @@ android {
         enableL8RuleSharing = true
         enableAssertions.set(false)
     }
-    lint {
-        abortOnError false
-    }
-//    testBuildType "release"
+    testBuildType "release"
 }
 
 dependencies {
