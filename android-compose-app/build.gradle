@@ -66,6 +66,7 @@ dependencies {
     implementation "com.arkivanov.decompose:decompose:$decompose_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
     implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
