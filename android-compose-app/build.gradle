@@ -22,9 +22,17 @@ android {
         resConfigs 'en', 'ru'
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics.mappingFileUploadEnabled(false)
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics.mappingFileUploadEnabled(true)
             signingConfig signingConfigs.config
         }
     }
