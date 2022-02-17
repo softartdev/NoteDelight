@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'org.jetbrains.compose'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 apply from: "$rootDir/gradle/common-android-sign-conf.gradle"
 def compose_version = org.jetbrains.compose.ComposeBuildConfig.composeVersion
@@ -63,6 +65,9 @@ dependencies {
     implementation "com.arkivanov.decompose:decompose:$decompose_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
     implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
