@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         // Context of the app under test.
-        assertEquals("com.softartdev.noteroom", getApplicationContext<Context>().packageName)
+        assertEquals("com.softartdev.notedelight.old", getApplicationContext<Context>().packageName)
     }
 }
