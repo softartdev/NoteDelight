@@ -11,10 +11,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.shared.base.IdlingResource
 import leakcanary.DetectLeaksAfterTestSuccess
+import leakcanary.SkipLeakDetection
+import leakcanary.TestDescriptionHolder
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.*
 
@@ -22,11 +25,12 @@ import java.util.*
 @RunWith(AndroidJUnit4::class)
 class CreateRemoveNoteTest {
 
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    private val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
-    val detectLeaksRule = DetectLeaksAfterTestSuccess()
+    val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
+        .around(DetectLeaksAfterTestSuccess())
+        .around(composeTestRule)
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
@@ -42,6 +46,8 @@ class CreateRemoveNoteTest {
         IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
     }
 
+    //TODO remove skip after update Jetpack Compose version above 1.1.0
+    @SkipLeakDetection("See https://issuetracker.google.com/issues/202190483")
     @Test
     fun createRemove() {
         composeTestRule

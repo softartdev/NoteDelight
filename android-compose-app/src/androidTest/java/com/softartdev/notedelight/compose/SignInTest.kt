@@ -12,23 +12,26 @@ import com.softartdev.notedelight.shared.base.IdlingResource
 import com.softartdev.notedelight.shared.test.util.Encryptor
 import com.softartdev.notedelight.ui.descTagTriple
 import leakcanary.DetectLeaksAfterTestSuccess
+import leakcanary.SkipLeakDetection
+import leakcanary.TestDescriptionHolder
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
 @FlakyTest
 @RunWith(AndroidJUnit4::class)
 class SignInTest {
 
-    @get:Rule
-    val composeTestRule = customAndroidComposeRule<MainActivity>(
+    private val composeTestRule = customAndroidComposeRule<MainActivity>(
         beforeActivityLaunched = Encryptor::encryptDB
     )
-
     @get:Rule
-    val detectLeaksRule = DetectLeaksAfterTestSuccess()
+    val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
+        .around(DetectLeaksAfterTestSuccess())
+        .around(composeTestRule)
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
@@ -44,6 +47,8 @@ class SignInTest {
         IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
     }
 
+    //TODO remove skip after update Jetpack Compose version above 1.1.0
+    @SkipLeakDetection("See https://issuetracker.google.com/issues/202190483")
     @Test
     fun signInTest() {
         composeTestRule.onAllNodes(isRoot(), useUnmergedTree = true)

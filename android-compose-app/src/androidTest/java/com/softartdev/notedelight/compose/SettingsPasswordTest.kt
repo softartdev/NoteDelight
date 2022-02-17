@@ -13,21 +13,25 @@ import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
 import com.softartdev.notedelight.ui.descTagTriple
 import leakcanary.DetectLeaksAfterTestSuccess
+import leakcanary.SkipLeakDetection
+import leakcanary.TestDescriptionHolder
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
 @FlakyTest
 @RunWith(AndroidJUnit4::class)
 class SettingsPasswordTest {
 
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    private val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
-    val detectLeaksRule = DetectLeaksAfterTestSuccess()
+    val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
+        .around(DetectLeaksAfterTestSuccess())
+        .around(composeTestRule)
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
@@ -43,6 +47,8 @@ class SettingsPasswordTest {
         IdlingRegistry.getInstance().unregister(countingIdlingResource)
     }
 
+    //TODO remove skip after update Jetpack Compose version above 1.1.0
+    @SkipLeakDetection("See https://issuetracker.google.com/issues/202190483")
     @Test
     fun settingPasswordTest() {
         composeTestRule.onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
