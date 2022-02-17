@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.compose
 
 import android.app.Application
-import com.softartdev.mr.MokoResHolder
 import com.softartdev.notedelight.shared.di.allModules
 import com.softartdev.notedelight.shared.util.isInLeakCanaryAnalyzerProcess
 import io.github.aakira.napier.Napier
@@ -21,6 +20,5 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(allModules)
         }
-        MokoResHolder.init(applicationContext)
     }
 }
