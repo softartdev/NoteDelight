@@ -14,3 +14,9 @@
 
 -keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+
+-keepclassmembers class net.sqlcipher.CursorWindow { *; }
+-keepclassmembers class net.sqlcipher.database.SQLiteDatabase { *; }
+-keepclassmembers class net.sqlcipher.database.SQLiteCompiledSql { *; }
+-keepclassmembers class net.sqlcipher.database.SQLiteQuery { *; }
+-keepclassmembers class net.sqlcipher.database.SQLiteStatement { *; }

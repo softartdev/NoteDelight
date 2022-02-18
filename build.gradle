@@ -24,7 +24,7 @@ buildscript {
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
-        classpath "com.slack.keeper:keeper:0.10.0"
+        classpath "com.slack.keeper:keeper:0.12.0"
         classpath "dev.icerock.moko:resources-generator:$moko_resources_version"
         classpath "org.jetbrains.compose:compose-gradle-plugin:1.0.1"
     }
@@ -36,7 +36,6 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
-        maven { url "https://kotlin.bintray.com/kotlinx/" }
     }
     group = 'com.softartdev.notedelight'
     version = '1.0-SNAPSHOT'
