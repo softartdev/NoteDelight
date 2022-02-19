@@ -47,8 +47,8 @@ android {
 kotlin {
     jvm()
     android()
-    iosX64("ios")
-//  ios() & iosSimulatorArm64("ios") are blocked by moko-resources, TODO: revert after update version above 0.17.3
+    ios()
+    iosSimulatorArm64()
     sourceSets {
         all {
             languageSettings.apply {
@@ -70,7 +70,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("io.insert-koin:koin-test:${rootProject.extra["koin_version"]}")
-                implementation("dev.icerock.moko:resources-test:0.18.0")
+                implementation("dev.icerock.moko:resources-test:${rootProject.extra["moko_resources_version"]}")
             }
         }
         val androidMain by getting {
@@ -107,6 +107,8 @@ kotlin {
             }
         }
         val iosTest by getting
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
         val jvmMain by getting {
             dependencies {
                 implementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
@@ -128,7 +130,7 @@ kotlin {
 //        pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
-            export("dev.icerock.moko:resources-iosx64:${rootProject.extra["moko_resources_version"]}")
+            export("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
         }
     }
 }
