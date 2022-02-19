@@ -4,30 +4,21 @@
 ![Fastlane CI/CD Android](https://github.com/softartdev/NoteDelight/workflows/Fastlane%20CI/CD%20Android/badge.svg)
 ![iOS starter workflow](https://github.com/softartdev/NoteDelight/workflows/iOS%20starter%20workflow/badge.svg)
 [![Desktop Java CI/CD](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml)
+[![Android old app CI](https://github.com/softartdev/NoteDelight/actions/workflows/old.yml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/old.yml)
 
 [Kotlin Multiplatform](https://kotlinlang.org/lp/mobile/) application for create notes in SQLite database
 with [SQLDelight](https://github.com/cashapp/sqldelight) library, and encrypt it
-with [Cipher](https://www.zetetic.net/sqlcipher/).
+with [Cipher](https://www.zetetic.net/sqlcipher/). The Compose-UI also has dark/light themes.
 
-The Android version also has dark/light themes.🤖
+Supported platforms:
+- Android
+- iOS
+- Desktop JVM (MacOS, Linux, Windows)
 
-An iOS version is under development.📱
-
-<img src="https://github.com/softartdev/NoteDelight/raw/master/demo_android.gif" height="500" />    <img src="https://github.com/softartdev/NoteDelight/raw/master/demo_ios.gif" height="500" />
+<img src="https://github.com/softartdev/NoteDelight/raw/master/demo_android.gif" height="500" />    <img src="https://github.com/softartdev/NoteDelight/raw/master/demo_ios.gif" height="500" />    <img src="https://raw.githubusercontent.com/softartdev/NoteDelight/dev/screenshoots/desktop.gif" height="500" />
 
 <p>
   <a href="https://play.google.com/store/apps/details?id=com.softartdev.noteroom"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" width="300" align="middle"/></a>
-  <a href="https://apps.apple.com/us/app/note-delight/id1455590246"><img alt="Get it on Apple Store" src="https://raw.githubusercontent.com/softartdev/NoteDelight/desktop/screenshoots/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg" width="300" height="80px" align="middle"/></a>
-</p>
-
-# JMV-Desktop powered by JetBrans-Compose 🖥
-
-![](screenshoots/desktop.gif)
-
-<p>
-<a href="https://snapcraft.io/note-delight"><img src="https://raw.githubusercontent.com/softartdev/NoteDelight/desktop/screenshoots/snap-store-black.svg" height="75px" align="middle" /></a>
-<a href="https://apps.apple.com/us/app/note-delight/id1455590246"><img src="https://raw.githubusercontent.com/softartdev/NoteDelight/desktop/screenshoots/Download_on_the_Mac_App_Store_Badge_US-UK_RGB_blk_092917.svg" height="75px" align="middle" /></a>
-<a href="https://www.microsoft.com/ru-ru/p/note-delight/9nztwsqntd1s"><img src="https://raw.githubusercontent.com/softartdev/NoteDelight/desktop/screenshoots/English_get it from MS_864X312.svg" height="75px" align="middle" /></a>
 </p>
 
 ## WORK IN PROGRESS 🛠
