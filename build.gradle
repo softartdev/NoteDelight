@@ -4,7 +4,7 @@ buildscript {
         coroutines_version = '1.6.0-native-mt'
         sqldelight_version = '1.5.3'
         decompose_version = '0.5.1'
-        koin_version= '3.1.5'
+        koin_version= '3.2.0-beta-1'
         napier_version = '2.4.0'
         moko_resources_version = '0.18.0'
         firebase_version = '29.0.3'

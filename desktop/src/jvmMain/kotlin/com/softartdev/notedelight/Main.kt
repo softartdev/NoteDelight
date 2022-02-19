@@ -20,7 +20,7 @@ import org.koin.core.logger.Level
 fun main() {
     Napier.base(antilog = DebugAntilog())
     startKoin {
-        printLogger(level = Level.ERROR) // TODO revert to Level.DEBUG after update Koin version above 3.1.5
+        printLogger(level = Level.DEBUG)
         modules(allModules)
     }
     val lifecycle = LifecycleRegistry()

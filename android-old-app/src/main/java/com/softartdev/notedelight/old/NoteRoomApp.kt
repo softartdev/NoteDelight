@@ -23,7 +23,7 @@ class NoteRoomApp : MultiDexApplication() {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         Napier.base(antilog = if (BuildConfig.DEBUG) DebugAntilog() else CrashlyticsAntilog())
         startKoin {
-            logger(NapierKoinLogger(Level.ERROR)) // TODO revert to Level.DEBUG after update Koin version above 3.1.5
+            logger(NapierKoinLogger(Level.DEBUG))
             androidContext(this@NoteRoomApp)
             modules(allAndroidModules)
         }

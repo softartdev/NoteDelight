@@ -18,7 +18,7 @@ class MainApplication : Application() {
         if (isInLeakCanaryAnalyzerProcess) return
         Napier.base(antilog = if (BuildConfig.DEBUG) DebugAntilog() else CrashlyticsAntilog())
         startKoin {
-            logger(NapierKoinLogger(Level.ERROR)) // TODO revert to Level.DEBUG after update Koin version above 3.1.5
+            logger(NapierKoinLogger(Level.DEBUG))
             androidContext(this@MainApplication)
             modules(allModules)
         }
