@@ -83,7 +83,7 @@ kotlin {
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
                 api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
-                api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+                api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
                 implementation("io.insert-koin:koin-android:${rootProject.extra["koin_version"]}")
                 implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
             }
