@@ -29,6 +29,8 @@ struct SignInView: View {
     
     struct FormView: View {
         @ObservedObject var viewModel: SignInViewModel
+        
+        var appName: String = MR.strings().app_name.desc().localized()
 
         var body: some View {
             NavigationView {
@@ -47,7 +49,7 @@ struct SignInView: View {
                         print("tap: \(viewModel.password)")
                         viewModel.checkPassword()
                     }).frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                }.navigationBarTitle("Note Delight")
+                }.navigationBarTitle(appName)
             }
         }
     }
