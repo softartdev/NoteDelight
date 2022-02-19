@@ -15,8 +15,8 @@ android {
         applicationId "com.softartdev.noteroom"
         minSdk 21
         targetSdk 31
-        versionCode 75
-        versionName "7.5"
+        versionCode 76
+        versionName "7.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
         vectorDrawables.useSupportLibrary = true
