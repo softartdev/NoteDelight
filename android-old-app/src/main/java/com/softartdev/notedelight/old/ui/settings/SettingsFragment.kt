@@ -86,7 +86,7 @@ class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListen
         onPreferenceChangeListener = this@SettingsFragment
     } ?: Napier.e("Security switch preference is null")
 
-    override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean = when (preference?.key) {
+    override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean = when (preference.key) {
         getString(R.string.theme_key) -> {
             ThemeHelper.applyTheme(newValue as String, requireContext())
             true

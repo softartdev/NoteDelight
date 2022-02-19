@@ -3,6 +3,7 @@ package com.softartdev.notedelight.old.util
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -59,7 +60,8 @@ fun MenuItem.tintIcon(
 }
 
 fun Preference.tintIcon() {
-    val drawableWrap = DrawableCompat.wrap(icon).mutate()
+    val ic: Drawable = icon ?: return
+    val drawableWrap = DrawableCompat.wrap(ic).mutate()
     val color = getThemeColor(context, android.R.attr.textColorPrimary)
     DrawableCompat.setTint(drawableWrap, color)
     icon = drawableWrap

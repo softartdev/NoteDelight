@@ -64,7 +64,7 @@ android {
         enableL8RuleSharing = true
         enableAssertions.set(false)
     }
-    testBuildType "release"
+//    testBuildType "release"
 }
 
 dependencies {
@@ -72,18 +72,18 @@ dependencies {
     implementation project(':shared-android-util')
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.annotation:annotation:1.3.0"
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation "com.google.android.material:material:1.4.0"
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.vectordrawable:vectordrawable:1.1.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
     implementation 'androidx.activity:activity-ktx:1.4.0'
-    implementation 'androidx.fragment:fragment-ktx:1.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     def arch_version = "2.1.0"
     implementation "androidx.arch.core:core-common:$arch_version"
