@@ -3,9 +3,14 @@ buildscript {
         kotlin_version = '1.6.10'
         coroutines_version = '1.6.0-native-mt'
         sqldelight_version = '1.5.3'
-        timber_version = '5.0.1'
+        decompose_version = '0.5.1'
+        koin_version= '3.2.0-beta-1'
+        napier_version = '2.4.0'
+        moko_resources_version = '0.18.0'
+        firebase_version = '29.1.0'
+        leak_canary_version = '2.8.1'
         junit_version = '4.13.2'
-        mockito_version = '4.2.0'
+        mockito_version = '4.3.1'
     }
     repositories {
         google()
@@ -15,11 +20,13 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
-        classpath "com.slack.keeper:keeper:0.11.1"
+        classpath "com.slack.keeper:keeper:0.12.0"
+        classpath "dev.icerock.moko:resources-generator:$moko_resources_version"
+        classpath "org.jetbrains.compose:compose-gradle-plugin:1.0.1"
     }
 }
 
@@ -29,7 +36,6 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
-        maven { url "https://kotlin.bintray.com/kotlinx/" }
     }
     group = 'com.softartdev.notedelight'
     version = '1.0-SNAPSHOT'

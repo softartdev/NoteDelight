@@ -1,0 +1,94 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'org.jetbrains.compose'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.slack.keeper'
+}
+apply from: "$rootDir/gradle/common-android-sign-conf.gradle"
+def compose_version = org.jetbrains.compose.ComposeBuildConfig.composeVersion
+
+android {
+    compileSdk 31
+    defaultConfig {
+        applicationId "com.softartdev.noteroom"
+        minSdk 21
+        targetSdk 31
+        versionCode 76
+        versionName "7.6"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        vectorDrawables.useSupportLibrary = true
+        resConfigs 'en', 'ru'
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics.mappingFileUploadEnabled(false)
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics.mappingFileUploadEnabled(true)
+            signingConfig signingConfigs.config
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion kotlin_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+//    testBuildType "release"
+}
+
+dependencies {
+    implementation project(':shared')
+    implementation project(':shared-compose-ui')
+    implementation project(':shared-android-util')
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation "com.arkivanov.decompose:decompose:$decompose_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$leak_canary_version"
+    implementation "com.squareup.leakcanary:plumber-android:$leak_canary_version"
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation project(path: ':shared-android-test-util')
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation "com.squareup.leakcanary:leakcanary-android-instrumentation:$leak_canary_version"
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
+}
