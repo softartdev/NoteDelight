@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '1.6.10'
-        coroutines_version = '1.6.0-native-mt'
+        coroutines_version = '1.6.1-native-mt'
         sqldelight_version = '1.5.3'
         decompose_version = '0.5.2'
         koin_version= '3.2.0-beta-1'
