@@ -3,7 +3,7 @@ buildscript {
         kotlin_version = '1.6.10'
         coroutines_version = '1.6.1-native-mt'
         sqldelight_version = '1.5.3'
-        decompose_version = '0.5.2'
+        decompose_version = '0.6.0'
         koin_version= '3.2.0-beta-1'
         napier_version = '2.5.0'
         moko_resources_version = '0.19.0'
