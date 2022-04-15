@@ -1,17 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     kotlin("android")
 }
 android {
-    compileSdkVersion(30)
+    compileSdk = 31
     defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
-
+        minSdk = 16
+        targetSdk = 31
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -30,17 +27,18 @@ android {
         kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
     }
     packagingOptions {
-        exclude("**/attach_hotspot_windows.dll")
-        exclude("META-INF/licenses/**")
-        pickFirst("META-INF/AL2.0")
-        pickFirst("META-INF/LGPL2.1")
+        jniLibs.excludes.add("META-INF/licenses/**")
+        resources.excludes += setOf("**/attach_hotspot_windows.dll", "META-INF/licenses/**")
+        resources.pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
-    implementation("junit:junit:${rootProject.extra["junit_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines_version"]}")
+    implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
+    implementation("junit:junit:${rootProject.extra["junit_version"]}")
     implementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
     implementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
 }

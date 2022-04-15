@@ -21,7 +21,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -33,15 +36,10 @@ android {
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
     packagingOptions.resources {
-        excludes.addAll(listOf(
-            "META-INF/*.kotlin_module",
-            "**/attach_hotspot_windows.dll",
-            "META-INF/licenses/**"
-        ))
-        pickFirsts.addAll(listOf(
-            "META-INF/AL2.0",
-            "META-INF/LGPL2.1"
-        ))
+        excludes += setOf(
+            "META-INF/*.kotlin_module", "**/attach_hotspot_windows.dll", "META-INF/licenses/**"
+        )
+        pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
 }
 kotlin {
