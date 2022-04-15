@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.softartdev.notedelight.old">
+
+    <uses-sdk tools:overrideLibrary="androidx.core.splashscreen, com.google.firebase.firebase_analytics, com.google.firebase.measurement, com.google.android.gms.measurement.sdk, com.google.firebase.measurement_impl, com.google.android.gms.measurement.api, com.google.android.gms.measurement.sdk.api, com.google.android.gms.measurement_base" />
+
+    <application
+        android:name=".NoteRoomApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/old_app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:theme="@style/Theme.App.Starting"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.signin.SignInActivity" />
+        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.note.NoteActivity"
+            android:label="@string/title_activity_note" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/settings" />
+    </application>
+
+</manifest>

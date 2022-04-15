@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "597223578367",
+    "project_id": "oldnotedelight",
+    "storage_bucket": "oldnotedelight.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597223578367:android:5a0843502cf1a1fe780aca",
+        "android_client_info": {
+          "package_name": "com.softartdev.notedelight.old"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597223578367-gef4t91fdejim2qoo2hjokmrqudtrtg8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softartdev.notedelight.old",
+            "certificate_hash": "dab8804d9f82f4a86e2c2a69056c0752dc0fca83"
+          }
+        },
+        {
+          "client_id": "597223578367-c9sn2m8dum6a3srqjqo3gpivl9fgo59h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMEBxeDwWKAj9KLxkxPCPBRPAnlerzxHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597223578367-c9sn2m8dum6a3srqjqo3gpivl9fgo59h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

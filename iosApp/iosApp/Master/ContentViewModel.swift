@@ -37,6 +37,10 @@ class ContentViewModel: ObservableObject {
         })
     }
     
+    func openSettings() {
+        self.state = ContentViewState.settings
+    }
+    
     func deleteNote(noteId: Int64) {
         noteUseCase.deleteNoteUnit(id: noteId, completionHandler: { unit, error in
             if unit != nil {
@@ -52,5 +56,6 @@ class ContentViewModel: ObservableObject {
 enum ContentViewState {
     case loading
     case result([Note])
+    case settings
     case error(String?)
 }

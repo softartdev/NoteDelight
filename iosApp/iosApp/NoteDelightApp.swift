@@ -15,11 +15,13 @@ struct NoteDelightApp: App {
     var body: some Scene {
         
         let iosDbRepo = IosDbRepo()
-        let useCase = CryptUseCase(dbRepo: iosDbRepo)
-        let viewModel = SplashViewModel(cryptUseCase: useCase)
+        let cryptUseCase = CryptUseCase(dbRepo: iosDbRepo)
+        let noteUseCase = NoteUseCase(dbRepo: iosDbRepo)
+        
+        let viewModel = SplashViewModel(dbRepo: iosDbRepo, cryptUseCase: cryptUseCase, noteUseCase: noteUseCase)
         
         WindowGroup {
-            SplashView(dbRepo: iosDbRepo, cryptUseCase: useCase, viewModel: viewModel)
+            SplashView(viewModel: viewModel)
         }
     }
 }

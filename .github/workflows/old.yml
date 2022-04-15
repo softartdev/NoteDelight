@@ -1,0 +1,44 @@
+name: Android old app CI
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+
+jobs:
+  compose_ui_test_job:
+    name: Old UI-tests on Android emulator
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [ 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+      - name: Cached Gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Run Compose UI-tests on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          script: ./gradlew :android-old-app:connectedCheck
+      - name: Archive ui-tests-output artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-compose-ui-tests-artifacts
+          path: |
+            android-old-app/build/outputs
+            android-old-app/build/reports

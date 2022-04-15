@@ -54,7 +54,7 @@ platform :android do
 
   lane :build_bundle_publish do
     gradle(
-      task: 'build bundle', # Task 'build' include 'assemble', 'lint' & 'test'
+      task: ':android-compose-app:build :android-compose-app:bundle', # Task 'build' include 'assemble', 'lint' & 'test'
       build_type: 'Release'
     )
     upload_to_play_store skip_upload_apk:true
