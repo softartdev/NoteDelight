@@ -14,7 +14,9 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -27,10 +29,10 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${rootProject.extra["kotlin_version"]}")
-    implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
-    implementation("io.github.aakira:napier:${rootProject.extra["napier_version"]}")
-    implementation(platform ("com.google.firebase:firebase-bom:${rootProject.extra["firebase_version"]}"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
+    implementation(libs.koin.core.jvm)
+    implementation(libs.napier)
+    implementation(platform("com.google.firebase:firebase-bom:${rootProject.extra["firebase_version"]}"))
     implementation("com.google.firebase:firebase-crashlytics")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")

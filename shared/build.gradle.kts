@@ -55,26 +55,26 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
-                implementation("com.squareup.sqldelight:coroutines-extensions:${rootProject.extra["sqldelight_version"]}")
+                implementation(libs.coroutines.core)
+                implementation(libs.sqlDelight.coroutinesExt)
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-                api("io.github.aakira:napier:${rootProject.extra["napier_version"]}")
-                api("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
-                implementation("io.insert-koin:koin-core:${rootProject.extra["koin_version"]}")
+                api(libs.napier)
+                api(libs.mokoResources)
+                implementation(libs.koin.core)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("io.insert-koin:koin-test:${rootProject.extra["koin_version"]}")
-                implementation("dev.icerock.moko:resources-test:${rootProject.extra["moko_resources_version"]}")
+                implementation(libs.koin.test)
+                implementation(libs.mokoResources.test)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
-                api("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
+                implementation(libs.coroutines.android)
+                api(libs.sqlDelight.android)
                 val sqliteVersion = "2.1.0"
                 implementation("androidx.sqlite:sqlite:$sqliteVersion")
                 implementation("androidx.sqlite:sqlite-ktx:$sqliteVersion")
@@ -82,7 +82,7 @@ kotlin {
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
                 api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
                 api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
-                implementation("io.insert-koin:koin-android:${rootProject.extra["koin_version"]}")
+                implementation(libs.koin.android)
                 implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
             }
         }
@@ -92,15 +92,15 @@ kotlin {
                 implementation(kotlin("test-junit"))
                 implementation(project(":shared-android-test-util"))
                 implementation("junit:junit:${rootProject.extra["junit_version"]}")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines_version"]}")
+                implementation(libs.coroutines.test)
                 implementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
                 implementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
-                implementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
+                implementation(libs.sqlDelight.jvm)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("com.squareup.sqldelight:native-driver:${rootProject.extra["sqldelight_version"]}")
+                implementation(libs.sqlDelight.native)
                 api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
@@ -109,7 +109,7 @@ kotlin {
         val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
         val jvmMain by getting {
             dependencies {
-                implementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
+                implementation(libs.sqlDelight.jvm)
             }
         }
         val jvmTest by getting {
@@ -128,7 +128,7 @@ kotlin {
 //        pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
-            export("dev.icerock.moko:resources:${rootProject.extra["moko_resources_version"]}")
+            export(libs.mokoResources)
         }
     }
 }

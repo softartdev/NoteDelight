@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
 }
+
 android {
     compileSdk = 31
     defaultConfig {
@@ -15,7 +16,9 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -35,9 +38,9 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines_version"]}")
-    implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.test)
+    implementation(libs.koin.core.jvm)
     implementation("junit:junit:${rootProject.extra["junit_version"]}")
     implementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
     implementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
