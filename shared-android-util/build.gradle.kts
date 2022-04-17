@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 16
-        targetSdk = 31
+        minSdk = libs.versions.oldMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     buildTypes {
         getByName("release") {
@@ -32,10 +32,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
     implementation(libs.koin.core.jvm)
     implementation(libs.napier)
-    implementation(platform("com.google.firebase:firebase-bom:${rootProject.extra["firebase_version"]}"))
-    implementation("com.google.firebase:firebase-crashlytics")
-    testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
-    testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
-    testImplementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
-    testImplementation("com.squareup.leakcanary:leakcanary-android-process:${rootProject.extra["leak_canary_version"]}")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    testImplementation(libs.junit)
+    testImplementation(libs.bundles.mockito)
+    testImplementation(libs.leakCanary.android.process)
 }

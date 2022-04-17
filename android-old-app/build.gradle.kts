@@ -12,11 +12,11 @@ plugins {
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.softartdev.notedelight.old"
-        minSdk = 16
-        targetSdk = 31
+        minSdk = libs.versions.oldMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 75
         versionName = "7.5"
         multiDexEnabled = true
@@ -90,24 +90,23 @@ dependencies {
     implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${rootProject.extra["leak_canary_version"]}")
-    debugImplementation("com.squareup.leakcanary:leakcanary-android-process:${rootProject.extra["leak_canary_version"]}")
-    implementation("com.squareup.leakcanary:plumber-android:${rootProject.extra["leak_canary_version"]}")
+    debugImplementation(libs.leakCanary.android)
+    debugImplementation(libs.leakCanary.android.process)
+    implementation(libs.leakCanary.plumber.android)
     implementation(libs.koin.android)
     compileOnly("org.glassfish:javax.annotation:10.0-b28")
-    implementation(platform("com.google.firebase:firebase-bom:${rootProject.extra["firebase_version"]}"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     testImplementation(project(":shared-android-test-util"))
-    testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
+    testImplementation(libs.junit)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
     testImplementation("androidx.arch.core:core-testing:$archVersion")
     testImplementation(libs.coroutines.test)
-    testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
-    testImplementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
+    testImplementation(libs.bundles.mockito)
     testImplementation("app.cash.turbine:turbine:0.7.0")
     androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
@@ -119,6 +118,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
     androidTestImplementation("androidx.arch.core:core-testing:$archVersion")
     androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${rootProject.extra["leak_canary_version"]}")
+    androidTestImplementation(libs.leakCanary.android.instrumentation)
     androidTestUtil("androidx.test:orchestrator:1.4.1")
 }

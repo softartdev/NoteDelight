@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 16
-        targetSdk = 31
+        minSdk = libs.versions.oldMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -41,7 +41,6 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.test)
     implementation(libs.koin.core.jvm)
-    implementation("junit:junit:${rootProject.extra["junit_version"]}")
-    implementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
-    implementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
+    implementation(libs.junit)
+    implementation(libs.bundles.mockito)
 }

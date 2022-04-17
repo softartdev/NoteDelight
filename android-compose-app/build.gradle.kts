@@ -13,11 +13,11 @@ plugins {
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.softartdev.noteroom"
-        minSdk = 21
-        targetSdk = 31
+        minSdk = libs.versions.composeMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 77
         versionName = "7.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -72,20 +72,20 @@ dependencies {
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation(platform("com.google.firebase:firebase-bom:${rootProject.extra["firebase_version"]}"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics")
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${rootProject.extra["leak_canary_version"]}")
-    debugImplementation("com.squareup.leakcanary:leakcanary-android-process:${rootProject.extra["leak_canary_version"]}")
-    implementation("com.squareup.leakcanary:plumber-android:${rootProject.extra["leak_canary_version"]}")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    debugImplementation(libs.leakCanary.android)
+    debugImplementation(libs.leakCanary.android.process)
+    implementation(libs.leakCanary.plumber.android)
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
-    testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
+    testImplementation(libs.junit)
     androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${rootProject.extra["leak_canary_version"]}")
+    androidTestImplementation(libs.leakCanary.android.instrumentation)
     androidTestUtil("androidx.test:orchestrator:1.4.1")
 }

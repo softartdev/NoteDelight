@@ -1,8 +1,4 @@
 buildscript {
-    val firebase_version by extra("29.3.1")
-    val leak_canary_version by extra("2.8.1")
-    val junit_version by extra("4.13.2")
-    val mockito_version by extra("4.4.0")
     repositories {
         google()
         mavenCentral()

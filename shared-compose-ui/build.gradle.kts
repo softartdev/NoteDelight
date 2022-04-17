@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.compose
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     id("org.jetbrains.compose")
     id("kotlin-parcelize")
 }
+
 kotlin {
     jvm {
         compilations.all {
@@ -22,8 +24,8 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.desktop.common)
-                implementation("org.jetbrains.compose.material:material:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
-                implementation("org.jetbrains.compose.material:material-icons-extended:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
+                implementation("org.jetbrains.compose.material:material:$composeVersion")
+                implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
                 api(libs.mokoResources.compose)
@@ -47,11 +49,12 @@ kotlin {
         }
     }
 }
+
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 21
-        targetSdk = 31
+        minSdk = libs.versions.composeMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

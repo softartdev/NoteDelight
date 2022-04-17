@@ -11,10 +11,10 @@ group = "com.softartdev.notedelight.shared"
 version = "1.0"
 
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 16
-        targetSdk = 31
+        minSdk = libs.versions.oldMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -91,10 +91,9 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation(project(":shared-android-test-util"))
-                implementation("junit:junit:${rootProject.extra["junit_version"]}")
+                implementation(libs.junit)
                 implementation(libs.coroutines.test)
-                implementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
-                implementation("org.mockito:mockito-inline:${rootProject.extra["mockito_version"]}")
+                implementation(libs.bundles.mockito)
                 implementation(libs.sqlDelight.jvm)
             }
         }
