@@ -1,0 +1,66 @@
+[versions]
+compileSdk = "31"
+targetSdk = "31"
+oldMinSdk = "16"
+composeMinSdk = "21"
+
+kotlin = "1.6.10"
+coroutines = "1.6.1-native-mt"
+sqlDelight = "1.5.3"
+decompose = "0.6.0"
+koin = "3.2.0-beta-1"
+napier = "2.5.0"
+mokoResources = "0.19.0"
+firebase = "29.3.1"
+leakCanary = "2.8.1"
+junit = "4.13.2"
+mockito = "4.4.0"
+
+[libraries]
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+sqlDelight-gradlePlugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqlDelight" }
+sqlDelight-runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelight" }
+sqlDelight-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-coroutinesExt = { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+sqlDelight-native = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqlDelight-jvm = { module = "com.squareup.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
+
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-extComposeJb = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-core-jvm = { module = "io.insert-koin:koin-core-jvm", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
+
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+
+mokoResources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "mokoResources" }
+mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
+mokoResources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
+mokoResources-test = { module = "dev.icerock.moko:resources-test", version.ref = "mokoResources" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
+leakCanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }
+leakCanary-android-process = { module = "com.squareup.leakcanary:leakcanary-android-process", version.ref = "leakCanary" }
+leakCanary-plumber-android = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakCanary" }
+leakCanary-android-instrumentation = { module = "com.squareup.leakcanary:leakcanary-android-instrumentation", version.ref = "leakCanary" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
+
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+
+[plugins]
+
+[bundles]
+mockito = ["mockito-core", "mockito-inline"]

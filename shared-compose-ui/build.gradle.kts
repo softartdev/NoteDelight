@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.compose
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     id("org.jetbrains.compose")
     id("kotlin-parcelize")
 }
+
 kotlin {
     jvm {
         compilations.all {
@@ -22,21 +24,21 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.desktop.common)
-                implementation("org.jetbrains.compose.material:material:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
-                implementation("org.jetbrains.compose.material:material-icons-extended:${org.jetbrains.compose.ComposeBuildConfig.composeVersion}")
-                implementation("com.arkivanov.decompose:decompose:${rootProject.extra["decompose_version"]}")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:${rootProject.extra["decompose_version"]}")
-                api("dev.icerock.moko:resources-compose:${rootProject.extra["moko_resources_version"]}")
+                implementation("org.jetbrains.compose.material:material:$composeVersion")
+                implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
+                implementation(libs.decompose)
+                implementation(libs.decompose.extComposeJb)
+                api(libs.mokoResources.compose)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.insert-koin:koin-androidx-compose:${rootProject.extra["koin_version"]}")
+                implementation(libs.koin.androidx.compose)
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation("io.insert-koin:koin-core-jvm:${rootProject.extra["koin_version"]}")
+                implementation(libs.koin.core.jvm)
             }
         }
         val jvmTest by getting {
@@ -47,11 +49,12 @@ kotlin {
         }
     }
 }
+
 android {
-    compileSdk = 31
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 21
-        targetSdk = 31
+        minSdk = libs.versions.composeMinSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
