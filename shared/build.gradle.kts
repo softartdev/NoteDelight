@@ -57,7 +57,7 @@ kotlin {
             dependencies {
                 implementation(libs.coroutines.core)
                 implementation(libs.sqlDelight.coroutinesExt)
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
                 api(libs.napier)
                 api(libs.mokoResources)
                 implementation(libs.koin.core)
