@@ -75,7 +75,7 @@ kotlin {
             dependencies {
                 implementation(libs.coroutines.android)
                 api(libs.sqlDelight.android)
-                val sqliteVersion = "2.1.0"
+                val sqliteVersion = "2.2.0"
                 implementation("androidx.sqlite:sqlite:$sqliteVersion")
                 implementation("androidx.sqlite:sqlite-ktx:$sqliteVersion")
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
