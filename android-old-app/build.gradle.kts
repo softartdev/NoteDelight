@@ -107,7 +107,7 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:$archVersion")
     testImplementation(libs.coroutines.test)
     testImplementation(libs.bundles.mockito)
-    testImplementation("app.cash.turbine:turbine:0.7.0")
+    testImplementation("app.cash.turbine:turbine:0.8.0")
     androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
