@@ -4,7 +4,7 @@ targetSdk = "31"
 oldMinSdk = "16"
 composeMinSdk = "21"
 
-kotlin = "1.6.21"
+kotlin = "1.6.10"
 coroutines = "1.6.1-native-mt"
 sqlDelight = "1.5.3"
 decompose = "0.6.0"

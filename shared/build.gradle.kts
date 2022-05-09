@@ -7,6 +7,7 @@ plugins {
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
+version = "1.0"
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -76,6 +77,7 @@ kotlin {
             }
         }
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.coroutines.android)
                 api(libs.sqlDelight.android)
@@ -91,6 +93,7 @@ kotlin {
             }
         }
         val androidTest by getting {
+            dependsOn(commonTest)
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -101,54 +104,49 @@ kotlin {
                 implementation(libs.sqlDelight.jvm)
             }
         }
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
         val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-//                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
             }
         }
-        val iosTest by creating
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
         val jvmMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.sqlDelight.jvm)
             }
         }
         val jvmTest by getting {
+            dependsOn(commonTest)
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        /* Main hierarchy */
-        jvmMain.dependsOn(commonMain)
-        androidMain.dependsOn(commonMain)
-        iosMain.dependsOn(commonMain)
-        iosX64Main.dependsOn(iosMain)
-        iosArm64Main.dependsOn(iosMain)
-        iosSimulatorArm64Main.dependsOn(iosMain)
-
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        /* Test hierarchy */
-        jvmTest.dependsOn(commonTest)
-        androidTest.dependsOn(commonTest)
-        iosTest.dependsOn(commonTest)
-        iosX64Test.dependsOn(iosTest)
-        iosArm64Test.dependsOn(iosTest)
-        iosSimulatorArm64Test.dependsOn(iosTest)
     }
     cocoapods {
-        version = "1.0"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
         useLibraries()
-        pod("SQLCipher", "~> 4.4.2")
+//        pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
             export(libs.mokoResources)
@@ -159,14 +157,5 @@ sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
-    }
-}
-
-tasks.named<org.jetbrains.kotlin.gradle.tasks.DefFileTask>("generateDefSQLCipher").configure {
-    doLast {
-        outputFile.writeText("""
-            language = Objective-C
-            headers = sqlite3.h
-        """.trimIndent())
     }
 }
