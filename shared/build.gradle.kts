@@ -161,3 +161,12 @@ sqldelight {
 //        linkSqlite = false
     }
 }
+
+tasks.named<org.jetbrains.kotlin.gradle.tasks.DefFileTask>("generateDefSQLCipher").configure {
+    doLast {
+        outputFile.writeText("""
+            language = Objective-C
+            headers = sqlite3.h
+        """.trimIndent())
+    }
+}
