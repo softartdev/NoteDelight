@@ -7,11 +7,10 @@ plugins {
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
-group = "com.softartdev.notedelight.shared"
-version = "1.0"
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = libs.versions.oldMinSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -42,10 +41,14 @@ android {
         pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
 }
+multiplatformResources {
+    multiplatformResourcesPackage = "com.softartdev.notedelight"
+}
 kotlin {
     jvm()
     android()
-    ios()
+    iosX64()
+    iosArm64()
     iosSimulatorArm64()
     sourceSets {
         all {
@@ -65,6 +68,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
+                implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(libs.koin.test)
@@ -97,15 +101,13 @@ kotlin {
                 implementation(libs.sqlDelight.jvm)
             }
         }
-        val iosMain by getting {
+        val iosMain by creating {
             dependencies {
                 implementation(libs.sqlDelight.native)
 //                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
-        val iosTest by getting
-        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
-        val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
+        val iosTest by creating
         val jvmMain by getting {
             dependencies {
                 implementation(libs.sqlDelight.jvm)
@@ -117,8 +119,30 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        /* Main hierarchy */
+        jvmMain.dependsOn(commonMain)
+        androidMain.dependsOn(commonMain)
+        iosMain.dependsOn(commonMain)
+        iosX64Main.dependsOn(iosMain)
+        iosArm64Main.dependsOn(iosMain)
+        iosSimulatorArm64Main.dependsOn(iosMain)
+
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        /* Test hierarchy */
+        jvmTest.dependsOn(commonTest)
+        androidTest.dependsOn(commonTest)
+        iosTest.dependsOn(commonTest)
+        iosX64Test.dependsOn(iosTest)
+        iosArm64Test.dependsOn(iosTest)
+        iosSimulatorArm64Test.dependsOn(iosTest)
     }
     cocoapods {
+        version = "1.0"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
@@ -136,7 +160,4 @@ sqldelight {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
     }
-}
-multiplatformResources {
-    multiplatformResourcesPackage = "com.softartdev.notedelight" // required
 }
