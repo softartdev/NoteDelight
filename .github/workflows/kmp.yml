@@ -31,6 +31,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: install cocoapods-generate
+        run: sudo gem install cocoapods-generate
       - name: Build
         run: ./gradlew build
       - name: Archive build-output artifacts
