@@ -20,6 +20,6 @@ fun LocalDateTime.toNSDate(): NSDate {
     return NSDate(secondsFromReferenceDate)
 }
 
-fun NSDate.toLocalDateTime(): LocalDateTime = Instant.fromEpochSeconds(
-    epochSeconds = timeIntervalSince1970.toLong()
-).toLocalDateTime(TimeZone.currentSystemDefault())
+fun NSDate.toLocalDateTime(): LocalDateTime = Instant
+    .fromEpochSeconds(epochSeconds = timeIntervalSince1970.toLong(), nanosecondAdjustment = 0)
+    .toLocalDateTime(timeZone = TimeZone.currentSystemDefault())

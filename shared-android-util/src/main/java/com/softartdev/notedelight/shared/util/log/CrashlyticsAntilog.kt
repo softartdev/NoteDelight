@@ -4,24 +4,21 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
 
-class CrashlyticsAntilog : Antilog() {
+class CrashlyticsAntilog(
+    private val crashlytics: FirebaseCrashlytics = FirebaseCrashlytics.getInstance()
+) : Antilog() {
 
-    private val crashlytics = FirebaseCrashlytics.getInstance()
+    private val logPrefixes: CharArray = LogLevel.values().let { levels: Array<LogLevel> ->
+        return@let CharArray(size = levels.size, init = { ordinal: Int -> levels[ordinal].name[0] })
+    }
 
-    private val LogLevel.logPrefix: String
-        get() = when (this) {
-            LogLevel.VERBOSE -> "V"
-            LogLevel.DEBUG -> "D"
-            LogLevel.INFO -> "I"
-            LogLevel.WARNING -> "W"
-            LogLevel.ERROR -> "E"
-            LogLevel.ASSERT -> "A"
-        }
-
-    override fun performLog(priority: LogLevel, tag: String?, throwable: Throwable?, message: String?) {
-        if (tag != null) {
-            crashlytics.log("${priority.logPrefix}/$tag: $message")
-        }
+    override fun performLog(
+        priority: LogLevel,
+        tag: String?,
+        throwable: Throwable?,
+        message: String?
+    ) {
+        crashlytics.log("${logPrefixes[priority.ordinal]}/${tag ?: '?'}: $message")
         throwable?.let(crashlytics::recordException)
     }
 }

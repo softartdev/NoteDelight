@@ -2,7 +2,7 @@ package com.softartdev.notedelight.shared
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import sqlite3.*
+import cocoapods.SQLCipher.*
 import kotlinx.cinterop.*
 import platform.Foundation.*
 

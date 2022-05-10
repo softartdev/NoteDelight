@@ -7,11 +7,11 @@ plugins {
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
-group = "com.softartdev.notedelight.shared"
 version = "1.0"
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = libs.versions.oldMinSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -42,10 +42,14 @@ android {
         pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
 }
+multiplatformResources {
+    multiplatformResourcesPackage = "com.softartdev.notedelight"
+}
 kotlin {
     jvm()
     android()
-    ios()
+    iosX64()
+    iosArm64()
     iosSimulatorArm64()
     sourceSets {
         all {
@@ -65,6 +69,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
+                implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(libs.koin.test)
@@ -72,21 +77,23 @@ kotlin {
             }
         }
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.coroutines.android)
                 api(libs.sqlDelight.android)
-                val sqliteVersion = "2.1.0"
+                val sqliteVersion = "2.2.0"
                 implementation("androidx.sqlite:sqlite:$sqliteVersion")
                 implementation("androidx.sqlite:sqlite-ktx:$sqliteVersion")
                 implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
                 api("com.commonsware.cwac:saferoom.x:1.3.0")
-                api("net.zetetic:android-database-sqlcipher:4.4.2@aar")
+                api("net.zetetic:android-database-sqlcipher:4.5.1@aar")
                 api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
                 implementation(libs.koin.android)
                 implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
             }
         }
         val androidTest by getting {
+            dependsOn(commonTest)
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -97,21 +104,36 @@ kotlin {
                 implementation(libs.sqlDelight.jvm)
             }
         }
-        val iosMain by getting {
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
             }
         }
-        val iosTest by getting
-        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
-        val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
         val jvmMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.sqlDelight.jvm)
             }
         }
         val jvmTest by getting {
+            dependsOn(commonTest)
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -136,7 +158,4 @@ sqldelight {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
     }
-}
-multiplatformResources {
-    multiplatformResourcesPackage = "com.softartdev.notedelight" // required
 }
