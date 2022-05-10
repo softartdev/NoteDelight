@@ -100,7 +100,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
             }
         }
         val iosTest by getting
