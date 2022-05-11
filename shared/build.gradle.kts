@@ -147,7 +147,7 @@ kotlin {
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-        useLibraries()
+//        useLibraries()
         pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
@@ -159,14 +159,5 @@ sqldelight {
     database("NoteDb") {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
-    }
-}
-
-tasks.named<org.jetbrains.kotlin.gradle.tasks.DefFileTask>("generateDefSQLCipher").configure {
-    doLast {
-        outputFile.writeText("""
-            language = Objective-C
-            headers = sqlite3.h
-        """.trimIndent())
     }
 }
