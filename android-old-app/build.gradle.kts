@@ -107,7 +107,7 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:$archVersion")
     testImplementation(libs.coroutines.test)
     testImplementation(libs.bundles.mockito)
-    testImplementation("app.cash.turbine:turbine:0.8.0")
+    testImplementation(libs.turbine)
     androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
@@ -118,6 +118,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
     androidTestImplementation("androidx.arch.core:core-testing:$archVersion")
     androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
     androidTestUtil("androidx.test:orchestrator:1.4.1")
 }

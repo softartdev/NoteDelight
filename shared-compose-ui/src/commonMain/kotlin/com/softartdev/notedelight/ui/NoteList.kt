@@ -17,7 +17,7 @@ fun NoteList(
     val listState = rememberLazyListState()
 
     LazyColumn(state = listState) {
-        items(noteList) {
+        items(items = noteList, key = Note::id) {
             NoteItem(
                 note = it,
                 onItemClicked = onItemClicked,

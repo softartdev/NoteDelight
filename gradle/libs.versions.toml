@@ -15,6 +15,7 @@ firebase = "29.3.1"
 leakCanary = "2.8.1"
 junit = "4.13.2"
 mockito = "4.4.0"
+turbine = "0.8.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -59,6 +60,8 @@ junit = { module = "junit:junit", version.ref = "junit" }
 
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 

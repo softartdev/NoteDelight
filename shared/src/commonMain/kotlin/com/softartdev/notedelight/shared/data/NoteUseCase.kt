@@ -39,8 +39,7 @@ class NoteUseCase(
     }
 
     @Throws(Exception::class) suspend fun createNote(title: String = "", text: String = ""): Long {
-        val notes = dbRepo.noteQueries.getAll().executeAsList()
-        val noteId = if (notes.isEmpty()) 1 else notes.last().id + 1
+        val noteId = dbRepo.noteQueries.lastInsertRowId().executeAsOne() + 1
         val localDateTime = createLocalDateTime()
         val note = Note(noteId, title, text, localDateTime, localDateTime)
         dbRepo.noteQueries.insert(note)
