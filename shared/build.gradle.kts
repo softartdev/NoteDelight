@@ -7,6 +7,7 @@ plugins {
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
+version = "1.0"
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -140,7 +141,6 @@ kotlin {
         }
     }
     cocoapods {
-        version = "1.0"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
