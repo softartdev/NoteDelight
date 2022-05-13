@@ -7,7 +7,6 @@ plugins {
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
-version = "1.0"
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -114,7 +113,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+//                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
         val iosX64Test by getting
@@ -141,12 +140,13 @@ kotlin {
         }
     }
     cocoapods {
+        version = "1.0"
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-        useLibraries()
-//        pod("SQLCipher", "~> 4.4.2")
+//        useLibraries()
+        pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
             export(libs.mokoResources)
