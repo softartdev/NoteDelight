@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.database
 
+import com.softartdev.notedelight.shared.db.NoteQueries
 import com.squareup.sqldelight.Transacter
 import com.squareup.sqldelight.TransactionWithReturn
 import com.squareup.sqldelight.TransactionWithoutReturn
@@ -22,3 +23,6 @@ suspend fun <R> Transacter.transactionResultWithContext(
 ): R = withContext(coroutineContext) {
     this@transactionResultWithContext.transactionWithResult(noEnclosing, bodyWithReturn)
 }
+
+val NoteQueries.lastInsertRowId: Long
+    get() = transactionWithResult { lastInsertRowId().executeAsOne() }

@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.database.lastInsertRowId
 import com.softartdev.notedelight.shared.database.transactionResultWithContext
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
@@ -39,7 +40,7 @@ class NoteUseCase(
     }
 
     @Throws(Exception::class) suspend fun createNote(title: String = "", text: String = ""): Long {
-        val noteId = dbRepo.noteQueries.lastInsertRowId().executeAsOne() + 1
+        val noteId = dbRepo.noteQueries.lastInsertRowId + 1
         val localDateTime = createLocalDateTime()
         val note = Note(noteId, title, text, localDateTime, localDateTime)
         dbRepo.noteQueries.insert(note)
