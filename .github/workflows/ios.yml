@@ -33,6 +33,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: install cocoapods-generate
+        run: sudo gem install cocoapods-generate
       - name: Set Default Scheme
         working-directory: ${{env.working-directory}}
         run: |
