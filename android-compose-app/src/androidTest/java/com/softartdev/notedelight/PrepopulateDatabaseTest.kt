@@ -32,20 +32,15 @@ class PrepopulateDatabaseTest {
             var notes: List<Note> = awaitItem()
             assertEquals(0, notes.size)
 
-            val expectedSize: Int = populateDatabase()
-            composeTestRule.waitForIdle()
+            for (num in 1..250) {
+                val loremIpsum = LoremIpsum(words = num).values.joinToString()
+                noteUseCase.createNote(title = "Title #$num", text = loremIpsum)
+                composeTestRule.awaitIdle()
 
-            notes = expectMostRecentItem()
-            assertEquals(expectedSize, notes.size)
+                notes = awaitItem()
+                assertEquals(num, notes.size)
+            }
         }
     }
 
-    private suspend fun populateDatabase(size: Int = 250): Int {
-        repeat(times = size) { num: Int ->
-            val loremIpsum = LoremIpsum(words = num).values.joinToString()
-            noteUseCase.createNote(title = "Title #$num", text = loremIpsum)
-            composeTestRule.awaitIdle()
-        }
-        return size
-    }
 }

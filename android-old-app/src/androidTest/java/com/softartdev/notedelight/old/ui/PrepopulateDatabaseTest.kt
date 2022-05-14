@@ -6,7 +6,8 @@ import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import androidx.test.rule.ActivityTestRule
-import app.cash.turbine.test
+import app.cash.turbine.FlowTurbine
+import app.cash.turbine.testIn
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
@@ -30,26 +31,23 @@ class PrepopulateDatabaseTest {
 
     @Test
     fun prepopulateDatabase() = runTest {
-        noteUseCase.getNotes().test {
-            var notes: List<Note> = awaitItem()
-            assertEquals(0, notes.size)
+        val turbine: FlowTurbine<List<Note>> = noteUseCase.getNotes().testIn(scope = this)
 
-            val expectedSize: Int = populateDatabase()
+        var notes: List<Note> = turbine.awaitItem()
+        assertEquals(0, notes.size)
 
-            notes = expectMostRecentItem()
-            assertEquals(expectedSize, notes.size)
-        }
-    }
-
-    private suspend fun populateDatabase(size: Int = 250): Int {
         val stringBuilder = StringBuilder()
-        repeat(times = size) { num: Int ->
-            val loremIpsum = stringBuilder
-                .append("Lorem ipsum dolor sit amet, consectetur adipiscing elit. ")
-                .toString()
-            noteUseCase.createNote(title = "Title #$num", text = loremIpsum)
+        for (num in 1..250) {
+            noteUseCase.createNote(
+                title = "Title #$num",
+                text = stringBuilder.append("Lorem ipsum dolor sit amet. ").toString()
+            )
             Espresso.onIdle()
+
+            notes = turbine.awaitItem()
+            assertEquals(num, notes.size)
         }
-        return size
+        turbine.cancel()
     }
+
 }
