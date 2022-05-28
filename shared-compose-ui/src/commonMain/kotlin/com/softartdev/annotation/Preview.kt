@@ -4,4 +4,4 @@ package com.softartdev.annotation
 @Target(
     AnnotationTarget.FUNCTION
 )
-annotation expect class Preview()
+expect annotation class Preview()

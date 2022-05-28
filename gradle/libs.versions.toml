@@ -9,6 +9,7 @@ coroutines = "1.6.1-native-mt"
 sqlDelight = "1.5.3"
 decompose = "0.6.0"
 koin = "3.2.0-beta-1"
+kotlinx-datetime = "0.3.2"
 napier = "2.5.0"
 mokoResources = "0.20.0"
 firebase = "29.3.1"
@@ -39,6 +40,8 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 

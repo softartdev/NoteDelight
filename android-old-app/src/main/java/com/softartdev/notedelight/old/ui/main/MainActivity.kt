@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,23 +13,18 @@ import com.softartdev.notedelight.old.databinding.ActivityMainBinding
 import com.softartdev.notedelight.old.ui.base.BaseActivity
 import com.softartdev.notedelight.old.ui.note.NoteActivity
 import com.softartdev.notedelight.old.ui.signin.SignInActivity
-import com.softartdev.notedelight.old.util.autoCleared
 import com.softartdev.notedelight.old.util.gone
 import com.softartdev.notedelight.old.util.tintIcon
 import com.softartdev.notedelight.old.util.visible
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity(
-        contentLayoutId = R.layout.activity_main
-), MainAdapter.ClickListener, Observer<NoteListResult> {
-
+class MainActivity : BaseActivity(contentLayoutId = R.layout.activity_main) {
     private val mainViewModel by viewModel<MainViewModel>()
     private val binding by viewBinding(ActivityMainBinding::bind, android.R.id.content)
-    private var mainAdapter by autoCleared<MainAdapter>()
+    private val mainAdapter by lazy { MainAdapter(onNoteClick = this::onNoteClick) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +33,6 @@ class MainActivity : BaseActivity(
             setColorSchemeResources(R.color.on_secondary)
             setOnRefreshListener { mainViewModel.updateNotes() }
         }
-        mainAdapter = MainAdapter()
-        mainAdapter.clickListener = this
         binding.notesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mainAdapter
@@ -57,11 +49,11 @@ class MainActivity : BaseActivity(
         mainViewModel.updateNotes()
     }
 
-    override fun onChanged(noteListResult: NoteListResult) = when (noteListResult) {
+    private fun onChanged(noteListResult: NoteListResult) = when (noteListResult) {
         is NoteListResult.Loading -> showProgress(true)
         is NoteListResult.Success -> {
             showProgress(false)
-            onUpdateNotes(noteListResult.result)
+            mainAdapter.submitList(noteListResult.result)
             showEmpty(noteListResult.result.isEmpty())
         }
         is NoteListResult.Error -> {
@@ -71,31 +63,19 @@ class MainActivity : BaseActivity(
         is NoteListResult.NavMain -> navSignIn()
     }
 
-    private fun onUpdateNotes(noteList: List<Note>) {
-        mainAdapter.notes = noteList
+    private fun onNoteClick(noteId: Long) = startActivity(NoteActivity.getStartIntent(this, noteId))
+
+    private fun showProgress(show: Boolean) = if (binding.mainSwipeRefresh.isRefreshing) {
+        binding.mainSwipeRefresh.isRefreshing = show
+    } else with(binding.mainProgressView) { if (show) visible() else gone() }
+
+    private fun showEmpty(show: Boolean) = with(binding.mainEmptyView) {
+        if (show) visible() else gone()
     }
 
-    override fun onNoteClick(noteId: Long) {
-        startActivity(NoteActivity.getStartIntent(this, noteId))
-    }
-
-    private fun showProgress(show: Boolean) {
-        if (binding.mainSwipeRefresh.isRefreshing) {
-            binding.mainSwipeRefresh.isRefreshing = show
-        } else {
-            binding.mainProgressView.apply { if (show) visible() else gone() }
-        }
-    }
-
-    private fun showEmpty(show: Boolean) {
-        binding.mainEmptyView.apply { if (show) visible() else gone() }
-    }
-
-    private fun showError(message: String?) {
-        binding.mainErrorView.apply {
-            visible()
-            messageTextView.text = message
-        }
+    private fun showError(message: String?) = with(binding.mainErrorView) {
+        visible()
+        messageTextView.text = message
     }
 
     private fun navSignIn() {
@@ -109,5 +89,4 @@ class MainActivity : BaseActivity(
         menu.findItem(R.id.action_settings).tintIcon(this)
         return true
     }
-
 }

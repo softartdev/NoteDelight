@@ -68,6 +68,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":shared-jvm-util"))
     implementation(project(":shared-android-util"))
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.annotation:annotation:1.3.0")

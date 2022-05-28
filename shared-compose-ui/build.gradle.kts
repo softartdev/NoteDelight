@@ -19,6 +19,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                implementation(project(":shared-jvm-util"))
                 api("io.github.softartdev:material-theme-prefs:0.2")
                 implementation(compose.runtime)
                 implementation(compose.foundation)
