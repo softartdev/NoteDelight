@@ -18,8 +18,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.composeMinSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 79
-        versionName = "7.9"
+        versionCode = 80
+        versionName = "8.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +47,7 @@ android {
     }
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
@@ -86,6 +87,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
     androidTestUtil("androidx.test:orchestrator:1.4.1")
 }

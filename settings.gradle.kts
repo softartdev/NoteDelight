@@ -10,6 +10,7 @@ rootProject.name = "NoteDelight"
 
 include(":shared")
 include(":shared-compose-ui")
+include(":shared-jvm-util")
 include(":shared-android-util")
 include(":shared-android-test-util")
 include(":android-old-app")

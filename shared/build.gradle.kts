@@ -61,7 +61,7 @@ kotlin {
             dependencies {
                 implementation(libs.coroutines.core)
                 implementation(libs.sqlDelight.coroutinesExt)
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+                api(libs.kotlinx.datetime)
                 api(libs.napier)
                 api(libs.mokoResources)
                 implementation(libs.koin.core)
@@ -114,7 +114,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+//                api("io.github.softartdev:sqlcipher-ktn-pod:1.2")
             }
         }
         val iosX64Test by getting
@@ -145,8 +145,8 @@ kotlin {
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
-        useLibraries()
-//        pod("SQLCipher", "~> 4.4.2")
+//        useLibraries()
+        pod("SQLCipher", "~> 4.4.2")
         framework {
 //            isStatic = false
             export(libs.mokoResources)

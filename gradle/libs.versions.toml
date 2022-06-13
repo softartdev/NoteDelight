@@ -9,12 +9,14 @@ coroutines = "1.6.1-native-mt"
 sqlDelight = "1.5.3"
 decompose = "0.6.0"
 koin = "3.2.0-beta-1"
+kotlinx-datetime = "0.3.2"
 napier = "2.5.0"
-mokoResources = "0.19.1"
+mokoResources = "0.20.0"
 firebase = "29.3.1"
 leakCanary = "2.8.1"
 junit = "4.13.2"
 mockito = "4.4.0"
+turbine = "0.8.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -39,6 +41,8 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
 mokoResources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "mokoResources" }
@@ -59,6 +63,8 @@ junit = { module = "junit:junit", version.ref = "junit" }
 
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 

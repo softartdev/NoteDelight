@@ -9,7 +9,7 @@ CREATE TABLE note (
 );
 
 getAll:
-SELECT * FROM note;
+SELECT * FROM note ORDER BY dateModified DESC;
 
 getById:
 SELECT * FROM note WHERE id = :noteId;
