@@ -2,12 +2,17 @@
 
 package com.softartdev.notedelight.old.ui
 
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import androidx.test.rule.ActivityTestRule
 import app.cash.turbine.FlowTurbine
 import app.cash.turbine.testIn
+import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
@@ -43,6 +48,7 @@ class PrepopulateDatabaseTest {
                 text = stringBuilder.append("Lorem ipsum dolor sit amet. ").toString()
             )
             Espresso.onIdle()
+            onView(withId(R.id.notes_recycler_view)).perform(scrollToPosition<ViewHolder>(0))
 
             notes = turbine.awaitItem()
             assertEquals(num, notes.size)
