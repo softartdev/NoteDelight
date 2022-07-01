@@ -80,7 +80,7 @@ dependencies {
     debugImplementation(libs.leakCanary.android.process)
     implementation(libs.leakCanary.plumber.android)
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

@@ -100,7 +100,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
     testImplementation(project(":shared-android-test-util"))
     testImplementation(libs.junit)
     testImplementation(libs.koin.test)
