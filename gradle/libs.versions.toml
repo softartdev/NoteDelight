@@ -17,6 +17,7 @@ leakCanary = "2.8.1"
 junit = "4.13.2"
 mockito = "4.4.0"
 turbine = "0.8.0"
+desugar = "1.1.5" #TODO: update to 1.2.0 after update AGP to 7.3.0-beta03 or later (Android Studio Dolphin).
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -65,6 +66,8 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
 [plugins]
 
