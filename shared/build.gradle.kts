@@ -53,9 +53,7 @@ kotlin {
     iosSimulatorArm64()
     sourceSets {
         all {
-            languageSettings.apply {
-                optIn("kotlin.RequiresOptIn")
-            }
+            languageSettings.optIn("kotlin.RequiresOptIn")
         }
         val commonMain by getting {
             dependencies {
@@ -81,15 +79,12 @@ kotlin {
             dependencies {
                 implementation(libs.coroutines.android)
                 api(libs.sqlDelight.android)
-                val sqliteVersion = "2.2.0"
-                implementation("androidx.sqlite:sqlite:$sqliteVersion")
-                implementation("androidx.sqlite:sqlite-ktx:$sqliteVersion")
-                implementation("androidx.sqlite:sqlite-framework:$sqliteVersion")
-                api("com.commonsware.cwac:saferoom.x:1.3.0")
-                api("net.zetetic:android-database-sqlcipher:4.5.1@aar")
-                api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
+                implementation(libs.bundles.androidx.sqlite)
+                api(libs.commonsware.saferoom)
+                api(libs.android.sqlcipher)
+                api(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.koin.android)
-                implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
+                implementation(libs.espresso.idling.resource)
             }
         }
         val androidTest by getting {

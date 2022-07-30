@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
+    implementation(kotlin("reflect"))
     implementation(libs.koin.core.jvm)
     implementation(libs.napier)
     implementation(platform(libs.firebase.bom))

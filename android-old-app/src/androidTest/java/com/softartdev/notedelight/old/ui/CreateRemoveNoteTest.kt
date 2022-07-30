@@ -1,13 +1,16 @@
 package com.softartdev.notedelight.old.ui
 
 import android.content.Context
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -60,6 +63,9 @@ class CreateRemoveNoteTest {
 
         val alertDialogPositiveButton = onView(withId(android.R.id.button1))
         alertDialogPositiveButton.perform(click())
+
+        Espresso.onIdle()
+        onView(withId(R.id.notes_recycler_view)).perform(scrollToPosition<ViewHolder>(0))
 
         val textView = onView(withId(R.id.item_note_title_text_view))
         textView.check(matches(withText(titleText)))

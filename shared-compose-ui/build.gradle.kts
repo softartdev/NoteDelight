@@ -1,4 +1,6 @@
-import org.jetbrains.compose.ComposeBuildConfig.composeVersion
+@file:OptIn(ExperimentalComposeLibrary::class)
+
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.compose
 
 plugins {
@@ -20,13 +22,12 @@ kotlin {
             dependencies {
                 implementation(project(":shared"))
                 implementation(project(":shared-jvm-util"))
-                api("io.github.softartdev:material-theme-prefs:0.2")
+                api(libs.material.theme.prefs)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.desktop.common)
-                implementation("org.jetbrains.compose.material:material:$composeVersion")
-                implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
+                implementation(compose.materialIconsExtended)
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
                 api(libs.mokoResources.compose)
@@ -45,7 +46,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
+                implementation(compose.uiTestJUnit4)
             }
         }
     }
