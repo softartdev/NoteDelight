@@ -57,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.2.0"//FIXME jb-composeVersion
     }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     testOptions {

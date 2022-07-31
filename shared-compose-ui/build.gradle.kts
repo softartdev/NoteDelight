@@ -27,7 +27,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.desktop.common)
-//                implementation(compose.materialIconsExtended)
+                implementation(compose.materialIconsExtended)
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
                 api(libs.mokoResources.compose)
