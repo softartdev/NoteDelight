@@ -42,8 +42,8 @@ class ContentViewModel: ObservableObject {
     }
     
     func deleteNote(noteId: Int64) {
-        noteUseCase.deleteNoteUnit(id: noteId, completionHandler: { unit, error in
-            if unit != nil {
+        noteUseCase.deleteNoteUnit(id: noteId, completionHandler: { error in
+            if error == nil {
                 print("Delete note with id=\(noteId)")
             } else {
                 print("Unexpected error: \(String(describing: error))")
