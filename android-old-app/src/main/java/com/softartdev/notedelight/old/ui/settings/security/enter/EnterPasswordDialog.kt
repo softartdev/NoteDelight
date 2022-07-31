@@ -15,6 +15,7 @@ import com.softartdev.notedelight.shared.presentation.settings.security.enter.En
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EnterPasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_enter_password,

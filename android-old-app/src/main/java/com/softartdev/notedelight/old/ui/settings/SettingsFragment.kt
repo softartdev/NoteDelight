@@ -24,6 +24,7 @@ import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("InflateParams")
 class SettingsFragment : BasePrefFragment(), Preference.OnPreferenceChangeListener, Observer<SecurityResult> {

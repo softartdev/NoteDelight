@@ -16,6 +16,7 @@ import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditTitleDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_title,

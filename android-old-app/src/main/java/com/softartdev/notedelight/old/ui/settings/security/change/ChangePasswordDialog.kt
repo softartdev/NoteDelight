@@ -15,6 +15,7 @@ import com.softartdev.notedelight.shared.presentation.settings.security.change.C
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChangePasswordDialog : BaseDialogFragment(
         titleStringRes = R.string.dialog_title_change_password,

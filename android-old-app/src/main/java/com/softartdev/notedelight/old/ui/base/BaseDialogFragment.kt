@@ -10,17 +10,11 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.lifecycle.ViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.fragmentScope
-import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.ViewModelOwnerDefinition
-import org.koin.androidx.viewmodel.scope.getViewModel
-import org.koin.core.parameter.ParametersDefinition
-import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope
 
 abstract class BaseDialogFragment(
@@ -84,14 +78,6 @@ abstract class BaseDialogFragment(
     private fun cancelLifecycleJobIfNeed() {
         lifecycleStateFlowJob?.cancel()
         lifecycleStateFlowJob = null
-    }
-
-    inline fun <reified T : ViewModel> viewModel(
-        qualifier: Qualifier? = null,
-        noinline owner: ViewModelOwnerDefinition = { ViewModelOwner.from(this, this) },
-        noinline parameters: ParametersDefinition? = null
-    ): Lazy<T> = lazy(LazyThreadSafetyMode.NONE) {
-        scope.getViewModel(qualifier, owner, T::class, parameters = parameters)
     }
 
     companion object {
