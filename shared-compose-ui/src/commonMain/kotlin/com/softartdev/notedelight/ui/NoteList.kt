@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.ui
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -7,7 +8,6 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.softartdev.annotation.Preview
 import com.softartdev.notedelight.shared.database.TestSchema.firstNote
 import com.softartdev.notedelight.shared.database.TestSchema.secondNote
 import com.softartdev.notedelight.shared.database.TestSchema.thirdNote

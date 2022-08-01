@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.ui
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +12,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.annotation.Preview
 import com.softartdev.mr.painterResource
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult

@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.ui.dialog.security
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.annotation.Preview
 import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
@@ -52,7 +52,6 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
     ) { enterViewModel.enterCheck(password = passwordState.value) }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShowEnterPasswordDialog(
     showLoaing: Boolean = true,

@@ -28,6 +28,8 @@ kotlin {
                 implementation(compose.material)
                 implementation(compose.desktop.common)
                 implementation(compose.materialIconsExtended)
+                implementation(compose.uiTooling)
+                implementation(compose.preview)
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
                 api(libs.mokoResources.compose)
