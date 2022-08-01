@@ -17,32 +17,34 @@ kotlin {
         }
     }
     android()
+    iosX64("ios")
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
-                implementation(project(":shared-jvm-util"))
                 api(libs.material.theme.prefs)
+                implementation(compose.ui)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
-                implementation(compose.desktop.common)
                 implementation(compose.materialIconsExtended)
-                implementation(compose.uiTooling)
-                implementation(compose.preview)
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
-                api(libs.mokoResources.compose)
+                implementation(libs.koin.core)
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation(libs.koin.androidx.compose)
+                implementation(project(":shared-jvm-util"))
+                api(libs.mokoResources.compose)
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation(libs.koin.core.jvm)
+                implementation(project(":shared-jvm-util"))
+                api(libs.mokoResources.compose)
             }
         }
         val jvmTest by getting {
@@ -51,6 +53,8 @@ kotlin {
                 implementation(compose.uiTestJUnit4)
             }
         }
+        val iosMain by getting
+        val iosTest by getting
     }
 }
 
