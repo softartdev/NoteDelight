@@ -40,10 +40,17 @@ class NoteUseCase(
     }
 
     @Throws(Exception::class) suspend fun createNote(title: String = "", text: String = ""): Long {
-        val noteId = dbRepo.noteQueries.lastInsertRowId + 1
+        val notes = dbRepo.noteQueries.getAll().executeAsList()
+        val lastId: Long = notes.maxByOrNull(Note::id)?.id ?: 0
+        val noteId = lastId + 1
+
         val localDateTime = createLocalDateTime()
         val note = Note(noteId, title, text, localDateTime, localDateTime)
-        dbRepo.noteQueries.insert(note)
+        try {
+            dbRepo.noteQueries.insert(note)
+        } catch (cause: Throwable) {
+            throw RuntimeException("Error create note with id = $noteId, lastId = $lastId", cause)
+        }
         return noteId
     }
 

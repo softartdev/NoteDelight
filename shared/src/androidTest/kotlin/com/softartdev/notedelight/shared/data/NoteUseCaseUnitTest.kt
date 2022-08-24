@@ -55,7 +55,9 @@ class NoteUseCaseUnitTest {
 
     @Test
     fun createNote() = runBlocking {
-        assertEquals(notes.last().id.inc(), noteUseCase.createNote())
+        val lastId = notes.maxByOrNull(Note::id)?.id ?: 0
+        val newId = lastId + 1
+        assertEquals(newId, noteUseCase.createNote())
     }
 
     @Test

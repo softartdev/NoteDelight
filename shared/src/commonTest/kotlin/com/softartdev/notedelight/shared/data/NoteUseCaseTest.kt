@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.database.TestSchema
+import com.softartdev.notedelight.shared.db.Note
 import com.squareup.sqldelight.internal.Atomic
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -56,7 +57,9 @@ class NoteUseCaseTest : BaseTest() {
 
     @Test
     fun createNote() = runTest {
-        assertEquals(notes.last().id.inc(), noteUseCase.createNote())
+        val lastId = notes.maxByOrNull(Note::id)?.id ?: 0
+        val newId = lastId + 1
+        assertEquals(newId, noteUseCase.createNote())
     }
 
     @Test
