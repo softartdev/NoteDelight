@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.compose
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -56,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"//FIXME org.jetbrains.compose.ComposeBuildConfig.composeVersion
+        kotlinCompilerExtensionVersion = composeVersion
     }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     testOptions {
@@ -72,9 +73,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
     implementation(compose.material)
-    implementation("androidx.compose.ui:ui-tooling-preview:1.2.0")//FIXME compose.preview
-    debugImplementation("androidx.compose.ui:ui-tooling:1.2.0")//FIXME compose.uiTooling
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.2.0")//FIXME compose.uiTestManifest
+    implementation(compose.preview)
+    debugImplementation(compose.uiTooling)
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.2.1")//FIXME compose.uiTestManifest
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
