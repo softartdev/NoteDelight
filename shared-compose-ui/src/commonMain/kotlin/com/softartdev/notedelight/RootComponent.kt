@@ -1,8 +1,9 @@
 package com.softartdev.notedelight
 
-import com.arkivanov.decompose.*
-import com.arkivanov.decompose.router.*
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.ui.*
@@ -11,12 +12,14 @@ class RootComponent(
     componentContext: ComponentContext,
 ) : NoteDelightRoot, ComponentContext by componentContext {
 
-    private val router = componentContext.router<Configuration, ContentChild>(
+    private val navigation = StackNavigation<Configuration>()
+    private val stack = childStack(
+        source = navigation,
         initialConfiguration = Configuration.Splash,
         handleBackButton = true,
         childFactory = ::createChild
     )
-    override val routerState: Value<RouterState<Configuration, ContentChild>> = router.state
+    override val childStack: Value<ChildStack<*, ContentChild>> = stack
 
     private fun createChild(configuration: Configuration, context: ComponentContext): ContentChild =
         when (configuration) {
@@ -30,42 +33,43 @@ class RootComponent(
     private fun splash(): ContentChild = {
         SplashScreen(
             splashViewModel = getViewModel(),
-            navSignIn = { router.replaceCurrent(Configuration.SignIn) },
-            navMain = { router.replaceCurrent(Configuration.Main) },
+            navSignIn = { navigation.replaceCurrent(Configuration.SignIn) },
+            navMain = { navigation.replaceCurrent(Configuration.Main) },
         )
     }
 
     private fun signIn(): ContentChild = {
         SignInScreen(
             signInViewModel = getViewModel(),
-            navMain = { router.replaceCurrent(Configuration.Main) },
+            navMain = { navigation.replaceCurrent(Configuration.Main) },
         )
     }
 
     private fun mainList(): ContentChild = {
         MainScreen(
             mainViewModel = getViewModel(),
-            onItemClicked = { id -> router.push(Configuration.Details(itemId = id)) },
-            onSettingsClick = { router.push(Configuration.Settings) },
+            onItemClicked = { id -> navigation.push(Configuration.Details(itemId = id)) },
+            onSettingsClick = { navigation.push(Configuration.Settings) },
         )
     }
 
     private fun noteDetail(configuration: Configuration.Details, context: ComponentContext): ContentChild = {
         val backWrapper = BackWrapper()
-        context.backPressedHandler.register(backWrapper)
-        context.lifecycle.doOnDestroy { context.backPressedHandler.unregister(backWrapper) }
+        val backCallback = BackCallback(isEnabled = true, onBack = backWrapper::invoke)
+        backHandler.register(backCallback)
+        context.lifecycle.doOnDestroy { backHandler.unregister(backCallback) }
 
         NoteDetail(
             noteViewModel = getViewModel(),
             noteId = configuration.itemId,
             backWrapper = backWrapper,
-            navBack = router::pop
+            navBack = navigation::pop
         )
     }
 
     private fun settings(): ContentChild = {
         SettingsScreen(
-            onBackClick = router::pop,
+            onBackClick = navigation::pop,
             settingsViewModel = getViewModel(),
         )
     }

@@ -4,9 +4,9 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import com.arkivanov.decompose.extensions.compose.jetbrains.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.childAnimation
-import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.slide
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.softartdev.notedelight.NoteDelightRoot
 import com.softartdev.themepref.PreferableMaterialTheme
 
@@ -21,7 +21,7 @@ fun MainRootUI(component: NoteDelightRoot) {
 
 @Composable
 fun RootUi(component: NoteDelightRoot) {
-    Children(routerState = component.routerState, animation = childAnimation(slide())) { child ->
+    Children(stack = component.childStack, animation = stackAnimation(slide()), content = { child ->
         child.instance()
-    }
+    })
 }
