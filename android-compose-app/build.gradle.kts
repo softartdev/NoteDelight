@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import org.jetbrains.compose.ComposeBuildConfig.composeVersion
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.compose
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -57,7 +56,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.3.0"//FIXME org.jetbrains.compose.ComposeBuildConfig.composeVersion
     }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     testOptions {
