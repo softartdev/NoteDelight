@@ -14,6 +14,7 @@ kotlin {
                     "-linker-option", "-framework", "-linker-option", "CoreText",
                     "-linker-option", "-framework", "-linker-option", "CoreGraphics"
                 )
+                linkerOpts.add("-lsqlite3")
             }
         }
     }
