@@ -8,7 +8,7 @@ import kotlin.native.concurrent.freeze
 
 class IosDbRepo : DatabaseRepo() {
 
-    private var dbHolder: DatabaseHolder? = null
+    private var dbHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
 
     override val databaseState: PlatformSQLiteState
         get() = IosCipherUtils.getDatabaseState(DB_NAME)

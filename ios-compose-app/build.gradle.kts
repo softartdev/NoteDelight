@@ -34,6 +34,13 @@ kotlin {
     }
 }
 
+kotlin.targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+    binaries.all {
+        binaryOptions["memoryModel"] = "experimental"
+        binaryOptions["freezing"] = "disabled"
+    }
+}
+
 kotlin {
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
         binaries.all {
