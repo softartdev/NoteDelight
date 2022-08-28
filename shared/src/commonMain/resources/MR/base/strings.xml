@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Note Delight</string>
+    <string name="app_name">Note Delight</string>
+    <string name="press_add_note"><![CDATA[Press "+" to add a note.]]></string>
+    <string name="title_activity_note">New Note</string>
     <string name="action_save_note">Save note</string>
     <string name="action_delete_note">Delete note</string>
-    <string name="press_add_note">Press \"+\" to add a note.</string>
-    <string name="title_activity_note">New Note</string>
     <string name="type_text">Type Text</string>
     <string name="note_deleted">Note deleted</string>
     <string name="note_saved">Note saved</string>
@@ -38,8 +39,8 @@
     <string name="choose_theme">Choose theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
-    <string name="set_by_byttery_saver">Set by Battery Saver</string>
     <string name="system_default">System default</string>
+    <string name="set_by_byttery_saver">Set by Battery Saver</string>
     <string name="hide_screen_contents">Hide screen contents</string>
     <string name="hide_screen_contents_summary">Turn on to hide the contents of the screen when switching between applications. Also, the ability to take a screenshot will be disabled.</string>
     <string name="action_edit_title">Edit title</string>
