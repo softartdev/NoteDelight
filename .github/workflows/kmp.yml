@@ -41,7 +41,7 @@ jobs:
         with:
           name: output-build-artifacts
           path: |
-            android-compose-app/build/outputs
+            shared/build/reports
             android-compose-app/build/reports
   android_ui_test_job:
     name: Android UI-tests on emulator
