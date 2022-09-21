@@ -11,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.shared.base.IdlingResource
 import leakcanary.DetectLeaksAfterTestSuccess
-import leakcanary.SkipLeakDetection
 import leakcanary.TestDescriptionHolder
 import org.junit.After
 import org.junit.Before
@@ -46,8 +45,6 @@ class CreateRemoveNoteTest {
         IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
     }
 
-    //TODO remove skip after update Jetpack Compose version above 1.1.0
-    @SkipLeakDetection("See https://issuetracker.google.com/issues/202190483")
     @Test
     fun createRemove() {
         composeTestRule

@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import androidx.test.rule.ActivityTestRule
-import app.cash.turbine.FlowTurbine
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.testIn
 import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.splash.SplashActivity
@@ -18,6 +18,7 @@ import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -32,11 +33,14 @@ class PrepopulateDatabaseTest {
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
+    @get:Rule
+    val detectLeaksRule = DetectLeaksAfterTestSuccess()
+
     private val noteUseCase: NoteUseCase by KoinJavaComponent.inject(NoteUseCase::class.java)
 
     @Test
     fun prepopulateDatabase() = runTest {
-        val turbine: FlowTurbine<List<Note>> = noteUseCase.getNotes().testIn(scope = this)
+        val turbine: ReceiveTurbine<List<Note>> = noteUseCase.getNotes().testIn(scope = this)
 
         var notes: List<Note> = turbine.awaitItem()
         assertEquals(0, notes.size)

@@ -14,9 +14,12 @@ import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.ui.NOTE_LIST_TEST_TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import leakcanary.DetectLeaksAfterTestSuccess
+import leakcanary.TestDescriptionHolder
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent
 
@@ -24,8 +27,12 @@ import org.koin.java.KoinJavaComponent
 @RunWith(AndroidJUnit4::class)
 class PrepopulateDatabaseTest {
 
+    private val composeTestRule = createAndroidComposeRule<MainActivity>()
+
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
+        .around(DetectLeaksAfterTestSuccess())
+        .around(composeTestRule)
 
     private val noteUseCase: NoteUseCase by KoinJavaComponent.inject(NoteUseCase::class.java)
 

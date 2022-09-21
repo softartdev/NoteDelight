@@ -12,7 +12,6 @@ import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
 import com.softartdev.notedelight.ui.descTagTriple
 import leakcanary.DetectLeaksAfterTestSuccess
-import leakcanary.SkipLeakDetection
 import leakcanary.TestDescriptionHolder
 import org.junit.After
 import org.junit.Before
@@ -46,8 +45,6 @@ class SettingsPasswordTest {
         IdlingRegistry.getInstance().unregister(countingIdlingResource)
     }
 
-    //TODO remove skip after update Jetpack Compose version above 1.1.0
-    @SkipLeakDetection("See https://issuetracker.google.com/issues/202190483")
     @Test
     fun settingPasswordTest() {
         composeTestRule.onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
