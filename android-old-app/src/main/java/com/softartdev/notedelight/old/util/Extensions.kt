@@ -54,7 +54,8 @@ fun MenuItem.tintIcon(
         context: Context,
         @ColorInt color: Int = getThemeColor(context, android.R.attr.textColorPrimary)
 ) {
-    val drawableWrap = DrawableCompat.wrap(icon).mutate()
+    val iconDrawable: Drawable = icon ?: return
+    val drawableWrap = DrawableCompat.wrap(iconDrawable).mutate()
     DrawableCompat.setTint(drawableWrap, color)
     icon = drawableWrap
 }

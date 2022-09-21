@@ -1,6 +1,6 @@
 [versions]
-compileSdk = "32"
-targetSdk = "31"
+compileSdk = "33"
+targetSdk = "33"
 oldMinSdk = "16"
 composeMinSdk = "21"
 
