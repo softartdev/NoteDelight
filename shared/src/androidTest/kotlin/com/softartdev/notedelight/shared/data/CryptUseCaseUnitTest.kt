@@ -8,14 +8,13 @@ import com.softartdev.notedelight.shared.test.util.StubEditable
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito
 
-@Suppress("IllegalIdentifier")
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class CryptUseCaseUnitTest {
 
     private val mockDbRepo = Mockito.mock(AndroidDbRepo::class.java)
@@ -40,7 +39,7 @@ class CryptUseCaseUnitTest {
     }
 
     @Test
-    fun `check correct password`() = runBlocking {
+    fun `check correct password`() = runTest {
         val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         NoteDb.Schema.create(driver)
         val noteDb = createQueryWrapper(driver)
@@ -50,7 +49,7 @@ class CryptUseCaseUnitTest {
     }
 
     @Test
-    fun `check incorrect password`() = runBlocking {
+    fun `check incorrect password`() = runTest {
         val pass = StubEditable("incorrect password")
         assertFalse(cryptUseCase.checkPassword(pass))
     }

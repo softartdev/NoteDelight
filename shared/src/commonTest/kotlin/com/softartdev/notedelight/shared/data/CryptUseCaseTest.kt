@@ -1,9 +1,12 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.BaseTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
 @Ignore
+@ExperimentalCoroutinesApi
 class CryptUseCaseTest : BaseTest() {
 
     private var cryptUseCase = CryptUseCase(dbRepo)

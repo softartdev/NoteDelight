@@ -41,6 +41,7 @@ android {
         )
         pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
+    testOptions.unitTests.isReturnDefaultValues = true
 }
 multiplatformResources {
     multiplatformResourcesPackage = "com.softartdev.notedelight"
@@ -70,6 +71,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(libs.coroutines.test)
                 implementation(libs.koin.test)
                 implementation(libs.mokoResources.test)
             }
@@ -97,6 +99,8 @@ kotlin {
                 implementation(libs.coroutines.test)
                 implementation(libs.bundles.mockito)
                 implementation(libs.sqlDelight.jvm)
+                implementation(libs.androidx.arch.core.testing)
+                implementation(libs.turbine)
             }
         }
         val iosX64Main by getting

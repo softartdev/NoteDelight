@@ -4,12 +4,14 @@ import com.softartdev.notedelight.shared.IosCipherUtils
 import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.data.CryptUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import platform.Foundation.NSFileManager
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@OptIn(ExperimentalUnsignedTypes::class)
+@ExperimentalCoroutinesApi
 class IosCipherUtilsTest : BaseTest() {
 
     @Test

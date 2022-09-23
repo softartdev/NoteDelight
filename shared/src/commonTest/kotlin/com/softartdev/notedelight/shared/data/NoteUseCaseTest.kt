@@ -4,10 +4,13 @@ import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.squareup.sqldelight.internal.Atomic
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
+@ExperimentalCoroutinesApi
 class NoteUseCaseTest : BaseTest() {
 
     private val noteUseCase = NoteUseCase(dbRepo)
