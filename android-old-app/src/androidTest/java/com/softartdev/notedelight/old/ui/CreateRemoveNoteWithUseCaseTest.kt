@@ -15,7 +15,7 @@ import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -26,10 +26,10 @@ import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent.inject
 import com.softartdev.notedelight.shared.base.IdlingResource as EspressoIdlingResource
 
+@ExperimentalCoroutinesApi
 @LargeTest
 @FlakyTest
 @RunWith(AndroidJUnit4::class)
-@OptIn(ExperimentalCoroutinesApi::class)
 class CreateRemoveNoteWithUseCaseTest {
 
     @get:Rule
@@ -58,7 +58,7 @@ class CreateRemoveNoteWithUseCaseTest {
     }
 
     @Test
-    fun createRemoveNote() = runBlocking<Unit> {
+    fun createRemoveNote() = runTest {
         val messageTextView = onView(withId(R.id.text_message))
         messageTextView.check(matches(withText(R.string.label_empty_result)))
 

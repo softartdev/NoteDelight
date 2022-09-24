@@ -55,7 +55,6 @@ fun EditTitleDialog(
     ) { editTitleViewModel.editTitle(noteId, textState.value) }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShowEditTitleDialog(
     showLoaing: Boolean = true,

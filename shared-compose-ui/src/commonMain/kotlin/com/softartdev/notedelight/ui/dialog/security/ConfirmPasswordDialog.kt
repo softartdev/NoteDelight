@@ -58,7 +58,6 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
     ) { confirmViewModel.conformCheck(password = passwordState.value, repeatPassword = repeatPasswordState.value) }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ShowConfirmPasswordDialog(
     showLoaing: Boolean = true,

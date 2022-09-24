@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package com.softartdev.notedelight.old.ui
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -25,6 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent
 
+@ExperimentalCoroutinesApi
 @FlakyTest
 @RunWith(AndroidJUnit4::class)
 class PrepopulateDatabaseTest {

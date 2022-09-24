@@ -5,7 +5,6 @@ import com.softartdev.notedelight.shared.database.DatabaseRepo
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.firstOrNull
-import kotlin.time.ExperimentalTime
 
 class CryptUseCase(
         private val dbRepo: DatabaseRepo
@@ -16,7 +15,6 @@ class CryptUseCase(
         PlatformSQLiteState.DOES_NOT_EXIST -> false
     }
 
-    @OptIn(ExperimentalTime::class)
     @Throws(Throwable::class) suspend fun isDbEncrypted(): Boolean = dbIsEncrypted()
 
     suspend fun checkPassword(pass: CharSequence): Boolean = try {

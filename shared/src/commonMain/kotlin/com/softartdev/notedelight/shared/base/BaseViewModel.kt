@@ -32,7 +32,6 @@ abstract class BaseViewModel<T> : KmmViewModel() {
         }.start()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun launch(flow: Flow<T>) {
         viewModelScope.launch(Dispatchers.Default) {
             flow.onStart {

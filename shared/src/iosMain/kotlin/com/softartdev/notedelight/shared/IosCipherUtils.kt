@@ -7,7 +7,6 @@ import kotlinx.cinterop.*
 import platform.Foundation.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
-@OptIn(ExperimentalUnsignedTypes::class)
 object IosCipherUtils {
 
     private val dbDirPath: NSString by lazy {
