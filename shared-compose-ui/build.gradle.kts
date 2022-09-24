@@ -72,7 +72,7 @@ kotlin {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = libs.versions.composeMinSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
     }
     compileOptions {

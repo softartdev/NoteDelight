@@ -1,8 +1,7 @@
 [versions]
 compileSdk = "33"
 targetSdk = "33"
-oldMinSdk = "16"
-composeMinSdk = "21"
+minSdk = "21"
 
 kotlin = "1.7.10"
 coroutines = "1.6.4"

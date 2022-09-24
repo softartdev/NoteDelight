@@ -15,7 +15,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.softartdev.notedelight.old"
-        minSdk = libs.versions.oldMinSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 75
         versionName = "7.5"
