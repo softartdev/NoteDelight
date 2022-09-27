@@ -113,7 +113,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+//                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
             }
         }
         val iosX64Test by getting
@@ -145,11 +145,11 @@ kotlin {
         ios.deploymentTarget = "14.0"
         podfile = project.file("../iosApp/Podfile")
 //        useLibraries()
-//        pod("SQLCipher", "~> 4.5.2")
+        pod("SQLCipher", "~> 4.5.2")
         framework {
 //            isStatic = false
             export(libs.mokoResources)
-            export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+//            export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
         }
     }
 }
