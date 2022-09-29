@@ -13,8 +13,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int = 0,
-    initialiseScope: Boolean = true
-) : ScopeActivity(contentLayoutId, initialiseScope) {
+) : ScopeActivity(contentLayoutId) {
 
     //inject out of scope because not all descendants have to declare a scope definition
     private val preferencesHelper: PreferencesHelper by inject(PreferencesHelper::class.java)

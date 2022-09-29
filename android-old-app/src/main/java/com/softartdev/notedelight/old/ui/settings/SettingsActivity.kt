@@ -9,7 +9,7 @@ import com.softartdev.notedelight.old.R
 import com.softartdev.notedelight.old.ui.base.BaseActivity
 import com.softartdev.notedelight.old.util.tintIcon
 
-class SettingsActivity : BaseActivity(R.layout.activity_settings, false) {
+class SettingsActivity : BaseActivity(R.layout.activity_settings) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
