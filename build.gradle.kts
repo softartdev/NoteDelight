@@ -14,7 +14,7 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
         classpath("com.slack.keeper:keeper:0.12.0")
         classpath(libs.mokoResources.generator)
-        classpath("org.jetbrains.compose:compose-gradle-plugin:1.2.0-beta01")
+        classpath("org.jetbrains.compose:compose-gradle-plugin:1.2.0-beta02")
     }
 }
 
