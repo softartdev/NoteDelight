@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
