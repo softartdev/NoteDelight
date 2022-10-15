@@ -34,6 +34,7 @@ android {
         resources.excludes += setOf("**/attach_hotspot_windows.dll", "META-INF/licenses/**")
         resources.pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
+    namespace = "com.softartdev.notedelight.shared.test.util"
 }
 
 dependencies {

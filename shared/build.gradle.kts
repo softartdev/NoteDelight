@@ -12,6 +12,7 @@ version = "1.0"
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -42,6 +43,7 @@ android {
         pickFirsts += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
     }
     testOptions.unitTests.isReturnDefaultValues = true
+    namespace = "com.softartdev.notedelight.shared"
 }
 multiplatformResources {
     multiplatformResourcesPackage = "com.softartdev.notedelight"

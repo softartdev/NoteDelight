@@ -23,6 +23,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    namespace = "com.softartdev.notedelight.shared.util"
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "1.8"
     }

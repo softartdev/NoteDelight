@@ -58,6 +58,7 @@ android {
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
+    namespace = "com.softartdev.notedelight"
 //    testBuildType = "release"
 }
 
