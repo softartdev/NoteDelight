@@ -23,7 +23,7 @@ val binConfig: KotlinNativeTarget.() -> Unit = {
 kotlin {
     iosX64("uikitX64", binConfig)
     iosArm64("uikitArm64", binConfig)
-//    iosSimulatorArm64("uikitSimulatorArm64", binConfig)
+    iosSimulatorArm64("uikitSimulatorArm64", binConfig)
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -39,12 +39,12 @@ kotlin {
         }
         val uikitX64Main by getting
         val uikitArm64Main by getting
-//        val uikitSimulatorArm64Main by getting
+        val uikitSimulatorArm64Main by getting
         val uikitMain by creating {
             dependsOn(commonMain)
             uikitX64Main.dependsOn(this)
             uikitArm64Main.dependsOn(this)
-//            uikitSimulatorArm64Main.dependsOn(this)
+            uikitSimulatorArm64Main.dependsOn(this)
             dependencies {
             }
         }
