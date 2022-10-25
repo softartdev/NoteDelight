@@ -74,7 +74,7 @@ dependencies {
     implementation(compose.material)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.2.1")//FIXME compose.uiTestManifest
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.0")//FIXME compose.uiTestManifest
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
