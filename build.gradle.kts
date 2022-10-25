@@ -3,7 +3,6 @@ buildscript {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
     dependencies {
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
@@ -24,7 +23,6 @@ allprojects {
         mavenCentral()
         maven(url = "https://jitpack.io")
         maven(url = "https://s3.amazonaws.com/repo.commonsware.com")
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
