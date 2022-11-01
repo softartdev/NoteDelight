@@ -316,9 +316,9 @@
 			productReference = 752D362C28B94ED3001FE634 /* iosComposeApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		7555FF7A242A565900829871 /* iosApp */ = {
+		7555FF7A242A565900829871 /* iosOldApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */;
+			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosOldApp" */;
 			buildPhases = (
 				E75A2EC4C71D5E2B845EAEC4 /* [CP] Check Pods Manifest.lock */,
 				7555FF77242A565900829871 /* Sources */,
@@ -332,7 +332,7 @@
 			);
 			dependencies = (
 			);
-			name = iosApp;
+			name = iosOldApp;
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* Note Delight.app */;
 			productType = "com.apple.product-type.application";
@@ -413,7 +413,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7555FF7A242A565900829871 /* iosApp */,
+				7555FF7A242A565900829871 /* iosOldApp */,
 				7555FF90242A565B00829871 /* iosAppTests */,
 				7555FF9B242A565B00829871 /* iosAppUITests */,
 				752D362B28B94ED3001FE634 /* iosComposeApp */,
@@ -599,12 +599,12 @@
 /* Begin PBXTargetDependency section */
 		7555FF93242A565B00829871 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7555FF7A242A565900829871 /* iosApp */;
+			target = 7555FF7A242A565900829871 /* iosOldApp */;
 			targetProxy = 7555FF92242A565B00829871 /* PBXContainerItemProxy */;
 		};
 		7555FF9E242A565B00829871 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7555FF7A242A565900829871 /* iosApp */;
+			target = 7555FF7A242A565900829871 /* iosOldApp */;
 			targetProxy = 7555FF9D242A565B00829871 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -817,6 +817,8 @@
 					"SQLITE_HAS_CODEC=1",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "(old) Note Delight";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -827,7 +829,7 @@
 					"-l\"c++\"",
 					"-lsqlite3",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight.old;
 				PRODUCT_NAME = "Note Delight";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -853,6 +855,8 @@
 					"SQLITE_HAS_CODEC=1",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "(old) Note Delight";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -863,7 +867,7 @@
 					"-l\"c++\"",
 					"-lsqlite3",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.notedelight.old;
 				PRODUCT_NAME = "Note Delight";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -971,7 +975,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */ = {
+		7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosOldApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7555FFA6242A565B00829871 /* Debug */,
