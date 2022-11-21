@@ -3,7 +3,6 @@ package com.softartdev.notedelight.shared.database
 import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
-import kotlin.native.concurrent.freeze
 
 class IosDbTestRepo : DatabaseRepo() {
 
@@ -29,24 +28,17 @@ class IosDbTestRepo : DatabaseRepo() {
 
     override fun decrypt(oldPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseTestHolder(
-            key = oldPass.toString()
-        ).freeze()
+        dbHolder = IosDatabaseTestHolder(key = oldPass.toString())
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseTestHolder(
-            key = oldPass.toString(),
-            rekey = newPass.toString()
-        ).freeze()
+        dbHolder = IosDatabaseTestHolder(key = oldPass.toString(), rekey = newPass.toString())
     }
 
     override fun encrypt(newPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseTestHolder(
-            rekey = newPass.toString()
-        ).freeze()
+        dbHolder = IosDatabaseTestHolder(rekey = newPass.toString())
     }
 
     override fun closeDatabase() {

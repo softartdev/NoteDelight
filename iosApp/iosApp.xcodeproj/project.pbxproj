@@ -479,7 +479,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ..\n\n./gradlew linkDebugExecutableUikitArm64\n\ncp ios-compose-app/build/bin/uikitArm64/debugExecutable/ios-compose-app.kexe \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n\n";
+			shellScript = "cd ..\n\n./gradlew linkDebugExecutableUikitSimulatorArm64\n\ncp ios-compose-app/build/bin/uikitSimulatorArm64/debugExecutable/ios-compose-app.kexe \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n\n";
 		};
 		752D364128B9501C001FE634 /* mokoResources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -498,7 +498,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/../gradlew\" -p \"$SRCROOT/../\" :ios-compose-app:copyResourcesDebugExecutableUikitArm64 \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=$BUILT_PRODUCTS_DIR \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=$CONTENTS_FOLDER_PATH\n";
+			shellScript = "\"$SRCROOT/../gradlew\" -p \"$SRCROOT/../\" :ios-compose-app:copyResourcesDebugExecutableUikitSimulatorArm64 \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=$BUILT_PRODUCTS_DIR \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=$CONTENTS_FOLDER_PATH\n";
 		};
 		758BC90B27173A99003EC1E7 /* copy_moko_resources */ = {
 			isa = PBXShellScriptBuildPhase;
