@@ -3,14 +3,8 @@ package com.softartdev.notedelight
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.defaultComponentContext
 import com.softartdev.notedelight.ui.MainRootUI
-import com.softartdev.notedelight.ui.PreviewMainScreen
-import com.softartdev.notedelight.ui.SignInScreenBody
-import com.softartdev.notedelight.ui.SplashScreenBody
-import com.softartdev.themepref.PreferableMaterialTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,22 +14,4 @@ class MainActivity : ComponentActivity() {
             MainRootUI(root)
         }
     }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() = PreferableMaterialTheme {
-    PreviewMainScreen()
-}
-
-@Preview
-@Composable
-fun PreviewSignInScreen() = PreferableMaterialTheme {
-    SignInScreenBody()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSplashScreen() = PreferableMaterialTheme {
-    SplashScreenBody()
 }

@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -66,6 +67,7 @@ kotlin {
                 api(libs.napier)
                 api(libs.mokoResources)
                 implementation(libs.koin.core)
+                api(libs.material.theme.prefs)
             }
         }
         val commonTest by getting {
@@ -115,7 +117,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-//                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
             }
         }
         val iosX64Test by getting
@@ -145,13 +147,24 @@ kotlin {
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
-        podfile = project.file("../iosApp/Podfile")
+//        podfile = project.file("../iosApp/Podfile")
 //        useLibraries()
-        pod("SQLCipher", "~> 4.5.2")
+//        pod("SQLCipher", "~> 4.5.2")
         framework {
 //            isStatic = false
             export(libs.mokoResources)
-//            export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+            export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+        }
+    }
+    targets.withType<KotlinNativeTarget> {
+        binaries.all {
+            freeCompilerArgs += listOf(
+                "-linker-option", "-framework", "-linker-option", "Metal",
+                "-linker-option", "-framework", "-linker-option", "CoreText",
+                "-linker-option", "-framework", "-linker-option", "CoreGraphics",
+                // TODO: the current compose binary surprises LLVM, so disable checks for now.
+                "-Xdisable-phases=VerifyBitcode"
+            )
         }
     }
 }

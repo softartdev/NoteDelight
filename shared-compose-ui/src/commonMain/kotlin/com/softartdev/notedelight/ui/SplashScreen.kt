@@ -38,7 +38,11 @@ fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMai
 }
 
 @Composable
-fun SplashScreenBody() = Box(modifier = Modifier.fillMaxSize()) {
+fun SplashScreenBody() = Box(
+    modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colors.background)
+) {
     Image(
         painter = painterResource(MR.images.app_icon),
         contentDescription = null,

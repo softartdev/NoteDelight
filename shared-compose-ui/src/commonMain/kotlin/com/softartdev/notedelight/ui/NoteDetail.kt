@@ -24,6 +24,7 @@ import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.notedelight.ui.dialog.showSaveChanges
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
+import com.softartdev.themepref.PreferableMaterialTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -131,7 +132,7 @@ fun NoteDetailBody(
     }) {
     Box {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (showLoading) LinearProgressIndicator()
+            if (showLoading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
                 value = textState.value,
                 onValueChange = { textState.value = it },
@@ -145,4 +146,4 @@ fun NoteDetailBody(
 
 @Preview
 @Composable
-fun PreviewNoteDetailBody() = NoteDetailBody()
+fun PreviewNoteDetailBody() = PreferableMaterialTheme { NoteDetailBody() }

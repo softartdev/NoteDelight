@@ -23,7 +23,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
-                api(libs.material.theme.prefs)
                 implementation(compose.ui)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
