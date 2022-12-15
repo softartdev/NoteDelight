@@ -25,6 +25,26 @@ Supported platforms:
 
 Partially deprecated, will be updated soon.
 
+## LIBRARY DEPENDENCIES 📇
+
+- [SQLDelight](https://github.com/cashapp/sqldelight)
+- [SQLCipher](https://github.com/sqlcipher/sqlcipher)
+- [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+- [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
+- [Decompose](https://github.com/arkivanov/Decompose)
+- [Compose Multiplatform, by JetBrains](https://github.com/JetBrains/compose-jb)
+- [MaterialThemePrefs](https://github.com/softartdev/MaterialThemePrefs)
+- [moko-resources](https://github.com/icerockdev/moko-resources)
+- [Koin](https://github.com/InsertKoinIO/koin)
+- [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom)
+- [Napier](https://github.com/AAkira/Napier)
+- [Firebase Crashlytics](https://firebase.google.com/products/crashlytics)
+- [LeakCanary 🐤](https://github.com/square/leakcanary)
+- [Mockito](https://github.com/mockito/mockito)
+- [Turbine](https://github.com/cashapp/turbine)
+- [Orchestrator](https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/runner#use-android)
+- [Espresso](https://developer.android.com/training/testing/espresso)
+
 ## WORK IN PROGRESS 🛠
 
 We need an iOS developer. If you have the skill to create apps with SwiftUI and are enthusiastic to

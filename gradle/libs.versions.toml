@@ -27,7 +27,6 @@ androidxTest = "1.5.1"
 androidxTestOrchestrator = "1.4.2"
 googleAndroidMaterial = "1.6.1"
 googleAndroidGmsOss = "17.0.0"
-viewBindingDelegate = "1.5.6"
 firebase = "31.1.1"
 leakCanary = "2.10"
 junit = "4.13.2"
@@ -100,8 +99,6 @@ androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.re
 
 google-android-material = { module = "com.google.android.material:material", version.ref = "googleAndroidMaterial" }
 google-android-gms-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "googleAndroidGmsOss" }
-
-viewbinding-delegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version.ref = "viewBindingDelegate" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
