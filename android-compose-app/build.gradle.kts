@@ -10,7 +10,6 @@ plugins {
     id("org.jetbrains.compose")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.slack.keeper")
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 
