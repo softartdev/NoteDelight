@@ -3,11 +3,8 @@ package com.softartdev.notedelight.shared.date
 import kotlinx.datetime.*
 import platform.Foundation.NSDate
 import platform.Foundation.timeIntervalSince1970
-import kotlin.system.getTimeMillis
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
-
-actual fun getSystemTimeInMillis(): Long = getTimeMillis()
 
 fun LocalDateTime.toNSDate(): NSDate {
     val referenceDateTime = LocalDateTime(2001, 1, 1, 0, 0, 0, 0)
