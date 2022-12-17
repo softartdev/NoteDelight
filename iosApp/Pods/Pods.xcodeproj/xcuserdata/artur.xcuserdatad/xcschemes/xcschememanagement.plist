@@ -3,29 +3,29 @@
 <plist version="1.0">
 <dict>
 	<key>SchemeUserState</key>
+	<dict/>
+	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>Pods-iosApp.xcscheme</key>
+		<key>332B9F524CA12614D9F8D30CC8374EBF</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>primary</key>
+			<true/>
 		</dict>
-		<key>Pods-oldApp.xcscheme</key>
+		<key>68AE2B80E718EF6F656B9A029F47121C</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>primary</key>
+			<true/>
 		</dict>
-		<key>ios_compose_kit.xcscheme</key>
+		<key>8777C9F6889E59EFFD631D80AEE9048B</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>primary</key>
+			<true/>
 		</dict>
-		<key>shared.xcscheme</key>
+		<key>ED39C638569286489CD697A6C8964146</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
-	<key>SuppressBuildableAutocreation</key>
-	<dict/>
 </dict>
 </plist>
