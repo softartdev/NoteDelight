@@ -60,3 +60,9 @@ fork of [NoteCrypt](https://github.com/softartdev/NoteCrypt)).
 
 Migrated to [SQLDelight](https://github.com/cashapp/sqldelight)
 from [Room](https://developer.android.com/topic/libraries/architecture/room) Persistence Library.
+
+#
+
+[![Jetbrains Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://jb.gg/OpenSourceSupport)
+
+Made with JetBrains tools 
