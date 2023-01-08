@@ -1,4 +1,4 @@
-name: Desktop Java CI/CD
+name: Desktop Java CD
 
 on:
   push:
@@ -42,6 +42,6 @@ jobs:
         with:
           name: output-ui-tests-artifacts
           path: |
-            desktop/build/compose/binaries/main/deb
-            desktop/build/compose/binaries/main/dmg
-            desktop/build/compose/binaries/main/msi
+            desktop-compose-app/build/compose/binaries/main/deb
+            desktop-compose-app/build/compose/binaries/main/dmg
+            desktop-compose-app/build/compose/binaries/main/msi

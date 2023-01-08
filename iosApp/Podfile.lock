@@ -2,10 +2,10 @@ PODS:
   - ios_compose_kit (1.0)
   - shared (1.0):
     - SQLCipher (~> 4.5.2)
-  - SQLCipher (4.5.2):
-    - SQLCipher/standard (= 4.5.2)
-  - SQLCipher/common (4.5.2)
-  - SQLCipher/standard (4.5.2):
+  - SQLCipher (4.5.3):
+    - SQLCipher/standard (= 4.5.3)
+  - SQLCipher/common (4.5.3)
+  - SQLCipher/standard (4.5.3):
     - SQLCipher/common
 
 DEPENDENCIES:
@@ -25,7 +25,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   ios_compose_kit: b72887492af351ef3f692e5561723c50845ddde6
   shared: 4c6544be0672cdca0a256a0b3eaf4a18e4f19b37
-  SQLCipher: f5b4857434158b571a3ed3b10b3b43cd18ef5f67
+  SQLCipher: 57fa9f863fa4a3ed9dd3c90ace52315db8c0fdca
 
 PODFILE CHECKSUM: 55cc5a8871bb1198ed13b2ef9fad927e117f2493
 

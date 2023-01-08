@@ -1,4 +1,4 @@
-name: Fastlane CI/CD Android
+name: Android CD
 
 on:
   push:

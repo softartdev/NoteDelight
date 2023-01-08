@@ -1,4 +1,4 @@
-name: iOS starter workflow
+name: iOS CD
 
 on:
   push:
@@ -11,8 +11,6 @@ jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
     runs-on: macos-latest
-    env:
-      working-directory: ./iosApp
 
     steps:
       - name: Check out
@@ -33,34 +31,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: install cocoapods-generate
-        run: sudo gem install cocoapods-generate
-      - name: Set Default Scheme
-        working-directory: ${{env.working-directory}}
-        run: |
-          scheme_list=$(xcodebuild -list -json | tr -d "\n")
-          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
-          echo Using default scheme: $default
-      - name: Build
-        env:
-          scheme: ${{ 'default' }}
-          platform: ${{ 'iOS Simulator' }}
-          deviceName: ${{ 'iPhone SE (2nd generation)' }}
-        working-directory: ${{env.working-directory}}
-        run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild build-for-testing -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$deviceName"
-      - name: Test
-        env:
-          scheme: ${{ 'default' }}
-          platform: ${{ 'iOS Simulator' }}
-          deviceName: ${{ 'iPhone SE (2nd generation)' }}
-        working-directory: ${{env.working-directory}}
-        run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild test-without-building -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$deviceName"
+      - name: Fastlane build gym
+        working-directory: ./iosApp
+        run: fastlane build_gym_lane
+      - name: Fastlane test scan
+        working-directory: ./iosApp
+        run: fastlane test_scan_lane
+      - name: Archive build artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-artifacts
+          path: |
+            iosApp/iosApp.app.dSYM.zip
+            iosApp/iosApp.ipa
+            iosApp/fastlane/test_output/report.html
