@@ -13,16 +13,10 @@ gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./fastlane/api-7350020584032910214-328107-d8d3807d1e1a.json ./.github/secrets/api-7350020584032910214-328107-d8d3807d1e1a.json.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
---output ./iosApp/fastlane/2R9U7X2397.json ./.github/secrets/2R9U7X2397.json.gpg
-
-gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
---output ./iosApp/fastlane/ios_development.p12 ./.github/secrets/ios_development.p12.gpg
+--output ./iosApp/fastlane/2R9U7X2397.json ./.github/secrets/28F5CB4337.json.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./iosApp/fastlane/ios_distribution.p12 ./.github/secrets/ios_distribution.p12.gpg
-
-gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
---output ./iosApp/fastlane/NoteDelight_Development_Profile.mobileprovision ./.github/secrets/NoteDelight_Development_Profile.mobileprovision.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision ./.github/secrets/NoteDelight_Distribution_Profile.mobileprovision.gpg

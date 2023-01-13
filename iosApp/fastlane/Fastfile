@@ -31,12 +31,6 @@ platform :ios do
       lock_when_sleeps: false
     )
     import_certificate(
-      certificate_path: "fastlane/ios_development.p12",
-      certificate_password: ENV["LARGE_SECRET_PASSPHRASE"],
-      keychain_name: ENV["KEYCHAIN_NAME"],
-      keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
-    )
-    import_certificate(
       certificate_path: "fastlane/ios_distribution.p12",
       certificate_password: ENV["LARGE_SECRET_PASSPHRASE"],
       keychain_name: ENV["KEYCHAIN_NAME"],
@@ -47,7 +41,6 @@ platform :ios do
       keychain_name: ENV["KEYCHAIN_NAME"],
       keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
     )
-    install_provisioning_profile(path: "fastlane/NoteDelight_Development_Profile.mobileprovision")
     install_provisioning_profile(path: "fastlane/NoteDelight_Distribution_Profile.mobileprovision")
   end
   desc "AppStore build lane with gym"
@@ -64,6 +57,6 @@ platform :ios do
   end
   desc "AppStore publish lane with deliver"
   lane :appstore_publish_deliver_lane do
-    deliver(api_key_path: "fastlane/2R9U7X2397.json")
+    deliver(api_key_path: "fastlane/28F5CB4337.json")
   end
 end
