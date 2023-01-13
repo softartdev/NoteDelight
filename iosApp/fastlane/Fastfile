@@ -20,12 +20,54 @@ platform :ios do
   lane :custom_lane do
     # add actions here: https://docs.fastlane.tools/actions
   end
-  desc "Test lane with scan"
-  lane :test_scan_lane do
-    scan(scheme: 'iosApp', suppress_xcode_output: false)
+  desc "Setup keychain & certificates lane"
+  lane :setup_certificates_lane do
+    create_keychain(
+      name: ENV["KEYCHAIN_NAME"],
+      password: ENV["LARGE_SECRET_PASSPHRASE"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
+    )
+    import_certificate(
+      certificate_path: "fastlane/ios_development.p12",
+      certificate_password: ENV["LARGE_SECRET_PASSPHRASE"],
+      keychain_name: ENV["KEYCHAIN_NAME"],
+      keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
+    )
+    import_certificate(
+      certificate_path: "fastlane/ios_distribution.p12",
+      certificate_password: ENV["LARGE_SECRET_PASSPHRASE"],
+      keychain_name: ENV["KEYCHAIN_NAME"],
+      keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
+    )
+    import_certificate(
+      certificate_path: "fastlane/AppleWWDRCAG3.cer",
+      keychain_name: ENV["KEYCHAIN_NAME"],
+      keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
+    )
+    install_provisioning_profile(path: "fastlane/NoteDelight_Development_Profile.mobileprovision")
+    install_provisioning_profile(path: "fastlane/NoteDelight_Distribution_Profile.mobileprovision")
   end
-  desc "Build lane with gym"
-  lane :build_gym_lane do
-    gym(scheme: 'iosApp')
+  desc "AppStore build lane with gym"
+  lane :appstore_build_gym_lane do
+    gym(
+      scheme: 'iosApp',
+      export_method: 'app-store',
+      export_options: {
+        provisioningProfiles: {
+          "com.softartdev.notedelight" => "NoteDelight: Distribution Profile"
+        }
+      }
+    )
+  end
+  desc "AppStore test lane with scan"
+  lane :appstore_test_scan_lane do
+    scan(scheme: 'iosApp', suppress_xcode_output: false, configuration: 'Release')
+  end
+  desc "AppStore publish lane with deliver"
+  lane :appstore_publish_deliver_lane do
+    deliver(api_key_path: "fastlane/2R9U7X2397.json")
   end
 end

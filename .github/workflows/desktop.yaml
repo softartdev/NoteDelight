@@ -2,10 +2,8 @@ name: Desktop Java CD
 
 on:
   push:
-    branches:
-      - '**'
-    tags-ignore:
-      - '**'
+    tags:
+      - desktop/*
 
 jobs:
   build_job:

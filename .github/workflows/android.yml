@@ -3,7 +3,7 @@ name: Android CD
 on:
   push:
     tags:
-      - '**'
+      - android/*
 
 jobs:
   ui_test_job:

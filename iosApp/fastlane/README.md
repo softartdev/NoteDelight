@@ -23,21 +23,37 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Description of what the lane does
 
-### ios test_scan_lane
+### ios setup_certificates_lane
 
 ```sh
-[bundle exec] fastlane ios test_scan_lane
+[bundle exec] fastlane ios setup_certificates_lane
 ```
 
-Test lane with scan
+Setup keychain & certificates lane
 
-### ios build_gym_lane
+### ios appstore_build_gym_lane
 
 ```sh
-[bundle exec] fastlane ios build_gym_lane
+[bundle exec] fastlane ios appstore_build_gym_lane
 ```
 
-Build lane with gym
+AppStore build lane with gym
+
+### ios appstore_test_scan_lane
+
+```sh
+[bundle exec] fastlane ios appstore_test_scan_lane
+```
+
+AppStore test lane with scan
+
+### ios appstore_publish_deliver_lane
+
+```sh
+[bundle exec] fastlane ios appstore_publish_deliver_lane
+```
+
+AppStore publish lane with deliver
 
 ----
 

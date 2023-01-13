@@ -14,11 +14,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SQLCipher.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>ios_compose_kit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
