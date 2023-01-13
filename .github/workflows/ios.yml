@@ -37,22 +37,15 @@ jobs:
         working-directory: ./iosApp/fastlane
         run: curl -o AppleWWDRCAG3.cer https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer
       - name: Install the Apple certificate and provisioning profile
-        continue-on-error: true # TODO remove
         working-directory: ./iosApp
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
           KEYCHAIN_NAME: app-signing
         run: fastlane setup_certificates_lane
       - name: AppStore build lane with gym
-        continue-on-error: true # TODO remove
         working-directory: ./iosApp
         run: fastlane appstore_build_gym_lane
-      - name: AppStore test lane with scan
-        continue-on-error: true # TODO remove
-        working-directory: ./iosApp
-        run: fastlane appstore_test_scan_lane
       - name: AppStore publish lane with deliver
-        continue-on-error: true # TODO remove
         working-directory: ./iosApp
         run: fastlane appstore_publish_deliver_lane
       - name: Archive build artifacts

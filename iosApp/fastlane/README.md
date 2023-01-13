@@ -39,14 +39,6 @@ Setup keychain & certificates lane
 
 AppStore build lane with gym
 
-### ios appstore_test_scan_lane
-
-```sh
-[bundle exec] fastlane ios appstore_test_scan_lane
-```
-
-AppStore test lane with scan
-
 ### ios appstore_publish_deliver_lane
 
 ```sh

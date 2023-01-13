@@ -62,10 +62,6 @@ platform :ios do
       }
     )
   end
-  desc "AppStore test lane with scan"
-  lane :appstore_test_scan_lane do
-    scan(scheme: 'iosApp', suppress_xcode_output: false, configuration: 'Release')
-  end
   desc "AppStore publish lane with deliver"
   lane :appstore_publish_deliver_lane do
     deliver(api_key_path: "fastlane/2R9U7X2397.json")
