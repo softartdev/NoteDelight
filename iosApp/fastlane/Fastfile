@@ -66,7 +66,8 @@ platform :ios do
       force: true, # Skip verification of HTML preview
       skip_metadata: true,
       skip_screenshots: true,
-      skip_app_version_update: true
+      skip_app_version_update: true,
+      run_precheck_before_submit: false
     )
   end
 end
