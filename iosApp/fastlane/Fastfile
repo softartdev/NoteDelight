@@ -45,6 +45,7 @@ platform :ios do
   end
   desc "AppStore build lane with gym"
   lane :appstore_build_gym_lane do
+    increment_build_number # automatically increment by one
     gym(
       scheme: 'iosApp',
       export_method: 'app-store',
