@@ -46,7 +46,10 @@ platform :ios do
   desc "AppStore build lane with gym"
   lane :appstore_build_gym_lane do
     increment_version_number # Automatically increment version number
-    increment_build_number # Automatically increment by one
+    build_num = app_store_build_number(api_key_path:"fastlane/28F5CB4337.json", live: false)
+    increment_build_number(
+      build_number: build_num + 1 # set a specific number
+    )
     gym(
       scheme: 'iosApp',
       export_method: 'app-store',
@@ -64,10 +67,9 @@ platform :ios do
       submit_for_review: true,
       automatic_release: true, # Automatically released once it's approved
       force: true, # Skip verification of HTML preview
-      skip_metadata: true,
       skip_screenshots: true,
-      skip_app_version_update: true,
-      run_precheck_before_submit: false
+      precheck_include_in_app_purchases: false,
+      submission_information: { add_id_info_uses_idfa: false }
     )
   end
 end
