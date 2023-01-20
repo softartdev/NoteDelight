@@ -36,6 +36,10 @@ Supported platforms:
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing features.
 
+## CONTINUOUS INTEGRATION / DELIVERY 🔄
+
+![CI/CD workflows blueprint for this project](screenshoots/ci_cd.png)
+
 ## LIBRARY DEPENDENCIES 📇
 
 - [SQLDelight](https://github.com/cashapp/sqldelight)
