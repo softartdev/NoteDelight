@@ -10,7 +10,7 @@ androidxSqlite = "2.2.0"
 saferoom = "1.3.0"
 androidSqlCipher = "4.5.1"
 decompose = "1.0.0-beta-03-native-compose"
-koin = "3.2.2"
+koin = "3.3.2"
 kotlinx-datetime = "0.4.0"
 napier = "2.6.1"
 mokoResources = "0.20.1"
@@ -62,7 +62,7 @@ decompose-extComposeJb = { module = "com.arkivanov.decompose:extensions-compose-
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-jvm = { module = "io.insert-koin:koin-core-jvm", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.1" } #TODO use version.ref = "koin" when 3.4.1 is released
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
