@@ -151,7 +151,7 @@ kotlin {
 //        useLibraries()
 //        pod("SQLCipher", "~> 4.5.2")
         framework {
-//            isStatic = false
+            isStatic = true
             export(libs.mokoResources)
             export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
         }
