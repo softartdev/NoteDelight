@@ -40,7 +40,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 
 ![CI/CD workflows blueprint for this project](screenshoots/ci_cd.png)
 
-## LIBRARY DEPENDENCIES 📇
+## LIBRARY DEPENDENCIES 📚
 
 - [SQLDelight](https://github.com/cashapp/sqldelight)
 - [SQLCipher](https://github.com/sqlcipher/sqlcipher)
