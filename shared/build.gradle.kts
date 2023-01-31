@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -16,7 +18,6 @@ android {
     sourceSets["main"].res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -56,9 +57,6 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     sourceSets {
-        all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
-        }
         val commonMain by getting {
             dependencies {
                 implementation(libs.coroutines.core)
@@ -93,7 +91,7 @@ kotlin {
                 implementation(libs.espresso.idling.resource)
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependsOn(commonTest)
             dependencies {
                 implementation(kotlin("test"))
@@ -141,6 +139,9 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
+        }
+        all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
         }
     }
     cocoapods {

@@ -1,3 +1,4 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
@@ -64,18 +65,18 @@ kotlin {
             dependencies {
             }
         }
+        all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
+        }
     }
 }
 
 android {
+    namespace = "com.softartdev.notedelight.shared.compose"
     compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-    }
+    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    namespace = "com.softartdev.notedelight.shared.compose"
 }

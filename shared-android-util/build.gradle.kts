@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,10 +9,7 @@ plugins {
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-    }
+    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false

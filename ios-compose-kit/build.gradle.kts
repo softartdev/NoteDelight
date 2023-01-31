@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -21,7 +20,7 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "ios_compose_kit"
-            embedBitcode = BitcodeEmbeddingMode.DISABLE
+            embedBitcodeMode.set(BitcodeEmbeddingMode.DISABLE)
             freeCompilerArgs += listOf(
                 "-linker-option", "-framework", "-linker-option", "Metal",
                 "-linker-option", "-framework", "-linker-option", "CoreText",

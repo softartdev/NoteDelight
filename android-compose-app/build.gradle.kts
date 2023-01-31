@@ -1,8 +1,9 @@
+@file:Suppress("UnstableApiUsage", "OPT_IN_IS_NOT_ENABLED")
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("com.android.application")
@@ -14,6 +15,7 @@ plugins {
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 
 android {
+    namespace = "com.softartdev.notedelight"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.softartdev.noteroom"
@@ -46,19 +48,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
-    buildFeatures {
-        compose = true
-    }
+    buildFeatures.compose = true
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-    testOptions {
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-    }
-    namespace = "com.softartdev.notedelight"
-//    testBuildType = "release"
+    testOptions.execution = "ANDROIDX_TEST_ORCHESTRATOR"
 }
 
 dependencies {
@@ -70,7 +65,7 @@ dependencies {
     implementation(compose.material)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")//FIXME compose.uiTestManifest
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
