@@ -1,8 +1,6 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
@@ -43,7 +41,6 @@ class PrepopulateDatabaseTest {
                 val loremIpsum = LoremIpsum(words = num).values.joinToString()
                 noteUseCase.createNote(title = "Title #$num", text = loremIpsum)
                 composeTestRule.awaitIdle()
-                composeTestRule.onNodeWithTag(NOTE_LIST_TEST_TAG).performScrollToIndex(0)
 
                 notes = awaitItem()
                 assertEquals(num, notes.size)

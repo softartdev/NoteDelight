@@ -6,8 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
+import androidx.compose.runtime.LaunchedEffect
 import com.softartdev.notedelight.shared.database.TestSchema.firstNote
 import com.softartdev.notedelight.shared.database.TestSchema.secondNote
 import com.softartdev.notedelight.shared.database.TestSchema.thirdNote
@@ -20,7 +19,7 @@ fun NoteList(
 ) {
     val listState = rememberLazyListState()
 
-    LazyColumn(modifier = Modifier.testTag(NOTE_LIST_TEST_TAG), state = listState) {
+    LazyColumn(state = listState) {
         items(items = noteList, key = Note::id) {
             NoteItem(
                 note = it,
@@ -28,6 +27,9 @@ fun NoteList(
             )
             Divider()
         }
+    }
+    LaunchedEffect(key1 = noteList.size, key2 = listState) {
+        listState.animateScrollToItem(0)
     }
 }
 
@@ -40,5 +42,3 @@ fun PreviewNoteList() {
     val onItemClicked: (id: Long) -> Unit = {}
     NoteList(testNotes, onItemClicked)
 }
-
-const val NOTE_LIST_TEST_TAG = "note_list_test_tag"
