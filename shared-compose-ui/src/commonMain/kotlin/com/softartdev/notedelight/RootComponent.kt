@@ -50,6 +50,7 @@ class RootComponent(
             mainViewModel = getViewModel(),
             onItemClicked = { id -> navigation.push(Configuration.Details(itemId = id)) },
             onSettingsClick = { navigation.push(Configuration.Settings) },
+            navSignIn = { navigation.replaceCurrent(Configuration.SignIn) },
         )
     }
 

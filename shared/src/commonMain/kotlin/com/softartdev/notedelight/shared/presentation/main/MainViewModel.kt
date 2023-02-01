@@ -24,7 +24,7 @@ class MainViewModel(
     override fun errorResult(
         throwable: Throwable,
     ): NoteListResult = when (throwable::class.simpleName?.contains("SQLite")) {
-        true -> NoteListResult.NavMain
+        true -> NoteListResult.NavSignIn
         else -> NoteListResult.Error(throwable.message)
     }
 

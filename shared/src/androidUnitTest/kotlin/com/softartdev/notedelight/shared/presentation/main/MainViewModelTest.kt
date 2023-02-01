@@ -54,7 +54,7 @@ class MainViewModelTest {
 
             Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
-            assertEquals(NoteListResult.NavMain, awaitItem())
+            assertEquals(NoteListResult.NavSignIn, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

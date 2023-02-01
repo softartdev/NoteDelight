@@ -15,20 +15,20 @@ import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
-import com.softartdev.themepref.PreferableMaterialTheme
 
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
     onItemClicked: (id: Long) -> Unit,
     onSettingsClick: () -> Unit,
+    navSignIn: () -> Unit
 ) {
     val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
     DisposableEffect(mainViewModel) {
         mainViewModel.updateNotes()
         onDispose(mainViewModel::onCleared)
     }
-    MainScreen(noteListState, onItemClicked, onSettingsClick)
+    MainScreen(noteListState, onItemClicked, onSettingsClick, navSignIn)
 }
 
 @Composable
@@ -36,6 +36,7 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    navSignIn: () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -52,7 +53,7 @@ fun MainScreen(
                 val notes: List<Note> = noteListResult.result
                 if (notes.isNotEmpty()) NoteList(notes, onItemClicked) else Empty()
             }
-            is NoteListResult.NavMain -> TODO() // navigate to sign in
+            is NoteListResult.NavSignIn -> navSignIn()
             is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
         }
     }, floatingActionButton = {
