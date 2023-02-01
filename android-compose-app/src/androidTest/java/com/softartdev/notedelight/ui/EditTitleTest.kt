@@ -61,6 +61,8 @@ class EditTitleTest {
             .assertIsDisplayed()
             .performClick()
 
+        composeTestRule.waitForIdle()
+
         composeTestRule.onNodeWithContentDescription(label = actualNoteText)
             .assertIsDisplayed()
             .performClick()
@@ -87,6 +89,8 @@ class EditTitleTest {
         composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
             .assertIsDisplayed()
             .performClick()
+
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithContentDescription(label = actualNoteTitle)
             .assertIsDisplayed()

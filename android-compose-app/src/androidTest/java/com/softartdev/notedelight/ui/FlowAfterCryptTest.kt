@@ -103,11 +103,15 @@ class FlowAfterCryptTest {
         Espresso.closeSoftKeyboard()
 
         pressBack()
+        composeTestRule.waitForIdle()
 
         composeTestRule
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
             .performClick()
+
+        composeTestRule.waitForIdle()
+
         //main
         composeTestRule.onNodeWithContentDescription(label = titleText)
             .assertIsDisplayed()

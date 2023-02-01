@@ -13,7 +13,6 @@ import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.R
 import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
-import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
 import org.junit.After
@@ -49,7 +48,7 @@ class SettingsPasswordTest {
     }
 
     @Test
-    fun settingPasswordTest() = runTest {
+    fun settingPasswordTest() {
         composeTestRule.onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
             .assertIsDisplayed()
             .performClick()
@@ -91,8 +90,8 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
 
         composeTestRule.advancePerform(confirmYesSNI::performClick)
+        composeTestRule.waitForIdle()
 
-        composeTestRule.awaitIdle()
         confirmLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         confirmPasswordSNI.performTextReplacement(text = "1")
@@ -161,6 +160,7 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
 
         composeTestRule.advancePerform(changeYesSNI::performClick)
+        composeTestRule.waitForIdle()
 
         changeOldLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeOldSNI.performTextReplacement(text = "2")
@@ -211,7 +211,7 @@ class SettingsPasswordTest {
 
         composeTestRule.advancePerform(enterYesSNI::performClick)
 
-        composeTestRule.awaitIdle()
+        composeTestRule.waitForIdle()
         enterLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         enterPasswordSNI.performTextReplacement(text = "1")

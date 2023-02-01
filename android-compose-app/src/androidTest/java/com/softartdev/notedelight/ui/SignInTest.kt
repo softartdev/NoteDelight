@@ -70,6 +70,7 @@ class SignInTest {
             .assertIsDisplayed()
 
         composeTestRule.advancePerform(signInButtonSNI::performClick)
+        composeTestRule.waitForIdle()
 
         passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
@@ -82,6 +83,7 @@ class SignInTest {
         passwordFieldSNI.performTextReplacement(text = Encryptor.PASSWORD)
         Espresso.closeSoftKeyboard()
         composeTestRule.advancePerform(signInButtonSNI::performClick)
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()
