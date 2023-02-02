@@ -110,11 +110,11 @@ class FlowAfterCryptTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.waitForIdle()
-
         //main
-        composeTestRule.onNodeWithContentDescription(label = titleText)
-            .assertIsDisplayed()
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithContentDescription(label = titleText).assertIsDisplayed()
+        }
+        composeTestRule.onNodeWithContentDescription(label = titleText).assertIsDisplayed()
 
         composeTestRule
             .onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
@@ -137,10 +137,14 @@ class FlowAfterCryptTest {
             .assertIsDisplayed()
             .performClick()
 
+        composeTestRule.safeWaitUntil(block = switchSNI::assertIsOff)
         switchSNI.assertIsOff()
 
         pressBack()
         //main
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithContentDescription(label = titleText).assertIsDisplayed()
+        }
         composeTestRule.onNodeWithContentDescription(label = titleText)
             .assertIsDisplayed()
             .performClick()
@@ -149,10 +153,18 @@ class FlowAfterCryptTest {
             .assertIsDisplayed()
             .performClick()
 
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
             .performClick()
         //main
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()
     }

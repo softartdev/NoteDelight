@@ -28,6 +28,7 @@ class SignInTest {
     private val composeTestRule = customAndroidComposeRule<MainActivity>(
         beforeActivityLaunched = Encryptor::encryptDB
     )
+
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
         .around(DetectLeaksAfterTestSuccess())
@@ -70,8 +71,11 @@ class SignInTest {
             .assertIsDisplayed()
 
         composeTestRule.advancePerform(signInButtonSNI::performClick)
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
+            signInButtonSNI.performClick()
+        }
         passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
         passwordFieldSNI.performTextReplacement(text = "incorrect password")

@@ -67,8 +67,10 @@ class CreateRemoveNoteTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithContentDescription(label = actualNoteText).assertIsDisplayed()
+        }
         composeTestRule.onNodeWithContentDescription(label = actualNoteText)
             .assertIsDisplayed()
             .performClick()
@@ -81,8 +83,11 @@ class CreateRemoveNoteTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()
     }

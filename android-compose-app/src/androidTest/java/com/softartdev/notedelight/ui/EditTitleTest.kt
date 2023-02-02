@@ -61,8 +61,11 @@ class EditTitleTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithContentDescription(label = actualNoteText)
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithContentDescription(label = actualNoteText)
             .assertIsDisplayed()
             .performClick()
@@ -90,8 +93,11 @@ class EditTitleTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithContentDescription(label = actualNoteTitle)
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithContentDescription(label = actualNoteTitle)
             .assertIsDisplayed()
     }
