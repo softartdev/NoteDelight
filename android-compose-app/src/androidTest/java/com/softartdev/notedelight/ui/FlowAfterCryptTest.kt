@@ -64,11 +64,15 @@ class FlowAfterCryptTest {
             .performClick()
         //settings
         switchSNI.assertIsOff()
-        switchSNI.performClick()
 
         val (_, _, confirmFieldTag) = MR.strings.enter_password.descTagTriple()
         val (_, _, confirmRepeatFieldTag) = MR.strings.confirm_password.descTagTriple()
 
+        composeTestRule.safeWaitUntil {
+            switchSNI.performClick()
+            composeTestRule.onNodeWithTag(confirmFieldTag, useUnmergedTree = true)
+                .assertIsDisplayed()
+        }
         val confirmPasswordSNI: SemanticsNodeInteraction = composeTestRule
             .onNodeWithTag(confirmFieldTag, useUnmergedTree = true)
             .assertIsDisplayed()

@@ -168,9 +168,8 @@ class SettingsPasswordTest {
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
 
-        composeTestRule.advancePerform(changeYesSNI::performClick)
-
         composeTestRule.safeWaitUntil {
+            changeYesSNI.performClick()
             composeTestRule.waitForIdle()
             changeOldLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         }
@@ -178,17 +177,18 @@ class SettingsPasswordTest {
         changeOldSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        composeTestRule.advancePerform(changeYesSNI::performClick)
-
         composeTestRule.safeWaitUntil {
+            changeYesSNI.performClick()
             changeNewLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         }
         changeNewLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         changeNewSNI.performTextReplacement(text = "2")
         Espresso.closeSoftKeyboard()
 
-        composeTestRule.advancePerform(changeYesSNI::performClick)
-
+        composeTestRule.safeWaitUntil {
+            changeYesSNI.performClick()
+            changeRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
+        }
         changeRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
 
         changeRepeatNewSNI.performTextReplacement(text = "2")
@@ -224,9 +224,8 @@ class SettingsPasswordTest {
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
 
-        composeTestRule.advancePerform(enterYesSNI::performClick)
-
         composeTestRule.safeWaitUntil {
+            enterYesSNI.performClick()
             composeTestRule.waitForIdle()
             enterLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         }
