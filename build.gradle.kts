@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
         classpath(libs.sqlDelight.gradlePlugin)
-        classpath("com.android.tools.build:gradle:7.4.0")
+        classpath("com.android.tools.build:gradle:7.4.1")
         classpath("com.google.gms:google-services:4.3.15")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
