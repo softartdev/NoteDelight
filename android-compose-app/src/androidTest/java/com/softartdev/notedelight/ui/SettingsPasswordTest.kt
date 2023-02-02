@@ -89,11 +89,10 @@ class SettingsPasswordTest {
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
 
-        composeTestRule.advancePerform(confirmYesSNI::performClick)
         composeTestRule.safeWaitUntil {
+            confirmYesSNI.performClick()
             composeTestRule.waitForIdle()
             confirmLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
-            confirmYesSNI.performClick()
         }
         confirmLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
@@ -118,7 +117,10 @@ class SettingsPasswordTest {
 
         confirmRepeatPasswordSNI.performTextReplacement(text = "1")
         composeTestRule.advancePerform(confirmYesSNI::performClick)
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+                .assertIsOn()
+        }
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()
@@ -239,7 +241,10 @@ class SettingsPasswordTest {
         enterPasswordSNI.performTextReplacement(text = "2")
 
         composeTestRule.advancePerform(enterYesSNI::performClick)
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+                .assertIsOff()
+        }
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()

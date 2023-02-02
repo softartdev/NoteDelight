@@ -70,11 +70,9 @@ class SignInTest {
             .onNodeWithText(text = context.getString(R.string.sign_in))
             .assertIsDisplayed()
 
-        composeTestRule.advancePerform(signInButtonSNI::performClick)
         composeTestRule.safeWaitUntil {
-            composeTestRule.waitForIdle()
-            passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
             signInButtonSNI.performClick()
+            passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
         }
         passwordLabelSNI.assertTextEquals(context.getString(R.string.empty_password))
 
@@ -87,8 +85,11 @@ class SignInTest {
         passwordFieldSNI.performTextReplacement(text = Encryptor.PASSWORD)
         Espresso.closeSoftKeyboard()
         composeTestRule.advancePerform(signInButtonSNI::performClick)
-        composeTestRule.waitForIdle()
-
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
+                .assertIsDisplayed()
+        }
         composeTestRule.onNodeWithText(text = context.getString(R.string.label_empty_result))
             .assertIsDisplayed()
     }

@@ -85,7 +85,7 @@ class FlowAfterCryptTest {
             .onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
         confirmYesSNI.performClick()
-
+        composeTestRule.safeWaitUntil(block = switchSNI::assertIsOn)
         switchSNI.assertIsOn()
 
         pressBack()
