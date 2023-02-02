@@ -99,17 +99,15 @@ class SettingsPasswordTest {
         confirmPasswordSNI.performTextReplacement(text = "1")
         Espresso.closeSoftKeyboard()
 
-        composeTestRule.advancePerform(confirmYesSNI::performClick)
-
-        confirmRepeatPasswordSNI.performClick()
-        confirmRepeatPasswordSNI.performTextReplacement(text = "2")
-
-        composeTestRule.onAllNodes(isRoot(), true).printToLog("🦄", maxDepth = Int.MAX_VALUE)
         composeTestRule.safeWaitUntil {
+            confirmYesSNI.performClick()
             composeTestRule.waitForIdle()
             confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
         }
         confirmRepeatLabelSNI.assertTextEquals(context.getString(R.string.passwords_do_not_match))
+
+        confirmRepeatPasswordSNI.performClick()
+        confirmRepeatPasswordSNI.performTextReplacement(text = "2")
 
         composeTestRule.advancePerform(confirmYesSNI::performClick)
 
