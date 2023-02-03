@@ -1,21 +1,21 @@
 PODS:
-  - ios_compose_kit (1.0)
+  - iosComposePod (1.0)
   - shared (1.0)
 
 DEPENDENCIES:
-  - ios_compose_kit (from `../ios-compose-kit`)
+  - iosComposePod (from `../ios-compose-kit`)
   - shared (from `../shared/`)
 
 EXTERNAL SOURCES:
-  ios_compose_kit:
+  iosComposePod:
     :path: "../ios-compose-kit"
   shared:
     :path: "../shared/"
 
 SPEC CHECKSUMS:
-  ios_compose_kit: b72887492af351ef3f692e5561723c50845ddde6
+  iosComposePod: 19e7880c5dea7c6651304f260ed2ad98b234c45a
   shared: 8185e5162bfc895f7927532c1a695af7d12d9de2
 
-PODFILE CHECKSUM: 55cc5a8871bb1198ed13b2ef9fad927e117f2493
+PODFILE CHECKSUM: e032c127d1580b59bc0f1a6663a6fd8661e0d7d0
 
 COCOAPODS: 1.11.3

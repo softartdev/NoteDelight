@@ -1,7 +1,7 @@
 target 'iosApp' do
   use_frameworks!
   platform :ios, '14.1'
-  pod 'ios_compose_kit', :path => '../ios-compose-kit'
+  pod 'iosComposePod', :path => '../ios-compose-kit'
 end
 
 target 'oldApp' do

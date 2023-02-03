@@ -1,24 +1,24 @@
 Pod::Spec.new do |spec|
-    spec.name                     = 'ios_compose_kit'
+    spec.name                     = 'iosComposeKit'
     spec.version                  = '1.0'
     spec.homepage                 = 'https://github.com/softartdev/NoteDelight'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
     spec.summary                  = 'Common UI-kit for the NoteDelight app'
-    spec.vendored_frameworks      = 'build/cocoapods/framework/ios_compose_kit.framework'
+    spec.vendored_frameworks      = 'build/cocoapods/framework/iosComposeKit.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '14.1'
                 
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':ios-compose-kit',
-        'PRODUCT_MODULE_NAME' => 'ios_compose_kit',
+        'PRODUCT_MODULE_NAME' => 'iosComposeKit',
     }
                 
     spec.script_phases = [
         {
-            :name => 'Build ios_compose_kit',
+            :name => 'Build iosComposeKit',
             :execution_position => :before_compile,
             :shell_path => '/bin/sh',
             :script => <<-SCRIPT

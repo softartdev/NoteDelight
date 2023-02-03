@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import ios_compose_kit
+import iosComposeKit
 
 class BackgroundCrashWorkaroundController: UIViewController {
     

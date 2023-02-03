@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "68AE2B80E718EF6F656B9A029F47121C"
-               BuildableName = "ios_compose_kit"
-               BlueprintName = "ios_compose_kit"
+               BlueprintIdentifier = "8CD5AC086628776F77663F3736B36F45"
+               BuildableName = "iosComposePod"
+               BlueprintName = "iosComposePod"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

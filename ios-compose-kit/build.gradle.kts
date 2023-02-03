@@ -13,13 +13,14 @@ kotlin {
     iosSimulatorArm64()
 
     cocoapods {
+        name = "iosComposePod"
         summary = "Common UI-kit for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         version = "1.0"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
-            baseName = "ios_compose_kit"
+            baseName = "iosComposeKit"
             embedBitcodeMode.set(BitcodeEmbeddingMode.DISABLE)
             freeCompilerArgs += listOf(
                 "-linker-option", "-framework", "-linker-option", "Metal",

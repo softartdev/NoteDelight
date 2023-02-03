@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ios_compose_kit
+import iosComposeKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     

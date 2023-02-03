@@ -1,2 +1,2 @@
 ${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh
-${PODS_ROOT}/../../ios-compose-kit/build/cocoapods/framework/ios_compose_kit.framework
+${PODS_ROOT}/../../ios-compose-kit/build/cocoapods/framework/iosComposeKit.framework
