@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
     packagingOptions.resources {
@@ -51,6 +51,7 @@ multiplatformResources {
     multiplatformResourcesPackage = "com.softartdev.notedelight"
 }
 kotlin {
+    jvmToolchain(11)
     jvm()
     android()
     iosX64()
@@ -174,4 +175,17 @@ sqldelight {
         packageName = "com.softartdev.notedelight.shared.db"
 //        linkSqlite = false
     }
+}
+//TODO try to remove after update moko-resources version > 0.20.1
+tasks.named("jvmProcessResources") {
+    dependsOn(":shared:generateMRjvmMain")
+    dependsOn(":shared:generateMRcommonMain")
+}
+tasks.named("iosSimulatorArm64ProcessResources") {
+    dependsOn(":shared:generateMRiosSimulatorArm64Main")
+    dependsOn(":shared:generateMRcommonMain")
+}
+tasks.named("iosX64ProcessResources") {
+    dependsOn(":shared:generateMRiosX64Main")
+    dependsOn(":shared:generateMRcommonMain")
 }

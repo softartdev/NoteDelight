@@ -11,6 +11,7 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(11)
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
@@ -76,7 +77,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
