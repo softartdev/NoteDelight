@@ -78,7 +78,7 @@ fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
 @Composable
 fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
     title = { Text(title) },
-    text = text?.let { { Text(it) } },
+    text = { Text(text.orEmpty()) },
     confirmButton = { Button(onClick = onConfirm) { Text(MR.strings.yes.composeLocalized()) } },
     dismissButton = { Button(onClick = onDismiss) { Text(MR.strings.cancel.composeLocalized()) } },
     onDismissRequest = onDismiss,
