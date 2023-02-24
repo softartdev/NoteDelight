@@ -3,6 +3,7 @@ buildscript {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
     dependencies {
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
@@ -12,7 +13,7 @@ buildscript {
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
         classpath(libs.mokoResources.generator)
-        classpath("org.jetbrains.compose:compose-gradle-plugin:1.3.0")
+        classpath("org.jetbrains.compose:compose-gradle-plugin:1.3.1-rc01")
     }
 }
 
@@ -22,6 +23,7 @@ allprojects {
         mavenCentral()
         maven(url = "https://jitpack.io")
         maven(url = "https://s3.amazonaws.com/repo.commonsware.com")
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
