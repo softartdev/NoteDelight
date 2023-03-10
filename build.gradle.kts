@@ -13,7 +13,7 @@ buildscript {
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.4")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
         classpath(libs.mokoResources.generator)
-        classpath("org.jetbrains.compose:compose-gradle-plugin:1.3.1-rc02")
+        classpath("org.jetbrains.compose:compose-gradle-plugin:1.4.0-alpha01-dev972")
     }
 }
 
