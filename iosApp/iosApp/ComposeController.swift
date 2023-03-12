@@ -14,10 +14,9 @@ struct ComposeController: UIViewControllerRepresentable {
     let skikoHelper: SkikoHelper
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        BackgroundCrashWorkaroundController(skikoHelper: skikoHelper)
+        skikoHelper.applicationUIViewController
     }
 
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        uiViewController.view.setNeedsLayout()
     }
 }

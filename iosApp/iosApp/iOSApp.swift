@@ -9,14 +9,8 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                ZStack {
-                    Color(UIColor.systemGray)
-                        .ignoresSafeArea()
-                    
-                    ComposeController(skikoHelper: appDelegate.skikoHelper)
-                }
-            }
+            ComposeController(skikoHelper: appDelegate.skikoHelper)
+                .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
         }
     }
 }
