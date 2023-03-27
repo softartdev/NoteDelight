@@ -176,7 +176,7 @@ sqldelight {
 //        linkSqlite = false
     }
 }
-//TODO try to remove after update moko-resources version > 0.20.1
+//TODO try to remove after update moko-resources version > 0.21.1
 tasks.named("jvmProcessResources") {
     dependsOn(":shared:generateMRjvmMain")
     dependsOn(":shared:generateMRcommonMain")

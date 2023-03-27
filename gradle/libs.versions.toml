@@ -10,11 +10,11 @@ androidxSqlite = "2.3.1"
 saferoom = "1.3.0"
 androidSqlCipher = "4.5.3"
 decompose = "1.0.0-compose-experimental"
-koin = "3.3.3"
+koin = "3.4.0"
 kotlinx-datetime = "0.4.0"
 napier = "2.6.1"
-mokoResources = "0.20.1"
-materialThemePrefs = "0.4.7"
+mokoResources = "0.21.1"
+materialThemePrefs = "0.4.8"
 androidxActivityCompose = "1.7.0"
 androidxCoreSplashscreen = "1.0.0"
 androidxLegacySupport = "1.0.0"
@@ -27,7 +27,7 @@ androidxTest = "1.5.2"
 androidxTestOrchestrator = "1.4.2"
 googleAndroidMaterial = "1.8.0"
 googleAndroidGmsOss = "17.0.0"
-firebase = "31.2.3"
+firebase = "31.3.0"
 leakCanary = "2.10"
 junit = "4.13.2"
 mockito = "5.2.0"
@@ -62,7 +62,7 @@ decompose-extComposeJb = { module = "com.arkivanov.decompose:extensions-compose-
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-jvm = { module = "io.insert-koin:koin-core-jvm", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.2" } #TODO use version.ref = "koin" when 3.4.2 is released
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.3" } #TODO use version.ref = "koin" when 3.4.3 is released
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
