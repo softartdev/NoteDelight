@@ -8,7 +8,6 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
-import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.R
@@ -49,7 +48,7 @@ class SettingsPasswordTest {
 
     @Test
     fun settingPasswordTest() {
-        composeTestRule.onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.settings))
             .assertIsDisplayed()
             .performClick()
 
@@ -124,7 +123,7 @@ class SettingsPasswordTest {
             .assertIsToggleable()
             .assertIsOn()
 
-        composeTestRule.onNodeWithText(text = MR.strings.pref_title_set_password.contextLocalized())
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_set_password))
             .assertIsDisplayed()
             .performClick()
 

@@ -17,7 +17,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -30,6 +29,7 @@ import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
 import com.softartdev.themepref.ThemePreferenceItem
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun SettingsScreen(
@@ -72,7 +72,7 @@ fun SettingsScreenBody(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.settings.composeLocalized()) },
+            title = { Text(stringResource(MR.strings.settings)) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
@@ -87,22 +87,22 @@ fun SettingsScreenBody(
     Box {
         Column {
             if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
-            PreferenceCategory(MR.strings.theme.composeLocalized(), Icons.Default.Brightness4)
+            PreferenceCategory(stringResource(MR.strings.theme), Icons.Default.Brightness4)
             ThemePreferenceItem()
-            PreferenceCategory(MR.strings.security.composeLocalized(), Icons.Default.Security)
+            PreferenceCategory(stringResource(MR.strings.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {
                     contentDescription = MR.strings.pref_title_enable_encryption.contextLocalized()
                     toggleableState = ToggleableState(encryptionState.value)
                 },
-                title = MR.strings.pref_title_enable_encryption.composeLocalized(),
+                title = stringResource(MR.strings.pref_title_enable_encryption),
                 vector = Icons.Default.Lock,
                 onClick = { changeEncryption(!encryptionState.value) }
             ) {
                 Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
             }
             Preference(
-                title = MR.strings.pref_title_set_password.composeLocalized(),
+                title = stringResource(MR.strings.pref_title_set_password),
                 vector = Icons.Default.Password,
                 onClick = changePassword
             )

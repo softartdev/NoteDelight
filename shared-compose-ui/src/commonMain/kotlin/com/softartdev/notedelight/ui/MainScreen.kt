@@ -9,12 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun MainScreen(
@@ -40,10 +40,10 @@ fun MainScreen(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.app_name.composeLocalized()) },
+            title = { Text(stringResource(MR.strings.app_name)) },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = MR.strings.settings.composeLocalized())
+                    Icon(Icons.Default.Settings, contentDescription = stringResource(MR.strings.settings))
                 }
             })
     }, content = {
@@ -57,7 +57,7 @@ fun MainScreen(
             is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
         }
     }, floatingActionButton = {
-        val text = MR.strings.create_note.composeLocalized()
+        val text = stringResource(MR.strings.create_note)
         ExtendedFloatingActionButton(
             text = { Text(text) },
             onClick = { onItemClicked(0) },

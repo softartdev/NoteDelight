@@ -9,7 +9,6 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.R
@@ -59,7 +58,7 @@ class FlowAfterCryptTest {
     fun flowAfterCryptTest() {
         //main
         composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
+            .onNodeWithContentDescription(label = MR.strings.settings.getString(context))
             .assertIsDisplayed()
             .performClick()
         //settings
@@ -121,7 +120,7 @@ class FlowAfterCryptTest {
         composeTestRule.onNodeWithContentDescription(label = titleText).assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
+            .onNodeWithContentDescription(label = MR.strings.settings.getString(context))
             .assertIsDisplayed()
             .performClick()
         //settings

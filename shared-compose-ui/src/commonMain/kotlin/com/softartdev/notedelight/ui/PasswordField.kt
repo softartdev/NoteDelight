@@ -16,10 +16,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 
 private const val PASSWORD_LABEL_TAG = "PASSWORD_LABEL_TAG"
 private const val PASSWORD_VISIBILITY_TAG = "PASSWORD_VISIBILITY_TAG"
@@ -43,9 +43,9 @@ fun rememberTagTriple(desc: String): Triple<String, String, String> =
 fun PasswordField(
     modifier: Modifier = Modifier,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.composeLocalized(),
+    label: String = stringResource(MR.strings.enter_password),
     isError: Boolean = true,
-    contentDescription: String = MR.strings.enter_password.composeLocalized(),
+    contentDescription: String = stringResource(MR.strings.enter_password),
 ) {
     val labelState by remember(label, isError) { mutableStateOf(label) } // workaround for ui-tests
     val (labelTag, visibilityTag, fieldTag) = rememberTagTriple(contentDescription)

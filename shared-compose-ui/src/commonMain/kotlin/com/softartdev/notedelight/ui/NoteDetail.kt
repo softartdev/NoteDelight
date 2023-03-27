@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.composeLocalized
 import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.RootComponent
@@ -25,6 +24,7 @@ import com.softartdev.notedelight.ui.dialog.showSaveChanges
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
 import com.softartdev.themepref.PreferableMaterialTheme
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
 @Composable
@@ -119,13 +119,13 @@ fun NoteDetailBody(
             },
             actions = {
                 IconButton(onClick = { onSaveClick(titleState.value, textState.value) }) {
-                    Icon(Icons.Default.Save, contentDescription = MR.strings.action_save_note.composeLocalized())
+                    Icon(Icons.Default.Save, contentDescription = stringResource(MR.strings.action_save_note))
                 }
                 IconButton(onClick = onEditClick) {
-                    Icon(Icons.Default.Title, contentDescription = MR.strings.action_edit_title.composeLocalized())
+                    Icon(Icons.Default.Title, contentDescription = stringResource(MR.strings.action_edit_title))
                 }
                 IconButton(onClick = onDeleteClick) {
-                    Icon(Icons.Default.Delete, contentDescription = MR.strings.action_delete_note.composeLocalized())
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(MR.strings.action_delete_note))
                 }
             }
         )
@@ -137,7 +137,7 @@ fun NoteDetailBody(
                 value = textState.value,
                 onValueChange = { textState.value = it },
                 modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
-                label = { Text(MR.strings.type_text.composeLocalized()) },
+                label = { Text(stringResource(MR.strings.type_text)) },
             )
         }
         LocalThemePrefs.current.showDialogIfNeed()

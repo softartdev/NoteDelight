@@ -18,7 +18,6 @@ import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.util.SimpleDateFormat
 
-
 @Composable
 fun NoteItem(
     note: Note,

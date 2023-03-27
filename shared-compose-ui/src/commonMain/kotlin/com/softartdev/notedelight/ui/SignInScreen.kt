@@ -6,13 +6,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
 import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
@@ -20,7 +21,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     DisposableEffect(signInViewModel) {
         onDispose(signInViewModel::onCleared)
     }
-    var label = MR.strings.enter_password.composeLocalized()
+    var labelResource by remember { mutableStateOf(MR.strings.enter_password) }
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
@@ -28,11 +29,11 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
         is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
         is SignInResult.NavMain -> navMain()
         is SignInResult.ShowEmptyPassError -> {
-            label = MR.strings.empty_password.composeLocalized()
+            labelResource = MR.strings.empty_password
             error = true
         }
         is SignInResult.ShowIncorrectPassError -> {
-            label = MR.strings.incorrect_password.composeLocalized()
+            labelResource = MR.strings.incorrect_password
             error = true
         }
         is SignInResult.ShowError -> dialogHolder.showError(signInResult.error.message)
@@ -40,7 +41,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     SignInScreenBody(
         showLoaing = signInResultState.value is SignInResult.ShowProgress,
         passwordState = passwordState,
-        label = label,
+        labelResource = labelResource,
         isError = error,
     ) { signInViewModel.signIn(pass = passwordState.value) }
 }
@@ -49,35 +50,36 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
 fun SignInScreenBody(
     showLoaing: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = MR.strings.enter_password.composeLocalized(),
+    labelResource: StringResource = MR.strings.enter_password,
     isError: Boolean = false,
     onSignInClick: () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(MR.strings.app_name.composeLocalized()) },
+            title = { Text(text = stringResource(MR.strings.app_name)) },
         )
     }
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(all = 16.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 16.dp)
     ) {
         Column {
             if (showLoaing) LinearProgressIndicator()
             PasswordField(
                 modifier = Modifier.fillMaxWidth(),
                 passwordState = passwordState,
-                label = label,
+                label = stringResource(labelResource),
                 isError = isError,
-                contentDescription = MR.strings.enter_password.composeLocalized()
+                contentDescription = stringResource(MR.strings.enter_password)
             )
             Button(
                 onClick = onSignInClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp)
-            ) { Text(MR.strings.sign_in.composeLocalized()) }
+            ) { Text(text = stringResource(MR.strings.sign_in)) }
         }
         LocalThemePrefs.current.showDialogIfNeed()
     }

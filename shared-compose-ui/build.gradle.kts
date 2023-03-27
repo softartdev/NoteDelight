@@ -33,20 +33,19 @@ kotlin {
                 implementation(libs.decompose)
                 implementation(libs.decompose.extComposeJb)
                 implementation(libs.koin.core)
+                api(libs.mokoResources.compose)
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation(libs.koin.androidx.compose)
                 implementation(project(":shared-jvm-util"))
-                api(libs.mokoResources.compose)
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation(libs.koin.core.jvm)
                 implementation(project(":shared-jvm-util"))
-                api(libs.mokoResources.compose)
             }
         }
         val jvmTest by getting {

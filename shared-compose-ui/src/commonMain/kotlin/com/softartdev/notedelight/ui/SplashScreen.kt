@@ -12,13 +12,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.painterResource
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
+import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
 fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {

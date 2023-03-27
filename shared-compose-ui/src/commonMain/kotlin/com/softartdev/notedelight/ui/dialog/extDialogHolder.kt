@@ -7,7 +7,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.composeLocalized
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
@@ -19,6 +18,7 @@ import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.themepref.AlertDialog
 import com.softartdev.themepref.DialogHolder
+import dev.icerock.moko.resources.compose.stringResource
 
 fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
     val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
@@ -69,7 +69,7 @@ fun DialogHolder.showError(message: String?) = showDialog {
 
 @Composable
 fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
-    title = MR.strings.error_title.composeLocalized(),
+    title = stringResource(MR.strings.error_title),
     text = message,
     onConfirm = dismissDialog,
     onDismiss = dismissDialog
@@ -79,8 +79,8 @@ fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
 fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
     title = { Text(title) },
     text = { Text(text.orEmpty()) },
-    confirmButton = { Button(onClick = onConfirm) { Text(MR.strings.yes.composeLocalized()) } },
-    dismissButton = { Button(onClick = onDismiss) { Text(MR.strings.cancel.composeLocalized()) } },
+    confirmButton = { Button(onClick = onConfirm) { Text(stringResource(MR.strings.yes)) } },
+    dismissButton = { Button(onClick = onDismiss) { Text(stringResource(MR.strings.cancel)) } },
     onDismissRequest = onDismiss,
 )
 
