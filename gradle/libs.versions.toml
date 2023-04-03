@@ -33,7 +33,7 @@ junit = "4.13.2"
 mockito = "5.2.0"
 turbine = "0.12.3"
 espresso = "3.5.1"
-desugar = "2.0.2"
+desugar = "2.0.3"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
