@@ -176,16 +176,3 @@ sqldelight {
 //        linkSqlite = false
     }
 }
-//TODO try to remove after update moko-resources version > 0.21.1
-tasks.named("jvmProcessResources") {
-    dependsOn(":shared:generateMRjvmMain")
-    dependsOn(":shared:generateMRcommonMain")
-}
-tasks.named("iosSimulatorArm64ProcessResources") {
-    dependsOn(":shared:generateMRiosSimulatorArm64Main")
-    dependsOn(":shared:generateMRcommonMain")
-}
-tasks.named("iosX64ProcessResources") {
-    dependsOn(":shared:generateMRiosX64Main")
-    dependsOn(":shared:generateMRcommonMain")
-}
