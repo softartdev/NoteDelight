@@ -11,7 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
-import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.R
 import com.softartdev.notedelight.shared.base.IdlingResource
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder

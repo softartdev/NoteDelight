@@ -3,12 +3,19 @@ package com.softartdev.notedelight.ui
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.printToLog
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import com.softartdev.notedelight.MainActivity
-import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.R
 import com.softartdev.notedelight.shared.base.IdlingResource
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
@@ -17,7 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import java.util.*
+import java.util.UUID
 
 class EditTitleTest {
 

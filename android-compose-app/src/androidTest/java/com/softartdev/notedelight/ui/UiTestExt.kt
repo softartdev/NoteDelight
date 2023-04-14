@@ -1,9 +1,14 @@
 package com.softartdev.notedelight.ui
 
 import android.widget.Toast
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ComposeTimeoutException
+import androidx.compose.ui.test.IdlingResource
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
 import io.github.aakira.napier.Napier
 

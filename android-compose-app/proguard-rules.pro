@@ -20,3 +20,6 @@
 -keepclassmembers class net.sqlcipher.database.SQLiteCompiledSql { *; }
 -keepclassmembers class net.sqlcipher.database.SQLiteQuery { *; }
 -keepclassmembers class net.sqlcipher.database.SQLiteStatement { *; }
+
+-dontwarn kotlinx.serialization.KSerializer
+-dontwarn kotlinx.serialization.Serializable

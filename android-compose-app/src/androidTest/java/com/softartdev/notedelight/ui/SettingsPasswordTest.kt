@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
-import com.softartdev.notedelight.R
+import com.softartdev.notedelight.shared.R
 import com.softartdev.notedelight.shared.base.IdlingResource.countingIdlingResource
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
