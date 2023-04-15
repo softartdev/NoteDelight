@@ -28,10 +28,10 @@ jobs:
           path: ~/.gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
-      - name: Set up JDK 15
+      - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
-          java-version: 15
+          java-version: 17
       - name: Packaging
         run: ./gradlew package
       - name: Archive ui-tests-output artifacts
