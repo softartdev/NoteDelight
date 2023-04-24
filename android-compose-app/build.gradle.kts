@@ -1,4 +1,4 @@
-@file:Suppress("UnstableApiUsage", "OPT_IN_IS_NOT_ENABLED")
+@file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
@@ -68,7 +68,7 @@ dependencies {
     implementation(compose.material)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.2")
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
