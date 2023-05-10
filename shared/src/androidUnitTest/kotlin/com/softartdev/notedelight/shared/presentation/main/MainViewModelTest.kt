@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.presentation.main
 
+import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.NoteUseCase
@@ -9,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import net.sqlcipher.database.SQLiteException
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
