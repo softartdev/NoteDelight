@@ -30,7 +30,7 @@ firebase = "32.0.0"
 leakCanary = "2.10"
 junit = "4.13.2"
 mockito = "5.2.0"
-turbine = "0.12.3"
+turbine = "0.13.0"
 espresso = "3.5.1"
 desugar = "2.0.3"
 
