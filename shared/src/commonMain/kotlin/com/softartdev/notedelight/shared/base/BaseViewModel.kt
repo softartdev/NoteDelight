@@ -16,7 +16,7 @@ abstract class BaseViewModel<T> : KmmViewModel() {
             useIdling: Boolean = true,
             block: suspend CoroutineScope.() -> T
     ) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (useIdling) {
                     IdlingResource.increment()

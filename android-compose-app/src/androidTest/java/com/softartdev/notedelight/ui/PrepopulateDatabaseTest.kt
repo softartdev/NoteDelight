@@ -8,7 +8,6 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
@@ -18,6 +17,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.koin.java.KoinJavaComponent
+import kotlin.time.Duration.Companion.minutes
 
 @FlakyTest
 @RunWith(AndroidJUnit4::class)
@@ -33,8 +33,7 @@ class PrepopulateDatabaseTest {
     private val noteUseCase: NoteUseCase by KoinJavaComponent.inject(NoteUseCase::class.java)
 
     @Test
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun prepopulateDatabase() = runTest {
+    fun prepopulateDatabase() = runTest(timeout = 1.minutes) {
         noteUseCase.getNotes().test {
             var notes: List<Note> = awaitItem()
             assertEquals(0, notes.size)
