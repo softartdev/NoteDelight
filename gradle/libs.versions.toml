@@ -9,6 +9,7 @@ sqlDelight = "1.5.5"
 androidxSqlite = "2.3.1"
 saferoom = "1.3.0"
 androidSqlCipher = "4.5.4"
+sqlcipherKtnPod = "1.3"
 decompose = "2.0.0-compose-experimental-alpha-02"
 koin = "3.4.1"
 kotlinx-datetime = "0.4.0"
@@ -54,6 +55,8 @@ androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", versi
 commonsware-saferoom = { module = "com.commonsware.cwac:saferoom.x", version.ref = "saferoom" }
 
 android-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidSqlCipher" }
+
+sqlcipherKtnPod = { module = "io.github.softartdev:sqlcipher-ktn-pod", version.ref = "sqlcipherKtnPod" }
 
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extComposeJb = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }

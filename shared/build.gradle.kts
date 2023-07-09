@@ -116,7 +116,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+                api(libs.sqlcipherKtnPod)
             }
         }
         val iosX64Test by getting
@@ -155,7 +155,7 @@ kotlin {
         framework {
             isStatic = true
             export(libs.mokoResources)
-            export("io.github.softartdev:sqlcipher-ktn-pod:1.3")
+            export(libs.sqlcipherKtnPod)
         }
     }
     targets.withType<KotlinNativeTarget> {
