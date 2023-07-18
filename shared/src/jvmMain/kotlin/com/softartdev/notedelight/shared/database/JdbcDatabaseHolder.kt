@@ -1,10 +1,10 @@
 package com.softartdev.notedelight.shared.database
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.squareup.sqldelight.db.SqlCursor
-import com.squareup.sqldelight.db.use
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
-import java.util.*
+import io.github.aakira.napier.Napier
+import java.sql.SQLException
+import java.util.Properties
 
 class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
     override val driver = JdbcSqliteDriver(
@@ -16,18 +16,24 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
 
     private var currentVersion: Int
         get() {
-            val sqlCursor: SqlCursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-            val ver: Long? = sqlCursor.use { it.getLong(0) }
-            return ver!!.toInt()
+            val queryResult = driver.execute(null, "PRAGMA user_version;", 0, null)
+            val ver: Long = queryResult.value
+            return ver.toInt()
         }
-        set(value) = driver.execute(null, "PRAGMA user_version = $value;", 0, null)
+        set(value) {
+            driver.execute(null, "PRAGMA user_version = $value;", 0, null)
+        }
 
     init {
         if (currentVersion == 0) {
-            NoteDb.Schema.create(driver)
+            try {
+                NoteDb.Schema.create(driver)
+            } catch (sqlException: SQLException) {
+                Napier.e("Error creating database", sqlException)
+            }
             currentVersion = 1
         } else if (NoteDb.Schema.version > currentVersion) {
-            NoteDb.Schema.migrate(driver, currentVersion, NoteDb.Schema.version)
+            NoteDb.Schema.migrate(driver, currentVersion.toLong(), NoteDb.Schema.version)
         }
     }
 

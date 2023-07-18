@@ -1,9 +1,9 @@
 package com.softartdev.notedelight.shared.database
 
 import com.softartdev.notedelight.shared.db.NoteQueries
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.TransactionWithReturn
-import com.squareup.sqldelight.TransactionWithoutReturn
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransactionWithReturn
+import app.cash.sqldelight.TransactionWithoutReturn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext

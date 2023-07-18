@@ -8,6 +8,8 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.database.DatabaseRepo.Companion.DB_NAME
@@ -18,8 +20,6 @@ import com.softartdev.notedelight.shared.database.TestSchema.thirdNote
 import com.softartdev.notedelight.shared.database.createQueryWrapper
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

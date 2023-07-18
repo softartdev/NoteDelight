@@ -4,15 +4,16 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 
 class AndroidDatabaseHolder(
     context: Context,
     passphrase: CharSequence,
-    schema: SqlDriver.Schema = NoteDb.Schema,
+    schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema,
     name: String? = DatabaseRepo.DB_NAME
 ) : DatabaseHolder() {
     private val openHelper: SupportSQLiteOpenHelper = SafeHelperFactory

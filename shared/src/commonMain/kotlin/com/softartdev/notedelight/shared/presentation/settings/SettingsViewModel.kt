@@ -4,8 +4,8 @@ import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
 
 
-class SettingsViewModel (
-        private val cryptUseCase: CryptUseCase
+class SettingsViewModel(
+    private val cryptUseCase: CryptUseCase
 ) : BaseViewModel<SecurityResult>() {
 
     override val loadingResult: SecurityResult = SecurityResult.Loading
@@ -26,11 +26,17 @@ class SettingsViewModel (
     }
 
     fun changePassword() = launch {
-            when(cryptUseCase.dbIsEncrypted()) {
-                true -> SecurityResult.ChangePasswordDialog
-                false -> SecurityResult.SetPasswordDialog
-            }
+        when (cryptUseCase.dbIsEncrypted()) {
+            true -> SecurityResult.ChangePasswordDialog
+            false -> SecurityResult.SetPasswordDialog
         }
+    }
 
-    override fun errorResult(throwable: Throwable): SecurityResult = SecurityResult.Error(throwable.message)
+    fun showCipherVersion() = launch {
+        val cipherVersion: String? = cryptUseCase.dbCipherVersion()
+        SecurityResult.SnackBar(cipherVersion)
+    }
+
+    override fun errorResult(throwable: Throwable): SecurityResult =
+        SecurityResult.Error(throwable.message)
 }

@@ -6,7 +6,9 @@ plugins {
     kotlin("native.cocoapods")
     id("org.jetbrains.compose")
 }
-
+compose {
+    kotlinCompilerPlugin.set("1.4.8")
+}
 kotlin {
     iosX64()
     iosArm64()
@@ -19,6 +21,7 @@ kotlin {
         version = "1.0"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
+        pod("SQLCipher", "~> 4.5.2")
         framework {
             baseName = "iosComposeKit"
             embedBitcodeMode.set(BitcodeEmbeddingMode.DISABLE)
@@ -60,7 +63,6 @@ kotlin {
         binaries.all {
             // TODO: the current compose binary surprises LLVM, so disable checks for now.
             freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
-            linkerOpts += "-lsqlite3"
         }
     }
 }

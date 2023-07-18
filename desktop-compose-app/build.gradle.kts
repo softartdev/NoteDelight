@@ -36,13 +36,16 @@ kotlin {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.softartdev.notedelight"
-            packageVersion = "1.0.0"
+compose {
+    kotlinCompilerPlugin.set("1.4.8")
+    desktop {
+        application {
+            mainClass = "MainKt"
+            nativeDistributions {
+                targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+                packageName = "com.softartdev.notedelight"
+                packageVersion = "1.0.0"
+            }
         }
     }
 }

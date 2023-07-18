@@ -4,6 +4,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 rootProject.name = "NoteDelight"

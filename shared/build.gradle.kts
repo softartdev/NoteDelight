@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    id("com.squareup.sqldelight")
+    id("app.cash.sqldelight")
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
 }
@@ -116,7 +116,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sqlDelight.native)
-                api(libs.sqlcipherKtnPod)
+//                api(libs.sqlcipherKtnPod)
             }
         }
         val iosX64Test by getting
@@ -151,11 +151,11 @@ kotlin {
         ios.deploymentTarget = "14.0"
 //        podfile = project.file("../iosApp/Podfile")
 //        useLibraries()
-//        pod("SQLCipher", "~> 4.5.2")
+        pod("SQLCipher", "~> 4.5.2")
         framework {
             isStatic = true
             export(libs.mokoResources)
-            export(libs.sqlcipherKtnPod)
+//            export(libs.sqlcipherKtnPod)
         }
     }
     targets.withType<KotlinNativeTarget> {
@@ -171,8 +171,10 @@ kotlin {
     }
 }
 sqldelight {
-    database("NoteDb") {
-        packageName = "com.softartdev.notedelight.shared.db"
-//        linkSqlite = false
+    databases {
+        create("NoteDb") {
+            packageName.set("com.softartdev.notedelight.shared.db")
+        }
     }
+    linkSqlite.set(false)
 }

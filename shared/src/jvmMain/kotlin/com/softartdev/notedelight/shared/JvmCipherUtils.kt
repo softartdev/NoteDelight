@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared
 
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import java.io.File
 import java.io.FileNotFoundException
 import java.sql.Connection

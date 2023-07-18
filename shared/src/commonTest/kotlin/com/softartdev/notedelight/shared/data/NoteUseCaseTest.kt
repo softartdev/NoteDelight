@@ -3,7 +3,6 @@ package com.softartdev.notedelight.shared.data
 import com.softartdev.notedelight.shared.BaseTest
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
-import com.squareup.sqldelight.internal.Atomic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -47,14 +46,9 @@ class NoteUseCaseTest : BaseTest() {
 
     @Test
     fun launchNotes() {
-        val count = Atomic(0)
-        noteUseCase.launchNotes(onSuccess = { actNotes ->
-            count.set(count.get() + 1)
-            println("launchNotes - #${count.get()} onSuccess = $actNotes")
-            if (actNotes.isNotEmpty()) {
-                println("launchNotes - #${count.get()} assertEquals")
-                assertEquals(notes, actNotes)
-            }
+        noteUseCase.launchNotes(onSuccess = successLambda@{ actNotes ->
+            if (actNotes.isEmpty()) return@successLambda
+            assertEquals(notes, actNotes)
         }, onFailure = { throwable -> throw throwable })
     }
 

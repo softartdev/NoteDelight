@@ -6,5 +6,6 @@ sealed class SecurityResult {
     object PasswordDialog : SecurityResult()
     object SetPasswordDialog : SecurityResult()
     object ChangePasswordDialog : SecurityResult()
+    data class SnackBar(val message: String?) : SecurityResult()
     data class Error(val message: String?) : SecurityResult()
 }

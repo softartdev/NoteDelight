@@ -4,6 +4,7 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
     dependencies {
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
@@ -24,6 +25,7 @@ allprojects {
         maven(url = "https://jitpack.io")
         maven(url = "https://s3.amazonaws.com/repo.commonsware.com")
         maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 

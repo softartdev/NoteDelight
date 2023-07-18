@@ -1,4 +1,3 @@
-@file:Suppress("OPT_IN_IS_NOT_ENABLED")
 @file:OptIn(ExperimentalComposeLibrary::class)
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
@@ -9,7 +8,9 @@ plugins {
     id("org.jetbrains.compose")
     id("kotlin-parcelize")
 }
-
+compose {
+    kotlinCompilerPlugin.set("1.4.8")
+}
 kotlin {
     jvmToolchain(11)
     jvm {

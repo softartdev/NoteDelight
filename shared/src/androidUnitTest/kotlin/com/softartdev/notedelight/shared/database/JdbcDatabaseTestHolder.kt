@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.database
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 
 class JdbcDatabaseTestHolder: DatabaseHolder() {
     override val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)

@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.database
 
-import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.IosCipherUtils
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
 import com.softartdev.notedelight.shared.db.NoteQueries
 
@@ -20,10 +20,7 @@ class IosDbRepo : DatabaseRepo() {
             return dbHolder!!
         }
         val passkey = if (passphrase.isEmpty()) null else passphrase.toString()
-        dbHolder = IosDatabaseHolder(
-            key = passkey,
-            rekey = passkey
-        )
+        dbHolder = IosDatabaseHolder(key = passkey)
         return dbHolder!!
     }
 
@@ -36,6 +33,7 @@ class IosDbRepo : DatabaseRepo() {
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
         dbHolder = IosDatabaseHolder(key = oldPass.toString(), rekey = newPass.toString())
+        dbHolder?.driver?.execute(null, "VACUUM;", 0)
     }
 
     override fun encrypt(newPass: CharSequence) {

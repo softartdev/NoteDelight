@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.date
 
-import com.squareup.sqldelight.ColumnAdapter
+import app.cash.sqldelight.ColumnAdapter
 import kotlinx.datetime.*
 
 class DateAdapter : ColumnAdapter<LocalDateTime, Long> {

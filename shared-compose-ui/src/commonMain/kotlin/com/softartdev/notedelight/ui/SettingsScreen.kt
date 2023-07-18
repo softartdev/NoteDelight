@@ -26,16 +26,19 @@ import com.softartdev.notedelight.ui.dialog.showChangePassword
 import com.softartdev.notedelight.ui.dialog.showConfirmPassword
 import com.softartdev.notedelight.ui.dialog.showEnterPassword
 import com.softartdev.notedelight.ui.dialog.showError
+import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.themepref.DialogHolder
 import com.softartdev.themepref.LocalThemePrefs
 import com.softartdev.themepref.ThemePreferenceItem
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
     settingsViewModel: SettingsViewModel,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val securityResultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
     DisposableEffect(settingsViewModel) {
         settingsViewModel.checkEncryption()
@@ -43,14 +46,19 @@ fun SettingsScreen(
     }
     val encryptionState = remember { mutableStateOf(false) }
     val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
+    val scaffoldState = rememberScaffoldState()
     when (val securityResult = securityResultState.value) {
         is SecurityResult.Loading -> Unit
         is SecurityResult.EncryptEnable -> {
             encryptionState.value = securityResult.encryption
         }
+
         is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword(doAfterDismiss = settingsViewModel::checkEncryption)
         is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword(doAfterDismiss = settingsViewModel::checkEncryption)
         is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword(doAfterDismiss = settingsViewModel::checkEncryption)
+        is SecurityResult.SnackBar -> coroutineScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(message = securityResult.message.toString())
+        }
         is SecurityResult.Error -> dialogHolder.showError(securityResult.message)
     }
     SettingsScreenBody(
@@ -59,6 +67,8 @@ fun SettingsScreen(
         encryptionState = encryptionState,
         changeEncryption = settingsViewModel::changeEncryption,
         changePassword = settingsViewModel::changePassword,
+        showCipherVersion = settingsViewModel::showCipherVersion,
+        settingsScaffoldState = scaffoldState
     )
 }
 
@@ -69,6 +79,8 @@ fun SettingsScreenBody(
     encryptionState: MutableState<Boolean> = mutableStateOf(false),
     changeEncryption: (Boolean) -> Unit = {},
     changePassword: () -> Unit = {},
+    showCipherVersion: () -> Unit = {},
+    settingsScaffoldState: ScaffoldState = rememberScaffoldState(),
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -82,36 +94,46 @@ fun SettingsScreenBody(
                 }
             },
         )
-    }
-) {
-    Box {
-        Column {
-            if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
-            PreferenceCategory(stringResource(MR.strings.theme), Icons.Default.Brightness4)
-            ThemePreferenceItem()
-            PreferenceCategory(stringResource(MR.strings.security), Icons.Default.Security)
-            Preference(
-                modifier = Modifier.semantics {
-                    contentDescription = MR.strings.pref_title_enable_encryption.contextLocalized()
-                    toggleableState = ToggleableState(encryptionState.value)
-                },
-                title = stringResource(MR.strings.pref_title_enable_encryption),
-                vector = Icons.Default.Lock,
-                onClick = { changeEncryption(!encryptionState.value) }
-            ) {
-                Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
+    },
+    content = {
+        Box {
+            Column {
+                if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
+                PreferenceCategory(stringResource(MR.strings.theme), Icons.Default.Brightness4)
+                ThemePreferenceItem()
+                PreferenceCategory(stringResource(MR.strings.security), Icons.Default.Security)
+                Preference(
+                    modifier = Modifier.semantics {
+                        contentDescription = MR.strings.pref_title_enable_encryption.contextLocalized()
+                        toggleableState = ToggleableState(encryptionState.value)
+                    },
+                    title = stringResource(MR.strings.pref_title_enable_encryption),
+                    vector = Icons.Default.Lock,
+                    onClick = { changeEncryption(!encryptionState.value) }
+                ) {
+                    Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
+                }
+                Preference(
+                    title = stringResource(MR.strings.pref_title_set_password),
+                    vector = Icons.Default.Password,
+                    onClick = changePassword
+                )
+                Preference(
+                    title = stringResource(MR.strings.pref_title_check_cipher_version),
+                    vector = Icons.Filled.FileLock,
+                    onClick = showCipherVersion
+                )
+                Spacer(Modifier.height(32.dp))
+                ListItem(
+                    text = {},
+                    icon = {},
+                    secondaryText = { Text(createMultiplatformMessage()) })
             }
-            Preference(
-                title = stringResource(MR.strings.pref_title_set_password),
-                vector = Icons.Default.Password,
-                onClick = changePassword
-            )
-            Spacer(Modifier.height(32.dp))
-            ListItem(text = {}, icon = {}, secondaryText = { Text(createMultiplatformMessage()) })
+            LocalThemePrefs.current.showDialogIfNeed()
         }
-        LocalThemePrefs.current.showDialogIfNeed()
-    }
-}
+    },
+    scaffoldState = settingsScaffoldState,
+)
 
 @Composable
 fun PreferenceCategory(title: String, vector: ImageVector) = ListItem(

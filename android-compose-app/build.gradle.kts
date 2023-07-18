@@ -13,7 +13,9 @@ plugins {
     id("com.google.firebase.crashlytics")
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
-
+compose {
+    kotlinCompilerPlugin.set("1.4.8")
+}
 android {
     namespace = "com.softartdev.notedelight"
     compileSdk = libs.versions.compileSdk.get().toInt()

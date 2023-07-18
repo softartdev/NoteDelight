@@ -32,6 +32,7 @@
 		757C9F71293CFA0200F37CC5 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C9F61293CFA0200F37CC5 /* SignInViewModel.swift */; };
 		757C9F73293DF64600F37CC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C9F72293DF64600F37CC5 /* AppDelegate.swift */; };
 		757C9F75293DF7FC00F37CC5 /* ComposeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C9F74293DF7FC00F37CC5 /* ComposeController.swift */; };
+		758ADF1F2A6356EB00B9CADA /* CipherChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */; };
 		BDBE60AC8D1BDF9F0735AF49 /* Pods_oldApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61F7B09D3DE6C3C0C3F6A025 /* Pods_oldApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,10 @@
 		757C9F61293CFA0200F37CC5 /* SignInViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		757C9F72293DF64600F37CC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		757C9F74293DF7FC00F37CC5 /* ComposeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeController.swift; sourceTree = "<group>"; };
+		758ADF0D2A6258A400B9CADA /* iosApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iosApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		758ADF0E2A6258A400B9CADA /* Note Delight Unit-Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Note Delight Unit-Tests-Bridging-Header.h"; sourceTree = "<group>"; };
+		758ADF0F2A6258A400B9CADA /* oldApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "oldApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CipherChecker.swift; sourceTree = "<group>"; };
 		8A9E88449BE549E547E57F76 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B895C121B756E73815F88CE2 /* Pods-oldApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oldApp.debug.xcconfig"; path = "Target Support Files/Pods-oldApp/Pods-oldApp.debug.xcconfig"; sourceTree = "<group>"; };
 		D7FD48404E9B0074884FCBF0 /* Pods-oldApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oldApp.release.xcconfig"; path = "Target Support Files/Pods-oldApp/Pods-oldApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -147,6 +152,9 @@
 				7555FF7C242A565900829871 /* Products */,
 				246F4278F0CB9E5E1153DA2B /* Pods */,
 				648F94B01095562B9D2B662C /* Frameworks */,
+				758ADF0D2A6258A400B9CADA /* iosApp-Bridging-Header.h */,
+				758ADF0E2A6258A400B9CADA /* Note Delight Unit-Tests-Bridging-Header.h */,
+				758ADF0F2A6258A400B9CADA /* oldApp-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +176,7 @@
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				757C9F72293DF64600F37CC5 /* AppDelegate.swift */,
 				757C9F74293DF7FC00F37CC5 /* ComposeController.swift */,
+				758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
 			);
 			path = iosApp;
@@ -313,6 +322,7 @@
 				757C9EBF293CE4F400F37CC5 /* Frameworks */,
 				757C9EC0293CE4F400F37CC5 /* Resources */,
 				757C9ED1293CECFA00F37CC5 /* Copy moko-resources */,
+				7010F72AEBB3205B75831522 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -335,13 +345,16 @@
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1430;
 					};
 					757153FE296AF3E300210F51 = {
 						CreatedOnToolsVersion = 14.2;
+						LastSwiftMigration = 1430;
 						TestTargetID = 7555FF7A242A565900829871;
 					};
 					757C9EC1293CE4F400F37CC5 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1430;
 					};
 				};
 			};
@@ -394,6 +407,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		7010F72AEBB3205B75831522 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-oldApp/Pods-oldApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-oldApp/Pods-oldApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-oldApp/Pods-oldApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7365685EF569139423BB2790 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -500,6 +530,7 @@
 			files = (
 				757C9F73293DF64600F37CC5 /* AppDelegate.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				758ADF1F2A6356EB00B9CADA /* CipherChecker.swift in Sources */,
 				757C9F75293DF7FC00F37CC5 /* ComposeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,6 +698,7 @@
 			baseConfigurationReference = D967D9A0A73422179C2CD9CA /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -682,7 +714,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -695,6 +727,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "NoteDelight: Development Profile";
+				SWIFT_OBJC_BRIDGING_HEADER = "iosApp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -705,6 +739,7 @@
 			baseConfigurationReference = 382AA2690E3C8D6A57C41D75 /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
@@ -720,7 +755,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -733,6 +768,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "NoteDelight: Distribution Profile";
+				SWIFT_OBJC_BRIDGING_HEADER = "iosApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -743,6 +779,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -753,6 +790,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.softartdev.Note-Delight-Unit-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Note Delight Unit-Tests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iosApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iosApp";
@@ -764,6 +803,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H7L7R3VNZ4;
@@ -773,6 +813,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.softartdev.Note-Delight-Unit-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Note Delight Unit-Tests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iosApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iosApp";
@@ -786,6 +827,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -816,6 +858,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.oldApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "oldApp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -828,6 +872,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"oldApp/Preview Content\"";
@@ -857,6 +902,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.softartdev.oldApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "oldApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

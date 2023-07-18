@@ -1,6 +1,6 @@
 CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
 CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/iosComposePod
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/../../ios-compose-kit/build/cocoapods/framework"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/SQLCipher" "${PODS_ROOT}/../../ios-compose-kit/build/cocoapods/framework"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 KOTLIN_PROJECT_PATH = :ios-compose-kit
 OTHER_LDFLAGS = $(inherited) -l"c++"

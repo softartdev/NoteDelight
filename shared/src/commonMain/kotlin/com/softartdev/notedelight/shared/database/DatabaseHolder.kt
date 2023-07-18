@@ -2,7 +2,7 @@ package com.softartdev.notedelight.shared.database
 
 import com.softartdev.notedelight.shared.db.NoteDb
 import com.softartdev.notedelight.shared.db.NoteQueries
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 
 abstract class DatabaseHolder {
