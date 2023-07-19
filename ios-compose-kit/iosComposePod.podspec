@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/iosComposeKit.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '14.1'
-    spec.dependency 'SQLCipher', '~> 4.5.2'
+    spec.dependency 'SQLCipher', '4.5.4'
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':ios-compose-kit',

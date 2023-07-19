@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "SQLCipher": [
-      "~> 4.5.2"
+      "4.5.4"
     ]
   },
   "pod_target_xcconfig": {

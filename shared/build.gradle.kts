@@ -151,7 +151,7 @@ kotlin {
         ios.deploymentTarget = "14.0"
 //        podfile = project.file("../iosApp/Podfile")
 //        useLibraries()
-        pod("SQLCipher", "~> 4.5.2")
+        pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
             isStatic = true
             export(libs.mokoResources)

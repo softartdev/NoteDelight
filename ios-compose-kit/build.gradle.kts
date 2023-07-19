@@ -21,7 +21,7 @@ kotlin {
         version = "1.0"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", "~> 4.5.2")
+        pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
             baseName = "iosComposeKit"
             embedBitcodeMode.set(BitcodeEmbeddingMode.DISABLE)

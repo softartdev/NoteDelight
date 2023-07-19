@@ -1,8 +1,8 @@
 PODS:
   - iosComposePod (1.0):
-    - SQLCipher (~> 4.5.2)
+    - SQLCipher (= 4.5.4)
   - shared (1.0):
-    - SQLCipher (~> 4.5.2)
+    - SQLCipher (= 4.5.4)
   - SQLCipher (4.5.4):
     - SQLCipher/standard (= 4.5.4)
   - SQLCipher/common (4.5.4)
@@ -24,10 +24,10 @@ EXTERNAL SOURCES:
     :path: "../shared/"
 
 SPEC CHECKSUMS:
-  iosComposePod: 51c78d1fc20db97320e3fc010a13ea3f27a4a8ae
-  shared: 4c6544be0672cdca0a256a0b3eaf4a18e4f19b37
+  iosComposePod: b70d469f7b5ee7518db3de99a90d8c08a0fef668
+  shared: 3a779943045d9383423361c97018d4877454c01d
   SQLCipher: 905b145f65f349f26da9e60a19901ad24adcd381
 
 PODFILE CHECKSUM: e032c127d1580b59bc0f1a6663a6fd8661e0d7d0
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
