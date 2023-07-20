@@ -42,6 +42,8 @@ jobs:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
           KEYCHAIN_NAME: app-signing
         run: fastlane setup_certificates_lane
+      - name: Pre-build with Gradle
+        run: ./gradlew :ios-compose-kit:linkPodReleaseFrameworkIosArm64
       - name: AppStore build lane with gym
         working-directory: ./iosApp
         run: fastlane appstore_build_gym_lane
