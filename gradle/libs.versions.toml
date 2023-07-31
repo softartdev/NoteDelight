@@ -65,7 +65,7 @@ decompose-extComposeJb = { module = "com.arkivanov.decompose:extensions-compose-
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-jvm = { module = "io.insert-koin:koin-core-jvm", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.5" } #TODO use version.ref = "koin" when 3.4.5 is released
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.6" } #TODO use version.ref = "koin" when 3.4.6 is released
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
