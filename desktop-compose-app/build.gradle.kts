@@ -40,7 +40,7 @@ compose {
     kotlinCompilerPlugin.set("1.4.8")
     desktop {
         application {
-            mainClass = "MainKt"
+            mainClass = "com.softartdev.notedelight.MainKt"
             nativeDistributions {
                 targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
                 packageName = "com.softartdev.notedelight"
