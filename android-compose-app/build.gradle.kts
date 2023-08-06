@@ -6,15 +6,15 @@ import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("org.jetbrains.compose")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.gms)
+    alias(libs.plugins.crashlytics)
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 compose {
-    kotlinCompilerPlugin.set("1.4.8")
+    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 android {
     namespace = "com.softartdev.notedelight"
@@ -45,6 +45,9 @@ android {
             signingConfig = signingConfigs.getByName("config")
         }
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
@@ -70,7 +73,7 @@ dependencies {
     implementation(compose.material)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.3")
+    debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.decompose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
@@ -81,7 +84,6 @@ dependencies {
     implementation(libs.leakCanary.plumber.android)
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
-    androidTestImplementation(project(":shared-android-test-util"))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)

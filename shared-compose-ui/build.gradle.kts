@@ -3,13 +3,13 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    id("org.jetbrains.compose")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.kotlin.parcelize)
 }
 compose {
-    kotlinCompilerPlugin.set("1.4.8")
+    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 kotlin {
     jvmToolchain(11)

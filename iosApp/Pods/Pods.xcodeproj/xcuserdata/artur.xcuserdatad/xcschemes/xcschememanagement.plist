@@ -9,22 +9,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-oldApp.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>SQLCipher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>iosComposePod.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>shared.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

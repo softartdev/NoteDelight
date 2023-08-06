@@ -7,11 +7,11 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
+import com.softartdev.notedelight.Encryptor
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.shared.R
 import com.softartdev.notedelight.shared.base.IdlingResource
-import com.softartdev.notedelight.shared.test.util.Encryptor
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
 import org.junit.After

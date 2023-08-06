@@ -3,9 +3,9 @@ package com.softartdev.notedelight.shared.presentation.signin
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.data.CryptUseCase
-import com.softartdev.notedelight.shared.test.util.MainDispatcherRule
-import com.softartdev.notedelight.shared.test.util.StubEditable
-import com.softartdev.notedelight.shared.test.util.anyObject
+import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
+import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.anyObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

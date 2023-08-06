@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.test.util
+package com.softartdev.notedelight.shared
 
 import org.mockito.Mockito
 

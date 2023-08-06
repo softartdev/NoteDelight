@@ -4,11 +4,11 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("app.cash.sqldelight")
-    id("com.android.library")
-    id("dev.icerock.mobile.multiplatform-resources")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.mokoResources)
 }
 version = "1.0"
 
@@ -61,6 +61,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.coroutines.core)
+                implementation(libs.sqlDelight.runtime)
                 implementation(libs.sqlDelight.coroutinesExt)
                 api(libs.kotlinx.datetime)
                 api(libs.napier)
@@ -97,7 +98,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation(project(":shared-android-test-util"))
                 implementation(libs.junit)
                 implementation(libs.coroutines.test)
                 implementation(libs.bundles.mockito)
