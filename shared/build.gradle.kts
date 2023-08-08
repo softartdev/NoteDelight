@@ -3,12 +3,12 @@
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX) {
-        kotlin("native.cocoapods")
-    }
-
+//    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX) {
+//        kotlin("native.cocoapods")
+//    }
     id("app.cash.sqldelight")
     id("com.android.library")
     id("dev.icerock.mobile.multiplatform-resources")
@@ -16,7 +16,6 @@ plugins {
 version = "1.0"
 
 android {
-
     compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
@@ -149,21 +148,21 @@ kotlin {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
     }
-    if ( OperatingSystem.current().isMacOsX) {
-        cocoapods {
-            summary = "Common library for the NoteDelight app"
-            homepage = "https://github.com/softartdev/NoteDelight"
-            ios.deploymentTarget = "14.0"
-//        podfile = project.file("../iosApp/Podfile")
-//        useLibraries()
-            pod("SQLCipher", libs.versions.iosSqlCipher.get())
-            framework {
-                isStatic = true
-                export(libs.mokoResources)
-//            export(libs.sqlcipherKtnPod)
-            }
-        }
-    }
+//    if ( OperatingSystem.current().isMacOsX) {//FIXME NOT WORK
+//        cocoapods {
+//            summary = "Common library for the NoteDelight app"
+//            homepage = "https://github.com/softartdev/NoteDelight"
+//            ios.deploymentTarget = "14.0"
+////        podfile = project.file("../iosApp/Podfile")
+////        useLibraries()
+//            pod("SQLCipher", libs.versions.iosSqlCipher.get())
+//            framework {
+//                isStatic = true
+//                export(libs.mokoResources)
+////            export(libs.sqlcipherKtnPod)
+//            }
+//        }
+//    }
 
     targets.withType<KotlinNativeTarget> {
         binaries.all {
