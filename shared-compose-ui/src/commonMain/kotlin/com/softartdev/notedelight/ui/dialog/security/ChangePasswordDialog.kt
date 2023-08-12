@@ -12,7 +12,6 @@ import com.softartdev.notedelight.shared.presentation.settings.security.change.C
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import com.softartdev.themepref.AlertDialog
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch

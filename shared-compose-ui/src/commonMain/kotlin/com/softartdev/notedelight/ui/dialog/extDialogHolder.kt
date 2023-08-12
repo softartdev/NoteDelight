@@ -3,6 +3,7 @@ package com.softartdev.notedelight.ui.dialog
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +17,6 @@ import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
-import com.softartdev.themepref.AlertDialog
 import com.softartdev.themepref.DialogHolder
 import dev.icerock.moko.resources.compose.stringResource
 
@@ -76,7 +76,12 @@ fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
 )
 
 @Composable
-fun ShowDialog(title: String, text: String?, onConfirm: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
+fun ShowDialog(
+    title: String,
+    text: String?,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) = AlertDialog(
     title = { Text(title) },
     text = { Text(text.orEmpty()) },
     confirmButton = { Button(onClick = onConfirm) { Text(stringResource(MR.strings.yes)) } },
