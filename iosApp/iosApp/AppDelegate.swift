@@ -10,26 +10,5 @@ import UIKit
 import iosComposeKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    
-    let skikoHelper = SkikoHelper()
-    
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
-        skikoHelper.appInit()
-        return true
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        skikoHelper.resumeLifecycle()
-    }
-    
-    func applicationWillResignActive(_ application: UIApplication) {
-        skikoHelper.stopLifecycle()
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        skikoHelper.destroyLifecycle()
-    }
+    let rootHolder: RootHolder = RootHolder()
 }

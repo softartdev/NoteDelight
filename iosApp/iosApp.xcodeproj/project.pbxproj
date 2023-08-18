@@ -15,6 +15,8 @@
 		757C9F73293DF64600F37CC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C9F72293DF64600F37CC5 /* AppDelegate.swift */; };
 		757C9F75293DF7FC00F37CC5 /* ComposeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C9F74293DF7FC00F37CC5 /* ComposeController.swift */; };
 		758ADF1F2A6356EB00B9CADA /* CipherChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */; };
+		75AB26F72A8FF51F0068F160 /* RootHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AB26F62A8FF51F0068F160 /* RootHolder.swift */; };
+		75AB26F82A8FF51F0068F160 /* RootHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AB26F62A8FF51F0068F160 /* RootHolder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,7 @@
 		758ADF0E2A6258A400B9CADA /* Note Delight Unit-Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Note Delight Unit-Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		758ADF0F2A6258A400B9CADA /* oldApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "oldApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CipherChecker.swift; sourceTree = "<group>"; };
+		75AB26F62A8FF51F0068F160 /* RootHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootHolder.swift; sourceTree = "<group>"; };
 		8A9E88449BE549E547E57F76 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B895C121B756E73815F88CE2 /* Pods-oldApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oldApp.debug.xcconfig"; path = "Target Support Files/Pods-oldApp/Pods-oldApp.debug.xcconfig"; sourceTree = "<group>"; };
 		D7FD48404E9B0074884FCBF0 /* Pods-oldApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oldApp.release.xcconfig"; path = "Target Support Files/Pods-oldApp/Pods-oldApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,6 +129,7 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				757C9F72293DF64600F37CC5 /* AppDelegate.swift */,
+				75AB26F62A8FF51F0068F160 /* RootHolder.swift */,
 				757C9F74293DF7FC00F37CC5 /* ComposeController.swift */,
 				758ADF1E2A6356EB00B9CADA /* CipherChecker.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
@@ -326,6 +330,7 @@
 			files = (
 				757C9F73293DF64600F37CC5 /* AppDelegate.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				75AB26F72A8FF51F0068F160 /* RootHolder.swift in Sources */,
 				758ADF1F2A6356EB00B9CADA /* CipherChecker.swift in Sources */,
 				757C9F75293DF7FC00F37CC5 /* ComposeController.swift in Sources */,
 			);
@@ -336,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75715402296AF3E300210F51 /* Note_Delight_Unit_Tests.swift in Sources */,
+				75AB26F82A8FF51F0068F160 /* RootHolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
