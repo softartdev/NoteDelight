@@ -63,7 +63,7 @@ fun NoteDetail(
             val noteSaved = MR.strings.note_saved.contextLocalized() + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
-        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId)
+        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteResult.noteId)
         is NoteResult.TitleUpdated -> {
             titleState.value = noteResult.title
         }

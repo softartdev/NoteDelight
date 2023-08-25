@@ -14,8 +14,12 @@ SELECT * FROM note ORDER BY dateModified DESC;
 getById:
 SELECT * FROM note WHERE id = :noteId;
 
-insert:
-INSERT INTO note VALUES ?;
+-- Ref : https://github.com/cashapp/sqldelight/issues/1482
+-- Ref : https://github.com/cashapp/sqldelight/issues/4508#issuecomment-1672976163
+insert{
+      INSERT INTO note( title,text ,dateCreated,dateModified) VALUES ( ?,?,?,?  );
+      SELECT last_insert_rowid();
+}
 
 lastInsertRowId:
 SELECT last_insert_rowid();

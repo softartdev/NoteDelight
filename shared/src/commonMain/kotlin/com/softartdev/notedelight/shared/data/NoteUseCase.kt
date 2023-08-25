@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 class NoteUseCase(
-        private val dbRepo: DatabaseRepo
+    private val dbRepo: DatabaseRepo
 ) {
     val titleChannel: Channel<String> by lazy { return@lazy Channel<String>() }
 
@@ -22,7 +22,8 @@ class NoteUseCase(
         dbRepo.relaunchFlowEmitter = function
     }
 
-    fun getNotes(): Flow<List<Note>> = dbRepo.noteQueries.getAll().asFlow().mapToList(Dispatchers.IO).distinctUntilChanged()
+    fun getNotes(): Flow<List<Note>> =
+        dbRepo.noteQueries.getAll().asFlow().mapToList(Dispatchers.IO).distinctUntilChanged()
 
     fun launchNotes(
         onSuccess: (List<Note>) -> Unit,
@@ -40,26 +41,22 @@ class NoteUseCase(
         onFailure(t)
     }
 
-    @Throws(Exception::class) suspend fun createNote(title: String = "", text: String = ""): Long {
-        val notes = dbRepo.noteQueries.getAll().executeAsList()
-        val lastId: Long = notes.maxByOrNull(Note::id)?.id ?: 0
-        val noteId = lastId + 1
-
-        val localDateTime = createLocalDateTime()
-        val note = Note(noteId, title, text, localDateTime, localDateTime)
-        try {
-            dbRepo.noteQueries.insert(note)
+    @Throws(Exception::class)
+    suspend fun createNote(title: String = "", text: String = ""): Long {
+       try {
+            val localDateTime = createLocalDateTime()
+            return dbRepo.noteQueries.insert(title, text, localDateTime, localDateTime).executeAsOne()
         } catch (cause: Throwable) {
-            throw RuntimeException("Error create note with id = $noteId, lastId = $lastId", cause)
+            throw RuntimeException("Error : create note ", cause)
         }
-        return noteId
     }
 
-    @Throws(Exception::class) suspend fun saveNote(id: Long, title: String, text: String): Note {
+    @Throws(Exception::class)
+    suspend fun saveNote(id: Long, title: String, text: String): Note {
         val note = loadNote(id).copy(
-                title = title,
-                text = text,
-                dateModified = createLocalDateTime()
+            title = title,
+            text = text,
+            dateModified = createLocalDateTime()
         )
         dbRepo.noteQueries.update(note)
         return note
@@ -67,14 +64,15 @@ class NoteUseCase(
 
     suspend fun updateTitle(id: Long, title: String): Int {
         val note = loadNote(id).copy(
-                title = title,
-                dateModified = createLocalDateTime()
+            title = title,
+            dateModified = createLocalDateTime()
         )
         dbRepo.noteQueries.update(note)
         return 1
     }
 
-    @Throws(Exception::class) suspend fun loadNote(noteId: Long): Note = dbRepo.noteQueries.getById(noteId).executeAsOne()
+    @Throws(Exception::class)
+    suspend fun loadNote(noteId: Long): Note = dbRepo.noteQueries.getById(noteId).executeAsOne()
 
     suspend fun deleteNote(id: Long): Int = dbRepo.noteQueries.transactionResultWithContext {
         val before = dbRepo.noteQueries.getAll().executeAsList().size
@@ -83,7 +81,8 @@ class NoteUseCase(
         return@transactionResultWithContext before - after
     }
 
-    @Throws(Exception::class) suspend fun deleteNoteUnit(id: Long) = dbRepo.noteQueries.delete(id)
+    @Throws(Exception::class)
+    suspend fun deleteNoteUnit(id: Long) = dbRepo.noteQueries.delete(id)
 
     suspend fun isChanged(id: Long, title: String, text: String): Boolean {
         val note = loadNote(id)

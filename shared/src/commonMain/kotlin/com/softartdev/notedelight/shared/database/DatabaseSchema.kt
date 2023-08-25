@@ -37,6 +37,7 @@ object TestSchema {
         dateModified = LocalDateTime(2016, 2, 3, 4, 5),
     )
 
-    fun insertTestNotes(noteQueries: NoteQueries) =
-        sequenceOf(firstNote, secondNote, thirdNote).forEach(noteQueries::insert)
+    //FIXME
+//    fun insertTestNotes(noteQueries: NoteQueries) =
+//        sequenceOf(firstNote, secondNote, thirdNote).forEach(noteQueries::insert)
 }
