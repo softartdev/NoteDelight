@@ -27,8 +27,8 @@ Supported platforms:
 <img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/light/5.png" height="447"> <img src="screenshoots/desktop/dark/6.png" height="447">
 <details>
     <summary>More…</summary>
-    <p><img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/dark/1.png" height="447"></p>
-    <p><img src="screenshoots/android/light/1.png" height="447"> <img src="screenshoots/ios/light/1.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/dark/1.png" height="447"> <img src="screenshoots/desktop/dark/1.png" height="447"></p>
+    <p><img src="screenshoots/android/light/1.png" height="447"> <img src="screenshoots/ios/light/1.png" height="447"> <img src="screenshoots/desktop/light/1.png" height="447"></p>
     <p><img src="screenshoots/android/dark/2.png" height="447"> <img src="screenshoots/ios/dark/2.png" height="447"> <img src="screenshoots/desktop/dark/2.png" height="447"></p>
     <p><img src="screenshoots/android/light/2.png" height="447"> <img src="screenshoots/ios/light/2.png" height="447"> <img src="screenshoots/desktop/light/2.png" height="447"></p>
     <p><img src="screenshoots/android/dark/3.png" height="447"> <img src="screenshoots/ios/dark/3.png" height="447"> <img src="screenshoots/desktop/dark/3.png" height="447"></p>

@@ -3,8 +3,8 @@
 <img src="android/dark/1.png" height="447"> <img src="ios/light/5.png" height="447"> <img src="desktop/dark/6.png" height="447">
 <details>
     <summary>More…</summary>
-    <p><img src="android/dark/1.png" height="447"> <img src="ios/dark/1.png" height="447"></p>
-    <p><img src="android/light/1.png" height="447"> <img src="ios/light/1.png" height="447"></p>
+    <p><img src="android/dark/1.png" height="447"> <img src="ios/dark/1.png" height="447"> <img src="desktop/dark/1.png" height="447"></p>
+    <p><img src="android/light/1.png" height="447"> <img src="ios/light/1.png" height="447"> <img src="desktop/light/1.png" height="447"></p>
     <p><img src="android/dark/2.png" height="447"> <img src="ios/dark/2.png" height="447"> <img src="desktop/dark/2.png" height="447"></p>
     <p><img src="android/light/2.png" height="447"> <img src="ios/light/2.png" height="447"> <img src="desktop/light/2.png" height="447"></p>
     <p><img src="android/dark/3.png" height="447"> <img src="ios/dark/3.png" height="447"> <img src="desktop/dark/3.png" height="447"></p>
