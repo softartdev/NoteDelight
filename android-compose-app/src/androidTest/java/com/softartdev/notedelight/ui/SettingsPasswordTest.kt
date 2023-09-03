@@ -52,7 +52,7 @@ class SettingsPasswordTest {
             .assertIsDisplayed()
             .performClick()
 
-        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+        composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOff()
@@ -115,10 +115,10 @@ class SettingsPasswordTest {
         confirmRepeatPasswordSNI.performTextReplacement(text = "1")
         composeTestRule.advancePerform(confirmYesSNI::performClick)
         composeTestRule.safeWaitUntil {
-            composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+            composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
                 .assertIsOn()
         }
-        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+        composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOn()
@@ -199,7 +199,7 @@ class SettingsPasswordTest {
 
         changeYesSNI.performClick()
 
-        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+        composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOn()
@@ -238,10 +238,10 @@ class SettingsPasswordTest {
 
         composeTestRule.advancePerform(enterYesSNI::performClick)
         composeTestRule.safeWaitUntil {
-            composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+            composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
                 .assertIsOff()
         }
-        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.pref_title_enable_encryption))
+        composeTestRule.onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
             .assertIsDisplayed()
             .assertIsToggleable()
             .assertIsOff()

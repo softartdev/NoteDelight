@@ -43,5 +43,5 @@ inline fun AndroidComposeTestRule<*, *>.safeWaitUntil(
     }
 } catch (e: ComposeTimeoutException) {
     Napier.e("$timeoutMillis ms condition timed out", e)
-    Toast.makeText(activity, e.message, Toast.LENGTH_LONG).show()
+    runOnUiThread { Toast.makeText(activity, e.message, Toast.LENGTH_LONG).show() }
 }

@@ -1,11 +1,27 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -14,6 +30,7 @@ import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
+import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
@@ -47,14 +64,17 @@ fun MainScreen(
                 }
             })
     }, content = {
-        when (val noteListResult = noteListState.value) {
-            is NoteListResult.Loading -> Loader()
-            is NoteListResult.Success -> {
-                val notes: List<Note> = noteListResult.result
-                if (notes.isNotEmpty()) NoteList(notes, onItemClicked) else Empty()
+        Box(modifier = Modifier.padding(it)) {
+            when (val noteListResult = noteListState.value) {
+                is NoteListResult.Loading -> Loader()
+                is NoteListResult.Success -> {
+                    val notes: List<Note> = noteListResult.result
+                    if (notes.isNotEmpty()) NoteList(notes, onItemClicked) else Empty()
+                }
+                is NoteListResult.NavSignIn -> navSignIn()
+                is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
-            is NoteListResult.NavSignIn -> navSignIn()
-            is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
+            themePrefs.showDialogIfNeed()
         }
     }, floatingActionButton = {
         val text = stringResource(MR.strings.create_note)

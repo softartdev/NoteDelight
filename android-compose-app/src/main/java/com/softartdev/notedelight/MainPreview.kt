@@ -7,7 +7,7 @@ import com.softartdev.notedelight.ui.NoteDetailBody
 import com.softartdev.notedelight.ui.PreviewMainScreen
 import com.softartdev.notedelight.ui.SignInScreenBody
 import com.softartdev.notedelight.ui.SplashScreenBody
-import com.softartdev.themepref.PreferableMaterialTheme
+import com.softartdev.theme.material3.PreferableMaterialTheme
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

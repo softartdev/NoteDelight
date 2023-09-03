@@ -70,7 +70,7 @@ dependencies {
     implementation(project(":shared-android-util"))
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
-    implementation(compose.material)
+    implementation(compose.material3)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)

@@ -3,9 +3,9 @@ package com.softartdev.notedelight.ui.dialog
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.MR
@@ -17,7 +17,7 @@ import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
-import com.softartdev.themepref.DialogHolder
+import com.softartdev.theme.pref.DialogHolder
 import dev.icerock.moko.resources.compose.stringResource
 
 fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
