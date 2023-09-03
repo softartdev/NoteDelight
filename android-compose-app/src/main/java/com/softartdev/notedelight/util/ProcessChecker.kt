@@ -1,6 +1,7 @@
-package com.softartdev.notedelight.shared.util
+package com.softartdev.notedelight.util
 
 import android.content.Context
+import com.softartdev.notedelight.BuildConfig
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.memberFunctions

@@ -23,8 +23,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 831
-        versionName = "8.3.1"
+        versionCode = 832
+        versionName = "8.3.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -67,7 +67,7 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":shared-compose-ui"))
-    implementation(project(":shared-android-util"))
+    implementation(kotlin("reflect"))
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
     implementation(compose.material3)
@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.leakCanary.plumber.android)
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
+    testImplementation(libs.bundles.mockito)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)

@@ -4,12 +4,11 @@ import com.softartdev.notedelight.shared.date.toNSDate
 import kotlinx.datetime.LocalDateTime
 import platform.Foundation.NSDateFormatter
 
-actual object SimpleDateFormat {
-
+actual object DateTimeFormatter {
     private val nsDateFormatter = NSDateFormatter()
 
     init {
-        nsDateFormatter.setDateFormat(dateFormat = "HH:mm dd-MM-yyyy")
+        nsDateFormatter.setDateFormat(dateFormat = PATTERN)
     }
 
     actual fun format(input: LocalDateTime): String = nsDateFormatter.stringFromDate(

@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.util.log
+package com.softartdev.notedelight.util.log
 
 import io.github.aakira.napier.Napier
 import org.koin.core.logger.KOIN_TAG

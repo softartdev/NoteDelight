@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.util
+package com.softartdev.notedelight.util
 
 import android.content.Context
 import org.junit.Assert.*

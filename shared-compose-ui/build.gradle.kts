@@ -40,13 +40,11 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.koin.androidx.compose)
-                implementation(project(":shared-jvm-util"))
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation(libs.koin.core.jvm)
-                implementation(project(":shared-jvm-util"))
             }
         }
         val jvmTest by getting {

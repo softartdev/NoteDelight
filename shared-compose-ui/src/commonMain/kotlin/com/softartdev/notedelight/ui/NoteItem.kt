@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.shared.database.TestSchema
 import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.util.SimpleDateFormat
+import com.softartdev.notedelight.util.DateTimeFormatter
 
 @Composable
 fun NoteItem(
@@ -35,7 +35,7 @@ fun NoteItem(
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = SimpleDateFormat.format(note.dateModified),
+            text = DateTimeFormatter.format(note.dateModified),
             style = MaterialTheme.typography.titleSmall,
             textAlign = TextAlign.End,
             modifier = Modifier.fillMaxWidth()
