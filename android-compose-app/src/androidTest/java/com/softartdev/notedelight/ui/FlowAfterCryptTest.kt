@@ -38,7 +38,7 @@ class FlowAfterCryptTest {
 
     private val switchSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(context.getString(R.string.pref_title_enable_encryption))
+            .onNodeWithTag(context.getString(R.string.pref_title_enable_encryption))
             .assertIsToggleable()
             .assertIsDisplayed()
 

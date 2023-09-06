@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.compose)
 }
 compose {
-    kotlinCompilerPlugin.set("1.4.8")
+    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 kotlin {
     iosX64()

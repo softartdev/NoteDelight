@@ -1,8 +1,8 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose)
 }
 group = "com.softartdev"
 version = "1.0"
@@ -37,14 +37,14 @@ kotlin {
 }
 
 compose {
-    kotlinCompilerPlugin.set("1.4.8")
+    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
     desktop {
         application {
             mainClass = "com.softartdev.notedelight.MainKt"
             nativeDistributions {
                 targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
                 packageName = "com.softartdev.notedelight"
-                packageVersion = "1.0.0"
+                packageVersion = "1.0.1"
             }
         }
     }

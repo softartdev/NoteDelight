@@ -50,7 +50,53 @@ class EditTitleTest {
     }
 
     @Test
-    fun editTitleTest() {
+    fun editTitleAfterCreateTest() {
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.create_note))
+            .assertIsDisplayed()
+            .performClick()
+
+        val actualNoteText = UUID.randomUUID().toString().substring(0, 30)
+        composeTestRule.onNodeWithText(text = context.getString(R.string.type_text))
+            .assertIsDisplayed()
+            .performTextInput(actualNoteText)
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.action_edit_title))
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onAllNodes(isRoot()).printToLog("🦄", maxDepth = Int.MAX_VALUE)
+
+        val actualNoteTitle = "title"
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.enter_title))
+            .assertIsDisplayed()
+            .performTextReplacement(actualNoteTitle)
+
+        composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.enter_title))
+            .assertDoesNotExist()
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.action_save_note))
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
+            .assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.safeWaitUntil {
+            composeTestRule.waitForIdle()
+            composeTestRule.onNodeWithContentDescription(label = actualNoteTitle)
+                .assertIsDisplayed()
+        }
+        composeTestRule.onNodeWithContentDescription(label = actualNoteTitle)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun editTitleAfterSaveTest() {
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.create_note))
             .assertIsDisplayed()
             .performClick()
@@ -91,6 +137,9 @@ class EditTitleTest {
         composeTestRule.onNodeWithText(text = context.getString(R.string.yes))
             .assertIsDisplayed()
             .performClick()
+
+        composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.enter_title))
+            .assertDoesNotExist()
 
         composeTestRule.onNodeWithContentDescription(label = context.getString(R.string.action_save_note))
             .assertIsDisplayed()

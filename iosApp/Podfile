@@ -3,9 +3,3 @@ target 'iosApp' do
   platform :ios, '14.1'
   pod 'iosComposePod', :path => '../ios-compose-kit'
 end
-
-target 'oldApp' do
-  use_frameworks!
-  platform :ios, '14.1'
-  pod 'shared', :path => '../shared/'
-end

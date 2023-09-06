@@ -6,7 +6,7 @@ import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.database.AndroidDbRepo
 import com.softartdev.notedelight.shared.database.createQueryWrapper
 import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.test.util.StubEditable
+import com.softartdev.notedelight.shared.StubEditable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse

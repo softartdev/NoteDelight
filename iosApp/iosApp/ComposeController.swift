@@ -11,10 +11,10 @@ import iosComposeKit
 
 struct ComposeController: UIViewControllerRepresentable {
     
-    let skikoHelper: SkikoHelper
+    let appHelper: AppHelper
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        skikoHelper.applicationUIViewController
+        appHelper.appUIViewController
     }
 
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {

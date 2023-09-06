@@ -24,7 +24,26 @@ Supported platforms:
 
 ## SCREENSHOTS 🎞️
 
-<img src="https://github.com/softartdev/NoteDelight/raw/master/screenshoots/demo_android.gif" height="447" />    <img src="https://github.com/softartdev/NoteDelight/raw/master/screenshoots/demo_ios.gif" height="447" />    <img src="https://raw.githubusercontent.com/softartdev/NoteDelight/master/screenshoots/demo_desktop.gif" height="447" />
+<img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/light/5.png" height="447"> <img src="screenshoots/desktop/dark/6.png" height="447">
+<details>
+    <summary>More…</summary>
+    <p><img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/dark/1.png" height="447"> <img src="screenshoots/desktop/dark/1.png" height="447"></p>
+    <p><img src="screenshoots/android/light/1.png" height="447"> <img src="screenshoots/ios/light/1.png" height="447"> <img src="screenshoots/desktop/light/1.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/2.png" height="447"> <img src="screenshoots/ios/dark/2.png" height="447"> <img src="screenshoots/desktop/dark/2.png" height="447"></p>
+    <p><img src="screenshoots/android/light/2.png" height="447"> <img src="screenshoots/ios/light/2.png" height="447"> <img src="screenshoots/desktop/light/2.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/3.png" height="447"> <img src="screenshoots/ios/dark/3.png" height="447"> <img src="screenshoots/desktop/dark/3.png" height="447"></p>
+    <p><img src="screenshoots/android/light/3.png" height="447"> <img src="screenshoots/ios/light/3.png" height="447"> <img src="screenshoots/desktop/light/3.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/4.png" height="447"> <img src="screenshoots/ios/dark/4.png" height="447"> <img src="screenshoots/desktop/dark/4.png" height="447"></p>
+    <p><img src="screenshoots/android/light/4.png" height="447"> <img src="screenshoots/ios/light/4.png" height="447"> <img src="screenshoots/desktop/light/4.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/5.png" height="447"> <img src="screenshoots/ios/dark/5.png" height="447"> <img src="screenshoots/desktop/dark/5.png" height="447"></p>
+    <p><img src="screenshoots/android/light/5.png" height="447"> <img src="screenshoots/ios/light/5.png" height="447"> <img src="screenshoots/desktop/light/5.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/6.png" height="447"> <img src="screenshoots/ios/dark/6.png" height="447"> <img src="screenshoots/desktop/dark/6.png" height="447"></p>
+    <p><img src="screenshoots/android/light/6.png" height="447"> <img src="screenshoots/ios/light/6.png" height="447"> <img src="screenshoots/desktop/light/6.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/7.png" height="447"> <img src="screenshoots/ios/dark/7.png" height="447"> <img src="screenshoots/desktop/dark/7.png" height="447"></p>
+    <p><img src="screenshoots/android/light/7.png" height="447"> <img src="screenshoots/ios/light/7.png" height="447"> <img src="screenshoots/desktop/light/7.png" height="447"></p>
+    <p><img src="screenshoots/android/dark/8.png" height="447"> <img src="screenshoots/ios/dark/8.png" height="447"> <img src="screenshoots/desktop/dark/8.png" height="447"></p>
+    <p><img src="screenshoots/android/light/8.png" height="447"> <img src="screenshoots/ios/light/8.png" height="447"> <img src="screenshoots/desktop/light/8.png" height="447"></p>
+</details>
 
 ## WORK IN PROGRESS 🛠
 

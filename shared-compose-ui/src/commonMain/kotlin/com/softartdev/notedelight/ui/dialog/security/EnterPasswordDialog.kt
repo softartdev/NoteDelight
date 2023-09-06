@@ -2,7 +2,7 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,7 +12,6 @@ import com.softartdev.notedelight.shared.presentation.settings.security.enter.En
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import com.softartdev.themepref.AlertDialog
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
