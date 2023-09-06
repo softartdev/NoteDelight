@@ -12,7 +12,7 @@ compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
@@ -75,7 +75,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
