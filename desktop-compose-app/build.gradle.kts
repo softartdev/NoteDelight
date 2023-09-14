@@ -30,7 +30,10 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
+                implementation(project(":jvm-compose-test"))
                 implementation(kotlin("test"))
+                implementation(compose.desktop.uiTestJUnit4)
+                implementation(compose.desktop.currentOs)
             }
         }
     }

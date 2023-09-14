@@ -12,6 +12,7 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.softartdev.notedelight.shared.di.allModules
+import com.softartdev.notedelight.shared.runOnUiThread
 import com.softartdev.notedelight.ui.MainRootUI
 import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog

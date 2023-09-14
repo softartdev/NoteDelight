@@ -1,17 +1,12 @@
 package com.softartdev.notedelight.shared.base
 
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
-/**
- * Contains a static reference to [IdlingResource]
- */
-actual object IdlingResource {
+actual object IdlingRes {
+    val countingIdlingResource = CountingIdlingResource("GLOBAL")
 
-    private const val RESOURCE = "GLOBAL"
-
-    @JvmField
-    val countingIdlingResource = CountingIdlingResource(RESOURCE)
+    actual val isIdleNow: Boolean
+        get() = countingIdlingResource.isIdleNow
 
     actual fun increment() {
         countingIdlingResource.increment()

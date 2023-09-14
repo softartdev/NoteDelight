@@ -41,7 +41,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
         is SignInResult.ShowError -> dialogHolder.showError(signInResult.error.message)
     }
     SignInScreenBody(
-        showLoaing = signInResultState.value is SignInResult.ShowProgress,
+        showLoading = signInResultState.value is SignInResult.ShowProgress,
         passwordState = passwordState,
         labelResource = labelResource,
         isError = error,
@@ -51,7 +51,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreenBody(
-    showLoaing: Boolean = true,
+    showLoading: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
     labelResource: StringResource = MR.strings.enter_password,
     isError: Boolean = false,
@@ -65,7 +65,7 @@ fun SignInScreenBody(
 ) {
     Box(modifier = Modifier.padding(it)) {
         Column(modifier = Modifier.fillMaxSize().padding(all = 16.dp)) {
-            if (showLoaing) LinearProgressIndicator()
+            if (showLoading) LinearProgressIndicator()
             PasswordField(
                 modifier = Modifier.fillMaxWidth(),
                 passwordState = passwordState,

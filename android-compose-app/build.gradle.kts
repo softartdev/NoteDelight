@@ -1,8 +1,6 @@
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -85,11 +83,12 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
+    androidTestImplementation(project(":jvm-compose-test"))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(compose.uiTestJUnit4)
+    androidTestImplementation(compose.desktop.uiTestJUnit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
 }
