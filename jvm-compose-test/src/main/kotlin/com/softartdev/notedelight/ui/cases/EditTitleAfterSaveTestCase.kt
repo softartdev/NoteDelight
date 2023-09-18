@@ -22,6 +22,7 @@ class EditTitleAfterSaveTestCase(
 
     override fun invoke() {
         mainTestScreen {
+            composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
             fabSNI.performClick()
             noteScreen {
                 textFieldSNI.performTextInput(actualNoteText)

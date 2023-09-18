@@ -28,6 +28,7 @@ class EditTitleAfterCreateTestCase(
                 textFieldSNI.performTextInput(actualNoteText)
                 editTitleMenuButtonSNI.performClick()
                 editTitleDialog {
+                    composeTestRule.waitUntilDisplayed(blockSNI = ::editTitleSNI)
                     editTitleSNI.performTextReplacement(actualNoteTitle)
                     yesDialogButtonSNI.performClick()
                 }
