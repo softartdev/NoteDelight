@@ -9,6 +9,7 @@ import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.DbTestEncryptor
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.ui.BaseTestCase
+import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
 
 class SignInTestCase(
@@ -27,8 +28,9 @@ class SignInTestCase(
                 .performClick()
 
             signInButtonSNI.performClick()
-            passwordLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
-
+            composeTestRule.waitAssert {
+                passwordLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+            }
             passwordFieldSNI.performTextReplacement(text = "incorrect password")
             closeSoftKeyboard()
             signInButtonSNI.performClick()

@@ -38,8 +38,7 @@ class EditTitleAfterCreateTestCase(
                 backButtonSNI.performClick()
             }
             noteItemTitleText = actualNoteTitle
-            noteListItemSNI.assertIsDisplayed()
-                .performClick()
+            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
         }
     }
 }

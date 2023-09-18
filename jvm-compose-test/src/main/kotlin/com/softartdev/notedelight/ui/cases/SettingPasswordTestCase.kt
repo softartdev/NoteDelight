@@ -28,8 +28,8 @@ class SettingPasswordTestCase(
                     .performClick()
 
                 confirmPasswordDialog {
-                    confirmPasswordSNI.assertIsDisplayed()
-                        .performClick()
+                    composeTestRule.waitUntilDisplayed(blockSNI = ::confirmPasswordSNI)
+                    confirmPasswordSNI.performClick()
                     confirmLabelSNI.assertIsDisplayed()
                     confirmRepeatPasswordSNI.assertIsDisplayed()
                     confirmRepeatLabelSNI.assertIsDisplayed()
@@ -59,6 +59,7 @@ class SettingPasswordTestCase(
                     yesDialogButtonSNI.performClick()
                 }
                 composeTestRule.waitAssert(encryptionSwitchSNI::assertIsOn)
+                composeTestRule.waitUntilDisplayed(blockSNI = ::setPasswordSNI)
                 setPasswordSNI.performClick()
 
                 changePasswordDialog {
@@ -108,7 +109,7 @@ class SettingPasswordTestCase(
                 encryptionSwitchSNI.assertIsOn()
                     .performClick()
                 enterPasswordDialog {
-                    enterPasswordSNI.assertIsDisplayed()
+                    composeTestRule.waitUntilDisplayed(blockSNI = ::enterPasswordSNI)
                     enterLabelSNI.assertIsDisplayed()
                     enterVisibilitySNI.assertIsDisplayed()
                         .performClick()
