@@ -167,6 +167,7 @@ kotlin {
                 // TODO: the current compose binary surprises LLVM, so disable checks for now.
                 "-Xdisable-phases=VerifyBitcode"
             )
+            linkerOpts += "-ld64" //TODO: remove after update Kotlin >= 1.9.10
         }
     }
 }

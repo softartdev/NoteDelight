@@ -30,6 +30,7 @@ kotlin {
                 "-linker-option", "-framework", "-linker-option", "CoreText",
                 "-linker-option", "-framework", "-linker-option", "CoreGraphics",
             )
+            linkerOpts += "-ld64" //TODO: remove after update Kotlin >= 1.9.10
             export(project(":shared"))
 //            export(project(":shared-compose-ui"))
             export(libs.mokoResources)
