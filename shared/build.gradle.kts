@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -149,24 +147,14 @@ kotlin {
         summary = "Common library for the NoteDelight app"
         homepage = "https://github.com/softartdev/NoteDelight"
         ios.deploymentTarget = "14.0"
-//        podfile = project.file("../iosApp/Podfile")
-//        useLibraries()
         pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
             isStatic = true
             export(libs.mokoResources)
-//            export(libs.sqlcipherKtnPod)
         }
     }
     targets.withType<KotlinNativeTarget> {
         binaries.all {
-            freeCompilerArgs += listOf(
-                "-linker-option", "-framework", "-linker-option", "Metal",
-                "-linker-option", "-framework", "-linker-option", "CoreText",
-                "-linker-option", "-framework", "-linker-option", "CoreGraphics",
-                // TODO: the current compose binary surprises LLVM, so disable checks for now.
-                "-Xdisable-phases=VerifyBitcode"
-            )
             if (rootProject.extra["hasXcode15"] == true) linkerOpts += "-ld64" //TODO: remove after update Kotlin >= 1.9.10
         }
     }
