@@ -1,17 +1,18 @@
 package com.softartdev.notedelight.shared.presentation.title
 
-import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 
-
-class EditTitleViewModel (
-        private val noteUseCase: NoteUseCase
+class EditTitleViewModel(
+    private val noteDAO: NoteDAO,
+    private val updateTitleUseCase: UpdateTitleUseCase
 ) : BaseViewModel<EditTitleResult>() {
 
     override val loadingResult: EditTitleResult = EditTitleResult.Loading
 
     fun loadTitle(noteId: Long) = launch {
-        val note = noteUseCase.loadNote(noteId)
+        val note = noteDAO.load(noteId)
         EditTitleResult.Loaded(note.title)
     }
 
@@ -20,8 +21,8 @@ class EditTitleViewModel (
         when {
             noteTitle.isEmpty() -> EditTitleResult.EmptyTitleError
             else -> {
-                noteUseCase.updateTitle(noteId, noteTitle)
-                noteUseCase.titleChannel.send(noteTitle)
+                updateTitleUseCase(noteId, noteTitle)
+                UpdateTitleUseCase.titleChannel.send(noteTitle)
                 EditTitleResult.Success
             }
         }

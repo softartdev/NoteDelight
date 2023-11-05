@@ -2,7 +2,8 @@ package com.softartdev.notedelight.shared.presentation.splash
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.PlatformSQLiteState
+import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -20,12 +21,12 @@ class SplashViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val cryptUseCase = Mockito.mock(CryptUseCase::class.java)
+    private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
 
     @Test
     fun navSignIn() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
-        val splashViewModel = SplashViewModel(cryptUseCase)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
+        val splashViewModel = SplashViewModel(mockSafeRepo)
         splashViewModel.resultStateFlow.test {
             assertEquals(SplashResult.Loading, awaitItem())
 
@@ -38,8 +39,8 @@ class SplashViewModelTest {
 
     @Test
     fun navMain() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
-        val splashViewModel = SplashViewModel(cryptUseCase)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.UNENCRYPTED)
+        val splashViewModel = SplashViewModel(mockSafeRepo)
         splashViewModel.resultStateFlow.test {
             assertEquals(SplashResult.Loading, awaitItem())
 
@@ -52,8 +53,8 @@ class SplashViewModelTest {
 
     @Test
     fun showError() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenThrow(RuntimeException::class.java)
-        val splashViewModel = SplashViewModel(cryptUseCase)
+        Mockito.`when`(mockSafeRepo.databaseState).thenThrow(RuntimeException::class.java)
+        val splashViewModel = SplashViewModel(mockSafeRepo)
         splashViewModel.resultStateFlow.test {
             assertEquals(SplashResult.Loading, awaitItem())
 

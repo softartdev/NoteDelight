@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import com.softartdev.notedelight.MR
-import com.softartdev.notedelight.shared.database.TestSchema
+import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult

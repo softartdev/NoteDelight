@@ -1,9 +1,6 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
-import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.NoteQueries
 import app.cash.sqldelight.db.SqlDriver
-
 
 abstract class DatabaseHolder {
     abstract val driver: SqlDriver

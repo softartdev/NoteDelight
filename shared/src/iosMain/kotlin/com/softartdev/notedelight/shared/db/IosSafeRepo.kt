@@ -1,27 +1,26 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
 import com.softartdev.notedelight.shared.IosCipherUtils
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
-import com.softartdev.notedelight.shared.db.NoteQueries
 
-class IosDbRepo : DatabaseRepo() {
+class IosSafeRepo : SafeRepo() {
 
-    private var dbHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var dbHolder: DatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
         get() = IosCipherUtils.getDatabaseState(DB_NAME)
 
-    override val noteQueries: NoteQueries
-        get() = dbHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
+    override val noteDAO: NoteDAO
+        get() = NoteDAO(buildDbIfNeed().noteQueries)
 
-    override fun buildDatabaseInstanceIfNeed(passphrase: CharSequence): DatabaseHolder {
-        if (dbHolder != null) {
-            return dbHolder!!
+    override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder {
+        var instance = dbHolder
+        if (instance == null) {
+            val passCopy: String? = if (passphrase.isNotEmpty()) passphrase.toString() else null
+            instance = IosDatabaseHolder(key = passCopy)
+            dbHolder = instance
         }
-        val passkey = if (passphrase.isEmpty()) null else passphrase.toString()
-        dbHolder = IosDatabaseHolder(key = passkey)
-        return dbHolder!!
+        return instance
     }
 
     override fun decrypt(oldPass: CharSequence) {

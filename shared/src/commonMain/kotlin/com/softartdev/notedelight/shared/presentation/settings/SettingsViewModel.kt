@@ -1,39 +1,44 @@
 package com.softartdev.notedelight.shared.presentation.settings
 
-import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.db.SafeRepo
+import com.softartdev.notedelight.shared.usecase.crypt.CheckSqlCipherVersionUseCase
 
 
 class SettingsViewModel(
-    private val cryptUseCase: CryptUseCase
+    private val safeRepo: SafeRepo,
+    private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase
 ) : BaseViewModel<SecurityResult>() {
 
     override val loadingResult: SecurityResult = SecurityResult.Loading
 
+    private val dbIsEncrypted: Boolean
+        get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
+
     fun checkEncryption() = launch {
-        val isEncrypted = cryptUseCase.dbIsEncrypted()
-        SecurityResult.EncryptEnable(isEncrypted)
+        SecurityResult.EncryptEnable(dbIsEncrypted)
     }
 
     fun changeEncryption(checked: Boolean) = launch {
         when (checked) {
             true -> SecurityResult.SetPasswordDialog
-            false -> when (cryptUseCase.dbIsEncrypted()) {
-                true -> SecurityResult.PasswordDialog
-                false -> SecurityResult.EncryptEnable(false)
+            false -> when {
+                dbIsEncrypted -> SecurityResult.PasswordDialog
+                else -> SecurityResult.EncryptEnable(false)
             }
         }
     }
 
     fun changePassword() = launch {
-        when (cryptUseCase.dbIsEncrypted()) {
-            true -> SecurityResult.ChangePasswordDialog
-            false -> SecurityResult.SetPasswordDialog
+        when {
+            dbIsEncrypted -> SecurityResult.ChangePasswordDialog
+            else -> SecurityResult.SetPasswordDialog
         }
     }
 
     fun showCipherVersion() = launch {
-        val cipherVersion: String? = cryptUseCase.dbCipherVersion()
+        val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
         SecurityResult.SnackBar(cipherVersion)
     }
 

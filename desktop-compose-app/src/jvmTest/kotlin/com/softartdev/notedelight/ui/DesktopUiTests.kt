@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performClick
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.softartdev.notedelight.RootComponent
-import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.di.allModules
 import com.softartdev.notedelight.shared.runOnUiThread
 import io.github.aakira.napier.Napier
@@ -39,8 +39,8 @@ class DesktopUiTests : AbstractUiTests() {
         val root = runOnUiThread {
             RootComponent(componentContext = DefaultComponentContext(lifecycle))
         }
-        val dbRepo: DatabaseRepo = get(DatabaseRepo::class.java)
-        dbRepo.noteQueries.deleteAll()
+        val noteDAO: NoteDAO = get(NoteDAO::class.java)
+        noteDAO.deleteAll()
         super.setUp()
         composeTestRule.setContent { MainRootUI(root) }
     }

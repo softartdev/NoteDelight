@@ -2,8 +2,12 @@ package com.softartdev.notedelight.shared.presentation.settings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.CryptUseCase
+import com.softartdev.notedelight.shared.PlatformSQLiteState.DOES_NOT_EXIST
+import com.softartdev.notedelight.shared.PlatformSQLiteState.ENCRYPTED
+import com.softartdev.notedelight.shared.PlatformSQLiteState.UNENCRYPTED
+import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
+import com.softartdev.notedelight.shared.usecase.crypt.CheckSqlCipherVersionUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -20,8 +24,9 @@ class SettingsViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val cryptUseCase = Mockito.mock(CryptUseCase::class.java)
-    private val settingsViewModel = SettingsViewModel(cryptUseCase)
+    private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
+    private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
+    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase)
 
     @Test
     fun checkEncryptionTrue() = assertEncryption(true)
@@ -30,7 +35,8 @@ class SettingsViewModelTest {
     fun checkEncryptionFalse() = assertEncryption(false)
 
     private fun assertEncryption(encryption: Boolean) = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(encryption)
+        val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(platformSQLiteState)
         settingsViewModel.resultStateFlow.test {
             assertEquals(SecurityResult.Loading, awaitItem())
 
@@ -55,7 +61,7 @@ class SettingsViewModelTest {
 
     @Test
     fun changeEncryptionPasswordDialog() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
         settingsViewModel.resultStateFlow.test {
             assertEquals(SecurityResult.Loading, awaitItem())
 
@@ -68,7 +74,7 @@ class SettingsViewModelTest {
 
     @Test
     fun changeEncryptionEncryptEnableFalse() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(UNENCRYPTED)
         settingsViewModel.resultStateFlow.test {
             assertEquals(SecurityResult.Loading, awaitItem())
 
@@ -81,7 +87,7 @@ class SettingsViewModelTest {
 
     @Test
     fun changePasswordChangePasswordDialog() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(true)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
         settingsViewModel.resultStateFlow.test {
             assertEquals(SecurityResult.Loading, awaitItem())
 
@@ -94,7 +100,7 @@ class SettingsViewModelTest {
 
     @Test
     fun changePasswordSetPasswordDialog() = runTest {
-        Mockito.`when`(cryptUseCase.dbIsEncrypted()).thenReturn(false)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(DOES_NOT_EXIST)
         settingsViewModel.resultStateFlow.test {
             assertEquals(SecurityResult.Loading, awaitItem())
 

@@ -1,7 +1,7 @@
 package com.softartdev.notedelight
 
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.db.SafeRepo
 import io.github.aakira.napier.Napier
 import org.koin.java.KoinJavaComponent.inject
 
@@ -10,9 +10,9 @@ object DbTestEncryptor : () -> Unit {
     const val PASSWORD = "password"
 
     override fun invoke() {
-        val safeRepo: DatabaseRepo by inject(DatabaseRepo::class.java)
+        val safeRepo: SafeRepo by inject(SafeRepo::class.java)
         while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
-            safeRepo.buildDatabaseInstanceIfNeed()
+            safeRepo.buildDbIfNeed()
             Thread.sleep(1000)
             Napier.d("databaseState = ${safeRepo.databaseState.name}")
         }

@@ -2,8 +2,9 @@ package com.softartdev.notedelight.ui.cases
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.ui.BaseTestCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -14,16 +15,17 @@ class PrepopulateDbTestCase(
     composeTestRule: ComposeContentTestRule
 ) : () -> Unit, BaseTestCase(composeTestRule) {
 
-    private val noteUseCase: NoteUseCase by KoinJavaComponent.inject(NoteUseCase::class.java)
+    private val noteDAO: NoteDAO by KoinJavaComponent.inject(NoteDAO::class.java)
+    private val createNoteUseCase: CreateNoteUseCase by KoinJavaComponent.inject(CreateNoteUseCase::class.java)
 
     override fun invoke() = runTest(timeout = 1.minutes) {
-        noteUseCase.getNotes().test {
+        noteDAO.listFlow.test {
             var notes: List<Note> = awaitItem()
             Assert.assertEquals(0, notes.size)
 
             for (num in 1..250) {
                 val loremIpsum = LOREM_IPSUM.repeat(num)
-                noteUseCase.createNote(title = "Title #$num", text = loremIpsum)
+                createNoteUseCase(title = "Title #$num", text = loremIpsum)
                 composeTestRule.awaitIdle()
 
                 notes = awaitItem()

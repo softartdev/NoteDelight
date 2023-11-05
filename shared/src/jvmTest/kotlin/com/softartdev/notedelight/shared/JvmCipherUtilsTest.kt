@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared
 
-import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.db.SafeRepo.Companion.DB_NAME
 import kotlin.test.*
 
 class JvmCipherUtilsTest {
@@ -16,7 +16,7 @@ class JvmCipherUtilsTest {
     @Test
     fun getDatabaseState() {
         val exp = PlatformSQLiteState.ENCRYPTED
-        val act = JvmCipherUtils.getDatabaseState(DatabaseRepo.DB_NAME)
+        val act = JvmCipherUtils.getDatabaseState(DB_NAME)
         assertNotEquals(exp, act)
     }
 }
