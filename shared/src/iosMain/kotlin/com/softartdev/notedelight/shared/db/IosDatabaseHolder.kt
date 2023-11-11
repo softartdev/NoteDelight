@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
@@ -6,13 +6,11 @@ import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
-import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.NoteQueries
 
 class IosDatabaseHolder(
     key: String? = null,
     rekey: String? = null,
-    name: String = DatabaseRepo.DB_NAME,
+    name: String = SafeRepo.DB_NAME,
     schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema
 ) : DatabaseHolder() {
     private val configuration = createDatabaseConfiguration(name, schema, key, rekey)
@@ -24,7 +22,7 @@ class IosDatabaseHolder(
 
     companion object {
         fun createDatabaseConfiguration(
-            name: String = DatabaseRepo.DB_NAME,
+            name: String = SafeRepo.DB_NAME,
             schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema,
             key: String? = null,
             rekey: String? = null
@@ -32,17 +30,14 @@ class IosDatabaseHolder(
             name = name,
             version = schema.version.toInt(),
             create = { connection ->
-                wrapConnection(connection) { schema.create(it) }
+                wrapConnection(connection, schema::create)
             },
             upgrade = { connection, oldVersion, newVersion ->
-                wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(),
-                    newVersion.toLong()
-                ) }
+                wrapConnection(connection) {
+                    schema.migrate(it, oldVersion.toLong(), newVersion.toLong())
+                }
             },
-            encryptionConfig = DatabaseConfiguration.Encryption(
-                key = key,
-                rekey = rekey,
-            )
+            encryptionConfig = DatabaseConfiguration.Encryption(key, rekey)
         )
     }
 }

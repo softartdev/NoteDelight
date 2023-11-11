@@ -2,9 +2,10 @@ package com.softartdev.notedelight.shared.presentation.settings.security.change
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
+import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -21,8 +22,9 @@ class ChangeViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val cryptUseCase = Mockito.mock(CryptUseCase::class.java)
-    private val changeViewModel = ChangeViewModel(cryptUseCase)
+    private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
+    private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
+    private val changeViewModel = ChangeViewModel(checkPasswordUseCase, changePasswordUseCase)
 
     @Test
     fun checkChangeOldEmptyPasswordError() = runTest {
@@ -76,7 +78,7 @@ class ChangeViewModelTest {
             assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
-            Mockito.`when`(cryptUseCase.checkPassword(old)).thenReturn(true)
+            Mockito.`when`(checkPasswordUseCase(old)).thenReturn(true)
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
             assertEquals(ChangeResult.Loading, awaitItem())
@@ -92,7 +94,7 @@ class ChangeViewModelTest {
             assertEquals(ChangeResult.InitState, awaitItem())
 
             val old = StubEditable("old")
-            Mockito.`when`(cryptUseCase.checkPassword(old)).thenReturn(false)
+            Mockito.`when`(checkPasswordUseCase(old)).thenReturn(false)
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
             assertEquals(ChangeResult.Loading, awaitItem())

@@ -1,10 +1,7 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
-import com.softartdev.notedelight.shared.date.DateAdapter
-import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.db.NoteDb
-import com.softartdev.notedelight.shared.db.NoteQueries
 import app.cash.sqldelight.db.SqlDriver
+import com.softartdev.notedelight.shared.date.DateAdapter
 import kotlinx.datetime.LocalDateTime
 
 fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb {
@@ -36,7 +33,7 @@ object TestSchema {
         dateCreated = LocalDateTime(2016, 1, 2, 3, 4),
         dateModified = LocalDateTime(2016, 2, 3, 4, 5),
     )
+    val notes = listOf(firstNote, secondNote, thirdNote)
 
-    fun insertTestNotes(noteQueries: NoteQueries) =
-        sequenceOf(firstNote, secondNote, thirdNote).forEach(noteQueries::insert)
+    fun insertTestNotes(noteQueries: NoteQueries) = notes.forEach(noteQueries::insert)
 }

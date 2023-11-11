@@ -1,25 +1,21 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
-import com.softartdev.notedelight.shared.db.NoteQueries
 
 /**
  * Encryption functions are mocked
  */
-class JdbcDbTestRepo : DatabaseRepo() {
+class JvmTestSafeRepo : SafeRepo() {
     @Volatile
-    private var databaseHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var databaseHolder: DatabaseHolder? = buildDbIfNeed()
 
     override val databaseState: PlatformSQLiteState
         get() = TODO("Not yet implemented")
 
-    override val noteQueries: NoteQueries
-        get() = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
+    override val noteDAO: NoteDAO
+        get() = NoteDAO(databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null"))
 
-    override fun buildDatabaseInstanceIfNeed(
-        passphrase: CharSequence
-    ): DatabaseHolder = synchronized(this) {
+    override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
             instance = JdbcDatabaseTestHolder()
@@ -30,17 +26,17 @@ class JdbcDbTestRepo : DatabaseRepo() {
 
     override fun decrypt(oldPass: CharSequence) {
         closeDatabase()
-        buildDatabaseInstanceIfNeed()
+        buildDbIfNeed()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
-        buildDatabaseInstanceIfNeed(newPass)
+        buildDbIfNeed(newPass)
     }
 
     override fun encrypt(newPass: CharSequence) {
         closeDatabase()
-        buildDatabaseInstanceIfNeed(newPass)
+        buildDbIfNeed(newPass)
     }
 
     override fun closeDatabase() = synchronized(this) {

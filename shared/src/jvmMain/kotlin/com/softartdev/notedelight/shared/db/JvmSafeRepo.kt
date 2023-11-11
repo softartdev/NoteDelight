@@ -1,27 +1,20 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
 import com.softartdev.notedelight.shared.JvmCipherUtils
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.data.PlatformSQLiteThrowable
-import com.softartdev.notedelight.shared.db.NoteQueries
-import java.util.*
+import java.util.Properties
 
-/**
- * Encryption functions are mocked
- */
-class JdbcDbRepo : DatabaseRepo() {
+class JvmSafeRepo : SafeRepo() {
     @Volatile
-    private var databaseHolder: DatabaseHolder? = buildDatabaseInstanceIfNeed()
+    private var databaseHolder: DatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
         get() = JvmCipherUtils.getDatabaseState(DB_NAME)
 
-    override val noteQueries: NoteQueries
-        get() = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null")
+    override val noteDAO: NoteDAO
+        get() = NoteDAO(buildDbIfNeed().noteQueries)
 
-    override fun buildDatabaseInstanceIfNeed(
-        passphrase: CharSequence
-    ): DatabaseHolder = synchronized(this) {
+    override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder {
         var instance = databaseHolder
         if (instance == null) {
             val properties = Properties()
@@ -38,7 +31,7 @@ class JdbcDbRepo : DatabaseRepo() {
             password = StringBuilder(oldPass).toString(),
             dbName = DB_NAME
         )
-        buildDatabaseInstanceIfNeed()
+        buildDbIfNeed()
     }
 
     override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
@@ -52,7 +45,7 @@ class JdbcDbRepo : DatabaseRepo() {
             password = StringBuilder(newPass).toString(),
             dbName = DB_NAME
         )
-        buildDatabaseInstanceIfNeed(newPass)
+        buildDbIfNeed(newPass)
     }
 
     override fun closeDatabase() = synchronized(this) {

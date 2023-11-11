@@ -7,9 +7,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.softartdev.notedelight.shared.database.TestSchema.firstNote
-import com.softartdev.notedelight.shared.database.TestSchema.secondNote
-import com.softartdev.notedelight.shared.database.TestSchema.thirdNote
+import com.softartdev.notedelight.shared.db.TestSchema.firstNote
+import com.softartdev.notedelight.shared.db.TestSchema.secondNote
+import com.softartdev.notedelight.shared.db.TestSchema.thirdNote
 import com.softartdev.notedelight.shared.db.Note
 
 @Composable

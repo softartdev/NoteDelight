@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.cocoapods)
@@ -24,14 +21,9 @@ kotlin {
         pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
             baseName = "iosComposeKit"
-            embedBitcodeMode.set(BitcodeEmbeddingMode.DISABLE)
-            freeCompilerArgs += listOf(
-                "-linker-option", "-framework", "-linker-option", "Metal",
-                "-linker-option", "-framework", "-linker-option", "CoreText",
-                "-linker-option", "-framework", "-linker-option", "CoreGraphics",
-            )
+            isStatic = true
+            if (rootProject.extra["hasXcode15"] == true) linkerOpts += "-ld64" //TODO: remove after update Kotlin >= 1.9.10
             export(project(":shared"))
-//            export(project(":shared-compose-ui"))
             export(libs.mokoResources)
             export(libs.koin.core)
         }
@@ -57,12 +49,6 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-        }
-    }
-    targets.withType<KotlinNativeTarget> {
-        binaries.all {
-            // TODO: the current compose binary surprises LLVM, so disable checks for now.
-            freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
         }
     }
 }

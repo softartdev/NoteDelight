@@ -1,14 +1,13 @@
-package com.softartdev.notedelight.shared.database
+package com.softartdev.notedelight.shared.db
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import com.softartdev.notedelight.shared.db.NoteDb
 import io.github.aakira.napier.Napier
 import java.sql.SQLException
 import java.util.Properties
 
 class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
     override val driver = JdbcSqliteDriver(
-        url = JdbcSqliteDriver.IN_MEMORY + DatabaseRepo.DB_NAME, // jdbc:sqlite:notes.db
+        url = JdbcSqliteDriver.IN_MEMORY + SafeRepo.DB_NAME, // jdbc:sqlite:notes.db
         properties = props
     )
     override val noteDb: NoteDb = createQueryWrapper(driver)

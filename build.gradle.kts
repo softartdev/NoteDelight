@@ -12,3 +12,15 @@ plugins {
     alias(libs.plugins.gms).apply(false)
     alias(libs.plugins.crashlytics).apply(false)
 }
+
+extra["hasXcode15"] = hasXcode15() //TODO: remove after update Kotlin >= 1.9.10
+
+fun hasXcode15(): Boolean = try {
+    val process: Process = ProcessBuilder("xcodebuild", "-version").start()
+    process.inputStream.bufferedReader().use { reader ->
+        process.waitFor() == 0 && reader.readText().startsWith("Xcode 15.")
+    }
+} catch (t: Throwable) {
+    t.printStackTrace()
+    false
+}

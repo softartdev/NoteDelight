@@ -1,9 +1,8 @@
 package com.softartdev.notedelight.shared
 
-import com.softartdev.notedelight.shared.database.DatabaseRepo
-import com.softartdev.notedelight.shared.database.DatabaseRepo.Companion.DB_NAME
-import com.softartdev.notedelight.shared.database.IosDbRepo
-import com.softartdev.notedelight.shared.database.TestSchema
+import com.softartdev.notedelight.shared.db.IosSafeRepo
+import com.softartdev.notedelight.shared.db.SafeRepo.Companion.DB_NAME
+import com.softartdev.notedelight.shared.db.TestSchema
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import platform.Foundation.NSFileManager
@@ -37,51 +36,51 @@ class CryptTest {
         val dbDeleted = IosCipherUtils.deleteDatabase()
         assertEquals(dbExisted, dbDeleted, message = "must be deleted if existed")
 
-        val dbRepo: DatabaseRepo = IosDbRepo()
-        assertEquals(expected = PlatformSQLiteState.DOES_NOT_EXIST, actual = dbRepo.databaseState)
+        val safeRepo = IosSafeRepo()
+        assertEquals(expected = PlatformSQLiteState.DOES_NOT_EXIST, actual = safeRepo.databaseState)
 
-        TestSchema.insertTestNotes(dbRepo.noteQueries)
-        assertEquals(expected = PlatformSQLiteState.UNENCRYPTED, actual = dbRepo.databaseState)
+        TestSchema.insertTestNotes(safeRepo.buildDbIfNeed().noteQueries)
+        assertEquals(expected = PlatformSQLiteState.UNENCRYPTED, actual = safeRepo.databaseState)
 
-        var noteList = dbRepo.noteQueries.getAll().executeAsList()
+        var noteList = safeRepo.buildDbIfNeed().noteQueries.getAll().executeAsList()
         assertEquals(expected = 3, actual = noteList.size)
 
         val cipherVersion = IosCipherUtils.checkCipherVersion(dbName = DB_NAME)
         assertEquals(expected = "4.5.4 community", actual = cipherVersion)
 
         Napier.v("1️⃣'st step - encrypt database")
-        dbRepo.closeDatabase()
+        safeRepo.closeDatabase()
         val password = "password"
         IosCipherUtils.encrypt(password, DB_NAME)
-        assertEquals(expected = PlatformSQLiteState.ENCRYPTED, actual = dbRepo.databaseState)
+        assertEquals(expected = PlatformSQLiteState.ENCRYPTED, actual = safeRepo.databaseState)
 
         assertTrue(actual = IosCipherUtils.checkKey(password, DB_NAME))
 
         Napier.v("Password checked, try to check the data.")
-        var dbHolder = dbRepo.buildDatabaseInstanceIfNeed(password)
+        var dbHolder = safeRepo.buildDbIfNeed(password)
         noteList = dbHolder.noteQueries.getAll().executeAsList()
         assertEquals(expected = 3, actual = noteList.size)
 
         Napier.v("2️⃣'nd step - change password")
-        dbRepo.closeDatabase()
+        safeRepo.closeDatabase()
         val newPassword = "newPassword"
-        dbRepo.rekey(password, newPassword)
-        dbRepo.closeDatabase()
+        safeRepo.rekey(password, newPassword)
+        safeRepo.closeDatabase()
         assertTrue(actual = IosCipherUtils.checkKey(newPassword, DB_NAME))
         assertFalse(actual = IosCipherUtils.checkKey(password, DB_NAME))
 
         Napier.v("New password checked, try to check the data.")
-        dbHolder = dbRepo.buildDatabaseInstanceIfNeed(newPassword)
+        dbHolder = safeRepo.buildDbIfNeed(newPassword)
         noteList = dbHolder.noteQueries.getAll().executeAsList()
         assertEquals(expected = 3, actual = noteList.size)
 
         Napier.v("3️⃣'rd step - decrypt database")
-        dbRepo.closeDatabase()
+        safeRepo.closeDatabase()
         IosCipherUtils.decrypt(newPassword, DB_NAME)
-        assertEquals(expected = PlatformSQLiteState.UNENCRYPTED, actual = dbRepo.databaseState)
+        assertEquals(expected = PlatformSQLiteState.UNENCRYPTED, actual = safeRepo.databaseState)
 
         Napier.v("Password removed, try to check the data.")
-        dbHolder = dbRepo.buildDatabaseInstanceIfNeed()
+        dbHolder = safeRepo.buildDbIfNeed()
         noteList = dbHolder.noteQueries.getAll().executeAsList()
         assertEquals(expected = 3, actual = noteList.size)
     }
