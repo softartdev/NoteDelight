@@ -20,11 +20,12 @@ import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.pref.DialogHolder
 import dev.icerock.moko.resources.compose.stringResource
 
-fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
-    val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
-    val notSaveCallback = prepareDismissCallback(doBefore = doNotSaveAndNavBack)
-    SaveDialog(saveCallback, notSaveCallback, ::dismissDialog)
-}
+fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) =
+    showDialog {
+        val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
+        val notSaveCallback = prepareDismissCallback(doBefore = doNotSaveAndNavBack)
+        SaveDialog(saveCallback, notSaveCallback, ::dismissDialog)
+    }
 
 fun DialogHolder.showEditTitle(noteId: Long) = showDialog {
     val editTitleViewModel: EditTitleViewModel = getViewModel()
@@ -68,11 +69,11 @@ fun DialogHolder.showError(message: String?) = showDialog {
 }
 
 @Composable
-fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
-    title = stringResource(MR.strings.error_title),
-    text = message,
-    onConfirm = dismissDialog, //TODO show 1 button
-    onDismiss = dismissDialog
+fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = AlertDialog(
+    title = { Text(text = stringResource(MR.strings.error_title)) },
+    text = { Text(message.orEmpty()) },
+    confirmButton = { Button(onClick = dismissDialog) { Text(stringResource(MR.strings.cancel)) } },
+    onDismissRequest = dismissDialog,
 )
 
 @Composable
