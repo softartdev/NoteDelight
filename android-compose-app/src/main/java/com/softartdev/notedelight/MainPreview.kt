@@ -23,7 +23,7 @@ fun PreviewSignInScreenLight() = PreferableMaterialTheme { SignInScreenBody() }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PreviewSplashScreenLight() = PreferableMaterialTheme { SplashScreenBody() }
+fun PreviewSplashScreenLight() = PreferableMaterialTheme { SplashScreenBody(true) }
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
@@ -39,4 +39,4 @@ fun PreviewSignInScreenDark() = PreferableMaterialTheme { SignInScreenBody() }
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewSplashScreenDark() = PreferableMaterialTheme { SplashScreenBody() }
+fun PreviewSplashScreenDark() = PreferableMaterialTheme { SplashScreenBody(true) }
