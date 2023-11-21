@@ -106,22 +106,18 @@ class NoteViewModel(
     private fun createTitleIfNeed(title: String?, text: String) =
         if (title.isNullOrEmpty()) createTitle(text) else title
 
-    //TODO trim '\n'
     private fun createTitle(text: String): String {
-        // Get the note's length
-        val length = text.length
+        var title = text.substring(0, 30.coerceAtMost(text.length))
 
-        // Sets the title by getting a substring of the text that is 31 characters long
-        // or the number of characters in the note plus one, whichever is smaller.
-        var title = text.substring(0, 30.coerceAtMost(length))
-
-        // If the resulting length is more than 30 characters, chops off any
-        // trailing spaces
-        if (length > 30) {
+        if (text.length > 30) {
             val lastSpace: Int = title.lastIndexOf(' ')
             if (lastSpace > 0) {
                 title = title.substring(0, lastSpace)
             }
+        }
+        val firstLine = title.indexOf('\n')
+        if (firstLine > 0) {
+            title = title.substring(0, firstLine)
         }
         return title
     }
