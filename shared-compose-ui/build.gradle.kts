@@ -14,51 +14,32 @@ kotlin {
             kotlinOptions.jvmTarget = "11"
         }
     }
-    android()
-    iosX64()
+    androidTarget()
     iosArm64()
     iosSimulatorArm64()
+    applyDefaultHierarchyTemplate()
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project(":shared"))
-                implementation(compose.ui)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(libs.decompose)
-                implementation(libs.decompose.extComposeJb)
-                implementation(libs.koin.core)
-                api(libs.mokoResources.compose)
-            }
+        commonMain.dependencies {
+            implementation(project(":shared"))
+            implementation(compose.ui)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.decompose)
+            implementation(libs.decompose.extComposeJb)
+            implementation(libs.koin.core)
+            api(libs.mokoResources.compose)
         }
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.koin.androidx.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.koin.androidx.compose)
         }
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.koin.core.jvm)
-            }
+        jvmMain.dependencies {
+            implementation(libs.koin.core.jvm)
         }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(compose.desktop.uiTestJUnit4)
-            }
-        }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-            }
+        jvmTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(compose.desktop.uiTestJUnit4)
         }
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")

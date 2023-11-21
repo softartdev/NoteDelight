@@ -71,7 +71,7 @@ fun DialogHolder.showError(message: String?) = showDialog {
 fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
     title = stringResource(MR.strings.error_title),
     text = message,
-    onConfirm = dismissDialog,
+    onConfirm = dismissDialog, //TODO show 1 button
     onDismiss = dismissDialog
 )
 

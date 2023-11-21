@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalForeignApi::class)
+
 package com.softartdev.notedelight.shared
 
 import cnames.structs.sqlite3

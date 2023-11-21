@@ -1,3 +1,9 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet.Companion.COMMON_MAIN_SOURCE_SET_NAME
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet.Companion.COMMON_TEST_SOURCE_SET_NAME
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -13,7 +19,9 @@ version = "1.0"
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDir(File(layout.buildDirectory.get().asFile, "generated/moko/androidMain/res"))
+    sourceSets["main"].res.srcDir(
+        File(layout.buildDirectory.get().asFile, "generated/moko/androidMain/res")
+    )
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -51,35 +59,30 @@ multiplatformResources {
 kotlin {
     jvmToolchain(11)
     jvm()
-    android()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    androidTarget()
+    iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.coroutines.core)
-                implementation(libs.sqlDelight.runtime)
-                implementation(libs.sqlDelight.coroutinesExt)
-                api(libs.kotlinx.datetime)
-                api(libs.napier)
-                api(libs.mokoResources)
-                implementation(libs.koin.core)
-                api(libs.material.theme.prefs)
-            }
+        commonMain.dependencies {
+            implementation(libs.coroutines.core)
+            implementation(libs.sqlDelight.coroutinesExt)
+            api(libs.kotlinx.datetime)
+            api(libs.napier)
+            api(libs.mokoResources)
+            implementation(libs.koin.core)
+            api(libs.material.theme.prefs)
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation(libs.coroutines.test)
-                implementation(libs.koin.test)
-                implementation(libs.mokoResources.test)
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(kotlin("test-common"))
+            implementation(kotlin("test-annotations-common"))
+            implementation(libs.coroutines.test)
+            implementation(libs.koin.test)
+            implementation(libs.mokoResources.test)
         }
-        val androidMain by getting {
-            dependsOn(commonMain)
+        androidMain {
+            dependsOn(commonMain.get())//TODO remove after update moko-resources > 0.23.0
             dependencies {
                 implementation(libs.coroutines.android)
                 api(libs.sqlDelight.android)
@@ -92,7 +95,7 @@ kotlin {
             }
         }
         val androidUnitTest by getting {
-            dependsOn(commonTest)
+            dependsOn(commonTest.get())
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -104,40 +107,15 @@ kotlin {
                 implementation(libs.turbine)
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-                implementation(libs.sqlDelight.native)
-//                api(libs.sqlcipherKtnPod)
-            }
+        iosMain.dependencies {
+            implementation(libs.sqlDelight.native)
         }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        val iosTest by creating {
-            dependsOn(commonTest)
-            iosX64Test.dependsOn(this)
-            iosArm64Test.dependsOn(this)
-            iosSimulatorArm64Test.dependsOn(this)
+        jvmMain.dependencies {
+            implementation(libs.sqlDelight.jvm)
         }
-        val jvmMain by getting {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(libs.sqlDelight.jvm)
-            }
-        }
-        val jvmTest by getting {
-            dependsOn(commonTest)
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-            }
+        jvmTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(kotlin("test-junit"))
         }
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
@@ -153,11 +131,6 @@ kotlin {
             export(libs.mokoResources)
         }
     }
-    targets.withType<KotlinNativeTarget> {
-        binaries.all {
-            if (rootProject.extra["hasXcode15"] == true) linkerOpts += "-ld64" //TODO: remove after update Kotlin >= 1.9.10
-        }
-    }
 }
 sqldelight {
     databases {
@@ -166,4 +139,28 @@ sqldelight {
         }
     }
     linkSqlite.set(false)
+}
+
+//FIXME https://github.com/cashapp/sqldelight/issues/4523
+fun KotlinSourceSetContainer.iosIntermediateSourceSets(vararg iosTargets: KotlinNativeTarget) {
+    val children: List<Pair<KotlinSourceSet, KotlinSourceSet>> = iosTargets.map { target ->
+        val main = target.compilations.getByName(MAIN_COMPILATION_NAME).defaultSourceSet
+        val test = target.compilations.getByName(TEST_COMPILATION_NAME).defaultSourceSet
+        return@map main to test
+    }
+    val parent: Pair<KotlinSourceSet, KotlinSourceSet> = Pair(
+        first = sourceSets.getByName(COMMON_MAIN_SOURCE_SET_NAME),
+        second = sourceSets.getByName(COMMON_TEST_SOURCE_SET_NAME)
+    )
+    createIntermediateSourceSet("iosMain", children.map { it.first }, parent.first)
+    createIntermediateSourceSet("iosTest", children.map { it.second }, parent.second)
+}
+
+fun KotlinSourceSetContainer.createIntermediateSourceSet(
+    name: String,
+    children: List<KotlinSourceSet>,
+    parent: KotlinSourceSet
+): KotlinSourceSet = sourceSets.maybeCreate(name).apply {
+    dependsOn(parent)
+    children.forEach { it.dependsOn(this) }
 }
