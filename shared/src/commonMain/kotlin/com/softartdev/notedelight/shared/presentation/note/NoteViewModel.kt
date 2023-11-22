@@ -91,7 +91,7 @@ class NoteViewModel(
     override fun errorResult(throwable: Throwable): NoteResult = NoteResult.Error(throwable.message)
 
     override fun onCleared() {
-//        super.onCleared()
+        super.onCleared()
         resetLoadingResult() // workaround due to koin uses remember function of compose
     }
 
