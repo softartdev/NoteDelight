@@ -2,10 +2,10 @@ package com.softartdev.notedelight.shared.presentation.signin
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
 import com.softartdev.notedelight.shared.anyObject
+import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -23,12 +23,12 @@ class SignInViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val cryptUseCase = Mockito.mock(CryptUseCase::class.java)
+    private val mockCheckPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
     fun setUp() {
-        signInViewModel = SignInViewModel(cryptUseCase)
+        signInViewModel = SignInViewModel(mockCheckPasswordUseCase)
     }
 
     @Test
@@ -45,7 +45,7 @@ class SignInViewModelTest {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
 
             val pass = StubEditable("pass")
-            Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(true)
+            Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
             signInViewModel.signIn(pass)
             assertEquals(SignInResult.ShowProgress, awaitItem())
             assertEquals(SignInResult.NavMain, awaitItem())
@@ -73,7 +73,7 @@ class SignInViewModelTest {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
 
             val pass = StubEditable("pass")
-            Mockito.`when`(cryptUseCase.checkPassword(pass)).thenReturn(false)
+            Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
             signInViewModel.signIn(pass)
             assertEquals(SignInResult.ShowProgress, awaitItem())
             assertEquals(SignInResult.ShowIncorrectPassError, awaitItem())
@@ -88,7 +88,7 @@ class SignInViewModelTest {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
 
             val throwable = Throwable()
-            Mockito.`when`(cryptUseCase.checkPassword(anyObject())).then { throw throwable }
+            Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
             signInViewModel.signIn(StubEditable("pass"))
             assertEquals(SignInResult.ShowProgress, awaitItem())
             assertEquals(SignInResult.ShowError(throwable), awaitItem())

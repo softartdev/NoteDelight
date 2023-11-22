@@ -3,9 +3,9 @@ package com.softartdev.notedelight.ui.dialog
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.MR
@@ -17,14 +17,15 @@ import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
-import com.softartdev.themepref.DialogHolder
+import com.softartdev.theme.pref.DialogHolder
 import dev.icerock.moko.resources.compose.stringResource
 
-fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) = showDialog {
-    val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
-    val notSaveCallback = prepareDismissCallback(doBefore = doNotSaveAndNavBack)
-    SaveDialog(saveCallback, notSaveCallback, ::dismissDialog)
-}
+fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) =
+    showDialog {
+        val saveCallback = prepareDismissCallback(doBefore = saveNoteAndNavBack)
+        val notSaveCallback = prepareDismissCallback(doBefore = doNotSaveAndNavBack)
+        SaveDialog(saveCallback, notSaveCallback, ::dismissDialog)
+    }
 
 fun DialogHolder.showEditTitle(noteId: Long) = showDialog {
     val editTitleViewModel: EditTitleViewModel = getViewModel()
@@ -68,11 +69,11 @@ fun DialogHolder.showError(message: String?) = showDialog {
 }
 
 @Composable
-fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = ShowDialog(
-    title = stringResource(MR.strings.error_title),
-    text = message,
-    onConfirm = dismissDialog,
-    onDismiss = dismissDialog
+fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = AlertDialog(
+    title = { Text(text = stringResource(MR.strings.error_title)) },
+    text = { Text(message.orEmpty()) },
+    confirmButton = { Button(onClick = dismissDialog) { Text(stringResource(MR.strings.cancel)) } },
+    onDismissRequest = dismissDialog,
 )
 
 @Composable

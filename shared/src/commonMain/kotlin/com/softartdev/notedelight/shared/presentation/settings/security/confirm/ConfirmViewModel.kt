@@ -1,11 +1,10 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
-import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
-
+import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 
 class ConfirmViewModel (
-        private val cryptUseCase: CryptUseCase
+    private val changePasswordUseCase: ChangePasswordUseCase
 ) : BaseViewModel<ConfirmResult>() {
 
     override var initResult: ConfirmResult? = ConfirmResult.InitState
@@ -16,7 +15,7 @@ class ConfirmViewModel (
             password.toString() != repeatPassword.toString() -> ConfirmResult.PasswordsNoMatchError
             password.isEmpty() -> ConfirmResult.EmptyPasswordError
             else -> {
-                cryptUseCase.changePassword(null, password)
+                changePasswordUseCase(null, password)
                 ConfirmResult.Success
             }
         }

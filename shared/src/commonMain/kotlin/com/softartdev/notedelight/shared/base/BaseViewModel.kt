@@ -19,7 +19,7 @@ abstract class BaseViewModel<T> : KmmViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (useIdling) {
-                    IdlingResource.increment()
+                    IdlingRes.increment()
                     loadingResult?.let { loading -> onResult(loading) }
                 }
                 onResult(block())
@@ -27,7 +27,7 @@ abstract class BaseViewModel<T> : KmmViewModel() {
                 Napier.e("❌", e)
                 onResult(errorResult(e))
             } finally {
-                if (useIdling) IdlingResource.decrement()
+                if (useIdling) IdlingRes.decrement()
             }
         }.start()
     }
@@ -36,11 +36,11 @@ abstract class BaseViewModel<T> : KmmViewModel() {
         viewModelScope.launch(Dispatchers.Default) {
             flow.onStart {
                 loadingResult ?: return@onStart
-                IdlingResource.increment()
+                IdlingRes.increment()
                 emit(loadingResult!!)
             }.onEach { result ->
                 onResult(result)
-                if (result == loadingResult) IdlingResource.decrement()
+                if (result == loadingResult) IdlingRes.decrement()
             }.catch { throwable ->
                 Napier.e("❌", throwable)
                 onResult(errorResult(throwable))

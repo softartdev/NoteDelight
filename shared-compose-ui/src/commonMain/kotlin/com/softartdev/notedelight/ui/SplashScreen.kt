@@ -5,19 +5,25 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.dialog.showError
-import com.softartdev.themepref.DialogHolder
-import com.softartdev.themepref.LocalThemePrefs
+import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
@@ -27,32 +33,37 @@ fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMai
         splashViewModel.checkEncryption()
         onDispose(splashViewModel::onCleared)
     }
-    val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
+    var showError: Boolean by remember { mutableStateOf(false) }
     when (val splashResult: SplashResult = splashResultState.value) {
-        is SplashResult.Loading -> Unit//TODO: progress bar
+        is SplashResult.Loading -> {
+            showError = true
+        }
         is SplashResult.NavSignIn -> navSignIn()
         is SplashResult.NavMain -> navMain()
-        is SplashResult.ShowError -> dialogHolder.showError(splashResult.message)
+        is SplashResult.ShowError -> themePrefs.dialogHolder.showError(splashResult.message)
     }
-    SplashScreenBody()
+    SplashScreenBody(showError)
 }
 
 @Composable
-fun SplashScreenBody() = Box(
+fun SplashScreenBody(showError: Boolean = false) = Box(
     modifier = Modifier
         .fillMaxSize()
-        .background(color = MaterialTheme.colors.background)
+        .background(color = MaterialTheme.colorScheme.background)
 ) {
     Image(
+        modifier = Modifier.align(Alignment.Center),
         painter = painterResource(MR.images.app_icon),
-        contentDescription = null,
-        modifier = Modifier
-            .align(Alignment.Center)
-            .background(color = MaterialTheme.colors.background)
+        contentDescription = null
     )
-    LocalThemePrefs.current.showDialogIfNeed()
+    if (showError) LinearProgressIndicator(
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .padding(bottom = 32.dp)
+    )
+    themePrefs.showDialogIfNeed()
 }
 
 @Preview
 @Composable
-fun PreviewSplashScreen() = SplashScreenBody()
+fun PreviewSplashScreen() = SplashScreenBody(true)

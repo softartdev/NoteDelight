@@ -3,8 +3,9 @@ package com.softartdev.notedelight.shared.presentation.main
 import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -25,12 +26,14 @@ class MainViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val noteUseCase = Mockito.mock(NoteUseCase::class.java)
+    private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
+    private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private lateinit var mainViewModel: MainViewModel
 
     @Before
     fun setUp() {
-        mainViewModel = MainViewModel(noteUseCase)
+        Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
+        mainViewModel = MainViewModel(mockSafeRepo, mockNoteDAO)
     }
 
     @Test
@@ -39,7 +42,7 @@ class MainViewModelTest {
             assertEquals(NoteListResult.Loading, awaitItem())
 
             val notes = emptyList<Note>()
-            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flowOf(notes))
+            Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flowOf(notes))
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.Success(notes), awaitItem())
 
@@ -52,7 +55,7 @@ class MainViewModelTest {
         mainViewModel.resultStateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
-            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw SQLiteException() })
+            Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.NavSignIn, awaitItem())
 
@@ -65,7 +68,7 @@ class MainViewModelTest {
         mainViewModel.resultStateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
-            Mockito.`when`(noteUseCase.getNotes()).thenReturn(flow { throw Throwable() })
+            Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw Throwable() })
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.Error(null), awaitItem())
 

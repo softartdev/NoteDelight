@@ -1,11 +1,10 @@
 package com.softartdev.notedelight.shared.presentation.signin
 
-import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 
-
-class SignInViewModel (
-        private val cryptUseCase: CryptUseCase
+class SignInViewModel(
+    private val checkPasswordUseCase: CheckPasswordUseCase
 ) : BaseViewModel<SignInResult>() {
 
     override var initResult: SignInResult? = SignInResult.ShowSignInForm
@@ -13,7 +12,7 @@ class SignInViewModel (
 
     fun signIn(pass: CharSequence) = launch {
         if (pass.isNotEmpty()) {
-            when (cryptUseCase.checkPassword(pass)) {
+            when (checkPasswordUseCase(pass)) {
                 true -> SignInResult.NavMain
                 false -> SignInResult.ShowIncorrectPassError
             }

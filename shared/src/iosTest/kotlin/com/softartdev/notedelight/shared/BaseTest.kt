@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.shared
 
-import com.softartdev.notedelight.shared.database.DatabaseRepo
-import com.softartdev.notedelight.shared.database.IosDbRepo
+import com.softartdev.notedelight.shared.db.IosSafeRepo
+import com.softartdev.notedelight.shared.db.SafeRepo
 
 actual abstract class BaseTest actual constructor() {
 
-    actual val dbRepo: DatabaseRepo = IosDbRepo()
+    actual val safeRepo: SafeRepo = IosSafeRepo()
 
     actual fun deleteDb() {
         IosCipherUtils.deleteDatabase()

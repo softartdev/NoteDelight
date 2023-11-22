@@ -13,25 +13,26 @@ kotlin {
             kotlinOptions.jvmTarget = "11"
         }
     }
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
-        val jvmMain by getting {
-            dependencies {
-                implementation(project(":shared"))
-                implementation(project(":shared-compose-ui"))
-                implementation(libs.decompose)
-                implementation(libs.decompose.extComposeJb)
-                implementation(libs.coroutines.swing)
-                implementation(compose.desktop.currentOs)
-                implementation(libs.koin.core.jvm)
-            }
+        jvmMain.dependencies {
+            implementation(project(":shared"))
+            implementation(project(":shared-compose-ui"))
+            implementation(libs.decompose)
+            implementation(libs.decompose.extComposeJb)
+            implementation(libs.coroutines.swing)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.koin.core.jvm)
         }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
+        jvmTest.dependencies {
+            implementation(project(":jvm-compose-test"))
+            implementation(kotlin("test"))
+            implementation(compose.desktop.uiTestJUnit4)
+            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -44,7 +45,7 @@ compose {
             nativeDistributions {
                 targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
                 packageName = "com.softartdev.notedelight"
-                packageVersion = "1.0.0"
+                packageVersion = "1.0.1"
             }
         }
     }

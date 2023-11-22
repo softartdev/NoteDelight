@@ -1,8 +1,6 @@
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalComposeLibrary::class)
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -23,8 +21,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 831
-        versionName = "8.3.1"
+        versionCode = 834
+        versionName = "8.3.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -67,10 +65,10 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":shared-compose-ui"))
-    implementation(project(":shared-android-util"))
+    implementation(kotlin("reflect"))
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
-    implementation(compose.material)
+    implementation(compose.material3)
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)
@@ -84,11 +82,13 @@ dependencies {
     implementation(libs.leakCanary.plumber.android)
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
+    testImplementation(libs.bundles.mockito)
+    androidTestImplementation(project(":jvm-compose-test"))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(compose.uiTestJUnit4)
+    androidTestImplementation(compose.desktop.uiTestJUnit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
 }

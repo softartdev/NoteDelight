@@ -1,63 +1,73 @@
 package com.softartdev.notedelight.shared.data
 
 import com.softartdev.notedelight.shared.BaseTest
+import com.softartdev.notedelight.shared.PlatformSQLiteState
+import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
+import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @Ignore
 @ExperimentalCoroutinesApi
 class CryptUseCaseTest : BaseTest() {
-
-    private var cryptUseCase = CryptUseCase(dbRepo)
+    private val checkPasswordUseCase = CheckPasswordUseCase(safeRepo)
+    private val changePasswordUseCase = ChangePasswordUseCase(safeRepo)
+    
+    private val dbIsEncrypted: Boolean
+        get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
 
     @BeforeTest
     fun setUp() = runTest {
-//        dbRepo.buildDatabaseInstanceIfNeed()
         deleteDb()
     }
 
     @AfterTest
     fun tearDown() = runTest {
-        dbRepo.closeDatabase()
+        safeRepo.closeDatabase()
     }
 
     @Test
     fun dbIsEncryptedTest() = runTest {
-        assertFalse(cryptUseCase.dbIsEncrypted())
+        assertFalse(dbIsEncrypted)
     }
 
     @Test
     fun checkPasswordTest() = runTest {
-        assertTrue(cryptUseCase.checkPassword(pass = ""), "empty pass")
-        assertFalse(cryptUseCase.checkPassword(pass = "~"), "not empty pass")
+        assertTrue(checkPasswordUseCase(pass = ""), "empty pass")
+        assertFalse(checkPasswordUseCase(pass = "~"), "not empty pass")
     }
 
     @Test
     fun changePasswordTest() = runTest {
         //prepare check
-        assertFalse(cryptUseCase.dbIsEncrypted(), "check db encrypt before")
-        assertTrue(cryptUseCase.checkPassword(pass = ""), "check empty pass before")
+        assertFalse(dbIsEncrypted, "check db encrypt before")
+        assertTrue(checkPasswordUseCase(pass = ""), "check empty pass before")
 
         //encrypt
         val firstPass = "first password"
-        cryptUseCase.changePassword(null, firstPass)
-        assertTrue(cryptUseCase.dbIsEncrypted(), "check db encrypt after encrypt")
-        assertTrue(cryptUseCase.checkPassword(pass = firstPass), "check correct pass after encrypt")
-        assertFalse(cryptUseCase.checkPassword(pass = ""), "check empty pass after encrypt")
+        changePasswordUseCase(null, firstPass)
+        assertTrue(dbIsEncrypted, "check db encrypt after encrypt")
+        assertTrue(checkPasswordUseCase(pass = firstPass), "check correct pass after encrypt")
+        assertFalse(checkPasswordUseCase(pass = ""), "check empty pass after encrypt")
 
         //rekey
         val secondPass = "second password"
-        cryptUseCase.changePassword(firstPass, secondPass)
-        assertTrue(cryptUseCase.dbIsEncrypted(), "check db encrypt after rekey")
-        assertTrue(cryptUseCase.checkPassword(pass = secondPass), "check correct pass after rekey")
-        assertFalse(cryptUseCase.checkPassword(pass = firstPass), "check incorrect pass after rekey")
+        changePasswordUseCase(firstPass, secondPass)
+        assertTrue(dbIsEncrypted, "check db encrypt after rekey")
+        assertTrue(checkPasswordUseCase(pass = secondPass), "check correct pass after rekey")
+        assertFalse(checkPasswordUseCase(pass = firstPass), "check incorrect pass after rekey")
 
         //decrypt
-        cryptUseCase.changePassword(secondPass, null)
-        assertFalse(cryptUseCase.dbIsEncrypted(), "check db encrypt after decrypt")
-        assertTrue(cryptUseCase.checkPassword(pass = ""), "check empty pass after decrypt")
-        assertFalse(cryptUseCase.checkPassword(pass = firstPass), "check first pass after decrypt")
-        assertFalse(cryptUseCase.checkPassword(pass = secondPass), "check second pass after decrypt")
+        changePasswordUseCase(secondPass, null)
+        assertFalse(dbIsEncrypted, "check db encrypt after decrypt")
+        assertTrue(checkPasswordUseCase(pass = ""), "check empty pass after decrypt")
+        assertFalse(checkPasswordUseCase(pass = firstPass), "check first pass after decrypt")
+        assertFalse(checkPasswordUseCase(pass = secondPass), "check second pass after decrypt")
     }
 }

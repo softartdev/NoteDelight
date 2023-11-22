@@ -9,9 +9,10 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.softartdev.notedelight.ComposeIdlingRes
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.shared.R
-import com.softartdev.notedelight.shared.base.IdlingResource
+import com.softartdev.notedelight.shared.base.IdlingRes
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
 import org.junit.After
@@ -37,14 +38,14 @@ class SignOutTest {
 
     @Before
     fun registerIdlingResource() {
-        IdlingRegistry.getInstance().register(IdlingResource.countingIdlingResource)
-        composeTestRule.registerIdlingResource(composeIdlingResource)
+        IdlingRegistry.getInstance().register(IdlingRes.countingIdlingResource)
+        composeTestRule.registerIdlingResource(ComposeIdlingRes)
     }
 
     @After
     fun unregisterIdlingResource() {
-        composeTestRule.unregisterIdlingResource(composeIdlingResource)
-        IdlingRegistry.getInstance().unregister(IdlingResource.countingIdlingResource)
+        composeTestRule.unregisterIdlingResource(ComposeIdlingRes)
+        IdlingRegistry.getInstance().unregister(IdlingRes.countingIdlingResource)
     }
 
     @Test

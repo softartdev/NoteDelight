@@ -1,10 +1,10 @@
 package com.softartdev.notedelight.shared
 
-import com.softartdev.notedelight.shared.database.DatabaseRepo
+import com.softartdev.notedelight.shared.db.SafeRepo
 
 expect abstract class BaseTest() {
 
-    val dbRepo: DatabaseRepo
+    val safeRepo: SafeRepo
 
     fun deleteDb()
 }

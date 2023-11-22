@@ -1,11 +1,12 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
-import com.softartdev.notedelight.shared.data.CryptUseCase
 import com.softartdev.notedelight.shared.base.BaseViewModel
-
+import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
+import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 
 class EnterViewModel (
-        private val cryptUseCase: CryptUseCase
+    private val checkPasswordUseCase: CheckPasswordUseCase,
+    private val changePasswordUseCase: ChangePasswordUseCase
 ) : BaseViewModel<EnterResult>() {
 
     override var initResult: EnterResult? = EnterResult.InitState
@@ -13,9 +14,9 @@ class EnterViewModel (
 
     fun enterCheck(password: CharSequence) = launch {
         if (password.isNotEmpty()) {
-            when (cryptUseCase.checkPassword(password)) {
+            when (checkPasswordUseCase(password)) {
                 true -> {
-                    cryptUseCase.changePassword(password, null)
+                    changePasswordUseCase(password, null)
                     EnterResult.Success
                 }
                 false -> EnterResult.IncorrectPasswordError

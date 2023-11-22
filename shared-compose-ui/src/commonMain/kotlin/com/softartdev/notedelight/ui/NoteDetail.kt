@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
@@ -5,9 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +23,9 @@ import com.softartdev.notedelight.ui.dialog.showDelete
 import com.softartdev.notedelight.ui.dialog.showEditTitle
 import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.notedelight.ui.dialog.showSaveChanges
-import com.softartdev.themepref.DialogHolder
-import com.softartdev.themepref.LocalThemePrefs
-import com.softartdev.themepref.PreferableMaterialTheme
+import com.softartdev.theme.material3.PreferableMaterialTheme
+import com.softartdev.theme.pref.DialogHolder
+import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
@@ -46,10 +48,9 @@ fun NoteDetail(
     val textState: MutableState<String> = remember { mutableStateOf("") }
 
     backWrapper.handler = { noteViewModel.checkSaveChange(titleState.value, textState.value) }
-    val dialogHolder: DialogHolder = LocalThemePrefs.current.dialogHolder
+    val dialogHolder: DialogHolder = themePrefs.dialogHolder
 
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
-    val snackbarHostState: SnackbarHostState = scaffoldState.snackbarHostState
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val noteResult: NoteResult = noteResultState.value) {
         is NoteResult.Loading,
@@ -63,7 +64,7 @@ fun NoteDetail(
             val noteSaved = MR.strings.note_saved.contextLocalized() + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
-        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteId)
+        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteResult.noteId)
         is NoteResult.TitleUpdated -> {
             titleState.value = noteResult.title
         }
@@ -83,7 +84,7 @@ fun NoteDetail(
         is NoteResult.Error -> dialogHolder.showError(noteResult.message)
     }
     NoteDetailBody(
-        scaffoldState = scaffoldState,
+        snackbarHostState = snackbarHostState,
         titleState = titleState,
         textState = textState,
         onBackClick = requireNotNull(backWrapper.handler),
@@ -96,7 +97,7 @@ fun NoteDetail(
 
 @Composable
 fun NoteDetailBody(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     titleState: MutableState<String> = mutableStateOf("Title"),
     textState: MutableState<String> = mutableStateOf("Text"),
     onBackClick: () -> Unit = {},
@@ -105,7 +106,7 @@ fun NoteDetailBody(
     onDeleteClick: () -> Unit = {},
     showLoading: Boolean = true,
 ) = Scaffold(
-    scaffoldState = scaffoldState,
+    snackbarHost = { SnackbarHost(snackbarHostState) },
     topBar = {
         TopAppBar(
             title = { Text(text = titleState.value, maxLines = 1) },
@@ -129,8 +130,8 @@ fun NoteDetailBody(
                 }
             }
         )
-    }) {
-    Box {
+    }) { paddingValues ->
+    Box(modifier = Modifier.padding(paddingValues)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             if (showLoading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
@@ -140,7 +141,7 @@ fun NoteDetailBody(
                 label = { Text(stringResource(MR.strings.type_text)) },
             )
         }
-        LocalThemePrefs.current.showDialogIfNeed()
+        themePrefs.showDialogIfNeed()
     }
 }
 

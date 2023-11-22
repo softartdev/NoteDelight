@@ -2,12 +2,14 @@ package com.softartdev.notedelight.shared.presentation.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.data.NoteUseCase
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
+import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
 import org.junit.After
@@ -26,23 +28,21 @@ class NoteViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val noteUseCase = Mockito.mock(NoteUseCase::class.java)
-    private var noteViewModel = NoteViewModel(noteUseCase)
+    private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
+    private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
+    private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
+    private var noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase)
 
     private val id = 1L
     private val title: String = "title"
     private val text: String = "text"
     private val ldt: LocalDateTime = createLocalDateTime()
     private val note = Note(id, title, text, ldt, ldt)
-    private val titleChannel = Channel<String>()
 
     @Before
     fun setUp() = runTest {
-        Mockito.`when`(noteUseCase.createNote()).thenReturn(id)
-        Mockito.`when`(noteUseCase.loadNote(id)).thenReturn(note)
-        Mockito.`when`(noteUseCase.saveNote(id, title, text)).thenReturn(note)
-        Mockito.`when`(noteUseCase.titleChannel).thenReturn(titleChannel)
-        Mockito.`when`(noteUseCase.deleteNote(id)).thenReturn(1)
+        Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
+        Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
     }
 
     @After
@@ -108,7 +108,7 @@ class NoteViewModelTest {
             noteViewModel.editTitle()
             assertEquals(NoteResult.NavEditTitle(id), awaitItem())
 
-            titleChannel.send(title)
+            UpdateTitleUseCase.titleChannel.send(title)
             assertEquals(NoteResult.TitleUpdated(title), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -130,12 +130,11 @@ class NoteViewModelTest {
 
     @Test
     fun checkSaveChange() = runTest {
-        Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(true)
-        Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
             assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
+            Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "new text"))
             noteViewModel.checkSaveChange(title, text)
             assertEquals(NoteResult.CheckSaveChange, awaitItem())
 
@@ -145,8 +144,6 @@ class NoteViewModelTest {
 
     @Test
     fun checkSaveChangeNavBack() = runTest {
-        Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
-        Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
             assertEquals(NoteResult.Loading, awaitItem())
 
@@ -160,13 +157,12 @@ class NoteViewModelTest {
 
     @Test
     fun checkSaveChangeDeleted() = runTest {
-        Mockito.`when`(noteUseCase.isChanged(id, title, text)).thenReturn(false)
-        Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
         noteViewModel.resultStateFlow.test {
             assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
-            noteViewModel.checkSaveChange(title, text)
+            Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
+            noteViewModel.checkSaveChange("", "")
             assertEquals(NoteResult.Deleted, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -188,7 +184,6 @@ class NoteViewModelTest {
 
     @Test
     fun doNotSaveAndNavBack() = runTest {
-        Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(false)
         noteViewModel.resultStateFlow.test {
             assertEquals(NoteResult.Loading, awaitItem())
 
@@ -202,11 +197,11 @@ class NoteViewModelTest {
 
     @Test
     fun doNotSaveAndNavBackDeleted() = runTest {
-        Mockito.`when`(noteUseCase.isEmpty(id)).thenReturn(true)
         noteViewModel.resultStateFlow.test {
             assertEquals(NoteResult.Loading, awaitItem())
 
             noteViewModel.setIdForTest(id)
+            Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
             noteViewModel.doNotSaveAndNavBack()
             assertEquals(NoteResult.Deleted, awaitItem())
 
