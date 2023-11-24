@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleC
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.softartdev.notedelight.shared.di.allModules
 import com.softartdev.notedelight.shared.runOnUiThread
+import com.softartdev.notedelight.shared.util.NapierKoinLogger
 import com.softartdev.notedelight.ui.MainRootUI
 import dev.icerock.moko.resources.desc.desc
 import io.github.aakira.napier.DebugAntilog
@@ -23,7 +24,7 @@ import org.koin.core.logger.Level
 fun main() {
     Napier.base(antilog = DebugAntilog())
     startKoin {
-        printLogger(level = Level.DEBUG)
+        logger(NapierKoinLogger(Level.DEBUG))
         modules(allModules)
     }
     val lifecycle = LifecycleRegistry()

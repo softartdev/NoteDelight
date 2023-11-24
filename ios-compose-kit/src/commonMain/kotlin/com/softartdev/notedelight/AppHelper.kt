@@ -10,6 +10,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.start
 import com.arkivanov.essenty.lifecycle.stop
 import com.softartdev.notedelight.shared.di.allModules
+import com.softartdev.notedelight.shared.util.NapierKoinLogger
 import com.softartdev.notedelight.ui.MainRootUI
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
@@ -25,7 +26,7 @@ class AppHelper {
     fun appInit() {
         Napier.base(antilog = DebugAntilog())
         startKoin {
-            printLogger(level = Level.DEBUG)
+            logger(NapierKoinLogger(Level.DEBUG))
             modules(allModules)
         }
     }

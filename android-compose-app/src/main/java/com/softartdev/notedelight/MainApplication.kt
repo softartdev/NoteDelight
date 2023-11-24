@@ -2,9 +2,9 @@ package com.softartdev.notedelight
 
 import android.app.Application
 import com.softartdev.notedelight.shared.di.allModules
+import com.softartdev.notedelight.shared.util.NapierKoinLogger
 import com.softartdev.notedelight.util.isInLeakCanaryAnalyzerProcess
 import com.softartdev.notedelight.util.log.CrashlyticsAntilog
-import com.softartdev.notedelight.util.log.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext

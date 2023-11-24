@@ -28,7 +28,9 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
             try {
                 NoteDb.Schema.create(driver)
             } catch (sqlException: SQLException) {
-                Napier.e("Error creating database", sqlException)
+                Napier.e(message = sqlException.localizedMessage)
+            } catch (t: Throwable) {
+                Napier.e(message = "Error creating database schema", throwable = t)
             }
             currentVersion = 1
         } else if (NoteDb.Schema.version > currentVersion) {

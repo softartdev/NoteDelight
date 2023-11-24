@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.cocoapods)
@@ -26,6 +28,7 @@ kotlin {
             export(libs.mokoResources)
             export(libs.koin.core)
         }
+        if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
     sourceSets {
         commonMain.dependencies {

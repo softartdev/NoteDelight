@@ -44,8 +44,18 @@ compose {
             mainClass = "com.softartdev.notedelight.MainKt"
             nativeDistributions {
                 targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-                packageName = "com.softartdev.notedelight"
-                packageVersion = "1.0.1"
+                packageName = "Note Delight"
+                packageVersion = "1.1.3"
+                description = "Note app with encryption"
+                copyright = "© 2023 SoftArtDev"
+                macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))
+                windows.iconFile.set(project.file("src/jvmMain/resources/app_icon.ico"))
+                linux.iconFile.set(project.file("src/jvmMain/resources/app_icon.png"))
+                modules("java.sql")
+            }
+            buildTypes.release.proguard {
+                isEnabled = false //FIXME
+                configurationFiles.from(project.file("compose-desktop.pro"))
             }
         }
     }

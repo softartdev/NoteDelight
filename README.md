@@ -17,6 +17,7 @@ Supported platforms:
 
 [![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
 [![app_store_badge](screenshoots/badge-app-store.svg)](https://apps.apple.com/ge/app/note-delight/id6444444290)
+<a href="https://github.com/softartdev/NoteDelight/releases"><img src="screenshoots/badge-github.webp" alt="github_badge" height="40"></a>
 
 ## ARCHITECTURE 🏛
 

@@ -1,3 +1,4 @@
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -130,6 +131,7 @@ kotlin {
             isStatic = true
             export(libs.mokoResources)
         }
+        if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
 }
 sqldelight {
