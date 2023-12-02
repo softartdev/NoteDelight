@@ -113,6 +113,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.sqlDelight.jvm)
+            implementation(libs.appdirs)
         }
         jvmTest.dependencies {
             implementation(kotlin("test"))

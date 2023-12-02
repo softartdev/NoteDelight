@@ -4,7 +4,7 @@ targetSdk = "34"
 minSdk = "21"
 
 kotlin = "1.9.21"
-agp = "8.1.4"
+agp = "8.2.0"
 gms = "4.3.15"
 crashlytics = "2.9.8"
 compose = "1.5.11"
@@ -41,6 +41,7 @@ mockito = "5.2.0"
 turbine = "1.0.0"
 espresso = "3.5.1"
 desugar = "2.0.4"
+appdirs = "1.2.2"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -123,6 +124,8 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+appdirs = { module = "net.harawata:appdirs", version.ref = "appdirs" }
 
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espresso" }

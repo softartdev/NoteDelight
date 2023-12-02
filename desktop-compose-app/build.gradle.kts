@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.compose)
 }
 group = "com.softartdev"
-version = "1.0"
 
 kotlin {
     jvm {
@@ -45,7 +44,7 @@ compose {
             nativeDistributions {
                 targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
                 packageName = "Note Delight"
-                packageVersion = "1.1.3"
+                packageVersion = "1.1.4"
                 description = "Note app with encryption"
                 copyright = "© 2023 SoftArtDev"
                 macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))

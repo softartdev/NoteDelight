@@ -7,7 +7,7 @@ import java.util.Properties
 
 class JdbcDatabaseHolder(props: Properties = Properties()) : DatabaseHolder() {
     override val driver = JdbcSqliteDriver(
-        url = JdbcSqliteDriver.IN_MEMORY + SafeRepo.DB_NAME, // jdbc:sqlite:notes.db
+        url = JdbcSqliteDriver.IN_MEMORY + FilePathResolver().invoke(),// jdbc:sqlite:/.../notes.db
         properties = props
     )
     override val noteDb: NoteDb = createQueryWrapper(driver)
