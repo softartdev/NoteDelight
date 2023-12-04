@@ -73,6 +73,7 @@ kotlin {
             api(libs.mokoResources)
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
+            implementation(libs.stately.common)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
