@@ -13,7 +13,7 @@ Supported platforms:
 
 - Android
 - iOS (the iPad version also works on macOS)
-- Desktop JVM (macOS, Linux, Windows)
+- Desktop JVM (macOS, Linux, Windows)x(x86_64, arm64)
 
 [![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
 [![app_store_badge](screenshoots/badge-app-store.svg)](https://apps.apple.com/ge/app/note-delight/id6444444290)
