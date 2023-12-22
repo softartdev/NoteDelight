@@ -3,7 +3,7 @@ compileSdk = "34"
 targetSdk = "34"
 minSdk = "21"
 
-kotlin = "1.9.21"
+kotlin = "1.9.22"
 agp = "8.2.0"
 gms = "4.4.0"
 crashlytics = "2.9.9"
