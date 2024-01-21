@@ -38,11 +38,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
     }
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = "11"
+        kotlinOptions.jvmTarget = libs.versions.jdk.get()
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
     packagingOptions.resources {
@@ -58,7 +58,7 @@ multiplatformResources {
     multiplatformResourcesPackage = "com.softartdev.notedelight"
 }
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
     androidTarget()
     iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())

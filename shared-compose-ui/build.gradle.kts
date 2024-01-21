@@ -8,10 +8,10 @@ compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(libs.versions.jdk.get().toInt())
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = libs.versions.jdk.get()
         }
     }
     androidTarget()
@@ -52,7 +52,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
     }
 }

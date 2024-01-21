@@ -48,16 +48,19 @@ android {
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = libs.versions.jdk.get()
     }
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
-    buildFeatures.compose = true
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     testOptions.execution = "ANDROIDX_TEST_ORCHESTRATOR"
 }
