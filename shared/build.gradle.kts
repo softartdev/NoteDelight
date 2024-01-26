@@ -55,7 +55,7 @@ android {
     namespace = "com.softartdev.notedelight.shared"
 }
 multiplatformResources {
-    multiplatformResourcesPackage = "com.softartdev.notedelight"
+    resourcesPackage.set("com.softartdev.notedelight")
 }
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
@@ -168,3 +168,9 @@ fun KotlinSourceSetContainer.createIntermediateSourceSet(
     dependsOn(parent)
     children.forEach { it.dependsOn(this) }
 }
+
+tasks.named("generateMRandroidUnitTest") {
+    dependsOn(tasks.named("generateDebugLintModel"))
+    dependsOn(tasks.named("generateDebugLintReportModel"))
+    dependsOn(tasks.named("generateReleaseLintModel"))
+}//TODO remove after update moko-resources > 0.24.0-alpha-2
