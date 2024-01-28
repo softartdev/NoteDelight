@@ -33,6 +33,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.androidx.compose)
+            implementation("androidx.compose.material3:material3:1.2.0-rc01") //TODO remove after update compose > 1.6.0-beta01
         }
         jvmMain.dependencies {
             implementation(libs.koin.core.jvm)
