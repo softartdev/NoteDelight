@@ -55,7 +55,7 @@ android {
     namespace = "com.softartdev.notedelight.shared"
 }
 multiplatformResources {
-    multiplatformResourcesPackage = "com.softartdev.notedelight"
+    resourcesPackage.set("com.softartdev.notedelight")
 }
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
