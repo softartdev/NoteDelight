@@ -83,18 +83,15 @@ kotlin {
             implementation(libs.koin.test)
             implementation(libs.mokoResources.test)
         }
-        androidMain {
-            dependsOn(commonMain.get())//TODO remove after update moko-resources > 0.23.0
-            dependencies {
-                implementation(libs.coroutines.android)
-                api(libs.sqlDelight.android)
-                implementation(libs.bundles.androidx.sqlite)
-                api(libs.commonsware.saferoom)
-                api(libs.android.sqlcipher)
-                api(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.koin.android)
-                implementation(libs.espresso.idling.resource)
-            }
+        androidMain.dependencies {
+            implementation(libs.coroutines.android)
+            api(libs.sqlDelight.android)
+            implementation(libs.bundles.androidx.sqlite)
+            api(libs.commonsware.saferoom)
+            api(libs.android.sqlcipher)
+            api(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.koin.android)
+            implementation(libs.espresso.idling.resource)
         }
         val androidUnitTest by getting {
             dependsOn(commonTest.get())
