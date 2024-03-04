@@ -62,7 +62,10 @@ android {
         compose = true
     }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-    testOptions.execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    testOptions{
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        emulatorControl.enable = true
+    }
 }
 
 dependencies {
@@ -80,6 +83,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.androidx.tracing)
     debugImplementation(libs.leakCanary.android)
     debugImplementation(libs.leakCanary.android.process)
     implementation(libs.leakCanary.plumber.android)
@@ -91,6 +95,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.espresso.device)
     androidTestImplementation(compose.desktop.uiTestJUnit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
