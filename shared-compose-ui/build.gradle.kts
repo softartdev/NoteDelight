@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
@@ -14,7 +17,17 @@ kotlin {
             kotlinOptions.jvmTarget = libs.versions.jdk.get()
         }
     }
-    androidTarget()
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant {
+            sourceSetTree.set(KotlinSourceSetTree.test)
+
+            dependencies {
+                implementation(libs.androidx.ui.test.junit4.android)
+                debugImplementation(libs.androidx.compose.test.manifest)
+            }
+        }
+    }
     iosArm64()
     iosSimulatorArm64()
     applyDefaultHierarchyTemplate()
@@ -31,6 +44,12 @@ kotlin {
             implementation(libs.koin.core)
             api(libs.mokoResources.compose)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
         androidMain.dependencies {
             implementation(libs.koin.androidx.compose)
         }
@@ -40,6 +59,7 @@ kotlin {
         jvmTest.dependencies {
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
+            implementation(compose.desktop.currentOs)
         }
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
@@ -50,7 +70,10 @@ kotlin {
 android {
     namespace = "com.softartdev.notedelight.shared.compose"
     compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
+    defaultConfig{
+        minSdk = libs.versions.minSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
