@@ -29,7 +29,7 @@ kotlin {
             implementation(libs.koin.core.jvm)
         }
         jvmTest.dependencies {
-            implementation(project(":jvm-compose-test"))
+            implementation(project(":shared-compose-test"))
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
             implementation(compose.desktop.currentOs)

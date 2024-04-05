@@ -1,23 +1,24 @@
 package com.softartdev.notedelight.shared
 
-import javax.swing.SwingUtilities
+import android.os.Handler
+import android.os.Looper
 
 actual fun <T> runOnUiThread(block: () -> T): T {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
         return block()
     }
-    var error: Throwable? = null
     var result: T? = null
-
-    SwingUtilities.invokeAndWait {
+    var error: Throwable? = null
+    val handler = Handler(Looper.getMainLooper())
+    val runnable = Runnable {
         try {
             result = block()
         } catch (e: Throwable) {
             error = e
         }
     }
-    error?.also { throw it }
+    handler.post(runnable)
 
-    @Suppress("UNCHECKED_CAST")
+    error?.let { throw it }
     return result as T
 }

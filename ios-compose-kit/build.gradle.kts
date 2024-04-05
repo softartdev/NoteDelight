@@ -42,5 +42,8 @@ kotlin {
             api(libs.mokoResources)
             api(libs.koin.core)
         }
+        commonTest.dependencies {
+            implementation(project(":shared-compose-test"))
+        }
     }
 }

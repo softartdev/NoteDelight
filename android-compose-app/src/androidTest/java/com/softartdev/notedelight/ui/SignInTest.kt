@@ -1,6 +1,11 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package com.softartdev.notedelight.ui
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.AndroidComposeUiTest
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -32,6 +37,12 @@ class SignInTest {
         .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
 
+    private val composeUiTest: ComposeUiTest by lazy {
+        val field = AndroidComposeTestRule::class.java.getDeclaredField("composeTest")
+        field.isAccessible = true
+        return@lazy field.get(composeTestRule) as AndroidComposeUiTest<*>
+    }
+
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(IdlingRes.countingIdlingResource)
@@ -45,5 +56,5 @@ class SignInTest {
     }
 
     @Test
-    fun signInTest() = SignInTestCase(composeTestRule, Espresso::closeSoftKeyboard).invoke()
+    fun signInTest() = SignInTestCase(composeUiTest, Espresso::closeSoftKeyboard).invoke()
 }

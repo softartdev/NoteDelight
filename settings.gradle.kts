@@ -2,7 +2,7 @@ rootProject.name = "NoteDelight"
 
 include(":shared")
 include(":shared-compose-ui")
-include(":jvm-compose-test")
+include(":shared-compose-test")
 include(":android-compose-app")
 include(":desktop-compose-app")
 include(":ios-compose-kit")
