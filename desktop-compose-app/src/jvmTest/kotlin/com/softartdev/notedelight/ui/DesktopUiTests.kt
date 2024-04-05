@@ -1,9 +1,16 @@
+@file:OptIn(ExperimentalTestApi::class, InternalTestApi::class)
+
 package com.softartdev.notedelight.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.DesktopComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.InternalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.junit4.DesktopComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
@@ -27,7 +34,14 @@ import org.koin.java.KoinJavaComponent.get
 class DesktopUiTests : AbstractUiTests() {
 
     @get:Rule
-    override val composeTestRule: ComposeContentTestRule = createComposeRule()
+    val composeContentTestRule: ComposeContentTestRule = createComposeRule()
+
+    override val composeTestRule: ComposeUiTest by lazy {
+        val desktopRule: DesktopComposeTestRule = composeContentTestRule as DesktopComposeTestRule
+        val field = DesktopComposeTestRule::class.java.getDeclaredField("composeTest")
+        field.isAccessible = true
+        return@lazy field.get(desktopRule) as DesktopComposeUiTest
+    }
 
     @Before
     override fun setUp() {
@@ -73,7 +87,7 @@ class DesktopUiTests : AbstractUiTests() {
     override fun settingPasswordTest() = super.settingPasswordTest()
 
     override fun pressBack() {
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
+        composeTestRule.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
             .assertIsDisplayed()
             .performClick()
     }

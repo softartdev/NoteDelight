@@ -1,5 +1,11 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package com.softartdev.notedelight.ui
 
+import androidx.compose.ui.test.AndroidComposeUiTest
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
@@ -18,12 +24,18 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AndroidUiTests : AbstractUiTests() {
 
-    override val composeTestRule = createAndroidComposeRule<MainActivity>()
+    private val androidComposeRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
         .around(DetectLeaksAfterTestSuccess())
-        .around(composeTestRule)
+        .around(androidComposeRule)
+
+    override val composeTestRule: ComposeUiTest by lazy {
+        val field = AndroidComposeTestRule::class.java.getDeclaredField("composeTest")
+        field.isAccessible = true
+        return@lazy field.get(androidComposeRule) as AndroidComposeUiTest<*>
+    }
 
     override fun setUp() {
         super.setUp()
