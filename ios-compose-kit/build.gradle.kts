@@ -1,3 +1,4 @@
+import com.softartdev.notedelight.iosIntermediateSourceSets
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
@@ -9,8 +10,7 @@ compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
 }
 kotlin {
-    iosArm64()
-    iosSimulatorArm64()
+    iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())
     applyDefaultHierarchyTemplate()
 
     cocoapods {
