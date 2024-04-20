@@ -70,3 +70,5 @@ note_room_key_store.jks
 /iosApp/fastlane/28F5CB4337.json
 /iosApp/fastlane/ios_distribution.p12
 /iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
+
+/.kotlin/
