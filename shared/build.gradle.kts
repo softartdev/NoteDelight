@@ -66,6 +66,7 @@ kotlin {
             api(libs.kotlinx.datetime)
             api(libs.napier)
             api(libs.mokoResources)
+            api("dev.icerock.moko:parcelize:0.9.0")
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
             implementation(libs.stately.common)
