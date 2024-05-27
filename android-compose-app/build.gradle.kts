@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import com.google.firebase.crashlytics.buildtools.gradle.tasks.UploadMappingFileTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -99,4 +100,7 @@ dependencies {
     androidTestImplementation(compose.desktop.uiTestJUnit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
+}
+tasks.withType<UploadMappingFileTask>{
+    dependsOn("processDebugGoogleServices")
 }
