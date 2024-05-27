@@ -1,10 +1,8 @@
-import com.softartdev.notedelight.iosIntermediateSourceSets
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
@@ -17,7 +15,8 @@ kotlin {
         }
     }
     androidTarget()
-    iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())
+    iosArm64()
+    iosSimulatorArm64()
     applyDefaultHierarchyTemplate()
 
     sourceSets {
@@ -31,6 +30,7 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.extComposeJb)
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
             api(libs.mokoResources.compose)
         }
         androidMain.dependencies {

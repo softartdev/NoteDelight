@@ -15,6 +15,7 @@ class RootComponent(
     private val navigation = StackNavigation<Configuration>()
     private val stack = childStack(
         source = navigation,
+        serializer = Configuration.serializer(),
         initialConfiguration = Configuration.Splash,
         handleBackButton = true,
         childFactory = ::createChild

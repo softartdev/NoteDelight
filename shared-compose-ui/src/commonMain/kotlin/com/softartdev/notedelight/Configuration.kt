@@ -1,22 +1,22 @@
 package com.softartdev.notedelight
 
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
+import kotlinx.serialization.Serializable
 
-sealed class Configuration : Parcelable {
+@Serializable
+sealed class Configuration {
 
-    @Parcelize
-    object Splash : Configuration()
+    @Serializable
+    data object Splash : Configuration()
 
-    @Parcelize
-    object SignIn : Configuration()
+    @Serializable
+    data object SignIn : Configuration()
 
-    @Parcelize
-    object Main : Configuration()
+    @Serializable
+    data object Main : Configuration()
 
-    @Parcelize
+    @Serializable
     data class Details(val itemId: Long) : Configuration()
 
-    @Parcelize
-    object Settings : Configuration()
+    @Serializable
+    data object Settings : Configuration()
 }

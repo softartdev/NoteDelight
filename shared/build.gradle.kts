@@ -1,4 +1,3 @@
-import com.softartdev.notedelight.iosIntermediateSourceSets
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -56,7 +55,8 @@ kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
     androidTarget()
-    iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())
+    iosArm64()
+    iosSimulatorArm64()
     applyDefaultHierarchyTemplate()
 
     sourceSets {

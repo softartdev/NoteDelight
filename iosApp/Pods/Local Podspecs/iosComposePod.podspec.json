@@ -31,6 +31,6 @@
     }
   ],
   "resources": [
-    "build/compose/ios/iosComposeKit/compose-resources"
+    "build/compose/cocoapods/compose-resources"
   ]
 }

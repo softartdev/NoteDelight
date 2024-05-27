@@ -3,12 +3,12 @@ compileSdk = "34"
 targetSdk = "34"
 minSdk = "21"
 jdk = "17"
-kotlin = "1.9.23"
-agp = "8.3.2"
+kotlin = "1.9.24"
+agp = "8.4.1"
 gms = "4.4.1"
-crashlytics = "2.9.9"
-compose = "1.6.2"
-composeCompiler = "1.5.10"
+crashlytics = "3.0.1"
+compose = "1.6.10"
+composeCompiler = "1.5.14"
 coroutines = "1.8.0"
 sqlDelight = "2.0.2"
 androidxSqlite = "2.4.0"
@@ -18,25 +18,26 @@ iosSqlCipher = "4.5.4"
 sqlcipherKtnPod = "1.4.2"
 decompose = "2.2.2-compose-experimental"
 koin = "3.5.3"
+kotlinx-serialization = "1.6.3"
 kotlinx-datetime = "0.5.0"
 napier = "2.7.1"
-mokoResources = "0.24.0-alpha-5"
-materialThemePrefs = "0.6.5"
-androidxActivityCompose = "1.8.2"
-androidxComposeTest = "1.6.5"
+mokoResources = "0.24.0-beta-5"
+materialThemePrefs = "0.8.1"
+androidxActivityCompose = "1.9.0"
+androidxComposeTest = "1.6.7"
 androidxCoreSplashscreen = "1.0.1"
 androidxLegacySupport = "1.0.0"
 androidxPreference = "1.2.1"
 androidxMultidex = "2.0.1"
 androidxTracing = "1.2.0"
-androidxLifecycle = "2.7.0"
+androidxLifecycle = "2.8.0"
 androidxArch = "2.2.0"
 androidxTestExt = "1.1.5"
 androidxTest = "1.5.2"
 androidxTestOrchestrator = "1.4.2"
-googleAndroidMaterial = "1.11.0"
-firebase = "32.8.0"
-leakCanary = "2.13"
+googleAndroidMaterial = "1.12.0"
+firebase = "33.0.0"
+leakCanary = "2.14"
 junit = "4.13.2"
 mockito = "5.11.0"
 turbine = "1.1.0"
@@ -78,6 +79,7 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
@@ -143,7 +145,7 @@ gradle-convention = { id = "com.softartdev.notedelight.buildlogic.convention", v
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
