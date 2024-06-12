@@ -2,6 +2,7 @@ plugins {
     `java-library`
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 compose {

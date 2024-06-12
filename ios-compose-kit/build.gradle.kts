@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())

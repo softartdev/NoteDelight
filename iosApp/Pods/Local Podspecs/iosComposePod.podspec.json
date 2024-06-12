@@ -18,6 +18,9 @@
       "4.5.4"
     ]
   },
+  "xcconfig": {
+    "ENABLE_USER_SCRIPT_SANDBOXING": "NO"
+  },
   "pod_target_xcconfig": {
     "KOTLIN_PROJECT_PATH": ":ios-compose-kit",
     "PRODUCT_MODULE_NAME": "iosComposeKit"
