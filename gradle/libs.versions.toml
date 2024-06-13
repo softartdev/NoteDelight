@@ -57,7 +57,7 @@ sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
 
-stately-common = { module = "co.touchlab:stately-common", version = "2.0.6" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
+stately-common = { module = "co.touchlab:stately-common", version = "2.0.7" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
 
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "androidxSqlite" }
