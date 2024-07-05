@@ -14,41 +14,40 @@
 				0E4FE4DB27D59D3921AB6E40F1563B7A /* [CP-User] Build iosComposePod */,
 			);
 			dependencies = (
-				2EB6C3B1DC3EDE9F23C4C79666EF4688 /* PBXTargetDependency */,
+				B83D4F885DD70CA410CBE4D9F5616736 /* PBXTargetDependency */,
 			);
 			name = iosComposePod;
-			productName = iosComposePod;
 		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0BF0AC9ACD0BA0A371B14221FC53817E /* Pods-iosApp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 015E0D7EA7331961AB63E5AFECA86BB5 /* Pods-iosApp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0BF0AC9ACD0BA0A371B14221FC53817E /* Pods-iosApp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3BC2DA8B911C40FAD4FF25C229B94B23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 952925E838A0DE4D7BDC4EE54022633D /* Foundation.framework */; };
 		3C486A28B2618549A56FE9CB93610820 /* SQLCipher-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A2872E600E9A746D096C16F2EBCBCA /* SQLCipher-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		481730739E8F23EC45A2D64B2927AA71 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3B2A0B779CE31153B2C0D8A7F8DC7FE /* Security.framework */; };
 		62AA43FCE46E6F7922E526782308A46E /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = FC29DBE0409C118D71AA46627E3967DF /* sqlite3.c */; settings = {COMPILER_FLAGS = "-DNDEBUG -DSQLITE_HAS_CODEC -DSQLITE_TEMP_STORE=2 -DSQLITE_SOUNDEX -DSQLITE_THREADSAFE -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_STAT3 -DSQLITE_ENABLE_STAT4 -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MEMORY_MANAGEMENT -DSQLITE_ENABLE_LOAD_EXTENSION -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS4_UNICODE61 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_UNLOCK_NOTIFY -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS5 -DSQLCIPHER_CRYPTO_CC -DHAVE_USLEEP=1 -DSQLITE_MAX_VARIABLE_NUMBER=99999 -fno-objc-arc"; }; };
-		63A5F98B5DA17C01C8E5205A43C75005 /* Pods-iosApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E6DB2A5F5DADA1DDE45F36B1A2D6AC16 /* Pods-iosApp-dummy.m */; };
+		63A5F98B5DA17C01C8E5205A43C75005 /* Pods-iosApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */; };
 		BA2A98B300F6A2F438A5439822646CB7 /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = E2ACA340E697922AEC7D81820FD63046 /* sqlite3.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF4DB579139E8F533154A4599B63C213 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 952925E838A0DE4D7BDC4EE54022633D /* Foundation.framework */; };
 		E827C96F61C81146EA5A05B7E69CA78A /* SQLCipher-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4769AA64068661236B3D136F70EEB862 /* SQLCipher-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7627C37550D2B50AACDA7DB0AC64F6E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8CD5AC086628776F77663F3736B36F45;
-			remoteInfo = iosComposePod;
-		};
-		AE467846ED8A5338064443CE30739F0A /* PBXContainerItemProxy */ = {
+		2B82EA63A716387213906CA518AB4956 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D21962D0DE148A440FADB55935BD4264;
 			remoteInfo = SQLCipher;
 		};
-		BBA589BE5E7234AAA4ECA0830566B100 /* PBXContainerItemProxy */ = {
+		CA1E7F5225CA23634E533E03E7E407EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8CD5AC086628776F77663F3736B36F45;
+			remoteInfo = iosComposePod;
+		};
+		EC63FDCA68DEC87EB5A1B097C5A4A3D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -58,35 +57,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		015E0D7EA7331961AB63E5AFECA86BB5 /* Pods-iosApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iosApp-umbrella.h"; sourceTree = "<group>"; };
-		056CC6A06008B475FFB4DB8426C39819 /* iosComposePod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.debug.xcconfig; sourceTree = "<group>"; };
-		11C9B998CE0869936AE6BE69270DAAC9 /* Pods-iosApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iosApp.modulemap"; sourceTree = "<group>"; };
+		0187F135D5F61750CD24C3E04B6E8B64 /* Pods-iosApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-frameworks.sh"; sourceTree = "<group>"; };
+		0873377E3857ADC44E919597C03BFA43 /* iosComposeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iosComposeKit.framework; path = build/cocoapods/framework/iosComposeKit.framework; sourceTree = "<group>"; };
 		13A2872E600E9A746D096C16F2EBCBCA /* SQLCipher-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SQLCipher-umbrella.h"; sourceTree = "<group>"; };
 		1FD5F5B0E4809A3AE2ECDE142F44A6BB /* SQLCipher */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SQLCipher; path = SQLCipher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		244FC2DAA936A0B07ACEFDC74E2D54B8 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		3ECD5041F27CC497ED97A9B292B3F0BC /* SQLCipher-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SQLCipher-prefix.pch"; sourceTree = "<group>"; };
+		3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 		3FF32DBA096086AD31F16EC316FF7140 /* SQLCipher.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SQLCipher.modulemap; sourceTree = "<group>"; };
-		43907F8241745A4AA5B48578B4BDFDFB /* compose-resources */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = "compose-resources"; path = "build/compose/cocoapods/compose-resources"; sourceTree = "<group>"; };
-		458C71A8882D0088D940108A6FF236CD /* iosComposePod.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = iosComposePod.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4769AA64068661236B3D136F70EEB862 /* SQLCipher-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SQLCipher-dummy.m"; sourceTree = "<group>"; };
-		55ABB06C8A1800962A74E007E7733796 /* Pods-iosApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-frameworks.sh"; sourceTree = "<group>"; };
-		6F3B5FED07117E377CFAC3D49B490F17 /* Pods-iosApp-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-resources.sh"; sourceTree = "<group>"; };
-		76A263267985B0185D85E24D40FCEE9A /* Pods-iosApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-Info.plist"; sourceTree = "<group>"; };
-		76D28488EA8CF5C697DFF07967A9960E /* Pods-iosApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-acknowledgements.plist"; sourceTree = "<group>"; };
+		54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iosApp-dummy.m"; sourceTree = "<group>"; };
+		5AC974169B09D4545F741E9A2147610E /* Pods-iosApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-Info.plist"; sourceTree = "<group>"; };
+		83AEBFFCA34953AFE8F7D4C0EE78427A /* iosComposePod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.debug.xcconfig; sourceTree = "<group>"; };
+		878F5B1E91E548FCF1BC50A0BB157712 /* iosComposePod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.release.xcconfig; sourceTree = "<group>"; };
+		8B524AABE529FB8A2D151B05321336E0 /* Pods-iosApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iosApp.modulemap"; sourceTree = "<group>"; };
 		952925E838A0DE4D7BDC4EE54022633D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9BB0B8B698D4C35D4F9A07EF70910170 /* Pods-iosApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-acknowledgements.plist"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9F1FFC8B10F4D7D4F37606E8959B3F29 /* Pods-iosApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iosApp-acknowledgements.markdown"; sourceTree = "<group>"; };
+		9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		AF73D48D694B262EA8800D1CA5A7A175 /* SQLCipher-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SQLCipher-Info.plist"; sourceTree = "<group>"; };
-		B097DD7534E741D5C41838011D755842 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B097DD7534E741D5C41838011D755842 /* Pods-iosApp */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-iosApp"; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B2A0B779CE31153B2C0D8A7F8DC7FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
-		C72E850B172798319EF8ADB399785CF4 /* iosComposeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iosComposeKit.framework; path = build/cocoapods/framework/iosComposeKit.framework; sourceTree = "<group>"; };
+		CEEC2E1232AEB6ACA3AC36F9342EFBDD /* iosComposePod.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = iosComposePod.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E2ACA340E697922AEC7D81820FD63046 /* sqlite3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
-		E462E23B3674BF94EAB1504D506F2803 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
-		E4C923318724794E3CC670804C2D6A6B /* Pods-iosApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iosApp-acknowledgements.markdown"; sourceTree = "<group>"; };
-		E6DB2A5F5DADA1DDE45F36B1A2D6AC16 /* Pods-iosApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iosApp-dummy.m"; sourceTree = "<group>"; };
 		EFE434E808F4ACDAD53CAD2893B9A8DE /* SQLCipher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.release.xcconfig; sourceTree = "<group>"; };
 		F1DBEF6B264AD5F07660CCEDCB9E0F82 /* SQLCipher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.debug.xcconfig; sourceTree = "<group>"; };
-		F3A43B865572C68F39872D2F7194AC56 /* iosComposePod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.release.xcconfig; sourceTree = "<group>"; };
-		FC29DBE0409C118D71AA46627E3967DF /* sqlite3.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iosApp-umbrella.h"; sourceTree = "<group>"; };
+		FC29DBE0409C118D71AA46627E3967DF /* sqlite3.c */ = {isa = PBXFileReference; includeInIndex = 1; path = sqlite3.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +107,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C6E05A4FEDEE0D095764C93447C807A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0873377E3857ADC44E919597C03BFA43 /* iosComposeKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		11C970DEAE48C6D0282DFE54684F53F1 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				52A898E555C2DBD7D25A7E44754C3FC6 /* Pods-iosApp */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
 		1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,12 +131,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		1A3D275F3BC4A7810FB3728EEF569A25 /* Frameworks */ = {
+		2863FB413E6D4B726B6D4BE69D99BE6A /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				C72E850B172798319EF8ADB399785CF4 /* iosComposeKit.framework */,
+				CEEC2E1232AEB6ACA3AC36F9342EFBDD /* iosComposePod.podspec */,
 			);
-			name = Frameworks;
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		4F56363B58525BCB3F7D2228EF3BFCA6 /* Support Files */ = {
@@ -141,25 +154,40 @@
 			path = "../Target Support Files/SQLCipher";
 			sourceTree = "<group>";
 		};
-		55BF10C492F0787F6F31FDE71C5109DF /* iosComposePod */ = {
+		52A898E555C2DBD7D25A7E44754C3FC6 /* Pods-iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				43907F8241745A4AA5B48578B4BDFDFB /* compose-resources */,
-				1A3D275F3BC4A7810FB3728EEF569A25 /* Frameworks */,
-				ABD794A40111A749E5B96FD96B354F3F /* Pod */,
-				A5449CB1139726204A039B3607B5400F /* Support Files */,
+				8B524AABE529FB8A2D151B05321336E0 /* Pods-iosApp.modulemap */,
+				9F1FFC8B10F4D7D4F37606E8959B3F29 /* Pods-iosApp-acknowledgements.markdown */,
+				9BB0B8B698D4C35D4F9A07EF70910170 /* Pods-iosApp-acknowledgements.plist */,
+				54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */,
+				0187F135D5F61750CD24C3E04B6E8B64 /* Pods-iosApp-frameworks.sh */,
+				5AC974169B09D4545F741E9A2147610E /* Pods-iosApp-Info.plist */,
+				F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */,
+				3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */,
+				9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */,
 			);
-			name = iosComposePod;
-			path = "../../ios-compose-kit";
+			name = "Pods-iosApp";
+			path = "Target Support Files/Pods-iosApp";
 			sourceTree = "<group>";
 		};
 		5818F946CC9DCBBEFC2CB7DE0E037777 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B097DD7534E741D5C41838011D755842 /* Pods_iosApp.framework */,
+				B097DD7534E741D5C41838011D755842 /* Pods-iosApp */,
 				1FD5F5B0E4809A3AE2ECDE142F44A6BB /* SQLCipher */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		665F49DF961ED93D1ACE0D16BA2DE7A0 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				83AEBFFCA34953AFE8F7D4C0EE78427A /* iosComposePod.debug.xcconfig */,
+				878F5B1E91E548FCF1BC50A0BB157712 /* iosComposePod.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../iosApp/Pods/Target Support Files/iosComposePod";
 			sourceTree = "<group>";
 		};
 		6746CCF30CAE34654B19DDA6B383D05D /* Pods */ = {
@@ -168,6 +196,25 @@
 				E74569A9C027A82A021AAB6F29D8BE3B /* SQLCipher */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		74312BEF1C762D20E36E394E8AAF8D9C /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				787250B755F418B1E823F0A4C48F32FA /* iosComposePod */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		787250B755F418B1E823F0A4C48F32FA /* iosComposePod */ = {
+			isa = PBXGroup;
+			children = (
+				0C6E05A4FEDEE0D095764C93447C807A /* Frameworks */,
+				2863FB413E6D4B726B6D4BE69D99BE6A /* Pod */,
+				665F49DF961ED93D1ACE0D16BA2DE7A0 /* Support Files */,
+			);
+			name = iosComposePod;
+			path = "../../ios-compose-kit";
 			sourceTree = "<group>";
 		};
 		7CE426AC267333500FABE7BA0A5A42A0 /* iOS */ = {
@@ -179,68 +226,16 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		A5449CB1139726204A039B3607B5400F /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				056CC6A06008B475FFB4DB8426C39819 /* iosComposePod.debug.xcconfig */,
-				F3A43B865572C68F39872D2F7194AC56 /* iosComposePod.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../iosApp/Pods/Target Support Files/iosComposePod";
-			sourceTree = "<group>";
-		};
-		ABD794A40111A749E5B96FD96B354F3F /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				458C71A8882D0088D940108A6FF236CD /* iosComposePod.podspec */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		BA6B7BC2729F657E9D3682E55CA6E980 /* Pods-iosApp */ = {
-			isa = PBXGroup;
-			children = (
-				11C9B998CE0869936AE6BE69270DAAC9 /* Pods-iosApp.modulemap */,
-				E4C923318724794E3CC670804C2D6A6B /* Pods-iosApp-acknowledgements.markdown */,
-				76D28488EA8CF5C697DFF07967A9960E /* Pods-iosApp-acknowledgements.plist */,
-				E6DB2A5F5DADA1DDE45F36B1A2D6AC16 /* Pods-iosApp-dummy.m */,
-				55ABB06C8A1800962A74E007E7733796 /* Pods-iosApp-frameworks.sh */,
-				76A263267985B0185D85E24D40FCEE9A /* Pods-iosApp-Info.plist */,
-				6F3B5FED07117E377CFAC3D49B490F17 /* Pods-iosApp-resources.sh */,
-				015E0D7EA7331961AB63E5AFECA86BB5 /* Pods-iosApp-umbrella.h */,
-				E462E23B3674BF94EAB1504D506F2803 /* Pods-iosApp.debug.xcconfig */,
-				244FC2DAA936A0B07ACEFDC74E2D54B8 /* Pods-iosApp.release.xcconfig */,
-			);
-			name = "Pods-iosApp";
-			path = "Target Support Files/Pods-iosApp";
-			sourceTree = "<group>";
-		};
-		BEA9DB10AD5229A07D3458D6147B3990 /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				55BF10C492F0787F6F31FDE71C5109DF /* iosComposePod */,
-			);
-			name = "Development Pods";
-			sourceTree = "<group>";
-		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				BEA9DB10AD5229A07D3458D6147B3990 /* Development Pods */,
+				74312BEF1C762D20E36E394E8AAF8D9C /* Development Pods */,
 				1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */,
 				6746CCF30CAE34654B19DDA6B383D05D /* Pods */,
 				5818F946CC9DCBBEFC2CB7DE0E037777 /* Products */,
-				D456857FB6E5BC3266BEC21401D60DB5 /* Targets Support Files */,
+				11C970DEAE48C6D0282DFE54684F53F1 /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		D456857FB6E5BC3266BEC21401D60DB5 /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				BA6B7BC2729F657E9D3682E55CA6E980 /* Pods-iosApp */,
-			);
-			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
 		E74569A9C027A82A021AAB6F29D8BE3B /* SQLCipher */ = {
@@ -249,6 +244,7 @@
 				EEA4CB4DFE16543549476985A542D6C6 /* common */,
 				4F56363B58525BCB3F7D2228EF3BFCA6 /* Support Files */,
 			);
+			name = SQLCipher;
 			path = SQLCipher;
 			sourceTree = "<group>";
 		};
@@ -314,12 +310,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				57BF9787BB098C6F14E266342C04EE27 /* PBXTargetDependency */,
-				6112B3F4F8AFA28E725A3EB18B299B06 /* PBXTargetDependency */,
+				0D4C4E291864EBC518E3B0902D2F7CD6 /* PBXTargetDependency */,
+				5235EBFBF7382849292F34FF910D3A0C /* PBXTargetDependency */,
 			);
 			name = "Pods-iosApp";
 			productName = Pods_iosApp;
-			productReference = B097DD7534E741D5C41838011D755842 /* Pods_iosApp.framework */;
+			productReference = B097DD7534E741D5C41838011D755842 /* Pods-iosApp */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -402,30 +398,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2EB6C3B1DC3EDE9F23C4C79666EF4688 /* PBXTargetDependency */ = {
+		0D4C4E291864EBC518E3B0902D2F7CD6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SQLCipher;
 			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
-			targetProxy = AE467846ED8A5338064443CE30739F0A /* PBXContainerItemProxy */;
+			targetProxy = 2B82EA63A716387213906CA518AB4956 /* PBXContainerItemProxy */;
 		};
-		57BF9787BB098C6F14E266342C04EE27 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SQLCipher;
-			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
-			targetProxy = BBA589BE5E7234AAA4ECA0830566B100 /* PBXContainerItemProxy */;
-		};
-		6112B3F4F8AFA28E725A3EB18B299B06 /* PBXTargetDependency */ = {
+		5235EBFBF7382849292F34FF910D3A0C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = iosComposePod;
 			target = 8CD5AC086628776F77663F3736B36F45 /* iosComposePod */;
-			targetProxy = 7627C37550D2B50AACDA7DB0AC64F6E8 /* PBXContainerItemProxy */;
+			targetProxy = CA1E7F5225CA23634E533E03E7E407EA /* PBXContainerItemProxy */;
+		};
+		B83D4F885DD70CA410CBE4D9F5616736 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SQLCipher;
+			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
+			targetProxy = EC63FDCA68DEC87EB5A1B097C5A4A3D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		052D17EECF4180EC4608BC2A6F212303 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F3A43B865572C68F39872D2F7194AC56 /* iosComposePod.release.xcconfig */;
+			baseConfigurationReference = 878F5B1E91E548FCF1BC50A0BB157712 /* iosComposePod.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -505,7 +501,7 @@
 		};
 		670E43FB90517C126953C6A6DB2147B3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 056CC6A06008B475FFB4DB8426C39819 /* iosComposePod.debug.xcconfig */;
+			baseConfigurationReference = 83AEBFFCA34953AFE8F7D4C0EE78427A /* iosComposePod.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -588,7 +584,7 @@
 		};
 		CC7C1D1A3B5075BD66875E59A070E404 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 244FC2DAA936A0B07ACEFDC74E2D54B8 /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = 9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -626,7 +622,7 @@
 		};
 		D2C52C24E863F310EA4C30647BF8BA35 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E462E23B3674BF94EAB1504D506F2803 /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = 3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;

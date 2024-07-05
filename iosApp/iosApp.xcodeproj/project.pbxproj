@@ -158,7 +158,6 @@
 				75CF0FBEED43B2BAC7F61B5C /* Frameworks */,
 				7594048B29365286005183CD /* Copy moko-resources */,
 				A798D07A9F8F09FA2C8C3203 /* [CP] Embed Pods Frameworks */,
-				0B98927A77A645700C19BF69 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -247,23 +246,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0B98927A77A645700C19BF69 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7594048B29365286005183CD /* Copy moko-resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
