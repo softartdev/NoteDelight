@@ -1,10 +1,10 @@
-import com.softartdev.notedelight.iosIntermediateSourceSets
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 compose {
     kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
@@ -16,7 +16,8 @@ kotlin {
             kotlinOptions.jvmTarget = libs.versions.jdk.get()
         }
     }
-    iosIntermediateSourceSets(iosArm64(), iosSimulatorArm64())
+    iosArm64()
+    iosSimulatorArm64()
     applyDefaultHierarchyTemplate()
 
     cocoapods {
