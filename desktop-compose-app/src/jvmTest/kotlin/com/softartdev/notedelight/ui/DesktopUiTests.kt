@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -73,7 +73,7 @@ class DesktopUiTests : AbstractUiTests() {
     override fun settingPasswordTest() = super.settingPasswordTest()
 
     override fun pressBack() {
-        composeTestRule.onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
+        composeTestRule.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
             .assertIsDisplayed()
             .performClick()
     }

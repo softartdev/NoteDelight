@@ -1,16 +1,17 @@
 package com.softartdev.notedelight.ui.cases
 
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.ui.screen.MainTestScreen.Companion.noteItemTitleText
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.test.runTest
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.enter_title
+import org.jetbrains.compose.resources.getString
 import java.util.UUID
 
 class EditTitleAfterCreateTestCase(
@@ -19,7 +20,7 @@ class EditTitleAfterCreateTestCase(
 
     private val actualNoteTitle = "title"
 
-    override fun invoke() {
+    override fun invoke() = runTest {
         mainTestScreen {
             composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
             fabSNI.performClick()
@@ -33,7 +34,7 @@ class EditTitleAfterCreateTestCase(
                     yesDialogButtonSNI.performClick()
                 }
                 composeTestRule
-                    .onNodeWithContentDescription(label = MR.strings.enter_title.contextLocalized())
+                    .onNodeWithContentDescription(label = getString(Res.string.enter_title))
                     .assertDoesNotExist()
                 saveNoteMenuButtonSNI.performClick()
                 backButtonSNI.performClick()

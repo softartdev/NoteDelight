@@ -19,12 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import dev.icerock.moko.resources.compose.painterResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.app_icon
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {
@@ -53,7 +54,7 @@ fun SplashScreenBody(showError: Boolean = false) = Box(
 ) {
     Image(
         modifier = Modifier.align(Alignment.Center),
-        painter = painterResource(MR.images.app_icon),
+        painter = painterResource(Res.drawable.app_icon),
         contentDescription = null
     )
     if (showError) LinearProgressIndicator(

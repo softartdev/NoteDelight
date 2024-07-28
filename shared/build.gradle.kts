@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.mokoResources)
 }
 version = "1.0"
 
@@ -48,9 +47,6 @@ android {
     testOptions.unitTests.isReturnDefaultValues = true
     namespace = "com.softartdev.notedelight.shared"
 }
-multiplatformResources {
-    resourcesPackage.set("com.softartdev.notedelight")
-}
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
@@ -65,7 +61,6 @@ kotlin {
             implementation(libs.sqlDelight.coroutinesExt)
             api(libs.kotlinx.datetime)
             api(libs.napier)
-            api(libs.mokoResources)
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
             implementation(libs.stately.common)
@@ -76,7 +71,6 @@ kotlin {
             implementation(kotlin("test-annotations-common"))
             implementation(libs.coroutines.test)
             implementation(libs.koin.test)
-            implementation(libs.mokoResources.test)
         }
         androidMain.dependencies {
             implementation(libs.coroutines.android)
@@ -123,7 +117,6 @@ kotlin {
         pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
             isStatic = true
-            export(libs.mokoResources)
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }

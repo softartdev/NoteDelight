@@ -16,17 +16,19 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.runBlocking
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.enter_password
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 private const val PASSWORD_LABEL_TAG = "PASSWORD_LABEL_TAG"
 private const val PASSWORD_VISIBILITY_TAG = "PASSWORD_VISIBILITY_TAG"
 private const val PASSWORD_FIELD_TAG = "PASSWORD_FIELD_TAG"
 
 fun StringResource.descTagTriple(): Triple<String, String, String> = this
-    .let(StringResource::contextLocalized)
+    .let { runBlocking { getString(it) } }
     .let(String::descTagTriple)
 
 fun String.descTagTriple(): Triple<String, String, String> = Triple(
@@ -43,9 +45,9 @@ fun rememberTagTriple(desc: String): Triple<String, String, String> =
 fun PasswordField(
     modifier: Modifier = Modifier,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    label: String = stringResource(MR.strings.enter_password),
+    label: String = stringResource(Res.string.enter_password),
     isError: Boolean = true,
-    contentDescription: String = stringResource(MR.strings.enter_password),
+    contentDescription: String = stringResource(Res.string.enter_password),
 ) {
     val labelState by remember(label, isError) { mutableStateOf(label) } // workaround for ui-tests
     val (labelTag, visibilityTag, fieldTag) = rememberTagTriple(contentDescription)

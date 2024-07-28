@@ -5,29 +5,33 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
+import kotlinx.coroutines.runBlocking
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.create_note
+import notedelight.shared_compose_ui.generated.resources.label_empty_result
+import notedelight.shared_compose_ui.generated.resources.settings
+import org.jetbrains.compose.resources.getString
 
 @JvmInline
 value class MainTestScreen(val composeTestRule: ComposeContentTestRule) {
 
     val settingsMenuButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.settings.contextLocalized())
+            .onNodeWithContentDescription(label = runBlocking { getString(Res.string.settings) })
             .assertIsDisplayed()
 
     val emptyResultLabelSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithText(text = MR.strings.label_empty_result.contextLocalized())
+        get() = composeTestRule.onNodeWithText(text = runBlocking { getString(Res.string.label_empty_result) })
 
     val noteListItemSNI: SemanticsNodeInteraction
         get() = composeTestRule.onNodeWithContentDescription(label = noteItemTitleText)
 
     val labelEmptyResultSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithText(MR.strings.label_empty_result.contextLocalized())
+        get() = composeTestRule.onNodeWithText(text = runBlocking { getString(Res.string.label_empty_result) })
 
     val fabSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.create_note.contextLocalized())
+            .onNodeWithContentDescription(label = runBlocking { getString(Res.string.create_note) })
             .assertIsDisplayed()
 
     companion object {

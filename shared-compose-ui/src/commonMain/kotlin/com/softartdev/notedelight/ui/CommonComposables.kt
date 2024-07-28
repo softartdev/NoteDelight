@@ -9,8 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.MR
-import dev.icerock.moko.resources.compose.stringResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.label_empty_result
+import notedelight.shared_compose_ui.generated.resources.press_add_note
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun Loader() {
@@ -31,12 +33,12 @@ fun Empty() {
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(MR.strings.label_empty_result),
+            text = stringResource(Res.string.label_empty_result),
             style = MaterialTheme.typography.headlineSmall,
         )
         Spacer(modifier = Modifier.weight(0.5f))
         Text(
-            text = stringResource(MR.strings.press_add_note),
+            text = stringResource(Res.string.press_add_note),
             style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.weight(3f))
@@ -70,11 +72,11 @@ fun PreviewError() = Error(err = "Mock error")
 fun PreviewCommons() = Column(modifier = Modifier.fillMaxWidth()) {
     PreviewLoader()
 
-    Divider()
+    HorizontalDivider()
 
     PreviewEmpty()
 
-    Divider()
+    HorizontalDivider()
 
     PreviewError()
 }

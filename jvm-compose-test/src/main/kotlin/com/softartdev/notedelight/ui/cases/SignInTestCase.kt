@@ -5,37 +5,42 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
-import com.softartdev.mr.contextLocalized
 import com.softartdev.notedelight.DbTestEncryptor
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.test.runTest
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.empty_password
+import notedelight.shared_compose_ui.generated.resources.enter_password
+import notedelight.shared_compose_ui.generated.resources.incorrect_password
+import org.jetbrains.compose.resources.getString
 
 class SignInTestCase(
     composeTestRule: ComposeContentTestRule,
     private val closeSoftKeyboard: () -> Unit,
 ) : () -> Unit, BaseTestCase(composeTestRule) {
 
-    override fun invoke() {
+    override fun invoke() = runTest {
         signInScreen {
-            passwordFieldSNI.assertIsDisplayed()
+            composeTestRule.waitUntilDisplayed(blockSNI = ::passwordFieldSNI)
 
             passwordLabelSNI.assertIsDisplayed()
-                .assertTextEquals(MR.strings.enter_password.contextLocalized())
+                .assertTextEquals(getString(Res.string.enter_password))
 
             passwordVisibilitySNI.assertIsDisplayed()
                 .performClick()
 
             signInButtonSNI.performClick()
+            val emptyPassTitle = getString(Res.string.empty_password)
             composeTestRule.waitAssert {
-                passwordLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+                passwordLabelSNI.assertTextEquals(emptyPassTitle)
             }
             passwordFieldSNI.performTextReplacement(text = "incorrect password")
             closeSoftKeyboard()
             signInButtonSNI.performClick()
 
-            passwordLabelSNI.assertTextEquals(MR.strings.incorrect_password.contextLocalized())
+            passwordLabelSNI.assertTextEquals(getString(Res.string.incorrect_password))
 
             passwordFieldSNI.performTextReplacement(text = DbTestEncryptor.PASSWORD)
             closeSoftKeyboard()

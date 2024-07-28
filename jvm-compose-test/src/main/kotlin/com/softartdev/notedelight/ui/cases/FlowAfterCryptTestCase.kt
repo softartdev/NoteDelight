@@ -6,9 +6,11 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
+import com.softartdev.notedelight.retryUntilDisplayed
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.test.runTest
 
 class FlowAfterCryptTestCase(
     composeTestRule: ComposeContentTestRule,
@@ -19,7 +21,7 @@ class FlowAfterCryptTestCase(
 
     private val titleText = "Lorem"
 
-    override fun invoke() {
+    override fun invoke() = runTest {
         mainTestScreen {
             composeTestRule.waitUntilDisplayed(blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
@@ -27,7 +29,10 @@ class FlowAfterCryptTestCase(
                 encryptionSwitchSNI.assertIsOff()
                     .performClick()
                 confirmPasswordDialog {
-                    composeTestRule.waitUntilDisplayed(blockSNI = ::confirmPasswordSNI)
+                    composeTestRule.retryUntilDisplayed(
+                        action = encryptionSwitchSNI::performClick,
+                        sni = confirmPasswordSNI
+                    )
                     confirmPasswordSNI.performTextReplacement(text = password)
                     closeSoftKeyboard()
                     confirmRepeatPasswordSNI.performTextReplacement(text = password)

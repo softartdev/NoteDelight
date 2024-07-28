@@ -8,14 +8,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
 import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.theme.pref.DialogHolder
 import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.app_name
+import notedelight.shared_compose_ui.generated.resources.empty_password
+import notedelight.shared_compose_ui.generated.resources.enter_password
+import notedelight.shared_compose_ui.generated.resources.incorrect_password
+import notedelight.shared_compose_ui.generated.resources.sign_in
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
@@ -23,7 +28,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     DisposableEffect(signInViewModel) {
         onDispose(signInViewModel::onCleared)
     }
-    var labelResource by remember { mutableStateOf(MR.strings.enter_password) }
+    var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val dialogHolder: DialogHolder = themePrefs.dialogHolder
@@ -31,11 +36,11 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
         is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
         is SignInResult.NavMain -> navMain()
         is SignInResult.ShowEmptyPassError -> {
-            labelResource = MR.strings.empty_password
+            labelResource = Res.string.empty_password
             error = true
         }
         is SignInResult.ShowIncorrectPassError -> {
-            labelResource = MR.strings.incorrect_password
+            labelResource = Res.string.incorrect_password
             error = true
         }
         is SignInResult.ShowError -> dialogHolder.showError(signInResult.error.message)
@@ -53,13 +58,13 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
 fun SignInScreenBody(
     showLoading: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
-    labelResource: StringResource = MR.strings.enter_password,
+    labelResource: StringResource = Res.string.enter_password,
     isError: Boolean = false,
     onSignInClick: () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(text = stringResource(MR.strings.app_name)) },
+            title = { Text(text = stringResource(Res.string.app_name)) },
         )
     }
 ) {
@@ -71,14 +76,14 @@ fun SignInScreenBody(
                 passwordState = passwordState,
                 label = stringResource(labelResource),
                 isError = isError,
-                contentDescription = stringResource(MR.strings.enter_password)
+                contentDescription = stringResource(Res.string.enter_password)
             )
             Button(
                 onClick = onSignInClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp)
-            ) { Text(text = stringResource(MR.strings.sign_in)) }
+            ) { Text(text = stringResource(Res.string.sign_in)) }
         }
         themePrefs.showDialogIfNeed()
     }

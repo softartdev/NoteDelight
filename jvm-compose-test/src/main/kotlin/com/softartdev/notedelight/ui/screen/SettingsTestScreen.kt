@@ -6,20 +6,23 @@ import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
+import kotlinx.coroutines.runBlocking
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
+import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
+import org.jetbrains.compose.resources.getString
 
 @JvmInline
 value class SettingsTestScreen(val composeTestRule: ComposeContentTestRule) {
 
     val encryptionSwitchSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithTag(testTag = MR.strings.pref_title_enable_encryption.contextLocalized())
+            .onNodeWithTag(testTag = runBlocking { getString(Res.string.pref_title_enable_encryption) })
             .assertIsToggleable()
             .assertIsDisplayed()
 
     val setPasswordSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(MR.strings.pref_title_set_password.contextLocalized())
+            .onNodeWithContentDescription(runBlocking { getString(Res.string.pref_title_set_password) })
             .assertIsDisplayed()
 }

@@ -6,9 +6,6 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
-compose {
-    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
-}
 kotlin {
     iosArm64()
     iosSimulatorArm64()
@@ -26,7 +23,6 @@ kotlin {
             baseName = "iosComposeKit"
             isStatic = true
             export(project(":shared"))
-            export(libs.mokoResources)
             export(libs.koin.core)
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
@@ -39,7 +35,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.runtime)
-            api(libs.mokoResources)
             api(libs.koin.core)
         }
     }

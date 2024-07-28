@@ -2,10 +2,25 @@ package com.softartdev.notedelight
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import io.github.aakira.napier.Napier
 
 const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 60_000
+
+inline fun ComposeTestRule.retryUntilDisplayed(
+    crossinline action: () -> Unit,
+    sni: SemanticsNodeInteraction,
+): SemanticsNodeInteraction {
+    waitUntil(timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS) {
+        if (sni.isNotDisplayed()) {
+            action()
+        }
+        return@waitUntil sni.isDisplayed()
+    }
+    return sni.assertIsDisplayed()
+}
 
 inline fun ComposeTestRule.waitUntilDisplayed(
     crossinline blockSNI: () -> SemanticsNodeInteraction,

@@ -1,7 +1,5 @@
 package com.softartdev.notedelight.shared.db
 
-import com.softartdev.notedelight.MR
-import dev.icerock.moko.resources.desc.desc
 import net.harawata.appdirs.impl.MacOSXAppDirs
 import net.harawata.appdirs.impl.UnixAppDirs
 import net.harawata.appdirs.impl.WindowsAppDirs
@@ -11,7 +9,7 @@ import kotlin.test.assertEquals
 
 class FilePathResolverTest : WindowsFolderResolver {
     private val home = System.getProperty("user.home")
-    private val appName = MR.strings.app_name.desc().localized()
+    private val appName = "Note Delight"
 
     @Test
     fun macOSXAppDirs() = assertEquals(

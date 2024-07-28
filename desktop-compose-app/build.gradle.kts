@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -9,9 +13,7 @@ group = "com.softartdev"
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = libs.versions.jdk.get()
-        }
+        compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
     applyDefaultHierarchyTemplate()
 
@@ -37,26 +39,23 @@ kotlin {
     }
 }
 
-compose {
-    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
-    desktop {
-        application {
-            mainClass = "com.softartdev.notedelight.MainKt"
-            nativeDistributions {
-                targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-                packageName = "Note Delight"
-                packageVersion = "1.1.5"
-                description = "Note app with encryption"
-                copyright = "© 2023 SoftArtDev"
-                macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))
-                windows.iconFile.set(project.file("src/jvmMain/resources/app_icon.ico"))
-                linux.iconFile.set(project.file("src/jvmMain/resources/app_icon.png"))
-                modules("java.sql")
-            }
-            buildTypes.release.proguard {
-                isEnabled = false //FIXME
-                configurationFiles.from(project.file("compose-desktop.pro"))
-            }
+compose.desktop {
+    application {
+        mainClass = "com.softartdev.notedelight.MainKt"
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "Note Delight"
+            packageVersion = "1.1.5"
+            description = "Note app with encryption"
+            copyright = "© 2023 SoftArtDev"
+            macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))
+            windows.iconFile.set(project.file("src/jvmMain/resources/app_icon.ico"))
+            linux.iconFile.set(project.file("src/jvmMain/resources/app_icon.png"))
+            modules("java.sql")
+        }
+        buildTypes.release.proguard {
+            isEnabled = false //FIXME
+            configurationFiles.from(project.file("compose-desktop.pro"))
         }
     }
 }

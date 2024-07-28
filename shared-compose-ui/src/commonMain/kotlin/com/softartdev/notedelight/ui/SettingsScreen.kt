@@ -5,11 +5,38 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
@@ -18,8 +45,6 @@ import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
@@ -31,8 +56,15 @@ import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.theme.material3.ThemePreferenceItem
 import com.softartdev.theme.pref.DialogHolder
 import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
+import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
+import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
+import notedelight.shared_compose_ui.generated.resources.security
+import notedelight.shared_compose_ui.generated.resources.settings
+import notedelight.shared_compose_ui.generated.resources.theme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsScreen(
@@ -85,43 +117,44 @@ fun SettingsScreenBody(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(stringResource(MR.strings.settings)) },
+            title = { Text(stringResource(Res.string.settings)) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = Icons.Default.ArrowBack.name
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
                     )
                 }
             },
         )
     },
     content = {
+        val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
         Box(modifier = Modifier.padding(it)) {
             Column {
                 if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
-                PreferenceCategory(stringResource(MR.strings.theme), Icons.Default.Brightness4)
+                PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
                 ThemePreferenceItem()
-                PreferenceCategory(stringResource(MR.strings.security), Icons.Default.Security)
+                PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
                 Preference(
                     modifier = Modifier.semantics {
-                        contentDescription = MR.strings.pref_title_enable_encryption.contextLocalized()
+                        contentDescription = enableEncryptionPrefTitle
                         toggleableState = ToggleableState(encryptionState.value)
-                        testTag = MR.strings.pref_title_enable_encryption.contextLocalized()
+                        testTag = enableEncryptionPrefTitle
                     },
-                    title = stringResource(MR.strings.pref_title_enable_encryption),
+                    title = enableEncryptionPrefTitle,
                     vector = Icons.Default.Lock,
                     onClick = { changeEncryption(!encryptionState.value) }
                 ) {
                     Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
                 }
                 Preference(
-                    title = stringResource(MR.strings.pref_title_set_password),
+                    title = stringResource(Res.string.pref_title_set_password),
                     vector = Icons.Default.Password,
                     onClick = changePassword
                 )
                 Preference(
-                    title = stringResource(MR.strings.pref_title_check_cipher_version),
+                    title = stringResource(Res.string.pref_title_check_cipher_version),
                     vector = Icons.Filled.FileLock,
                     onClick = showCipherVersion
                 )

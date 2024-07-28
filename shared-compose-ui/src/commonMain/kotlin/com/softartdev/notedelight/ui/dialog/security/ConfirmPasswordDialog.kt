@@ -6,15 +6,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.cancel
+import notedelight.shared_compose_ui.generated.resources.confirm_password
+import notedelight.shared_compose_ui.generated.resources.dialog_title_conform_password
+import notedelight.shared_compose_ui.generated.resources.empty_password
+import notedelight.shared_compose_ui.generated.resources.enter_password
+import notedelight.shared_compose_ui.generated.resources.error_title
+import notedelight.shared_compose_ui.generated.resources.passwords_do_not_match
+import notedelight.shared_compose_ui.generated.resources.yes
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmViewModel) {
@@ -22,9 +30,9 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
     DisposableEffect(confirmViewModel) {
         onDispose(confirmViewModel::onCleared)
     }
-    var labelResource by remember { mutableStateOf(MR.strings.enter_password) }
+    var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
-    var repeatLabelResource by remember { mutableStateOf(MR.strings.confirm_password) }
+    var repeatLabelResource by remember { mutableStateOf(Res.string.confirm_password) }
     var repeatError by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val repeatPasswordState: MutableState<String> = remember { mutableStateOf("") }
@@ -34,15 +42,15 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
         is ConfirmResult.InitState, is ConfirmResult.Loading -> Unit
         is ConfirmResult.Success -> dismissDialog()
         is ConfirmResult.EmptyPasswordError -> {
-            labelResource = MR.strings.empty_password
+            labelResource = Res.string.empty_password
             error = true
         }
         is ConfirmResult.PasswordsNoMatchError -> {
-            repeatLabelResource = MR.strings.passwords_do_not_match
+            repeatLabelResource = Res.string.passwords_do_not_match
             repeatError = true
         }
         is ConfirmResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(confirmResult.message ?: MR.strings.error_title.contextLocalized())
+            snackbarHostState.showSnackbar(confirmResult.message ?: getString(Res.string.error_title))
         }
     }
     ShowConfirmPasswordDialog(
@@ -63,15 +71,15 @@ fun ShowConfirmPasswordDialog(
     showLoaing: Boolean = true,
     passwordState: MutableState<String> = mutableStateOf("password"),
     repeatPasswordState: MutableState<String> = mutableStateOf("repeat password"),
-    labelResource: StringResource = MR.strings.enter_password,
-    repeatLabelResource: StringResource = MR.strings.confirm_password,
+    labelResource: StringResource = Res.string.enter_password,
+    repeatLabelResource: StringResource = Res.string.confirm_password,
     isError: Boolean = false,
     isRepeatError: Boolean = true,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     dismissDialog: () -> Unit = {},
     onConfirmClick: () -> Unit = {},
 ) = AlertDialog(
-    title = { Text(text = stringResource(MR.strings.dialog_title_conform_password)) },
+    title = { Text(text = stringResource(Res.string.dialog_title_conform_password)) },
     text = {
         Column {
             if (showLoaing) LinearProgressIndicator()
@@ -79,19 +87,19 @@ fun ShowConfirmPasswordDialog(
                 passwordState = passwordState,
                 label = stringResource(labelResource),
                 isError = isError,
-                contentDescription = stringResource(MR.strings.enter_password),
+                contentDescription = stringResource(Res.string.enter_password),
             )
             PasswordField(
                 passwordState = repeatPasswordState,
                 label = stringResource(repeatLabelResource),
                 isError = isRepeatError,
-                contentDescription = stringResource(MR.strings.confirm_password),
+                contentDescription = stringResource(Res.string.confirm_password),
             )
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     },
-    confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(MR.strings.yes)) } },
-    dismissButton = { Button(onClick = dismissDialog) { Text(stringResource(MR.strings.cancel)) } },
+    confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = dismissDialog) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = dismissDialog,
 )
 

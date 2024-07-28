@@ -4,7 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.softartdev.notedelight.shared.db.TestSchema.firstNote
@@ -25,7 +25,7 @@ fun NoteList(
                 note = it,
                 onItemClicked = onItemClicked,
             )
-            Divider()
+            HorizontalDivider()
         }
     }
     LaunchedEffect(key1 = noteList.size, key2 = listState) {

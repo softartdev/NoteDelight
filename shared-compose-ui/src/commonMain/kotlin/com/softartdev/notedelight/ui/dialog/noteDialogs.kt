@@ -14,8 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.MR
-import dev.icerock.moko.resources.compose.stringResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.action_delete_note
+import notedelight.shared_compose_ui.generated.resources.cancel
+import notedelight.shared_compose_ui.generated.resources.no
+import notedelight.shared_compose_ui.generated.resources.note_changes_not_saved_dialog_title
+import notedelight.shared_compose_ui.generated.resources.note_delete_dialog_message
+import notedelight.shared_compose_ui.generated.resources.note_save_change_dialog_message
+import notedelight.shared_compose_ui.generated.resources.yes
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SaveDialog(
@@ -28,22 +35,22 @@ fun SaveDialog(
     AlertDialogContent(
         buttons = {
             Row(Modifier.padding(horizontal = 8.dp)) {
-                Button(onClick = onDismiss) { Text(stringResource(MR.strings.cancel)) }
+                Button(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
                 Spacer(Modifier.width(8.dp))
-                Button(onClick = doNotSaveAndNavBack) { Text(stringResource(MR.strings.no)) }
+                Button(onClick = doNotSaveAndNavBack) { Text(stringResource(Res.string.no)) }
                 Spacer(Modifier.width(8.dp))
-                Button(onClick = saveNoteAndNavBack) { Text(stringResource(MR.strings.yes)) }
+                Button(onClick = saveNoteAndNavBack) { Text(stringResource(Res.string.yes)) }
             }
         },
-        title = { Text(stringResource(MR.strings.note_changes_not_saved_dialog_title)) },
-        text = { Text(stringResource(MR.strings.note_save_change_dialog_message)) },
+        title = { Text(stringResource(Res.string.note_changes_not_saved_dialog_title)) },
+        text = { Text(stringResource(Res.string.note_save_change_dialog_message)) },
     )
 }
 
 @Composable
 fun DeleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = ShowDialog(
-    title = stringResource(MR.strings.action_delete_note),
-    text = stringResource(MR.strings.note_delete_dialog_message),
+    title = stringResource(Res.string.action_delete_note),
+    text = stringResource(Res.string.note_delete_dialog_message),
     onConfirm = onDeleteClick,
     onDismiss = onDismiss
 )

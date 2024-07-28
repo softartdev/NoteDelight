@@ -5,9 +5,12 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.ui.descTagTriple
+import kotlinx.coroutines.runBlocking
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.enter_password
+import notedelight.shared_compose_ui.generated.resources.sign_in
+import org.jetbrains.compose.resources.getString
 
 @JvmInline
 value class SignInScreen(val composeTestRule: ComposeContentTestRule) {
@@ -23,11 +26,11 @@ value class SignInScreen(val composeTestRule: ComposeContentTestRule) {
 
     val signInButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithText(text = MR.strings.sign_in.contextLocalized())
+            .onNodeWithText(text = runBlocking { getString(Res.string.sign_in) })
             .assertIsDisplayed()
 
     companion object {
-        private val enterTags = MR.strings.enter_password.descTagTriple()
+        private val enterTags = Res.string.enter_password.descTagTriple()
         private val enterLabelTag = enterTags.first
         private val enterVisibilityTag = enterTags.second
         private val enterFieldTag = enterTags.third

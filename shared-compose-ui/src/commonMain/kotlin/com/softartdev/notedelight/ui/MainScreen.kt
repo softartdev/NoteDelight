@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.softartdev.notedelight.ui
 
@@ -25,13 +25,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import dev.icerock.moko.resources.compose.stringResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.app_name
+import notedelight.shared_compose_ui.generated.resources.create_note
+import notedelight.shared_compose_ui.generated.resources.settings
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MainScreen(
@@ -57,10 +60,10 @@ fun MainScreen(
 ) = Scaffold(
     topBar = {
         TopAppBar(
-            title = { Text(stringResource(MR.strings.app_name)) },
+            title = { Text(stringResource(Res.string.app_name)) },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = stringResource(MR.strings.settings))
+                    Icon(Icons.Default.Settings, contentDescription = stringResource(Res.string.settings))
                 }
             })
     }, content = {
@@ -77,7 +80,7 @@ fun MainScreen(
             themePrefs.showDialogIfNeed()
         }
     }, floatingActionButton = {
-        val text = stringResource(MR.strings.create_note)
+        val text = stringResource(Res.string.create_note)
         ExtendedFloatingActionButton(
             text = { Text(text) },
             onClick = { onItemClicked(0) },

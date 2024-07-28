@@ -8,7 +8,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
@@ -18,7 +17,11 @@ import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.pref.DialogHolder
-import dev.icerock.moko.resources.compose.stringResource
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.cancel
+import notedelight.shared_compose_ui.generated.resources.error_title
+import notedelight.shared_compose_ui.generated.resources.yes
+import org.jetbrains.compose.resources.stringResource
 
 fun DialogHolder.showSaveChanges(saveNoteAndNavBack: () -> Unit, doNotSaveAndNavBack: () -> Unit) =
     showDialog {
@@ -70,9 +73,9 @@ fun DialogHolder.showError(message: String?) = showDialog {
 
 @Composable
 fun ErrorDialog(message: String?, dismissDialog: () -> Unit) = AlertDialog(
-    title = { Text(text = stringResource(MR.strings.error_title)) },
+    title = { Text(text = stringResource(Res.string.error_title)) },
     text = { Text(message.orEmpty()) },
-    confirmButton = { Button(onClick = dismissDialog) { Text(stringResource(MR.strings.cancel)) } },
+    confirmButton = { Button(onClick = dismissDialog) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = dismissDialog,
 )
 
@@ -85,8 +88,8 @@ fun ShowDialog(
 ) = AlertDialog(
     title = { Text(title) },
     text = { Text(text.orEmpty()) },
-    confirmButton = { Button(onClick = onConfirm) { Text(stringResource(MR.strings.yes)) } },
-    dismissButton = { Button(onClick = onDismiss) { Text(stringResource(MR.strings.cancel)) } },
+    confirmButton = { Button(onClick = onConfirm) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = onDismiss,
 )
 

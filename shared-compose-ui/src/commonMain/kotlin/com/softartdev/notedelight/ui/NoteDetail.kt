@@ -8,14 +8,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
 import com.softartdev.notedelight.RootComponent
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
@@ -26,8 +43,17 @@ import com.softartdev.notedelight.ui.dialog.showSaveChanges
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.pref.DialogHolder
 import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.action_delete_note
+import notedelight.shared_compose_ui.generated.resources.action_edit_title
+import notedelight.shared_compose_ui.generated.resources.action_save_note
+import notedelight.shared_compose_ui.generated.resources.note_deleted
+import notedelight.shared_compose_ui.generated.resources.note_empty
+import notedelight.shared_compose_ui.generated.resources.note_saved
+import notedelight.shared_compose_ui.generated.resources.type_text
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NoteDetail(
@@ -61,7 +87,7 @@ fun NoteDetail(
         }
         is NoteResult.Saved -> coroutineScope.launch {
             titleState.value = noteResult.title
-            val noteSaved = MR.strings.note_saved.contextLocalized() + ": " + noteResult.title
+            val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
         is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteResult.noteId)
@@ -69,12 +95,12 @@ fun NoteDetail(
             titleState.value = noteResult.title
         }
         is NoteResult.Empty -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(MR.strings.note_empty.contextLocalized())
+            snackbarHostState.showSnackbar(message = getString(Res.string.note_empty))
         }
         is NoteResult.Deleted -> coroutineScope.launch {
             dialogHolder.dismissDialog()
             navBack()
-            snackbarHostState.showSnackbar(MR.strings.note_deleted.contextLocalized())
+            snackbarHostState.showSnackbar(message = getString(Res.string.note_deleted))
         }
         is NoteResult.CheckSaveChange -> dialogHolder.showSaveChanges(
             saveNoteAndNavBack = { noteViewModel.saveNoteAndNavBack(titleState.value, textState.value) },
@@ -113,20 +139,20 @@ fun NoteDetailBody(
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = Icons.Default.ArrowBack.name
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
                     )
                 }
             },
             actions = {
                 IconButton(onClick = { onSaveClick(titleState.value, textState.value) }) {
-                    Icon(Icons.Default.Save, contentDescription = stringResource(MR.strings.action_save_note))
+                    Icon(Icons.Default.Save, contentDescription = stringResource(Res.string.action_save_note))
                 }
                 IconButton(onClick = onEditClick) {
-                    Icon(Icons.Default.Title, contentDescription = stringResource(MR.strings.action_edit_title))
+                    Icon(Icons.Default.Title, contentDescription = stringResource(Res.string.action_edit_title))
                 }
                 IconButton(onClick = onDeleteClick) {
-                    Icon(Icons.Default.Delete, contentDescription = stringResource(MR.strings.action_delete_note))
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.action_delete_note))
                 }
             }
         )
@@ -138,7 +164,7 @@ fun NoteDetailBody(
                 value = textState.value,
                 onValueChange = { textState.value = it },
                 modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
-                label = { Text(stringResource(MR.strings.type_text)) },
+                label = { Text(stringResource(Res.string.type_text)) },
             )
         }
         themePrefs.showDialogIfNeed()

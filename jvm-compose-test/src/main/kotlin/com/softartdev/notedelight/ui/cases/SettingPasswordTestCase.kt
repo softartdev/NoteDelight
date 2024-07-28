@@ -7,28 +7,40 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
+import com.softartdev.notedelight.retryUntilDisplayed
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.test.runTest
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.empty_password
+import notedelight.shared_compose_ui.generated.resources.incorrect_password
+import notedelight.shared_compose_ui.generated.resources.passwords_do_not_match
+import org.jetbrains.compose.resources.getString
 
 class SettingPasswordTestCase(
     composeTestRule: ComposeContentTestRule,
     private val closeSoftKeyboard: () -> Unit,
 ) : () -> Unit, BaseTestCase(composeTestRule) {
 
-    override fun invoke() {
+    override fun invoke() = runTest {
         mainTestScreen {
             composeTestRule.waitUntilDisplayed(blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
 
             settingsTestScreen {
+                val emptyPassTitle = getString(Res.string.empty_password)
+                val passDoNotMatchTitle = getString(Res.string.passwords_do_not_match)
+                val incorrectPassTitle = getString(Res.string.incorrect_password)
+
                 encryptionSwitchSNI.assertIsOff()
                     .performClick()
 
                 confirmPasswordDialog {
-                    composeTestRule.waitUntilDisplayed(blockSNI = ::confirmPasswordSNI)
+                    composeTestRule.retryUntilDisplayed(
+                        action = encryptionSwitchSNI::performClick,
+                        sni = confirmPasswordSNI
+                    )
                     confirmPasswordSNI.performClick()
                     confirmLabelSNI.assertIsDisplayed()
                     confirmRepeatPasswordSNI.assertIsDisplayed()
@@ -41,19 +53,19 @@ class SettingPasswordTestCase(
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        confirmLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+                        confirmLabelSNI.assertTextEquals(emptyPassTitle)
                     }
                     confirmPasswordSNI.performTextReplacement(text = "1")
                     closeSoftKeyboard()
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        confirmRepeatLabelSNI.assertTextEquals(MR.strings.passwords_do_not_match.contextLocalized())
+                        confirmRepeatLabelSNI.assertTextEquals(passDoNotMatchTitle)
                     }
                     confirmRepeatPasswordSNI.performTextReplacement(text = "2")
 
                     yesDialogButtonSNI.performClick()
-                    confirmRepeatLabelSNI.assertTextEquals(MR.strings.passwords_do_not_match.contextLocalized())
+                    confirmRepeatLabelSNI.assertTextEquals(passDoNotMatchTitle)
 
                     confirmRepeatPasswordSNI.performTextReplacement(text = "1")
                     yesDialogButtonSNI.performClick()
@@ -80,27 +92,27 @@ class SettingPasswordTestCase(
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        changeOldLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+                        changeOldLabelSNI.assertTextEquals(emptyPassTitle)
                     }
                     changeOldSNI.performTextReplacement(text = "2")
                     closeSoftKeyboard()
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        changeNewLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+                        changeNewLabelSNI.assertTextEquals(emptyPassTitle)
                     }
                     changeNewSNI.performTextReplacement(text = "2")
                     closeSoftKeyboard()
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        changeRepeatLabelSNI.assertTextEquals(MR.strings.passwords_do_not_match.contextLocalized())
+                        changeRepeatLabelSNI.assertTextEquals(passDoNotMatchTitle)
                     }
                     changeRepeatNewSNI.performTextReplacement(text = "2")
                     closeSoftKeyboard()
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        changeOldLabelSNI.assertTextEquals(MR.strings.incorrect_password.contextLocalized())
+                        changeOldLabelSNI.assertTextEquals(incorrectPassTitle)
                     }
                     changeOldSNI.performTextReplacement(text = "1")
                     closeSoftKeyboard()
@@ -109,20 +121,23 @@ class SettingPasswordTestCase(
                 encryptionSwitchSNI.assertIsOn()
                     .performClick()
                 enterPasswordDialog {
-                    composeTestRule.waitUntilDisplayed(blockSNI = ::enterPasswordSNI)
+                    composeTestRule.retryUntilDisplayed(
+                        action = encryptionSwitchSNI::performClick,
+                        sni = enterPasswordSNI
+                    )
                     enterLabelSNI.assertIsDisplayed()
                     enterVisibilitySNI.assertIsDisplayed()
                         .performClick()
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        enterLabelSNI.assertTextEquals(MR.strings.empty_password.contextLocalized())
+                        enterLabelSNI.assertTextEquals(emptyPassTitle)
                     }
                     enterPasswordSNI.performTextReplacement(text = "1")
 
                     yesDialogButtonSNI.performClick()
                     composeTestRule.waitAssert {
-                        enterLabelSNI.assertTextEquals(MR.strings.incorrect_password.contextLocalized())
+                        enterLabelSNI.assertTextEquals(incorrectPassTitle)
                     }
                     enterPasswordSNI.performTextReplacement(text = "2")
                     yesDialogButtonSNI.performClick()

@@ -1,3 +1,8 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
@@ -5,15 +10,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
 }
-compose {
-    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
+compose.resources {
+    publicResClass = true
+    generateResClass = always
 }
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = libs.versions.jdk.get()
-        }
+        compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
     androidTarget()
     iosArm64()
@@ -28,11 +32,11 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
             implementation(libs.decompose)
             implementation(libs.decompose.extComposeJb)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
-            api(libs.mokoResources.compose)
         }
         androidMain.dependencies {
             implementation(libs.koin.androidx.compose)

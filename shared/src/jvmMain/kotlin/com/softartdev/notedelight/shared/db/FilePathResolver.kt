@@ -1,14 +1,12 @@
 package com.softartdev.notedelight.shared.db
 
-import com.softartdev.notedelight.MR
-import dev.icerock.moko.resources.desc.desc
 import net.harawata.appdirs.AppDirs
 import net.harawata.appdirs.AppDirsFactory
 import java.io.File
 
 class FilePathResolver(
     private val appDirs: AppDirs = AppDirsFactory.getInstance(),
-    private val appName: String = MR.strings.app_name.desc().localized(),
+    private val appName: String = "Note Delight",
     private val testMode: Boolean = false
 ) : () -> String {
 

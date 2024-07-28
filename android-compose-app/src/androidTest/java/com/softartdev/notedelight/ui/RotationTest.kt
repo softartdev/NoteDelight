@@ -1,9 +1,8 @@
 package com.softartdev.notedelight.ui
 
-import android.content.Context
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.core.app.ApplicationProvider
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.device.DeviceInteraction.Companion.setScreenOrientation
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
@@ -13,10 +12,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.ComposeIdlingRes
 import com.softartdev.notedelight.MainActivity
-import com.softartdev.notedelight.shared.R
 import com.softartdev.notedelight.shared.base.IdlingRes
+import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.create_note
+import org.jetbrains.compose.resources.getString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -36,8 +38,6 @@ class RotationTest {
         .around(ScreenOrientationRule(ScreenOrientation.PORTRAIT))
         .around(composeTestRule)
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
-
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(IdlingRes.countingIdlingResource)
@@ -51,15 +51,15 @@ class RotationTest {
     }
 
     @Test
-    fun rotationTest() {
+    fun rotationTest() = runTest {
         composeTestRule
-            .onNodeWithContentDescription(label = context.getString(R.string.create_note))
+            .onNodeWithContentDescription(label = getString(Res.string.create_note))
             .assertIsDisplayed()
 
         onDevice().setScreenOrientation(ScreenOrientation.LANDSCAPE)
 
         composeTestRule
-            .onNodeWithContentDescription(label = context.getString(R.string.create_note))
+            .onNodeWithContentDescription(label = getString(Res.string.create_note))
             .assertIsDisplayed()
 
         onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)

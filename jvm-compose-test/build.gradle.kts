@@ -5,10 +5,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-compose {
-    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
-}
-
 java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get().toInt())) }
     sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())

@@ -1,40 +1,45 @@
 package com.softartdev.notedelight.ui.screen
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import com.softartdev.mr.contextLocalized
-import com.softartdev.notedelight.MR
+import kotlinx.coroutines.runBlocking
+import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.action_delete_note
+import notedelight.shared_compose_ui.generated.resources.action_edit_title
+import notedelight.shared_compose_ui.generated.resources.action_save_note
+import notedelight.shared_compose_ui.generated.resources.type_text
+import org.jetbrains.compose.resources.getString
 
 @JvmInline
 value class NoteScreen(val composeTestRule: ComposeContentTestRule) {
 
     val backButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = Icons.Default.ArrowBack.name)
+            .onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
             .assertIsDisplayed()
 
     val saveNoteMenuButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.action_save_note.contextLocalized())
+            .onNodeWithContentDescription(label = runBlocking { getString(Res.string.action_save_note) })
             .assertIsDisplayed()
 
     val editTitleMenuButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.action_edit_title.contextLocalized())
+            .onNodeWithContentDescription(label = runBlocking { getString(Res.string.action_edit_title) })
             .assertIsDisplayed()
 
     val deleteNoteMenuButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithContentDescription(label = MR.strings.action_delete_note.contextLocalized())
+            .onNodeWithContentDescription(label = runBlocking { getString(Res.string.action_delete_note) })
             .assertIsDisplayed()
 
     val textFieldSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithText(text = MR.strings.type_text.contextLocalized())
+            .onNodeWithText(text = runBlocking { getString(Res.string.type_text) })
             .assertIsDisplayed()
 }

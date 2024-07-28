@@ -13,9 +13,6 @@ plugins {
     alias(libs.plugins.crashlytics)
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
-compose {
-    kotlinCompilerPlugin.set(libs.versions.composeCompiler.get())
-}
 android {
     namespace = "com.softartdev.notedelight"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -44,9 +41,6 @@ android {
             configure<CrashlyticsExtension> { mappingFileUploadEnabled = true }
             signingConfig = signingConfigs.getByName("config")
         }
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

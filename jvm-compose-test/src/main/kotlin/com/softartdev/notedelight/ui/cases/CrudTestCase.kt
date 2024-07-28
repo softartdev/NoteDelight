@@ -6,6 +6,7 @@ import androidx.compose.ui.test.performTextInput
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.ui.screen.MainTestScreen.Companion.noteItemTitleText
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.test.runTest
 import java.util.UUID
 
 class CrudTestCase(
@@ -14,7 +15,7 @@ class CrudTestCase(
 
     private val actualNoteText = UUID.randomUUID().toString().substring(0, 30)
 
-    override fun invoke() {
+    override fun invoke() = runTest {
         mainTestScreen {
             composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
             fabSNI.performClick()
