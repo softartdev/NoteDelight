@@ -19,16 +19,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
-import com.softartdev.notedelight.ui.dialog.showError
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_icon
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {
+    val navController: NavHostController = rememberNavController()
     val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
     DisposableEffect(splashViewModel) {
         splashViewModel.checkEncryption()
@@ -41,7 +43,9 @@ fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMai
         }
         is SplashResult.NavSignIn -> navSignIn()
         is SplashResult.NavMain -> navMain()
-        is SplashResult.ShowError -> themePrefs.dialogHolder.showError(splashResult.message)
+        is SplashResult.ShowError -> navController.navigate(
+            route = "${AppNavGraph.ErrorDialog.name}/${splashResult.message}"
+        )
     }
     SplashScreenBody(showError)
 }
@@ -62,7 +66,6 @@ fun SplashScreenBody(showError: Boolean = false) = Box(
             .align(Alignment.BottomCenter)
             .padding(bottom = 32.dp)
     )
-    themePrefs.showDialogIfNeed()
 }
 
 @Preview

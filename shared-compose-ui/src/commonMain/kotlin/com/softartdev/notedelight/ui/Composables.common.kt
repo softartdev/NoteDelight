@@ -15,6 +15,9 @@ import notedelight.shared_compose_ui.generated.resources.press_add_note
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
+expect fun BackHandler(enabled: Boolean = true, onBack: () -> Unit)
+
+@Composable
 fun Loader() {
     Box(
         contentAlignment = Alignment.Center,

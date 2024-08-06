@@ -57,10 +57,23 @@ class NoteViewModel(
         val changed = isChanged(noteId, noteTitle, text)
         val empty = isEmpty(noteId)
         when {
-            changed -> NoteResult.CheckSaveChange
+            changed -> {
+                subscribeToSaveNote(title, text)
+                NoteResult.CheckSaveChange
+            }
             empty -> deleteNoteForResult()
             else -> NoteResult.NavBack
         }
+    }
+
+    private suspend fun subscribeToSaveNote(title: String?, text: String) = launch(useIdling = false) {
+        val doSave: Boolean = SaveNoteUseCase.saveChannel.receive()
+        if (doSave) {
+            saveNoteAndNavBack(title, text)
+        } else {
+            doNotSaveAndNavBack()
+        }
+        return@launch NoteResult.NavBack //FIXME
     }
 
     fun saveNoteAndNavBack(title: String?, text: String) = launch {

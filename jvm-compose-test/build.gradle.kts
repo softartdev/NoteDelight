@@ -14,7 +14,6 @@ java {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":shared-compose-ui"))
-    implementation(libs.decompose)
     implementation(libs.koin.core.jvm)
     implementation(libs.turbine)
     implementation(compose.desktop.uiTestJUnit4)

@@ -4,6 +4,7 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,11 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.create_note
@@ -66,8 +66,8 @@ fun MainScreen(
                     Icon(Icons.Default.Settings, contentDescription = stringResource(Res.string.settings))
                 }
             })
-    }, content = {
-        Box(modifier = Modifier.padding(it)) {
+    }, content = { paddingValues: PaddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader()
                 is NoteListResult.Success -> {
@@ -77,7 +77,6 @@ fun MainScreen(
                 is NoteListResult.NavSignIn -> navSignIn()
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
-            themePrefs.showDialogIfNeed()
         }
     }, floatingActionButton = {
         val text = stringResource(Res.string.create_note)

@@ -7,12 +7,9 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import com.softartdev.notedelight.RootComponent
+import com.softartdev.notedelight.App
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.di.allModules
-import com.softartdev.notedelight.shared.runOnUiThread
 import io.github.aakira.napier.Napier
 import org.junit.After
 import org.junit.Before
@@ -35,14 +32,10 @@ class DesktopUiTests : AbstractUiTests() {
             printLogger(level = Level.DEBUG)
             modules(allModules)
         }
-        val lifecycle = LifecycleRegistry()
-        val root = runOnUiThread {
-            RootComponent(componentContext = DefaultComponentContext(lifecycle))
-        }
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
         super.setUp()
-        composeTestRule.setContent { MainRootUI(root) }
+        composeTestRule.setContent { App() }
     }
 
     @After

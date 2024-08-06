@@ -74,7 +74,7 @@ dependencies {
     implementation(compose.preview)
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)
-    implementation(libs.decompose)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
