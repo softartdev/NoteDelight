@@ -65,10 +65,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsScreen(
-    onBackClick: () -> Unit,
     settingsViewModel: SettingsViewModel,
+    navController: NavHostController = rememberNavController()
 ) {
-    val navController: NavHostController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val securityResultState: State<SecurityResult> =
         settingsViewModel.resultStateFlow.collectAsState()
@@ -109,13 +108,14 @@ fun SettingsScreen(
         }
     }
     SettingsScreenBody(
-        onBackClick = onBackClick,
+        onBackClick = navController::navigateUp,
         showLoading = securityResultState.value is SecurityResult.Loading,
         encryptionState = encryptionState,
         changeEncryption = settingsViewModel::changeEncryption,
         changePassword = settingsViewModel::changePassword,
         showCipherVersion = settingsViewModel::showCipherVersion,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
+        navController = navController
     )
 }
 
@@ -128,6 +128,7 @@ fun SettingsScreenBody(
     changePassword: () -> Unit = {},
     showCipherVersion: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    navController: NavHostController = rememberNavController()
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -147,7 +148,7 @@ fun SettingsScreenBody(
         Column(modifier = Modifier.padding(paddingValues)) {
             if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
-            ThemePreferenceItem()
+            ThemePreferenceItem(onClick = { navController.navigate(AppNavGraph.ThemeDialog.name) })
             PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {

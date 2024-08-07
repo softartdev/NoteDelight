@@ -6,11 +6,17 @@ enum class AppNavGraph {
     Main,
     Details,
     Settings,
+    ThemeDialog,
     SaveChangesDialog,
     EditTitleDialog,
     DeleteNoteDialog,
     EnterPasswordDialog,
     ConfirmPasswordDialog,
     ChangePasswordDialog,
-    ErrorDialog,
+    ErrorDialog;
+
+    fun argRoute(message: String?): String = when (message) {
+        null -> name
+        else -> "$name?message=$message"
+    }
 }

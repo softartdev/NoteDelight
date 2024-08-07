@@ -93,6 +93,16 @@ class NoteViewModel(
         }
     }
 
+    fun subscribeToDeleteNote() = launch {
+        val doDelete: Boolean = SaveNoteUseCase.deleteChannel.receive()
+        if (doDelete) {
+            deleteNoteForResult()
+        } else {
+            Napier.d("Don't delete note")
+            return@launch NoteResult.NavBack //FIXME
+        }
+    }
+
     private fun deleteNoteForResult(): NoteResult {
         noteDAO.delete(noteId)
         Napier.d("Deleted note with id=$noteId")

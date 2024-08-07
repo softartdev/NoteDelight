@@ -23,6 +23,8 @@ import com.softartdev.notedelight.ui.dialog.ErrorDialog
 import com.softartdev.notedelight.ui.dialog.SaveDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
+import com.softartdev.theme.material3.ThemeDialog
+import com.softartdev.theme.pref.PreferenceHelper
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,13 +81,22 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
             NoteDetail(
                 noteViewModel = getViewModel(),
                 noteId = backStackEntry.arguments!!.getLong("noteId"),
-                navBack = navController::navigateUp
+                navBack = navController::navigateUp,
+                navController = navController
             )
         }
         composable(route = AppNavGraph.Settings.name) {
             SettingsScreen(
-                onBackClick = navController::navigateUp,
                 settingsViewModel = getViewModel(),
+                navController = navController
+            )
+        }
+        dialog(route = AppNavGraph.ThemeDialog.name) {
+            val preferenceHelper: PreferenceHelper = themePrefs.preferenceHelper
+            ThemeDialog(
+                darkThemeState = themePrefs.darkThemeState,
+                writePref = preferenceHelper::themeEnum::set,
+                dismissDialog = navController::navigateUp,
             )
         }
         dialog(route = AppNavGraph.SaveChangesDialog.name) {
@@ -115,8 +126,13 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
             )
         }
         dialog(route = AppNavGraph.DeleteNoteDialog.name) {
+            val coroutineScope = rememberCoroutineScope()
             DeleteDialog(
-                onDeleteClick = { },
+                onDeleteClick = {
+                    coroutineScope.launch {
+                        SaveNoteUseCase.deleteChannel.send(true) //FIXME
+                    }
+                },
                 onDismiss = navController::navigateUp
             )
         }
@@ -138,7 +154,13 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
                 enterViewModel = getViewModel()
             )
         }
-        dialog(route = "${AppNavGraph.ErrorDialog.name}/{message}") { backStackEntry: NavBackStackEntry ->
+        dialog(
+            route = "${AppNavGraph.ErrorDialog.name}?message={message}",
+            arguments = listOf(navArgument("message") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry: NavBackStackEntry ->
             ErrorDialog(
                 message = backStackEntry.arguments?.getString("message"),
                 dismissDialog = navController::navigateUp

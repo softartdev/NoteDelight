@@ -55,8 +55,8 @@ fun NoteDetail(
     noteViewModel: NoteViewModel,
     noteId: Long,
     navBack: () -> Unit,
+    navController: NavHostController = rememberNavController()
 ) {
-    val navController: NavHostController = rememberNavController()
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
     DisposableEffect(noteId) {
         when (noteId) {
@@ -86,7 +86,6 @@ fun NoteDetail(
             val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
             snackbarHostState.showSnackbar(noteSaved)
         }
-//        is NoteResult.NavEditTitle -> dialogHolder.showEditTitle(noteResult.noteId)
         is NoteResult.NavEditTitle -> navController.navigate(
             route = "${AppNavGraph.EditTitleDialog.name}/${noteResult.noteId}",
         )
@@ -106,9 +105,8 @@ fun NoteDetail(
 
         is NoteResult.CheckSaveChange -> navController.navigate(AppNavGraph.SaveChangesDialog.name)
         is NoteResult.NavBack -> navBack()
-//        is NoteResult.Error -> dialogHolder.showError(noteResult.message)
         is NoteResult.Error -> navController.navigate(
-            route = "${AppNavGraph.ErrorDialog.name}/${noteResult.message}",
+            route = AppNavGraph.ErrorDialog.argRoute(noteResult.message),
         )
     }
     NoteDetailBody(
@@ -119,7 +117,7 @@ fun NoteDetail(
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
         onDeleteClick = {
-//            dialogHolder.showDelete(onDeleteClick = noteViewModel::deleteNote)
+            noteViewModel.subscribeToDeleteNote()
             navController.navigate(AppNavGraph.DeleteNoteDialog.name)
         },
         showLoading = noteResultState.value == NoteResult.Loading,
