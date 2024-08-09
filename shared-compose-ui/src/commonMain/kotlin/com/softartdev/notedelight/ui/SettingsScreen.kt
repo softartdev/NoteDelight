@@ -46,6 +46,7 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -69,47 +70,40 @@ fun SettingsScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val securityResultState: State<SecurityResult> =
-        settingsViewModel.resultStateFlow.collectAsState()
+    val resultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
     DisposableEffect(settingsViewModel) {
         settingsViewModel.checkEncryption()
         onDispose(settingsViewModel::onCleared)
     }
     val encryptionState = remember { mutableStateOf(false) }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    when (val securityResult = securityResultState.value) {
+    navController.currentBackStackEntryAsState().value?.let {
+        settingsViewModel.checkEncryption()
+    }
+    when (val securityResult = resultState.value) {
         is SecurityResult.Loading -> Unit
         is SecurityResult.EncryptEnable -> {
             encryptionState.value = securityResult.encryption
         }
-
-        is SecurityResult.PasswordDialog -> {
-//            dialogHolder.showEnterPassword(doAfterDismiss = settingsViewModel::checkEncryption)
-            navController.navigate(route = AppNavGraph.EnterPasswordDialog.name)
-        }
-
-        is SecurityResult.SetPasswordDialog -> {
-//            dialogHolder.showConfirmPassword(doAfterDismiss = settingsViewModel::checkEncryption)
-            navController.navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
-        }
-
-        is SecurityResult.ChangePasswordDialog -> {
-//            dialogHolder.showChangePassword(doAfterDismiss = settingsViewModel::checkEncryption)
-            navController.navigate(route = AppNavGraph.ChangePasswordDialog.name)
-        }
-
+        is SecurityResult.PasswordDialog -> navController.navigate(
+            route = AppNavGraph.EnterPasswordDialog.name
+        )
+        is SecurityResult.SetPasswordDialog -> navController.navigate(
+            route = AppNavGraph.ConfirmPasswordDialog.name
+        )
+        is SecurityResult.ChangePasswordDialog -> navController.navigate(
+            route = AppNavGraph.ChangePasswordDialog.name
+        )
         is SecurityResult.SnackBar -> coroutineScope.launch {
             snackbarHostState.showSnackbar(message = securityResult.message.toString())
         }
-
-        is SecurityResult.Error -> {
-//            dialogHolder.showError(securityResult.message)
-            //TODO
-        }
+        is SecurityResult.Error -> navController.navigate(
+            route = AppNavGraph.ErrorDialog.argRoute(message = securityResult.message),
+        )
     }
     SettingsScreenBody(
         onBackClick = navController::navigateUp,
-        showLoading = securityResultState.value is SecurityResult.Loading,
+        showLoading = resultState.value is SecurityResult.Loading,
         encryptionState = encryptionState,
         changeEncryption = settingsViewModel::changeEncryption,
         changePassword = settingsViewModel::changePassword,

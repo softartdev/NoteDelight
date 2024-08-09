@@ -29,8 +29,10 @@ import notedelight.shared_compose_ui.generated.resources.app_icon
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {
-    val navController: NavHostController = rememberNavController()
+fun SplashScreen(
+    splashViewModel: SplashViewModel,
+    navController: NavHostController = rememberNavController()
+) {
     val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
     DisposableEffect(splashViewModel) {
         splashViewModel.checkEncryption()
@@ -41,10 +43,14 @@ fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMai
         is SplashResult.Loading -> {
             showError = true
         }
-        is SplashResult.NavSignIn -> navSignIn()
-        is SplashResult.NavMain -> navMain()
+        is SplashResult.NavSignIn -> navController.navigate(AppNavGraph.SignIn.name) {
+            popUpTo(AppNavGraph.Splash.name) { inclusive = true }
+        }
+        is SplashResult.NavMain -> navController.navigate(AppNavGraph.Main.name) {
+            popUpTo(AppNavGraph.Main.name) { inclusive = true }
+        }
         is SplashResult.ShowError -> navController.navigate(
-            route = "${AppNavGraph.ErrorDialog.name}/${splashResult.message}"
+            route = AppNavGraph.ErrorDialog.argRoute(message = splashResult.message),
         )
     }
     SplashScreenBody(showError)

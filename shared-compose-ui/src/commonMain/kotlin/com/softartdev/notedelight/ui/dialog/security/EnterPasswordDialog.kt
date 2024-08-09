@@ -46,7 +46,9 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
             error = true
         }
         is EnterResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(enterResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = enterResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowEnterPasswordDialog(
@@ -55,8 +57,9 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
         labelResource = labelResource,
         isError = error,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
-    ) { enterViewModel.enterCheck(password = passwordState.value) }
+        dismissDialog = dismissDialog,
+        onConfirmClick = { enterViewModel.enterCheck(password = passwordState.value) }
+    )
 }
 
 @Composable
@@ -79,7 +82,10 @@ fun ShowEnterPasswordDialog(
                 isError = isError,
                 contentDescription = stringResource(Res.string.enter_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },

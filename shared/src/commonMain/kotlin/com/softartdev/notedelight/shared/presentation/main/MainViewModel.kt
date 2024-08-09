@@ -22,13 +22,10 @@ class MainViewModel(
             NoteListResult.Success(notes)
         })
 
-    override fun errorResult(throwable: Throwable): NoteListResult {
-        val errorName: String = throwable::class.simpleName.orEmpty()
-        return when {
-            errorName.contains("SQLite") -> NoteListResult.NavSignIn
-            else -> NoteListResult.Error(throwable.message)
-        }
-    }
+    override fun errorResult(throwable: Throwable): NoteListResult = if (
+        throwable::class.simpleName.orEmpty().contains("SQLite") ||
+        throwable.message.orEmpty().contains("database")
+    ) NoteListResult.NavSignIn else NoteListResult.Error(throwable.message)
 
     override fun onCleared() {
         safeRepo.relaunchListFlowCallback = null

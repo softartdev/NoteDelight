@@ -42,5 +42,7 @@ fun PreviewErrorDialog() = PreviewDialog { ErrorDialog("preview err") {} }
 
 @Preview
 @Composable
-fun PreviewDialog(dialogContent: @Composable () -> Unit) =
-    Box(modifier = Modifier.fillMaxSize()) { dialogContent() }
+fun PreviewDialog(dialogContent: @Composable () -> Unit) = Box(
+    modifier = Modifier.fillMaxSize(),
+    content = { dialogContent() }
+)

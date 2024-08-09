@@ -21,6 +21,8 @@ import com.softartdev.notedelight.ui.dialog.DeleteDialog
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
 import com.softartdev.notedelight.ui.dialog.SaveDialog
+import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
+import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialog
@@ -36,42 +38,19 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
         composable(route = AppNavGraph.Splash.name) {
             SplashScreen(
                 splashViewModel = getViewModel(),
-                navSignIn = {
-                    navController.navigate(AppNavGraph.SignIn.name) {
-                        popUpTo(AppNavGraph.Splash.name) { inclusive = true }
-                    }
-                },
-                navMain = {
-                    navController.navigate(AppNavGraph.Main.name) {
-                        popUpTo(AppNavGraph.Splash.name) { inclusive = true }
-                    }
-                },
+                navController = navController
             )
         }
         composable(route = AppNavGraph.SignIn.name) {
             SignInScreen(
                 signInViewModel = getViewModel(),
-                navMain = {
-                    navController.navigate(AppNavGraph.Main.name) {
-                        popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
-                    }
-                },
+                navController = navController
             )
         }
         composable(route = AppNavGraph.Main.name) {
             MainScreen(
                 mainViewModel = getViewModel(),
-                onItemClicked = { id: Long ->
-                    navController.navigate(route = "${AppNavGraph.Details.name}/$id")
-                },
-                onSettingsClick = {
-                    navController.navigate(AppNavGraph.Settings.name)
-                },
-                navSignIn = {
-                    navController.navigate(AppNavGraph.SignIn.name) {
-                        popUpTo(AppNavGraph.Main.name) { inclusive = true }
-                    }
-                },
+                navController = navController
             )
         }
         composable(
@@ -142,15 +121,15 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
             )
         }
         dialog(route = AppNavGraph.ConfirmPasswordDialog.name) {
-            EnterPasswordDialog(
+            ConfirmPasswordDialog(
                 dismissDialog = navController::navigateUp,
-                enterViewModel = getViewModel()
+                confirmViewModel = getViewModel()
             )
         }
         dialog(route = AppNavGraph.ChangePasswordDialog.name) {
-            EnterPasswordDialog(
+            ChangePasswordDialog(
                 dismissDialog = navController::navigateUp,
-                enterViewModel = getViewModel()
+                changeViewModel = getViewModel()
             )
         }
         dialog(

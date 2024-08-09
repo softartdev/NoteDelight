@@ -63,7 +63,9 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
             oldError = true
         }
         is ChangeResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(changeResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = changeResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowChangePasswordDialog(
@@ -79,7 +81,13 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
         repeatPasswordState = repeatPasswordState,
         snackbarHostState = snackbarHostState,
         dismissDialog = dismissDialog
-    ) { changeViewModel.checkChange(oldPassword = oldPasswordState.value, newPassword = newPasswordState.value, repeatNewPassword = repeatPasswordState.value) }
+    ) {
+        changeViewModel.checkChange(
+            oldPassword = oldPasswordState.value,
+            newPassword = newPasswordState.value,
+            repeatNewPassword = repeatPasswordState.value
+        )
+    }
 }
 
 @Composable
@@ -120,7 +128,10 @@ fun ShowChangePasswordDialog(
                 isError = repeatError,
                 contentDescription = stringResource(Res.string.repeat_new_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onChangeClick) { Text(stringResource(Res.string.yes)) } },

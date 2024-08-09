@@ -50,7 +50,9 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
             repeatError = true
         }
         is ConfirmResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(confirmResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = confirmResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowConfirmPasswordDialog(
@@ -62,8 +64,14 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
         isError = error,
         isRepeatError = repeatError,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
-    ) { confirmViewModel.conformCheck(password = passwordState.value, repeatPassword = repeatPasswordState.value) }
+        dismissDialog = dismissDialog,
+        onConfirmClick = {
+            confirmViewModel.conformCheck(
+                password = passwordState.value,
+                repeatPassword = repeatPasswordState.value
+            )
+        }
+    )
 }
 
 @Composable
@@ -95,7 +103,10 @@ fun ShowConfirmPasswordDialog(
                 isError = isRepeatError,
                 contentDescription = stringResource(Res.string.confirm_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },

@@ -40,8 +40,10 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
-    val navController: NavHostController = rememberNavController()
+fun SignInScreen(
+    signInViewModel: SignInViewModel,
+    navController: NavHostController = rememberNavController()
+) {
     val signInResultState: State<SignInResult> = signInViewModel.resultStateFlow.collectAsState()
     DisposableEffect(signInViewModel) {
         onDispose(signInViewModel::onCleared)
@@ -50,20 +52,21 @@ fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     when (val signInResult: SignInResult = signInResultState.value) {
-        is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
-        is SignInResult.NavMain -> navMain()
+        is SignInResult.ShowSignInForm,
+        is SignInResult.ShowProgress -> Unit
+        is SignInResult.NavMain -> navController.navigate(AppNavGraph.Main.name) {
+            popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
+        }
         is SignInResult.ShowEmptyPassError -> {
             labelResource = Res.string.empty_password
             error = true
         }
-
         is SignInResult.ShowIncorrectPassError -> {
             labelResource = Res.string.incorrect_password
             error = true
         }
-
         is SignInResult.ShowError -> navController.navigate(
-            route = "${AppNavGraph.ErrorDialog.name}/${signInResult.error.message}"
+            route = AppNavGraph.ErrorDialog.argRoute(message = signInResult.error.message),
         )
     }
     SignInScreenBody(

@@ -26,6 +26,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
@@ -39,16 +42,27 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
-    onItemClicked: (id: Long) -> Unit,
-    onSettingsClick: () -> Unit,
-    navSignIn: () -> Unit
+    navController: NavHostController = rememberNavController()
 ) {
     val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
     DisposableEffect(mainViewModel) {
         mainViewModel.updateNotes()
         onDispose(mainViewModel::onCleared)
     }
-    MainScreen(noteListState, onItemClicked, onSettingsClick, navSignIn)
+    MainScreen(
+        noteListState = noteListState,
+        onItemClicked = { id: Long ->
+            navController.navigate(route = "${AppNavGraph.Details.name}/$id")
+        },
+        onSettingsClick = {
+            navController.navigate(AppNavGraph.Settings.name)
+        },
+        navSignIn = {
+            navController.navigate(AppNavGraph.SignIn.name) {
+                popUpTo(AppNavGraph.Main.name) { inclusive = true }
+            }
+        },
+    )
 }
 
 @Composable
@@ -56,14 +70,17 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    navSignIn: () -> Unit = {},
+    navSignIn: () -> Unit = {}
 ) = Scaffold(
     topBar = {
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = stringResource(Res.string.settings))
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(Res.string.settings)
+                    )
                 }
             })
     }, content = { paddingValues: PaddingValues ->
