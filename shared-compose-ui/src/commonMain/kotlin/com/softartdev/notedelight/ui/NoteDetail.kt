@@ -54,7 +54,6 @@ import org.jetbrains.compose.resources.stringResource
 fun NoteDetail(
     noteViewModel: NoteViewModel,
     noteId: Long,
-    navBack: () -> Unit,
     navController: NavHostController = rememberNavController()
 ) {
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
@@ -75,12 +74,10 @@ fun NoteDetail(
     when (val noteResult: NoteResult = noteResultState.value) {
         is NoteResult.Loading,
         is NoteResult.Created -> Unit
-
         is NoteResult.Loaded -> {
             titleState.value = noteResult.result.title
             textState.value = noteResult.result.text
         }
-
         is NoteResult.Saved -> coroutineScope.launch {
             titleState.value = noteResult.title
             val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
@@ -89,22 +86,18 @@ fun NoteDetail(
         is NoteResult.NavEditTitle -> navController.navigate(
             route = "${AppNavGraph.EditTitleDialog.name}/${noteResult.noteId}",
         )
-
         is NoteResult.TitleUpdated -> {
             titleState.value = noteResult.title
         }
-
         is NoteResult.Empty -> coroutineScope.launch {
             snackbarHostState.showSnackbar(message = getString(Res.string.note_empty))
         }
-
         is NoteResult.Deleted -> coroutineScope.launch {
-            navBack()
             snackbarHostState.showSnackbar(message = getString(Res.string.note_deleted))
+            navController.popBackStack(route = AppNavGraph.Main.name, inclusive = false)
         }
-
         is NoteResult.CheckSaveChange -> navController.navigate(AppNavGraph.SaveChangesDialog.name)
-        is NoteResult.NavBack -> navBack()
+        is NoteResult.NavBack -> navController.navigateUp()
         is NoteResult.Error -> navController.navigate(
             route = AppNavGraph.ErrorDialog.argRoute(noteResult.message),
         )

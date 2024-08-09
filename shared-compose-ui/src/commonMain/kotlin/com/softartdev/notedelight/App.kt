@@ -81,7 +81,6 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
             NoteDetail(
                 noteViewModel = getViewModel(),
                 noteId = backStackEntry.arguments!!.getLong("noteId"),
-                navBack = navController::navigateUp,
                 navController = navController
             )
         }

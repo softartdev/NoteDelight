@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.di
 
+import androidx.compose.runtime.Composable
 import com.softartdev.notedelight.shared.base.KmmViewModel
 
-//@Composable FIXME revert after fix https://youtrack.jetbrains.com/issue/KT-53523
+@Composable
 expect inline fun <reified T : KmmViewModel> getViewModel(): T
