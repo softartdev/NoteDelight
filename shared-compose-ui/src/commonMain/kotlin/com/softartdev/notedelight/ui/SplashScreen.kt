@@ -44,7 +44,7 @@ fun SplashScreen(
             showError = true
         }
         is SplashResult.NavSignIn -> navController.navigate(AppNavGraph.SignIn.name) {
-            popUpTo(AppNavGraph.Splash.name) { inclusive = true }
+            popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
         }
         is SplashResult.NavMain -> navController.navigate(AppNavGraph.Main.name) {
             popUpTo(AppNavGraph.Main.name) { inclusive = true }

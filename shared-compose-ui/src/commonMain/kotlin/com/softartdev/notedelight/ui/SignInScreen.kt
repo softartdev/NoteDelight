@@ -55,7 +55,7 @@ fun SignInScreen(
         is SignInResult.ShowSignInForm,
         is SignInResult.ShowProgress -> Unit
         is SignInResult.NavMain -> navController.navigate(AppNavGraph.Main.name) {
-            popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
+            popUpTo(AppNavGraph.Main.name) { inclusive = true }
         }
         is SignInResult.ShowEmptyPassError -> {
             labelResource = Res.string.empty_password

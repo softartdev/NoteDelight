@@ -64,6 +64,7 @@ kotlin {
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
             implementation(libs.stately.common)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

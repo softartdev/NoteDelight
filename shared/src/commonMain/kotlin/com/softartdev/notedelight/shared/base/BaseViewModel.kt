@@ -1,10 +1,12 @@
 package com.softartdev.notedelight.shared.base
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class BaseViewModel<T> : KmmViewModel() {
+abstract class BaseViewModel<T> : ViewModel() {
 
     open var initResult: T? = null
     abstract val loadingResult: T
@@ -58,4 +60,6 @@ abstract class BaseViewModel<T> : KmmViewModel() {
     fun resetLoadingResult() {
         _resultStateFlow.value = loadingResult
     }
+
+    public override fun onCleared() = super.onCleared()//FIXME
 }

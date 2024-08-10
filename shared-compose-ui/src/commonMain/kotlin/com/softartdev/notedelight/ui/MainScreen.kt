@@ -59,7 +59,7 @@ fun MainScreen(
         },
         navSignIn = {
             navController.navigate(AppNavGraph.SignIn.name) {
-                popUpTo(AppNavGraph.Main.name) { inclusive = true }
+                popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
             }
         },
     )
