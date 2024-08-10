@@ -17,7 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -44,11 +44,10 @@ fun MainScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController = rememberNavController()
 ) {
-    val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(mainViewModel) {
+    LaunchedEffect(mainViewModel) {
         mainViewModel.updateNotes()
-        onDispose(mainViewModel::onCleared)
     }
+    val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
     MainScreen(
         noteListState = noteListState,
         onItemClicked = { id: Long ->

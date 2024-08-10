@@ -2,8 +2,21 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterResult
@@ -26,9 +39,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewModel) {
     val enterResultState: State<EnterResult> = enterViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(enterViewModel) {
-        onDispose(enterViewModel::onCleared)
-    }
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }

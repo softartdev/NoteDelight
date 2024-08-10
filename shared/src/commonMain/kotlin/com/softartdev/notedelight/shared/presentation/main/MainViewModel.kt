@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.shared.presentation.main
 
 import com.softartdev.notedelight.shared.base.BaseViewModel
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.db.SafeRepo
 import kotlinx.coroutines.flow.map
@@ -18,14 +17,17 @@ class MainViewModel(
     }
 
     fun updateNotes() = launch(
-        flow = noteDAO.listFlow.map { notes: List<Note> ->
-            NoteListResult.Success(notes)
-        })
+        useIdling = false,
+        flow = noteDAO.listFlow.map(NoteListResult::Success)
+    )
 
-    override fun errorResult(throwable: Throwable): NoteListResult = if (
-        throwable::class.simpleName.orEmpty().contains("SQLite") ||
-        throwable.message.orEmpty().contains("database")
-    ) NoteListResult.NavSignIn else NoteListResult.Error(throwable.message)
+    override fun errorResult(throwable: Throwable): NoteListResult {
+        val errorName: String = throwable::class.simpleName.orEmpty()
+        return when {
+            errorName.contains("SQLite") -> NoteListResult.NavSignIn
+            else -> NoteListResult.Error(throwable.message)
+        }
+    }
 
     override fun onCleared() {
         safeRepo.relaunchListFlowCallback = null

@@ -10,7 +10,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -43,11 +43,10 @@ fun EditTitleDialog(
     dismissDialog: () -> Unit,
     editTitleViewModel: EditTitleViewModel
 ) {
-    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(noteId) {
+    LaunchedEffect(noteId) {
         editTitleViewModel.loadTitle(noteId)
-        onDispose(editTitleViewModel::onCleared)
     }
+    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.resultStateFlow.collectAsState()
     var labelResource by remember { mutableStateOf(Res.string.enter_title) }
     val textState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }

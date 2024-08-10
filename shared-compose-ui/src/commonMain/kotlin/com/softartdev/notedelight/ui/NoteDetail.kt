@@ -22,7 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -56,14 +56,13 @@ fun NoteDetail(
     noteId: Long,
     navController: NavHostController = rememberNavController()
 ) {
-    val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(noteId) {
+    LaunchedEffect(noteId) {
         when (noteId) {
             0L -> noteViewModel.createNote()
             else -> noteViewModel.loadNote(noteId)
         }
-        onDispose(noteViewModel::onCleared)
     }
+    val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
     val titleState: MutableState<String> = remember { mutableStateOf("") }
     val textState: MutableState<String> = remember { mutableStateOf("") }
 

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,11 +33,10 @@ fun SplashScreen(
     splashViewModel: SplashViewModel,
     navController: NavHostController = rememberNavController()
 ) {
-    val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(splashViewModel) {
+    LaunchedEffect(splashViewModel) {
         splashViewModel.checkEncryption()
-        onDispose(splashViewModel::onCleared)
     }
+    val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
     var showError: Boolean by remember { mutableStateOf(false) }
     when (val splashResult: SplashResult = splashResultState.value) {
         is SplashResult.Loading -> {

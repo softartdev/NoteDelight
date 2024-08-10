@@ -30,7 +30,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -46,7 +46,6 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -64,22 +63,20 @@ import notedelight.shared_compose_ui.generated.resources.settings
 import notedelight.shared_compose_ui.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
 
+
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     navController: NavHostController = rememberNavController()
 ) {
+//    navController.currentBackStackEntryAsState()
+    LaunchedEffect(settingsViewModel) {
+        settingsViewModel.checkEncryption()
+    }
     val coroutineScope = rememberCoroutineScope()
     val resultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(settingsViewModel) {
-        settingsViewModel.checkEncryption()
-        onDispose(settingsViewModel::onCleared)
-    }
     val encryptionState = remember { mutableStateOf(false) }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    navController.currentBackStackEntryAsState().value?.let {
-        settingsViewModel.checkEncryption()
-    }
     when (val securityResult = resultState.value) {
         is SecurityResult.Loading -> Unit
         is SecurityResult.EncryptEnable -> {

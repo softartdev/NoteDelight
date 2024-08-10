@@ -15,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -45,9 +44,6 @@ fun SignInScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val signInResultState: State<SignInResult> = signInViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(signInViewModel) {
-        onDispose(signInViewModel::onCleared)
-    }
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
