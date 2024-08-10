@@ -18,7 +18,7 @@ class MainViewModel(
 
     fun updateNotes() = launch(
         useIdling = false,
-        flow = noteDAO.listFlow.map(NoteListResult::Success)
+        flow = safeRepo.noteDAO.listFlow.map(NoteListResult::Success)
     )
 
     override fun errorResult(throwable: Throwable): NoteListResult {
@@ -27,9 +27,5 @@ class MainViewModel(
             errorName.contains("SQLite") -> NoteListResult.NavSignIn
             else -> NoteListResult.Error(throwable.message)
         }
-    }
-
-    override fun onCleared() {
-        safeRepo.relaunchListFlowCallback = null
     }
 }

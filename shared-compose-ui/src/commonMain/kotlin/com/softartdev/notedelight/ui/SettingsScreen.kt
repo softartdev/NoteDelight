@@ -34,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,7 +46,9 @@ import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.createMultiplatformMessage
@@ -69,34 +72,42 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     navController: NavHostController = rememberNavController()
 ) {
-//    navController.currentBackStackEntryAsState()
-    LaunchedEffect(settingsViewModel) {
-        settingsViewModel.checkEncryption()
-    }
-    val coroutineScope = rememberCoroutineScope()
+    val entry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
     val resultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
     val encryptionState = remember { mutableStateOf(false) }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    when (val securityResult = resultState.value) {
-        is SecurityResult.Loading -> Unit
-        is SecurityResult.EncryptEnable -> {
-            encryptionState.value = securityResult.encryption
+    LaunchedEffect(
+        key1 = settingsViewModel,
+        key2 = resultState.value,
+        key3 = entry?.destination?.route,
+    ) {
+        settingsViewModel.checkEncryption()
+    }
+    LaunchedEffect(
+        key1 = settingsViewModel,
+        key2 = resultState.value
+    ) {
+        when (val securityResult = resultState.value) {
+            is SecurityResult.Loading -> Unit
+            is SecurityResult.EncryptEnable -> {
+                encryptionState.value = securityResult.encryption
+            }
+            is SecurityResult.PasswordDialog -> navController.navigate(
+                route = AppNavGraph.EnterPasswordDialog.name
+            )
+            is SecurityResult.SetPasswordDialog -> navController.navigate(
+                route = AppNavGraph.ConfirmPasswordDialog.name
+            )
+            is SecurityResult.ChangePasswordDialog -> navController.navigate(
+                route = AppNavGraph.ChangePasswordDialog.name
+            )
+            is SecurityResult.SnackBar -> snackbarHostState.showSnackbar(
+                message = securityResult.message.toString()
+            )
+            is SecurityResult.Error -> navController.navigate(
+                route = AppNavGraph.ErrorDialog.argRoute(message = securityResult.message),
+            )
         }
-        is SecurityResult.PasswordDialog -> navController.navigate(
-            route = AppNavGraph.EnterPasswordDialog.name
-        )
-        is SecurityResult.SetPasswordDialog -> navController.navigate(
-            route = AppNavGraph.ConfirmPasswordDialog.name
-        )
-        is SecurityResult.ChangePasswordDialog -> navController.navigate(
-            route = AppNavGraph.ChangePasswordDialog.name
-        )
-        is SecurityResult.SnackBar -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(message = securityResult.message.toString())
-        }
-        is SecurityResult.Error -> navController.navigate(
-            route = AppNavGraph.ErrorDialog.argRoute(message = securityResult.message),
-        )
     }
     SettingsScreenBody(
         onBackClick = navController::navigateUp,

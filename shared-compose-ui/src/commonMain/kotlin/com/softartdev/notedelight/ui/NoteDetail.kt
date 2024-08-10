@@ -28,7 +28,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,7 +37,6 @@ import com.softartdev.notedelight.AppNavGraph
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme
-import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.action_delete_note
 import notedelight.shared_compose_ui.generated.resources.action_edit_title
@@ -56,7 +54,7 @@ fun NoteDetail(
     noteId: Long,
     navController: NavHostController = rememberNavController()
 ) {
-    LaunchedEffect(noteId) {
+    LaunchedEffect(key1 = noteId, key2 = noteViewModel) {
         when (noteId) {
             0L -> noteViewModel.createNote()
             else -> noteViewModel.loadNote(noteId)
@@ -65,41 +63,45 @@ fun NoteDetail(
     val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
     val titleState: MutableState<String> = remember { mutableStateOf("") }
     val textState: MutableState<String> = remember { mutableStateOf("") }
-
-    BackHandler { noteViewModel.checkSaveChange(titleState.value, textState.value) }
-
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    when (val noteResult: NoteResult = noteResultState.value) {
-        is NoteResult.Loading,
-        is NoteResult.Created -> Unit
-        is NoteResult.Loaded -> {
-            titleState.value = noteResult.result.title
-            textState.value = noteResult.result.text
+    LaunchedEffect(
+        key1 = noteId,
+        key2 = noteViewModel,
+        key3 = noteResultState.value
+    ) {
+        when (val noteResult: NoteResult = noteResultState.value) {
+            is NoteResult.Loading,
+            is NoteResult.Created -> Unit
+            is NoteResult.Loaded -> {
+                titleState.value = noteResult.result.title
+                textState.value = noteResult.result.text
+            }
+            is NoteResult.Saved -> {
+                titleState.value = noteResult.title
+                val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
+                snackbarHostState.showSnackbar(noteSaved)
+            }
+            is NoteResult.NavEditTitle -> navController.navigate(
+                route = "${AppNavGraph.EditTitleDialog.name}/${noteResult.noteId}",
+            )
+            is NoteResult.TitleUpdated -> {
+                titleState.value = noteResult.title
+            }
+            is NoteResult.Empty -> snackbarHostState.showSnackbar(
+                message = getString(Res.string.note_empty)
+            )
+            is NoteResult.Deleted -> {
+                snackbarHostState.showSnackbar(message = getString(Res.string.note_deleted))
+                navController.popBackStack(route = AppNavGraph.Main.name, inclusive = false)
+            }
+            is NoteResult.CheckSaveChange -> navController.navigate(
+                route = AppNavGraph.SaveChangesDialog.name
+            )
+            is NoteResult.NavBack -> navController.popBackStack()
+            is NoteResult.Error -> navController.navigate(
+                route = AppNavGraph.ErrorDialog.argRoute(noteResult.message),
+            )
         }
-        is NoteResult.Saved -> coroutineScope.launch {
-            titleState.value = noteResult.title
-            val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
-            snackbarHostState.showSnackbar(noteSaved)
-        }
-        is NoteResult.NavEditTitle -> navController.navigate(
-            route = "${AppNavGraph.EditTitleDialog.name}/${noteResult.noteId}",
-        )
-        is NoteResult.TitleUpdated -> {
-            titleState.value = noteResult.title
-        }
-        is NoteResult.Empty -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(message = getString(Res.string.note_empty))
-        }
-        is NoteResult.Deleted -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(message = getString(Res.string.note_deleted))
-            navController.popBackStack(route = AppNavGraph.Main.name, inclusive = false)
-        }
-        is NoteResult.CheckSaveChange -> navController.navigate(AppNavGraph.SaveChangesDialog.name)
-        is NoteResult.NavBack -> navController.navigateUp()
-        is NoteResult.Error -> navController.navigate(
-            route = AppNavGraph.ErrorDialog.argRoute(noteResult.message),
-        )
     }
     NoteDetailBody(
         snackbarHostState = snackbarHostState,
@@ -114,6 +116,7 @@ fun NoteDetail(
         },
         showLoading = noteResultState.value == NoteResult.Loading,
     )
+    BackHandler { noteViewModel.checkSaveChange(titleState.value, textState.value) }
 }
 
 @Composable

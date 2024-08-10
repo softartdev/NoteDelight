@@ -84,11 +84,13 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
                     coroutineScope.launch {
                         SaveNoteUseCase.saveChannel.send(true) //FIXME
                     }
+                    navController.navigateUp()
                 },
                 doNotSaveAndNavBack = {
                     coroutineScope.launch {
                         SaveNoteUseCase.saveChannel.send(false) //FIXME
                     }
+                    navController.navigateUp()
                 },
                 onDismiss = navController::navigateUp
             )
