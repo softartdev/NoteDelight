@@ -16,11 +16,11 @@ class SettingsViewModel(
     private val dbIsEncrypted: Boolean
         get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
 
-    fun checkEncryption() = launch {
+    fun checkEncryption() = launch(useIdling = false) {
         SecurityResult.EncryptEnable(dbIsEncrypted)
     }
 
-    fun changeEncryption(checked: Boolean) = launch {
+    fun changeEncryption(checked: Boolean) = launch(useIdling = false) {
         when (checked) {
             true -> SecurityResult.SetPasswordDialog
             false -> when {
@@ -30,14 +30,14 @@ class SettingsViewModel(
         }
     }
 
-    fun changePassword() = launch {
+    fun changePassword() = launch(useIdling = false) {
         when {
             dbIsEncrypted -> SecurityResult.ChangePasswordDialog
             else -> SecurityResult.SetPasswordDialog
         }
     }
 
-    fun showCipherVersion() = launch {
+    fun showCipherVersion() = launch(useIdling = false) {
         val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
         SecurityResult.SnackBar(cipherVersion)
     }

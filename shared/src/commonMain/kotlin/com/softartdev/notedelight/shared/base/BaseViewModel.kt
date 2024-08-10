@@ -14,10 +14,7 @@ abstract class BaseViewModel<T> : ViewModel() {
     private val _resultStateFlow by lazy { MutableStateFlow(initResult ?: loadingResult) }
     val resultStateFlow: StateFlow<T> by lazy { _resultStateFlow.asStateFlow() }
 
-    fun launch(
-            useIdling: Boolean = true,
-            block: suspend CoroutineScope.() -> T
-    ) {
+    fun launch(useIdling: Boolean = true, block: suspend CoroutineScope.() -> T) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (useIdling) {
@@ -34,15 +31,15 @@ abstract class BaseViewModel<T> : ViewModel() {
         }.start()
     }
 
-    fun launch(flow: Flow<T>) {
+    fun launch(useIdling: Boolean = true, flow: Flow<T>) {
         viewModelScope.launch(Dispatchers.Default) {
             flow.onStart {
                 loadingResult ?: return@onStart
-                IdlingRes.increment()
+                if (useIdling) IdlingRes.increment()
                 emit(loadingResult!!)
             }.onEach { result ->
                 onResult(result)
-                if (result == loadingResult) IdlingRes.decrement()
+                if (useIdling && result == loadingResult) IdlingRes.decrement()
             }.catch { throwable ->
                 Napier.e("❌", throwable)
                 onResult(errorResult(throwable))
@@ -56,7 +53,7 @@ abstract class BaseViewModel<T> : ViewModel() {
 
     abstract fun errorResult(throwable: Throwable): T
 
-//    @androidx.annotation.VisibleForTesting
+    //    @androidx.annotation.VisibleForTesting
     fun resetLoadingResult() {
         _resultStateFlow.value = loadingResult
     }
