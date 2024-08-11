@@ -9,6 +9,7 @@ import com.softartdev.notedelight.DbTestEncryptor
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.empty_password
@@ -26,13 +27,13 @@ class SignInTestCase(
             composeTestRule.waitUntilDisplayed(blockSNI = ::passwordFieldSNI)
 
             passwordLabelSNI.assertIsDisplayed()
-                .assertTextEquals(getString(Res.string.enter_password))
+                .assertTextEquals(runBlocking { getString(Res.string.enter_password) })
 
             passwordVisibilitySNI.assertIsDisplayed()
                 .performClick()
 
             signInButtonSNI.performClick()
-            val emptyPassTitle = getString(Res.string.empty_password)
+            val emptyPassTitle = runBlocking { getString(Res.string.empty_password) }
             composeTestRule.waitAssert {
                 passwordLabelSNI.assertTextEquals(emptyPassTitle)
             }
@@ -40,7 +41,7 @@ class SignInTestCase(
             closeSoftKeyboard()
             signInButtonSNI.performClick()
 
-            passwordLabelSNI.assertTextEquals(getString(Res.string.incorrect_password))
+            passwordLabelSNI.assertTextEquals(runBlocking { getString(Res.string.incorrect_password) })
 
             passwordFieldSNI.performTextReplacement(text = DbTestEncryptor.PASSWORD)
             closeSoftKeyboard()
