@@ -28,7 +28,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel

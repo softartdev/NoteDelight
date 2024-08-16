@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme

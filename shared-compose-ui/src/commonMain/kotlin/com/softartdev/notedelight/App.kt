@@ -11,6 +11,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.softartdev.notedelight.di.getViewModel
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.ui.MainScreen
 import com.softartdev.notedelight.ui.NoteDetail

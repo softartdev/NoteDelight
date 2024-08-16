@@ -1,4 +1,4 @@
-package com.softartdev.notedelight
+package com.softartdev.notedelight.shared.navigation
 
 enum class AppNavGraph {
     Splash,

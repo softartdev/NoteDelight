@@ -4,7 +4,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.softartdev.notedelight.shared.di.allModules
+import com.softartdev.notedelight.di.navigationModule
+import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.util.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
@@ -20,7 +21,7 @@ fun main() {
     Napier.base(antilog = DebugAntilog())
     startKoin {
         logger(NapierKoinLogger(Level.DEBUG))
-        modules(allModules)
+        modules(sharedModules + navigationModule)
     }
     application {
         Window(

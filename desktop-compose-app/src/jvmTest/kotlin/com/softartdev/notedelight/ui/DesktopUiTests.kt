@@ -12,10 +12,13 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.App
 import com.softartdev.notedelight.TestLifecycleOwner
+import com.softartdev.notedelight.di.navigationModule
 import com.softartdev.notedelight.shared.db.NoteDAO
-import com.softartdev.notedelight.shared.di.allModules
+import com.softartdev.notedelight.shared.di.sharedModules
+import com.softartdev.notedelight.shared.navigation.Router
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
@@ -38,15 +41,18 @@ class DesktopUiTests : AbstractUiTests() {
     override fun setUp() {
         startKoin {
             printLogger(level = Level.DEBUG)
-            modules(allModules)
+            modules(sharedModules + navigationModule)
         }
+        val router: Router = get(Router::class.java)
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
         super.setUp()
         val lifecycleOwner = TestLifecycleOwner(coroutineDispatcher = Dispatchers.Swing)
         composeTestRule.setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
-                App()
+                val navController = rememberNavController()
+                router.setController(navController)
+                App(navController)
             }
         }
     }

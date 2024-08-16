@@ -19,7 +19,7 @@ import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val allModules: List<Module>
+val sharedModules: List<Module>
     get() = repoModule + daoModule + useCaseModule + viewModelModule
 
 /**

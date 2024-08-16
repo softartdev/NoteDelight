@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import notedelight.shared_compose_ui.generated.resources.Res

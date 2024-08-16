@@ -37,7 +37,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
@@ -50,13 +49,12 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.theme.material3.ThemePreferenceItem
-import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
 import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
