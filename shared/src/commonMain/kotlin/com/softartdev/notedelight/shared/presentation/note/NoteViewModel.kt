@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.presentation.note
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
@@ -11,7 +11,7 @@ class NoteViewModel(
     private val noteDAO: NoteDAO,
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
-) : BaseViewModel<NoteResult>() {
+) : BaseStateViewModel<NoteResult>() {
 
     private var noteId: Long = 0
         get() = when (field) {

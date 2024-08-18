@@ -1,13 +1,13 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 
 class EnterViewModel (
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase
-) : BaseViewModel<EnterResult>() {
+) : BaseStateViewModel<EnterResult>() {
 
     override var initResult: EnterResult? = EnterResult.InitState
     override val loadingResult: EnterResult = EnterResult.Loading

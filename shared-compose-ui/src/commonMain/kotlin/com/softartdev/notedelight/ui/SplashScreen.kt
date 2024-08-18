@@ -37,10 +37,10 @@ fun SplashScreen(
         splashViewModel.checkEncryption()
     }
     val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
-    var showError: Boolean by remember { mutableStateOf(false) }
+    var showLoading: Boolean by remember { mutableStateOf(false) }
     when (val splashResult: SplashResult = splashResultState.value) {
         is SplashResult.Loading -> {
-            showError = true
+            showLoading = true
         }
         is SplashResult.NavSignIn -> navController.navigate(AppNavGraph.SignIn.name) {
             popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
@@ -52,11 +52,11 @@ fun SplashScreen(
             route = AppNavGraph.ErrorDialog.argRoute(message = splashResult.message),
         )
     }
-    SplashScreenBody(showError)
+    SplashScreenBody(showLoading)
 }
 
 @Composable
-fun SplashScreenBody(showError: Boolean = false) = Box(
+fun SplashScreenBody(showLoading: Boolean = false) = Box(
     modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.background)
@@ -66,7 +66,7 @@ fun SplashScreenBody(showError: Boolean = false) = Box(
         painter = painterResource(Res.drawable.app_icon),
         contentDescription = null
     )
-    if (showError) LinearProgressIndicator(
+    if (showLoading) LinearProgressIndicator(
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(bottom = 32.dp)

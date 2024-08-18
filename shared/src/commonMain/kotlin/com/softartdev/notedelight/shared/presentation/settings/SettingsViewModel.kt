@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.shared.presentation.settings
 
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.usecase.crypt.CheckSqlCipherVersionUseCase
 
@@ -9,7 +9,7 @@ import com.softartdev.notedelight.shared.usecase.crypt.CheckSqlCipherVersionUseC
 class SettingsViewModel(
     private val safeRepo: SafeRepo,
     private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase
-) : BaseViewModel<SecurityResult>() {
+) : BaseStateViewModel<SecurityResult>() {
 
     override val loadingResult: SecurityResult = SecurityResult.Loading
 

@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.shared.presentation.signin
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 
 class SignInViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase
-) : BaseViewModel<SignInResult>() {
+) : BaseStateViewModel<SignInResult>() {
 
     override var initResult: SignInResult? = SignInResult.ShowSignInForm
     override val loadingResult: SignInResult = SignInResult.ShowProgress

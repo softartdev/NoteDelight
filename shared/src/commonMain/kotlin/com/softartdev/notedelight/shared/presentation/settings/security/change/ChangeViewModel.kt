@@ -1,13 +1,13 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.change
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 
 class ChangeViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase
-) : BaseViewModel<ChangeResult>() {
+) : BaseStateViewModel<ChangeResult>() {
 
     override var initResult: ChangeResult? = ChangeResult.InitState
     override val loadingResult: ChangeResult = ChangeResult.Loading

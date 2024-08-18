@@ -1,11 +1,11 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 
 class ConfirmViewModel (
     private val changePasswordUseCase: ChangePasswordUseCase
-) : BaseViewModel<ConfirmResult>() {
+) : BaseStateViewModel<ConfirmResult>() {
 
     override var initResult: ConfirmResult? = ConfirmResult.InitState
     override val loadingResult: ConfirmResult = ConfirmResult.Loading

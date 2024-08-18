@@ -6,7 +6,7 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class BaseViewModel<T> : ViewModel() {
+abstract class BaseStateViewModel<T> : ViewModel() {
 
     open var initResult: T? = null
     abstract val loadingResult: T
@@ -32,7 +32,7 @@ abstract class BaseViewModel<T> : ViewModel() {
     }
 
     fun launch(useIdling: Boolean = true, flow: Flow<T>) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             flow.onStart {
                 loadingResult ?: return@onStart
                 if (useIdling) IdlingRes.increment()

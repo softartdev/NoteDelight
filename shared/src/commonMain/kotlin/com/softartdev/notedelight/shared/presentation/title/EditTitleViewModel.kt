@@ -1,13 +1,13 @@
 package com.softartdev.notedelight.shared.presentation.title
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 
 class EditTitleViewModel(
     private val noteDAO: NoteDAO,
     private val updateTitleUseCase: UpdateTitleUseCase
-) : BaseViewModel<EditTitleResult>() {
+) : BaseStateViewModel<EditTitleResult>() {
 
     override val loadingResult: EditTitleResult = EditTitleResult.Loading
 

@@ -1,12 +1,12 @@
 package com.softartdev.notedelight.shared.presentation.splash
 
 import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.db.SafeRepo
 
 class SplashViewModel(
     private val safeRepo: SafeRepo
-) : BaseViewModel<SplashResult>() {
+) : BaseStateViewModel<SplashResult>() {
 
     override val loadingResult: SplashResult = SplashResult.Loading
 

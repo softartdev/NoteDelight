@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.shared.presentation.main
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import com.softartdev.notedelight.shared.base.BaseStateViewModel
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.db.SafeRepo
 import kotlinx.coroutines.flow.map
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 class MainViewModel(
     private val safeRepo: SafeRepo,
     private val noteDAO: NoteDAO,
-) : BaseViewModel<NoteListResult>() {
+) : BaseStateViewModel<NoteListResult>() {
 
     override val loadingResult: NoteListResult = NoteListResult.Loading
 
