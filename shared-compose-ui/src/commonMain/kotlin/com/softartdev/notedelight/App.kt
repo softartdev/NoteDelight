@@ -37,10 +37,7 @@ fun App(navController: NavHostController = rememberNavController()) = Preferable
         startDestination = AppNavGraph.Splash.name,
     ) {
         composable(route = AppNavGraph.Splash.name) {
-            SplashScreen(
-                splashViewModel = getViewModel(),
-                navController = navController
-            )
+            SplashScreen(splashViewModel = getViewModel())
         }
         composable(route = AppNavGraph.SignIn.name) {
             SignInScreen(

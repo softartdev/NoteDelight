@@ -10,19 +10,11 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.shared.navigation.AppNavGraph
-import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_icon
@@ -31,26 +23,10 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun SplashScreen(
     splashViewModel: SplashViewModel,
-    navController: NavHostController = rememberNavController()
 ) {
+    val showLoading: Boolean by splashViewModel.stateFlow.collectAsState()
     LaunchedEffect(splashViewModel) {
         splashViewModel.checkEncryption()
-    }
-    val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
-    var showLoading: Boolean by remember { mutableStateOf(false) }
-    when (val splashResult: SplashResult = splashResultState.value) {
-        is SplashResult.Loading -> {
-            showLoading = true
-        }
-        is SplashResult.NavSignIn -> navController.navigate(AppNavGraph.SignIn.name) {
-            popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
-        }
-        is SplashResult.NavMain -> navController.navigate(AppNavGraph.Main.name) {
-            popUpTo(AppNavGraph.Main.name) { inclusive = true }
-        }
-        is SplashResult.ShowError -> navController.navigate(
-            route = AppNavGraph.ErrorDialog.argRoute(message = splashResult.message),
-        )
     }
     SplashScreenBody(showLoading)
 }

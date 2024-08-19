@@ -41,7 +41,7 @@ val useCaseModule: Module = module {
 }
 
 val viewModelModule: Module = module {
-    viewModelFactory { SplashViewModel(get()) }
+    viewModelFactory { SplashViewModel(get(), get()) }
     viewModelFactory { SignInViewModel(get()) }
     viewModelFactory { MainViewModel(get(), get()) }
     viewModelFactory { NoteViewModel(get(), get(), get()) }

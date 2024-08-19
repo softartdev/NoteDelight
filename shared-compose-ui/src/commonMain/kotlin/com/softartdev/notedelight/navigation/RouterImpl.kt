@@ -12,4 +12,10 @@ class RouterImpl : Router {
     }
 
     override fun navigate(route: String) = navController.navigate(route)
+
+    override fun navigateClearingBackStack(route: String) = navController.navigate(route) {
+        popUpTo(route) { inclusive = true }
+    }
+
+    override fun popBackStack() = navController.popBackStack()
 }
