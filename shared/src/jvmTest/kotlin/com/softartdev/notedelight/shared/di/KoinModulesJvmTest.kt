@@ -9,7 +9,7 @@ class KoinModulesJvmTest : KoinTest {
 
     @Test
     fun checkModulesTest() = checkKoinModules(
-        modules = sharedModules,
+        modules = sharedModules + navigationModule,
         appDeclaration = { printLogger(level = Level.DEBUG) }
     )
 }

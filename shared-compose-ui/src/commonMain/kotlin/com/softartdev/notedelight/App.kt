@@ -1,6 +1,7 @@
 package com.softartdev.notedelight
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -12,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.ui.MainScreen
 import com.softartdev.notedelight.ui.NoteDetail
@@ -31,7 +33,14 @@ import com.softartdev.theme.pref.PreferenceHelper
 import kotlinx.coroutines.launch
 
 @Composable
-fun App(navController: NavHostController = rememberNavController()) = PreferableMaterialTheme {
+fun App(
+    router: Router,
+    navController: NavHostController = rememberNavController()
+) = PreferableMaterialTheme {
+    DisposableEffect(key1 = router, key2 = navController) {
+        router.setController(navController)
+        onDispose(router::releaseController)
+    }
     NavHost(
         navController = navController,
         startDestination = AppNavGraph.Splash.name,

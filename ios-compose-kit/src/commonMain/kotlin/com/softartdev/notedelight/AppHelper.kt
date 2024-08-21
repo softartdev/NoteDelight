@@ -1,8 +1,6 @@
 package com.softartdev.notedelight
 
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.window.ComposeUIViewController
-import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.di.navigationModule
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.navigation.Router
@@ -17,15 +15,7 @@ import platform.UIKit.UIViewController
 
 class AppHelper : KoinComponent {
     private val router: Router by inject()
-
-    val appUIViewController: UIViewController = ComposeUIViewController {
-        val navController = rememberNavController()
-        DisposableEffect(key1 = router, key2 = navController) {
-            router.setController(navController)
-            onDispose(router::releaseController)
-        }
-        App(navController)
-    }
+    val appUIViewController: UIViewController = ComposeUIViewController { App(router) }
 
     fun appInit() {
         Napier.base(antilog = DebugAntilog())

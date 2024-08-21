@@ -1,11 +1,9 @@
 package com.softartdev.notedelight
 
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import androidx.navigation.compose.rememberNavController
 import com.softartdev.notedelight.di.navigationModule
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.navigation.Router
@@ -37,12 +35,7 @@ fun main() {
             icon = painterResource(Res.drawable.app_icon)
         ) {
             CustomDesktopTheme {
-                val navController = rememberNavController()
-                DisposableEffect(key1 = router, key2 = navController) {
-                    router.setController(navController)
-                    onDispose(router::releaseController)
-                }
-                App(navController)
+                App(router)
             }
         }
     }
