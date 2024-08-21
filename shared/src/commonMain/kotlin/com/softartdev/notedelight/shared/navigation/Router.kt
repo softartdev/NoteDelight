@@ -4,6 +4,8 @@ interface Router {
 
     fun setController(navController: Any)
 
+    fun releaseController()
+
     fun navigate(route: String)
 
     fun navigateClearingBackStack(route: String)

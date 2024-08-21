@@ -5,17 +5,21 @@ import com.softartdev.notedelight.shared.navigation.Router
 
 class RouterImpl : Router {
 
-    private lateinit var navController: NavHostController
+    private var navController: NavHostController? = null
 
     override fun setController(navController: Any) {
         this.navController = navController as NavHostController
     }
 
-    override fun navigate(route: String) = navController.navigate(route)
+    override fun releaseController() {
+        navController = null
+    }
 
-    override fun navigateClearingBackStack(route: String) = navController.navigate(route) {
+    override fun navigate(route: String) = navController!!.navigate(route)
+
+    override fun navigateClearingBackStack(route: String) = navController!!.navigate(route) {
         popUpTo(route) { inclusive = true }
     }
 
-    override fun popBackStack() = navController.popBackStack()
+    override fun popBackStack() = navController!!.popBackStack()
 }

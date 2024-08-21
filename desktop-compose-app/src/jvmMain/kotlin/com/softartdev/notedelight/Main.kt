@@ -1,5 +1,6 @@
 package com.softartdev.notedelight
 
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -37,7 +38,10 @@ fun main() {
         ) {
             CustomDesktopTheme {
                 val navController = rememberNavController()
-                router.setController(navController)
+                DisposableEffect(key1 = router, key2 = navController) {
+                    router.setController(navController)
+                    onDispose(router::releaseController)
+                }
                 App(navController)
             }
         }

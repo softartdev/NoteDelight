@@ -5,6 +5,7 @@ package com.softartdev.notedelight.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -51,7 +52,10 @@ class DesktopUiTests : AbstractUiTests() {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
                 val navController = rememberNavController()
-                router.setController(navController)
+                DisposableEffect(key1 = router, key2 = navController) {
+                    router.setController(navController)
+                    onDispose(router::releaseController)
+                }
                 App(navController)
             }
         }
