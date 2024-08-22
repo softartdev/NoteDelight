@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui.cases
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
@@ -118,6 +119,7 @@ class SettingPasswordTestCase(
                     changeOldSNI.performTextReplacement(text = "1")
                     closeSoftKeyboard()
                     yesDialogButtonSNI.performClick()
+                    composeTestRule.waitAssert(yesDialogButtonSNI::assertIsNotDisplayed)
                 }
                 encryptionSwitchSNI.assertIsOn()
                     .performClick()
