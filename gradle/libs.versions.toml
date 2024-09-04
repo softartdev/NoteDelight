@@ -4,7 +4,7 @@ targetSdk = "34"
 minSdk = "21"
 jdk = "17"
 kotlin = "2.0.20"
-agp = "8.5.2"
+agp = "8.6.0"
 gms = "4.4.2"
 crashlytics = "3.0.2"
 compose = "1.6.11"
@@ -29,13 +29,13 @@ androidxArch = "2.2.0"
 androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 androidxTestOrchestrator = "1.5.0"
-firebase = "33.1.2"
+firebase = "33.2.0"
 leakCanary = "2.14"
 junit = "4.13.2"
-mockito = "5.12.0"
+mockito = "5.13.0"
 turbine = "1.1.0"
 espresso = "3.6.1"
-desugar = "2.0.4"
+desugar = "2.1.2"
 appdirs = "1.2.2"
 
 [libraries]
@@ -49,8 +49,6 @@ sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.re
 sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
-
-stately-common = { module = "co.touchlab:stately-common", version = "2.0.6" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
 
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "androidxSqlite" }
