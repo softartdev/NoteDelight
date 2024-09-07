@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class SignInViewModel(
                 else -> SignInResult.ShowIncorrectPassError
             }
         } catch (error: Throwable) {
+            Napier.e("❌", error)
             router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = error.message))
             mutableStateFlow.value = SignInResult.ShowSignInForm
         }

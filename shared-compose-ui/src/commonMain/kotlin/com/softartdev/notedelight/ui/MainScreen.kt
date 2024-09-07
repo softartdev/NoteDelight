@@ -26,10 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.shared.navigation.AppNavGraph
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
@@ -40,27 +36,15 @@ import notedelight.shared_compose_ui.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainScreen(
-    mainViewModel: MainViewModel,
-    navController: NavHostController = rememberNavController()
-) {
+fun MainScreen(mainViewModel: MainViewModel) {
     LaunchedEffect(mainViewModel) {
         mainViewModel.updateNotes()
     }
-    val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
+    val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
     MainScreen(
         noteListState = noteListState,
-        onItemClicked = { id: Long ->
-            navController.navigate(route = "${AppNavGraph.Details.name}/$id")
-        },
-        onSettingsClick = {
-            navController.navigate(AppNavGraph.Settings.name)
-        },
-        navSignIn = {
-            navController.navigate(AppNavGraph.SignIn.name) {
-                popUpTo(AppNavGraph.SignIn.name) { inclusive = true }
-            }
-        },
+        onItemClicked = mainViewModel::onNoteClicked,
+        onSettingsClick = mainViewModel::onSettingsClicked,
     )
 }
 
@@ -69,7 +53,6 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    navSignIn: () -> Unit = {}
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -87,10 +70,14 @@ fun MainScreen(
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader()
                 is NoteListResult.Success -> {
-                    val notes: List<Note> = noteListResult.result
-                    if (notes.isNotEmpty()) NoteList(notes, onItemClicked) else Empty()
+                    when {
+                        noteListResult.result.isNotEmpty() -> NoteList(
+                            noteList = noteListResult.result,
+                            onItemClicked = onItemClicked,
+                        )
+                        else -> Empty()
+                    }
                 }
-                is NoteListResult.NavSignIn -> navSignIn()
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
         }

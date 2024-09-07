@@ -52,10 +52,7 @@ fun App(
             SignInScreen(signInViewModel = getViewModel())
         }
         composable(route = AppNavGraph.Main.name) {
-            MainScreen(
-                mainViewModel = getViewModel(),
-                navController = navController
-            )
+            MainScreen(mainViewModel = getViewModel())
         }
         composable(
             route = "${AppNavGraph.Details.name}/{noteId}",

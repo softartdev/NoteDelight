@@ -6,6 +6,7 @@ import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class SplashViewModel(
                 }
             )
         } catch (error: Throwable) {
+            Napier.e("❌", error)
             router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = error.message))
         }
         mutableStateFlow.value = false
