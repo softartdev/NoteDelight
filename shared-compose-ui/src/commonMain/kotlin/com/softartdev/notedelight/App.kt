@@ -49,10 +49,7 @@ fun App(
             SplashScreen(splashViewModel = getViewModel())
         }
         composable(route = AppNavGraph.SignIn.name) {
-            SignInScreen(
-                signInViewModel = getViewModel(),
-                navController = navController
-            )
+            SignInScreen(signInViewModel = getViewModel())
         }
         composable(route = AppNavGraph.Main.name) {
             MainScreen(
