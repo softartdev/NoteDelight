@@ -61,7 +61,6 @@ fun App(
             NoteDetail(
                 noteViewModel = getViewModel(),
                 noteId = backStackEntry.arguments!!.getLong("noteId"),
-                navController = navController
             )
         }
         composable(route = AppNavGraph.Settings.name) {

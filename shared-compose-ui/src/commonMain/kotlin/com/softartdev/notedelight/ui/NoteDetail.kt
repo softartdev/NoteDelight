@@ -31,9 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.presentation.note.NoteResult
 import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -49,18 +46,14 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NoteDetail(
-    noteViewModel: NoteViewModel,
-    noteId: Long,
-    navController: NavHostController = rememberNavController()
-) {
+fun NoteDetail(noteViewModel: NoteViewModel, noteId: Long) {
     LaunchedEffect(key1 = noteId, key2 = noteViewModel) {
         when (noteId) {
             0L -> noteViewModel.createNote()
             else -> noteViewModel.loadNote(noteId)
         }
     }
-    val noteResultState: State<NoteResult> = noteViewModel.resultStateFlow.collectAsState()
+    val noteResultState: State<NoteResult> = noteViewModel.stateFlow.collectAsState()
     val titleState: MutableState<String> = remember { mutableStateOf("") }
     val textState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -81,9 +74,6 @@ fun NoteDetail(
                 val noteSaved = getString(Res.string.note_saved) + ": " + noteResult.title
                 snackbarHostState.showSnackbar(noteSaved)
             }
-            is NoteResult.NavEditTitle -> navController.navigate(
-                route = "${AppNavGraph.EditTitleDialog.name}/${noteResult.noteId}",
-            )
             is NoteResult.TitleUpdated -> {
                 titleState.value = noteResult.title
             }
@@ -92,15 +82,7 @@ fun NoteDetail(
             )
             is NoteResult.Deleted -> {
                 snackbarHostState.showSnackbar(message = getString(Res.string.note_deleted))
-                navController.popBackStack(route = AppNavGraph.Main.name, inclusive = false)
             }
-            is NoteResult.CheckSaveChange -> navController.navigate(
-                route = AppNavGraph.SaveChangesDialog.name
-            )
-            is NoteResult.NavBack -> navController.popBackStack()
-            is NoteResult.Error -> navController.navigate(
-                route = AppNavGraph.ErrorDialog.argRoute(noteResult.message),
-            )
         }
     }
     NoteDetailBody(
@@ -110,10 +92,7 @@ fun NoteDetail(
         onBackClick = { noteViewModel.checkSaveChange(titleState.value, textState.value) },
         onSaveClick = noteViewModel::saveNote,
         onEditClick = noteViewModel::editTitle,
-        onDeleteClick = {
-            noteViewModel.subscribeToDeleteNote()
-            navController.navigate(AppNavGraph.DeleteNoteDialog.name)
-        },
+        onDeleteClick = noteViewModel::subscribeToDeleteNote,
         showLoading = noteResultState.value == NoteResult.Loading,
     )
     BackHandler { noteViewModel.checkSaveChange(titleState.value, textState.value) }

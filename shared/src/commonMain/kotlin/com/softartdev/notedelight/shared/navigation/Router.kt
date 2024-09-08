@@ -10,5 +10,7 @@ interface Router {
 
     fun navigateClearingBackStack(route: String)
 
+    fun popBackStack(route: String, inclusive: Boolean, saveState: Boolean): Boolean
+
     fun popBackStack(): Boolean
 }

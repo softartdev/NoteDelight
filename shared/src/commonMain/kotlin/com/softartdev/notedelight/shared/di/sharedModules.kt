@@ -44,7 +44,7 @@ val viewModelModule: Module = module {
     viewModelFactory { SplashViewModel(get(), get()) }
     viewModelFactory { SignInViewModel(get(), get()) }
     viewModelFactory { MainViewModel(get(), get()) }
-    viewModelFactory { NoteViewModel(get(), get(), get()) }
+    viewModelFactory { NoteViewModel(get(), get(), get(), get()) }
     viewModelFactory { EditTitleViewModel(get(), get()) }
     viewModelFactory { SettingsViewModel(get(), get()) }
     viewModelFactory { EnterViewModel(get(), get()) }
