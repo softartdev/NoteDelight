@@ -133,7 +133,7 @@ class NoteViewModel(
             noteDAO.delete(noteId)
         }
         Napier.d("Deleted note with id=$noteId")
-        router.navigateClearingBackStack(route = AppNavGraph.Main.name)
+        router.popBackStack(route = AppNavGraph.Main.name, inclusive = false, saveState = false)
         return NoteResult.Deleted
     }
 
