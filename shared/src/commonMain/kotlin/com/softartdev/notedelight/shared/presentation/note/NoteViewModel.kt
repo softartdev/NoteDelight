@@ -96,7 +96,6 @@ class NoteViewModel(
             doSave -> saveNoteAndNavBack(title, text)
             else -> doNotSaveAndNavBack()
         }
-        router.popBackStack()
     }
 
     fun saveNoteAndNavBack(title: String?, text: String) = viewModelScope.launch {
@@ -134,7 +133,7 @@ class NoteViewModel(
             noteDAO.delete(noteId)
         }
         Napier.d("Deleted note with id=$noteId")
-        router.popBackStack(route = AppNavGraph.Main.name, inclusive = true, saveState = false)
+        router.navigateClearingBackStack(route = AppNavGraph.Main.name)
         return NoteResult.Deleted
     }
 
