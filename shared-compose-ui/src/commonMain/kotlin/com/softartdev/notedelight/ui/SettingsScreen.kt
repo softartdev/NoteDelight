@@ -31,11 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,7 +46,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
@@ -64,58 +60,30 @@ import notedelight.shared_compose_ui.generated.resources.settings
 import notedelight.shared_compose_ui.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController() // FIXME update state after close dialog
 ) {
     val entry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
-    val resultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
-    val encryptionState = remember { mutableStateOf(false) }
+    val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(
-        key1 = settingsViewModel,
-        key2 = resultState.value,
-        key3 = entry?.destination?.route,
-    ) {
-        settingsViewModel.checkEncryption()
-    }
-    LaunchedEffect(
-        key1 = settingsViewModel,
-        key2 = resultState.value
-    ) {
-        when (val securityResult = resultState.value) {
-            is SecurityResult.Loading -> Unit
-            is SecurityResult.EncryptEnable -> {
-                encryptionState.value = securityResult.encryption
-            }
-            is SecurityResult.PasswordDialog -> navController.navigate(
-                route = AppNavGraph.EnterPasswordDialog.name
-            )
-            is SecurityResult.SetPasswordDialog -> navController.navigate(
-                route = AppNavGraph.ConfirmPasswordDialog.name
-            )
-            is SecurityResult.ChangePasswordDialog -> navController.navigate(
-                route = AppNavGraph.ChangePasswordDialog.name
-            )
-            is SecurityResult.SnackBar -> snackbarHostState.showSnackbar(
-                message = securityResult.message.toString()
-            )
-            is SecurityResult.Error -> navController.navigate(
-                route = AppNavGraph.ErrorDialog.argRoute(message = securityResult.message),
-            )
+    LaunchedEffect(key1 = settingsViewModel, key2 = result, key3 = entry) {
+        result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
+            snackbarHostState.showSnackbar(message = msg)
+            result.disposeOneTimeEvents()
         }
+        result.checkEncryption()
     }
     SettingsScreenBody(
-        onBackClick = navController::navigateUp,
-        showLoading = resultState.value is SecurityResult.Loading,
-        encryptionState = encryptionState,
-        changeEncryption = settingsViewModel::changeEncryption,
-        changePassword = settingsViewModel::changePassword,
-        showCipherVersion = settingsViewModel::showCipherVersion,
+        onBackClick = result.navBack,
+        showLoading = result.loading,
+        changeTheme = result.changeTheme,
+        encryption = result.encryption,
+        changeEncryption = result.changeEncryption,
+        changePassword = result.changePassword,
+        showCipherVersion = result.showCipherVersion,
         snackbarHostState = snackbarHostState,
-        navController = navController
     )
 }
 
@@ -123,12 +91,12 @@ fun SettingsScreen(
 fun SettingsScreenBody(
     onBackClick: () -> Unit = {},
     showLoading: Boolean = true,
-    encryptionState: MutableState<Boolean> = mutableStateOf(false),
+    changeTheme: () -> Unit = {},
+    encryption: Boolean = false,
     changeEncryption: (Boolean) -> Unit = {},
     changePassword: () -> Unit = {},
     showCipherVersion: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    navController: NavHostController = rememberNavController()
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -148,19 +116,19 @@ fun SettingsScreenBody(
         Column(modifier = Modifier.padding(paddingValues)) {
             if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
-            ThemePreferenceItem(onClick = { navController.navigate(AppNavGraph.ThemeDialog.name) })
+            ThemePreferenceItem(onClick = changeTheme)
             PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {
                     contentDescription = enableEncryptionPrefTitle
-                    toggleableState = ToggleableState(encryptionState.value)
+                    toggleableState = ToggleableState(encryption)
                     testTag = enableEncryptionPrefTitle
                 },
                 title = enableEncryptionPrefTitle,
                 vector = Icons.Default.Lock,
-                onClick = { changeEncryption(!encryptionState.value) }
+                onClick = { changeEncryption(!encryption) }
             ) {
-                Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
+                Switch(checked = encryption, onCheckedChange = changeEncryption)
             }
             Preference(
                 title = stringResource(Res.string.pref_title_set_password),

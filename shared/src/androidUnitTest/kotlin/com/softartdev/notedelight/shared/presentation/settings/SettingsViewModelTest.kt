@@ -6,14 +6,17 @@ import com.softartdev.notedelight.shared.PlatformSQLiteState.DOES_NOT_EXIST
 import com.softartdev.notedelight.shared.PlatformSQLiteState.ENCRYPTED
 import com.softartdev.notedelight.shared.PlatformSQLiteState.UNENCRYPTED
 import com.softartdev.notedelight.shared.db.SafeRepo
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.crypt.CheckSqlCipherVersionUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class SettingsViewModelTest {
@@ -26,7 +29,15 @@ class SettingsViewModelTest {
 
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
-    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase)
+    private val mockRouter = Mockito.mock(Router::class.java)
+    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockRouter)
+
+    @Test
+    fun changeTheme() = runTest {
+        settingsViewModel.stateFlow.value.changeTheme.invoke()
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.ThemeDialog.name)
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
 
     @Test
     fun checkEncryptionTrue() = assertEncryption(true)
@@ -37,82 +48,75 @@ class SettingsViewModelTest {
     private fun assertEncryption(encryption: Boolean) = runTest {
         val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(platformSQLiteState)
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
-
-            settingsViewModel.checkEncryption()
-            assertEquals(SecurityResult.EncryptEnable(encryption), awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.checkEncryption.invoke()
+            if (encryption) awaitItem().let { result: SecurityResult ->
+                assertFalse(result.loading)
+                assertTrue(result.encryption)
+            }
+            expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun changeEncryptionSetPasswordDialog() = runTest {
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
-
-            settingsViewModel.changeEncryption(true)
-            assertEquals(SecurityResult.SetPasswordDialog, awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.changeEncryption.invoke(true)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+            expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun changeEncryptionPasswordDialog() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
-
-            settingsViewModel.changeEncryption(false)
-            assertEquals(SecurityResult.PasswordDialog, awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.changeEncryption.invoke(false)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.EnterPasswordDialog.name)
+            expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun changeEncryptionEncryptEnableFalse() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(UNENCRYPTED)
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.changeEncryption.invoke(false)
 
-            settingsViewModel.changeEncryption(false)
-            assertEquals(SecurityResult.EncryptEnable(false), awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+            Mockito.verifyNoMoreInteractions(mockRouter)
+            expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun changePasswordChangePasswordDialog() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
-
-            settingsViewModel.changePassword()
-            assertEquals(SecurityResult.ChangePasswordDialog, awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.changePassword.invoke()
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ChangePasswordDialog.name)
+            expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun changePasswordSetPasswordDialog() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(DOES_NOT_EXIST)
-        settingsViewModel.resultStateFlow.test {
-            assertEquals(SecurityResult.Loading, awaitItem())
-
-            settingsViewModel.changePassword()
-            assertEquals(SecurityResult.SetPasswordDialog, awaitItem())
-
-            cancelAndIgnoreRemainingEvents()
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.stateFlow.value.changePassword.invoke()
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+            expectNoEvents()
         }
-    }
-
-    @Test
-    fun errorResult() {
-        assertEquals(SecurityResult.Error("err"), settingsViewModel.errorResult(Throwable("err")))
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 }

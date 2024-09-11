@@ -64,10 +64,7 @@ fun App(
             )
         }
         composable(route = AppNavGraph.Settings.name) {
-            SettingsScreen(
-                settingsViewModel = getViewModel(),
-                navController = navController
-            )
+            SettingsScreen(settingsViewModel = getViewModel(), navController = navController)
         }
         dialog(route = AppNavGraph.ThemeDialog.name) {
             val preferenceHelper: PreferenceHelper = themePrefs.preferenceHelper
