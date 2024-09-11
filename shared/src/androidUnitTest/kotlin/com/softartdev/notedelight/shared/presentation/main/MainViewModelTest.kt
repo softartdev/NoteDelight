@@ -67,6 +67,18 @@ class MainViewModelTest {
     }
 
     @Test
+    fun onNoteClicked() {
+        mainViewModel.onNoteClicked(1)
+        Mockito.verify(mockRouter).navigate(route = "${AppNavGraph.Details.name}/1")
+    }
+
+    @Test
+    fun onSettingsClicked() {
+        mainViewModel.onSettingsClicked()
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings.name)
+    }
+
+    @Test
     fun error() = runTest {
         mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
