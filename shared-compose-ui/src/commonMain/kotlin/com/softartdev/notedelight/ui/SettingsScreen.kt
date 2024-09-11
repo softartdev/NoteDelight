@@ -30,10 +30,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
@@ -42,15 +42,13 @@ import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.theme.material3.ThemePreferenceItem
+import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
 import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
@@ -61,19 +59,17 @@ import notedelight.shared_compose_ui.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SettingsScreen(
-    settingsViewModel: SettingsViewModel,
-    navController: NavHostController = rememberNavController() // FIXME update state after close dialog
-) {
-    val entry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+fun SettingsScreen(settingsViewModel: SettingsViewModel) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(key1 = settingsViewModel, key2 = result, key3 = entry) {
+    LifecycleResumeEffect(key1 = settingsViewModel, key2 = result ) {
+        result.checkEncryption()
         result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
-            snackbarHostState.showSnackbar(message = msg)
+            coroutineScope.launch { snackbarHostState.showSnackbar(message = msg) }
             result.disposeOneTimeEvents()
         }
-        result.checkEncryption()
+        onPauseOrDispose { result.checkEncryption() }
     }
     SettingsScreenBody(
         onBackClick = result.navBack,
