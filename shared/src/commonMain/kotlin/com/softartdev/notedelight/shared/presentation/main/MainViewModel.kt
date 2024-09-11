@@ -40,11 +40,9 @@ class MainViewModel(
             .flowOn(Dispatchers.IO)
             .catch { throwable ->
                 Napier.e("❌", throwable)
-                val errorName: String = throwable::class.simpleName.orEmpty()
-                if (errorName.contains("SQLite")) {
+                mutableStateFlow.value = NoteListResult.Error(throwable.message)
+                if (throwable::class.simpleName.orEmpty().contains("SQLite")) {
                     router.navigateClearingBackStack(AppNavGraph.SignIn.name)
-                } else {
-                    mutableStateFlow.value = NoteListResult.Error(throwable.message)
                 }
             }.launchIn(this)
     }.ensureActive()

@@ -60,6 +60,7 @@ class MainViewModelTest {
 
             Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
+            assertEquals(NoteListResult.Error(null), awaitItem())
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn.name)
 
             cancelAndIgnoreRemainingEvents()
