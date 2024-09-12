@@ -47,7 +47,7 @@ class MainViewModel(
             }.launchIn(this)
     }.ensureActive()
 
-    fun onNoteClicked(id: Long) = router.navigate(route = "${AppNavGraph.Details.name}/$id")
+    fun onNoteClicked(id: Long) = router.navigate(route = AppNavGraph.Details.argRoute(noteId = id))
 
     fun onSettingsClicked() = router.navigate(route = AppNavGraph.Settings.name)
 }

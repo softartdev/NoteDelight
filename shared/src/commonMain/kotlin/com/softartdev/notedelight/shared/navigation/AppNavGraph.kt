@@ -19,4 +19,6 @@ enum class AppNavGraph {
         null -> name
         else -> "$name?message=$message"
     }
+
+    fun argRoute(noteId: Long): String = "$name/$noteId"
 }
