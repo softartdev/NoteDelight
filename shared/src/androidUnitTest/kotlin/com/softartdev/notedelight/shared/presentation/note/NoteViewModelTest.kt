@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.softartdev.notedelight.shared.presentation.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -12,6 +14,7 @@ import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
 import org.junit.After
@@ -21,7 +24,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
-@ExperimentalCoroutinesApi
 class NoteViewModelTest {
 
     @get:Rule
@@ -34,7 +36,7 @@ class NoteViewModelTest {
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
     private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
-    private var noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockRouter)
+    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockRouter)
 
     private val id = 1L
     private val title: String = "title"

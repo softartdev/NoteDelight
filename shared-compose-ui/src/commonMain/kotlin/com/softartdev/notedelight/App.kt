@@ -23,7 +23,7 @@ import com.softartdev.notedelight.ui.SplashScreen
 import com.softartdev.notedelight.ui.dialog.DeleteDialog
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
-import com.softartdev.notedelight.ui.dialog.SaveDialog
+import com.softartdev.notedelight.ui.dialog.note.SaveDialog
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
@@ -75,22 +75,7 @@ fun App(
             )
         }
         dialog(route = AppNavGraph.SaveChangesDialog.route) {
-            val coroutineScope = rememberCoroutineScope()
-            SaveDialog(
-                saveNoteAndNavBack = {
-                    coroutineScope.launch {
-                        SaveNoteUseCase.saveChannel.send(true) //FIXME
-                    }
-                    navController.navigateUp()
-                },
-                doNotSaveAndNavBack = {
-                    coroutineScope.launch {
-                        SaveNoteUseCase.saveChannel.send(false) //FIXME
-                    }
-                    navController.navigateUp()
-                },
-                onDismiss = navController::navigateUp
-            )
+            SaveDialog(saveViewModel = getViewModel())
         }
         dialog(
             route = AppNavGraph.EditTitleDialog.route,
