@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.presentation.note
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.db.NoteDAO
@@ -67,7 +68,7 @@ class NoteViewModel(
 
     fun editTitle() = viewModelScope.launch {
         subscribeToEditTitle()
-        router.navigate(route = "${AppNavGraph.EditTitleDialog.name}/$noteId")
+        router.navigate(route = AppNavGraph.EditTitleDialog.argRoute(noteId = noteId))
     }
 
     fun deleteNote() = viewModelScope.launch {
@@ -156,7 +157,7 @@ class NoteViewModel(
         mutableStateFlow.value = NoteResult.Loading
     }
 
-    // @androidx.annotation.VisibleForTesting
+    @VisibleForTesting
     fun setIdForTest(id: Long) {
         noteId = id
     }

@@ -43,30 +43,30 @@ fun App(
     }
     NavHost(
         navController = navController,
-        startDestination = AppNavGraph.Splash.name,
+        startDestination = AppNavGraph.Splash.route,
     ) {
-        composable(route = AppNavGraph.Splash.name) {
+        composable(route = AppNavGraph.Splash.route) {
             SplashScreen(splashViewModel = getViewModel())
         }
-        composable(route = AppNavGraph.SignIn.name) {
+        composable(route = AppNavGraph.SignIn.route) {
             SignInScreen(signInViewModel = getViewModel())
         }
-        composable(route = AppNavGraph.Main.name) {
+        composable(route = AppNavGraph.Main.route) {
             MainScreen(mainViewModel = getViewModel())
         }
         composable(
-            route = "${AppNavGraph.Details.name}/{noteId}",
-            arguments = listOf(navArgument("noteId") { type = NavType.LongType })
+            route = AppNavGraph.Details.route,
+            arguments = listOf(navArgument(name = AppNavGraph.ARG_NOTE_ID) { type = NavType.LongType })
         ) { backStackEntry: NavBackStackEntry ->
             NoteDetail(
                 noteViewModel = getViewModel(),
-                noteId = backStackEntry.arguments!!.getLong("noteId"),
+                noteId = AppNavGraph.ARG_NOTE_ID.let(backStackEntry.arguments!!::getLong),
             )
         }
-        composable(route = AppNavGraph.Settings.name) {
+        composable(route = AppNavGraph.Settings.route) {
             SettingsScreen(settingsViewModel = getViewModel())
         }
-        dialog(route = AppNavGraph.ThemeDialog.name) {
+        dialog(route = AppNavGraph.ThemeDialog.route) {
             val preferenceHelper: PreferenceHelper = themePrefs.preferenceHelper
             ThemeDialog(
                 darkThemeState = themePrefs.darkThemeState,
@@ -74,7 +74,7 @@ fun App(
                 dismissDialog = navController::navigateUp,
             )
         }
-        dialog(route = AppNavGraph.SaveChangesDialog.name) {
+        dialog(route = AppNavGraph.SaveChangesDialog.route) {
             val coroutineScope = rememberCoroutineScope()
             SaveDialog(
                 saveNoteAndNavBack = {
@@ -93,16 +93,16 @@ fun App(
             )
         }
         dialog(
-            route = "${AppNavGraph.EditTitleDialog.name}/{noteId}",
-            arguments = listOf(navArgument("noteId") { type = NavType.LongType })
+            route = AppNavGraph.EditTitleDialog.route,
+            arguments = listOf(navArgument(name = AppNavGraph.ARG_NOTE_ID) { type = NavType.LongType })
         ) { backStackEntry: NavBackStackEntry ->
             EditTitleDialog(
-                noteId = backStackEntry.arguments!!.getLong("noteId"),
+                noteId = AppNavGraph.ARG_NOTE_ID.let(backStackEntry.arguments!!::getLong),
                 dismissDialog = navController::navigateUp,
                 editTitleViewModel = getViewModel()
             )
         }
-        dialog(route = AppNavGraph.DeleteNoteDialog.name) {
+        dialog(route = AppNavGraph.DeleteNoteDialog.route) {
             val coroutineScope = rememberCoroutineScope()
             DeleteDialog(
                 onDeleteClick = {
@@ -113,33 +113,33 @@ fun App(
                 onDismiss = navController::navigateUp
             )
         }
-        dialog(route = AppNavGraph.EnterPasswordDialog.name) {
+        dialog(route = AppNavGraph.EnterPasswordDialog.route) {
             EnterPasswordDialog(
                 dismissDialog = navController::navigateUp,
                 enterViewModel = getViewModel()
             )
         }
-        dialog(route = AppNavGraph.ConfirmPasswordDialog.name) {
+        dialog(route = AppNavGraph.ConfirmPasswordDialog.route) {
             ConfirmPasswordDialog(
                 dismissDialog = navController::navigateUp,
                 confirmViewModel = getViewModel()
             )
         }
-        dialog(route = AppNavGraph.ChangePasswordDialog.name) {
+        dialog(route = AppNavGraph.ChangePasswordDialog.route) {
             ChangePasswordDialog(
                 dismissDialog = navController::navigateUp,
                 changeViewModel = getViewModel()
             )
         }
         dialog(
-            route = "${AppNavGraph.ErrorDialog.name}?message={message}",
-            arguments = listOf(navArgument("message") {
+            route = AppNavGraph.ErrorDialog.route,
+            arguments = listOf(navArgument(name = AppNavGraph.ARG_MESSAGE) {
                 type = NavType.StringType
                 nullable = true
             })
         ) { backStackEntry: NavBackStackEntry ->
             ErrorDialog(
-                message = backStackEntry.arguments?.getString("message"),
+                message = AppNavGraph.ARG_MESSAGE.let(backStackEntry.arguments!!::getString),
                 dismissDialog = navController::navigateUp
             )
         }
