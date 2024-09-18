@@ -45,7 +45,7 @@ class MainViewModel(
                     router.navigateClearingBackStack(AppNavGraph.SignIn.name)
                 }
             }.launchIn(this)
-    }.ensureActive()
+    }
 
     fun onNoteClicked(id: Long) = router.navigate(route = AppNavGraph.Details.argRoute(noteId = id))
 

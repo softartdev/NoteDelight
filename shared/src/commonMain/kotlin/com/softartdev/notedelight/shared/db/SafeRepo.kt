@@ -8,7 +8,7 @@ abstract class SafeRepo {
 
     abstract val noteDAO: NoteDAO
 
-    var relaunchListFlowCallback: (() -> Unit)? = null
+    var relaunchListFlowCallback: (() -> Any)? = null
 
     abstract fun buildDbIfNeed(passphrase: CharSequence = ""): DatabaseHolder
 
