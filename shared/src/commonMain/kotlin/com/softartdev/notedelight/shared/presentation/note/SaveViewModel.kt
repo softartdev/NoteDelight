@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.shared.presentation.save
+package com.softartdev.notedelight.shared.presentation.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -17,6 +17,5 @@ class SaveNoteUseCase(private val noteDAO: NoteDAO) : (Long, String, String) -> 
 
     companion object {
         val saveChannel: Channel<Boolean> by lazy { return@lazy Channel<Boolean>() }
-        val deleteChannel: Channel<Boolean> by lazy { return@lazy Channel<Boolean>() }
     }
 }

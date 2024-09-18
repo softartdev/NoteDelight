@@ -2,7 +2,6 @@ package com.softartdev.notedelight
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,15 +13,14 @@ import androidx.navigation.navArgument
 import com.softartdev.notedelight.di.getViewModel
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
-import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.ui.MainScreen
 import com.softartdev.notedelight.ui.NoteDetail
 import com.softartdev.notedelight.ui.SettingsScreen
 import com.softartdev.notedelight.ui.SignInScreen
 import com.softartdev.notedelight.ui.SplashScreen
-import com.softartdev.notedelight.ui.dialog.DeleteDialog
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
+import com.softartdev.notedelight.ui.dialog.note.DeleteDialog
 import com.softartdev.notedelight.ui.dialog.note.SaveDialog
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
@@ -30,7 +28,6 @@ import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialog
 import com.softartdev.theme.pref.PreferenceHelper
-import kotlinx.coroutines.launch
 
 @Composable
 fun App(
@@ -88,15 +85,7 @@ fun App(
             )
         }
         dialog(route = AppNavGraph.DeleteNoteDialog.route) {
-            val coroutineScope = rememberCoroutineScope()
-            DeleteDialog(
-                onDeleteClick = {
-                    coroutineScope.launch {
-                        SaveNoteUseCase.deleteChannel.send(true) //FIXME
-                    }
-                },
-                onDismiss = navController::navigateUp
-            )
+            DeleteDialog(deleteViewModel = getViewModel())
         }
         dialog(route = AppNavGraph.EnterPasswordDialog.route) {
             EnterPasswordDialog(

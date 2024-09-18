@@ -7,6 +7,7 @@ import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import io.github.aakira.napier.Napier
@@ -21,6 +22,7 @@ class NoteViewModel(
     private val noteDAO: NoteDAO,
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     private val router: Router
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(
@@ -119,7 +121,7 @@ class NoteViewModel(
     fun subscribeToDeleteNote() = viewModelScope.launch {
         router.navigate(route = AppNavGraph.DeleteNoteDialog.name)
         val doDelete: Boolean = withContext(Dispatchers.IO) {
-            SaveNoteUseCase.deleteChannel.receive()
+            DeleteNoteUseCase.deleteChannel.receive()
         }
         if (doDelete) {
             mutableStateFlow.value = deleteNoteForResult()
@@ -131,7 +133,7 @@ class NoteViewModel(
 
     private suspend fun deleteNoteForResult(): NoteResult {
         withContext(Dispatchers.IO) {
-            noteDAO.delete(noteId)
+            deleteNoteUseCase.invoke(id = noteId)
         }
         Napier.d("Deleted note with id=$noteId")
         router.popBackStack(route = AppNavGraph.Main.name, inclusive = false, saveState = false)

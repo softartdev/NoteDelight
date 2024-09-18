@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.softartdev.notedelight.shared.presentation.save
+package com.softartdev.notedelight.shared.presentation.note
 
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
@@ -22,21 +22,21 @@ class SaveViewModelTest {
     private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter)
 
     @Test
-    fun saveNoteAndNavBack() = runTest {
+    fun `save and nav back`() = runTest {
         saveViewModel.saveNoteAndNavBack()
         assertTrue(SaveNoteUseCase.saveChannel.receive())
         Mockito.verify(mockRouter).popBackStack()
     }
 
     @Test
-    fun doNotSaveAndNavBack() = runTest {
+    fun `Don't save and nav back`() = runTest {
         saveViewModel.doNotSaveAndNavBack()
         assertFalse(SaveNoteUseCase.saveChannel.receive())
         Mockito.verify(mockRouter).popBackStack()
     }
 
     @Test
-    fun navigateUp() = runTest {
+    fun `navigate up`() = runTest {
         saveViewModel.navigateUp()
         Mockito.verify(mockRouter).popBackStack()
     }

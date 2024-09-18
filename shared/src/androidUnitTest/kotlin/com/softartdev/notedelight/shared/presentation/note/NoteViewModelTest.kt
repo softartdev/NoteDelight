@@ -11,10 +11,10 @@ import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
 import org.junit.After
@@ -35,8 +35,9 @@ class NoteViewModelTest {
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
     private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
+    private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
-    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockRouter)
+    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockDeleteNoteUseCase, mockRouter)
 
     private val id = 1L
     private val title: String = "title"
