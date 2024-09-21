@@ -12,7 +12,7 @@ with [Cipher](https://www.zetetic.net/sqlcipher/). The Compose-UI also has dark/
 Supported platforms:
 
 - Android
-- iOS (the iPad version also works on macOS)
+- iOS (+ macOS [(Mac Catalyst)](https://developer.apple.com/mac-catalyst/))
 - Desktop JVM (macOS, Linux, Windows)x(x86_64, arm64)
 
 [![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
