@@ -52,7 +52,7 @@ jobs:
         run: fastlane appstore_publish_deliver_lane
       - name: Archive build artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: |
