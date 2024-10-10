@@ -2,6 +2,7 @@ package com.softartdev.notedelight.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
@@ -85,7 +86,7 @@ fun ShowEditTitleDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_change_title)) },
     text = {
         Column {
-            if (showLoaing) LinearProgressIndicator()
+            if (showLoaing) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
                 value = textState.value,
                 onValueChange = { textState.value = it },
