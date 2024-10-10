@@ -51,7 +51,7 @@ val viewModelModule: Module = module {
     viewModelFactory { NoteViewModel(get(), get(), get(), get(), get()) }
     viewModelFactory { SaveViewModel(get()) }
     viewModelFactory { DeleteViewModel(get()) }
-    viewModelFactory { EditTitleViewModel(get(), get()) }
+    viewModelFactory { EditTitleViewModel(get(), get(), get()) }
     viewModelFactory { SettingsViewModel(get(), get(), get()) }
     viewModelFactory { EnterViewModel(get(), get()) }
     viewModelFactory { ConfirmViewModel(get()) }

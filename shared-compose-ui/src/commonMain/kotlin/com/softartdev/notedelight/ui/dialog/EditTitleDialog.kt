@@ -40,13 +40,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun EditTitleDialog(
     noteId: Long,
-    dismissDialog: () -> Unit,
-    editTitleViewModel: EditTitleViewModel
+    editTitleViewModel: EditTitleViewModel,
 ) {
     LaunchedEffect(noteId) {
         editTitleViewModel.loadTitle(noteId)
     }
-    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.resultStateFlow.collectAsState()
+    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.stateFlow.collectAsState()
     var labelResource by remember { mutableStateOf(Res.string.enter_title) }
     val textState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -56,7 +55,6 @@ fun EditTitleDialog(
         is EditTitleResult.Loaded -> {
             textState.value = editTitleResult.title
         }
-        is EditTitleResult.Success -> dismissDialog()
         is EditTitleResult.EmptyTitleError -> {
             labelResource = Res.string.empty_title
         }
@@ -70,7 +68,7 @@ fun EditTitleDialog(
         label = stringResource(labelResource),
         isError = editTitleResultState.value is EditTitleResult.EmptyTitleError,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
+        dismissDialog = editTitleViewModel::navigateUp
     ) { editTitleViewModel.editTitle(noteId, textState.value) }
 }
 

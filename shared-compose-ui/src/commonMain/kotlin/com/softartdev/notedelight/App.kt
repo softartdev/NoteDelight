@@ -80,7 +80,6 @@ fun App(
         ) { backStackEntry: NavBackStackEntry ->
             EditTitleDialog(
                 noteId = AppNavGraph.ARG_NOTE_ID.let(backStackEntry.arguments!!::getLong),
-                dismissDialog = navController::navigateUp,
                 editTitleViewModel = getViewModel()
             )
         }

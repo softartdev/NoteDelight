@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.shared.base
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.aakira.napier.Napier
@@ -53,7 +54,7 @@ abstract class BaseStateViewModel<T> : ViewModel() {
 
     abstract fun errorResult(throwable: Throwable): T
 
-    //    @androidx.annotation.VisibleForTesting
+    @VisibleForTesting
     fun resetLoadingResult() {
         _resultStateFlow.value = loadingResult
     }
