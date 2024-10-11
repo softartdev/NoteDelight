@@ -6,6 +6,7 @@ import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -24,20 +25,26 @@ class SaveViewModelTest {
     @Test
     fun `save and nav back`() = runTest {
         saveViewModel.saveNoteAndNavBack()
-        assertTrue(SaveNoteUseCase.saveChannel.receive())
+        advanceUntilIdle()
+        assertTrue(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
         Mockito.verify(mockRouter).popBackStack()
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun `Don't save and nav back`() = runTest {
         saveViewModel.doNotSaveAndNavBack()
-        assertFalse(SaveNoteUseCase.saveChannel.receive())
+        advanceUntilIdle()
+        assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
         Mockito.verify(mockRouter).popBackStack()
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
     fun `navigate up`() = runTest {
         saveViewModel.navigateUp()
+        advanceUntilIdle()
         Mockito.verify(mockRouter).popBackStack()
+        Mockito.verifyNoMoreInteractions(mockRouter)
     }
 }

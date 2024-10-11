@@ -4,11 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -24,7 +27,13 @@ class EnterViewModelTest {
 
     private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
-    private val enterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase)
+    private val router = Mockito.mock(Router::class.java)
+    private lateinit var enterViewModel: EnterViewModel
+
+    @Before
+    fun setUp() = runTest {
+        enterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router)
+    }
 
     @Test
     fun enterCheckSuccess() = runTest {
@@ -35,7 +44,10 @@ class EnterViewModelTest {
             Mockito.`when`(checkPasswordUseCase(pass)).thenReturn(true)
             enterViewModel.enterCheck(pass)
             assertEquals(EnterResult.Loading, awaitItem())
-            assertEquals(EnterResult.Success, awaitItem())
+
+            advanceUntilIdle()
+            Mockito.verify(router).popBackStack()
+            Mockito.verifyNoMoreInteractions(router)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -70,7 +82,20 @@ class EnterViewModelTest {
     }
 
     @Test
-    fun errorResult() {
-        assertEquals(EnterResult.Error("err"), enterViewModel.errorResult(Throwable("err")))
+    fun enterCheckError() = runTest {
+        enterViewModel.resultStateFlow.test {
+            assertEquals(EnterResult.InitState, awaitItem())
+
+            val pass = StubEditable("pass")
+            Mockito.`when`(checkPasswordUseCase(pass)).thenReturn(true)
+            val error = RuntimeException("error message")
+            Mockito.`when`(changePasswordUseCase(pass, null)).thenThrow(error)
+
+            enterViewModel.enterCheck(pass)
+            assertEquals(EnterResult.Loading, awaitItem())
+            assertEquals(EnterResult.Error(message = error.message), awaitItem())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

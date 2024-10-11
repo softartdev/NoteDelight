@@ -87,10 +87,7 @@ fun App(
             DeleteDialog(deleteViewModel = getViewModel())
         }
         dialog(route = AppNavGraph.EnterPasswordDialog.route) {
-            EnterPasswordDialog(
-                dismissDialog = navController::navigateUp,
-                enterViewModel = getViewModel()
-            )
+            EnterPasswordDialog(enterViewModel = getViewModel())
         }
         dialog(route = AppNavGraph.ConfirmPasswordDialog.route) {
             ConfirmPasswordDialog(

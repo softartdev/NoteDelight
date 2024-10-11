@@ -1,28 +1,49 @@
 package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
-import com.softartdev.notedelight.shared.base.BaseStateViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class EnterViewModel (
     private val checkPasswordUseCase: CheckPasswordUseCase,
-    private val changePasswordUseCase: ChangePasswordUseCase
-) : BaseStateViewModel<EnterResult>() {
+    private val changePasswordUseCase: ChangePasswordUseCase,
+    private val router: Router,
+) : ViewModel() {
+    private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(
+        value = EnterResult.InitState
+    )
+    val resultStateFlow: StateFlow<EnterResult> = mutableStateFlow
 
-    override var initResult: EnterResult? = EnterResult.InitState
-    override val loadingResult: EnterResult = EnterResult.Loading
-
-    fun enterCheck(password: CharSequence) = launch {
-        if (password.isNotEmpty()) {
-            when (checkPasswordUseCase(password)) {
-                true -> {
-                    changePasswordUseCase(password, null)
-                    EnterResult.Success
+    fun enterCheck(password: CharSequence) = viewModelScope.launch(context = Dispatchers.IO) {
+        mutableStateFlow.value = EnterResult.Loading
+        try {
+            when {
+                password.isEmpty() -> {
+                    mutableStateFlow.value = EnterResult.EmptyPasswordError
                 }
-                false -> EnterResult.IncorrectPasswordError
+                checkPasswordUseCase(password) -> {
+                    changePasswordUseCase(password, null)
+                    navigateUp()
+                }
+                else -> {
+                    mutableStateFlow.value = EnterResult.IncorrectPasswordError
+                }
             }
-        } else EnterResult.EmptyPasswordError
+        } catch (e: Throwable) {
+            Napier.e("❌", e)
+            mutableStateFlow.value = EnterResult.Error(e.message)
+        }
     }
 
-    override fun errorResult(throwable: Throwable) = EnterResult.Error(throwable.message)
+    fun navigateUp() = viewModelScope.launch(context = Dispatchers.Main) {
+        router.popBackStack()
+    }
 }

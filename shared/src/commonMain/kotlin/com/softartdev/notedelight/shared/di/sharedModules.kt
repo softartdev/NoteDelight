@@ -53,7 +53,7 @@ val viewModelModule: Module = module {
     viewModelFactory { DeleteViewModel(get()) }
     viewModelFactory { EditTitleViewModel(get(), get(), get()) }
     viewModelFactory { SettingsViewModel(get(), get(), get()) }
-    viewModelFactory { EnterViewModel(get(), get()) }
+    viewModelFactory { EnterViewModel(get(), get(), get()) }
     viewModelFactory { ConfirmViewModel(get()) }
     viewModelFactory { ChangeViewModel(get(), get()) }
 }

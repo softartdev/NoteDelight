@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewModel) {
+fun EnterPasswordDialog(enterViewModel: EnterViewModel) {
     val enterResultState: State<EnterResult> = enterViewModel.resultStateFlow.collectAsState()
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
@@ -45,8 +45,8 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val enterResult: EnterResult = enterResultState.value) {
-        is EnterResult.InitState, is EnterResult.Loading -> Unit
-        is EnterResult.Success -> dismissDialog()
+        is EnterResult.InitState,
+        is EnterResult.Loading -> Unit
         is EnterResult.EmptyPasswordError -> {
             labelResource = Res.string.empty_password
             error = true
@@ -67,7 +67,7 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
         labelResource = labelResource,
         isError = error,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog,
+        dismissDialog = enterViewModel::navigateUp,
         onConfirmClick = { enterViewModel.enterCheck(password = passwordState.value) }
     )
 }
