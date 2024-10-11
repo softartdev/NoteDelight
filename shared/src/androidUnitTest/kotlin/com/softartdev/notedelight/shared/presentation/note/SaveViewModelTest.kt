@@ -23,19 +23,19 @@ class SaveViewModelTest {
     private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter)
 
     @Test
-    fun `save and nav back`() = runTest {
-        saveViewModel.saveNoteAndNavBack()
+    fun `Don't save and nav back`() = runTest {
+        saveViewModel.doNotSaveAndNavBack()
         advanceUntilIdle()
-        assertTrue(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
+        assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
         Mockito.verify(mockRouter).popBackStack()
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
     @Test
-    fun `Don't save and nav back`() = runTest {
-        saveViewModel.doNotSaveAndNavBack()
+    fun `save and nav back`() = runTest {
+        saveViewModel.saveNoteAndNavBack()
         advanceUntilIdle()
-        assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
+        assertTrue(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
         Mockito.verify(mockRouter).popBackStack()
         Mockito.verifyNoMoreInteractions(mockRouter)
     }

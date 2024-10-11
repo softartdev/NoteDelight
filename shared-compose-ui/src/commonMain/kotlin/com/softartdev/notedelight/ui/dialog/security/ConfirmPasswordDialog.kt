@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmViewModel) {
+fun ConfirmPasswordDialog(confirmViewModel: ConfirmViewModel) {
     val confirmResultState: State<ConfirmResult> = confirmViewModel.resultStateFlow.collectAsState()
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
@@ -49,8 +49,8 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val confirmResult: ConfirmResult = confirmResultState.value) {
-        is ConfirmResult.InitState, is ConfirmResult.Loading -> Unit
-        is ConfirmResult.Success -> dismissDialog()
+        is ConfirmResult.InitState,
+        is ConfirmResult.Loading -> Unit
         is ConfirmResult.EmptyPasswordError -> {
             labelResource = Res.string.empty_password
             error = true
@@ -74,7 +74,7 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
         isError = error,
         isRepeatError = repeatError,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog,
+        dismissDialog = confirmViewModel::navigateUp,
         onConfirmClick = {
             confirmViewModel.conformCheck(
                 password = passwordState.value,
