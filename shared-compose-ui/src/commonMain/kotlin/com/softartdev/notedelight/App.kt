@@ -93,10 +93,7 @@ fun App(
             ConfirmPasswordDialog(confirmViewModel = getViewModel())
         }
         dialog(route = AppNavGraph.ChangePasswordDialog.route) {
-            ChangePasswordDialog(
-                dismissDialog = navController::navigateUp,
-                changeViewModel = getViewModel()
-            )
+            ChangePasswordDialog(changeViewModel = getViewModel())
         }
         dialog(
             route = AppNavGraph.ErrorDialog.route,

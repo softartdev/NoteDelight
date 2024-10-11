@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 class SaveViewModelTest {
 
@@ -23,7 +24,7 @@ class SaveViewModelTest {
     private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter)
 
     @Test
-    fun `Don't save and nav back`() = runTest {
+    fun `Don't save and nav back`() = runTest(timeout = 5.seconds) {
         saveViewModel.doNotSaveAndNavBack()
         advanceUntilIdle()
         assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())

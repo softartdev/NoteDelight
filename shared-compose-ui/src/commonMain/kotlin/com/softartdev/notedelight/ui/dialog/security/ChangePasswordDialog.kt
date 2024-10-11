@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewModel) {
+fun ChangePasswordDialog(changeViewModel: ChangeViewModel) {
     val changeResultState: State<ChangeResult> = changeViewModel.resultStateFlow.collectAsState()
     var oldLabelResource by remember { mutableStateOf(Res.string.enter_old_password) }
     var oldError by remember { mutableStateOf(false) }
@@ -55,7 +55,6 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
     val coroutineScope = rememberCoroutineScope()
     when (val changeResult: ChangeResult = changeResultState.value) {
         is ChangeResult.InitState, is ChangeResult.Loading -> Unit
-        is ChangeResult.Success -> dismissDialog()
         is ChangeResult.OldEmptyPasswordError -> {
             oldLabelResource = Res.string.empty_password
             oldError = true
@@ -90,7 +89,7 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
         repeatError = repeatError,
         repeatPasswordState = repeatPasswordState,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
+        dismissDialog = changeViewModel::navigateUp,
     ) {
         changeViewModel.checkChange(
             oldPassword = oldPasswordState.value,
