@@ -14,7 +14,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import com.softartdev.notedelight.App
 import com.softartdev.notedelight.TestLifecycleOwner
-import com.softartdev.notedelight.di.navigationTestModule
+import com.softartdev.notedelight.di.uiTestModules
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.navigation.Router
@@ -40,7 +40,7 @@ class DesktopUiTests : AbstractUiTests() {
     override fun setUp() {
         startKoin {
             printLogger(level = Level.DEBUG)
-            modules(sharedModules + navigationTestModule)
+            modules(sharedModules + uiTestModules)
         }
         val router: Router = get(Router::class.java)
         val noteDAO: NoteDAO = get(NoteDAO::class.java)

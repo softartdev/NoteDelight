@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.presentation.settings.security.change
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
 import com.softartdev.notedelight.shared.navigation.Router
@@ -27,7 +28,8 @@ class ChangeViewModelTest {
     private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val router = Mockito.mock(Router::class.java)
-    private val changeViewModel = ChangeViewModel(checkPasswordUseCase, changePasswordUseCase, router)
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val changeViewModel = ChangeViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
 
     @Test
     fun checkChangeOldEmptyPasswordError() = runTest {

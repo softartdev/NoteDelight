@@ -1,7 +1,7 @@
 package com.softartdev.notedelight
 
 import android.app.Application
-import com.softartdev.notedelight.di.navigationModule
+import com.softartdev.notedelight.di.uiModules
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.util.NapierKoinLogger
 import com.softartdev.notedelight.util.isInLeakCanaryAnalyzerProcess
@@ -21,7 +21,7 @@ class MainApplication : Application() {
         startKoin {
             logger(NapierKoinLogger(Level.DEBUG))
             androidContext(this@MainApplication)
-            modules(sharedModules + navigationModule)
+            modules(sharedModules + uiModules)
         }
     }
 }

@@ -4,15 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
+import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ConfirmViewModel (
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val router: Router,
+    private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
         value = ConfirmResult.InitState
@@ -22,7 +22,7 @@ class ConfirmViewModel (
     fun conformCheck(
         password: CharSequence,
         repeatPassword: CharSequence
-    ) = viewModelScope.launch(context = Dispatchers.IO) {
+    ) = viewModelScope.launch(context = coroutineDispatchers.io) {
         mutableStateFlow.value = ConfirmResult.Loading
         try {
             when {
@@ -43,7 +43,7 @@ class ConfirmViewModel (
         }
     }
 
-    fun navigateUp() = viewModelScope.launch(context = Dispatchers.Main) {
+    fun navigateUp() = viewModelScope.launch(context = coroutineDispatchers.main) {
         router.popBackStack()
     }
 }

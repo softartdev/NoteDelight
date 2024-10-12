@@ -2,6 +2,7 @@ package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.StubEditable
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
@@ -25,7 +26,8 @@ class ConfirmViewModelTest {
 
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val router = Mockito.mock(Router::class.java)
-    private val confirmViewModel = ConfirmViewModel(changePasswordUseCase, router)
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val confirmViewModel = ConfirmViewModel(changePasswordUseCase, router, coroutineDispatchers)
 
     @Test
     fun conformCheckPasswordsNoMatchError() = runTest {

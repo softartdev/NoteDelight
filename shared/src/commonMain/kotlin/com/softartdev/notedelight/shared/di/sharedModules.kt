@@ -47,13 +47,13 @@ val useCaseModule: Module = module {
 val viewModelModule: Module = module {
     viewModelFactory { SplashViewModel(get(), get()) }
     viewModelFactory { SignInViewModel(get(), get()) }
-    viewModelFactory { MainViewModel(get(), get()) }
-    viewModelFactory { NoteViewModel(get(), get(), get(), get(), get()) }
-    viewModelFactory { SaveViewModel(get()) }
+    viewModelFactory { MainViewModel(get(), get(), get()) }
+    viewModelFactory { NoteViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModelFactory { SaveViewModel(get(), get()) }
     viewModelFactory { DeleteViewModel(get()) }
     viewModelFactory { EditTitleViewModel(get(), get(), get()) }
     viewModelFactory { SettingsViewModel(get(), get(), get()) }
-    viewModelFactory { EnterViewModel(get(), get(), get()) }
-    viewModelFactory { ConfirmViewModel(get(), get()) }
-    viewModelFactory { ChangeViewModel(get(), get(), get()) }
+    viewModelFactory { EnterViewModel(get(), get(), get(), get()) }
+    viewModelFactory { ConfirmViewModel(get(), get(), get()) }
+    viewModelFactory { ChangeViewModel(get(), get(), get(), get()) }
 }

@@ -2,9 +2,10 @@ package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
+import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,11 +29,12 @@ class EnterViewModelTest {
     private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val router = Mockito.mock(Router::class.java)
-    private lateinit var enterViewModel: EnterViewModel
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private var enterViewModel: EnterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
 
     @Before
-    fun setUp() = runTest {
-        enterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router)
+    fun setUp() {
+        enterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
     }
 
     @Test
@@ -63,6 +65,10 @@ class EnterViewModelTest {
             enterViewModel.enterCheck(pass)
             assertEquals(EnterResult.Loading, awaitItem())
             assertEquals(EnterResult.IncorrectPasswordError, awaitItem())
+//            advanceUntilIdle()
+//            val actuals: List<EnterResult> = awaitAll<EnterResult>()
+//            assertEquals(EnterResult.Loading, actuals[0])
+//            assertEquals(EnterResult.IncorrectPasswordError, actuals[1])
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -97,5 +103,11 @@ class EnterViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun navigateUp() = runTest {
+        enterViewModel.navigateUp()
+        Mockito.verify(router).popBackStack()
     }
 }

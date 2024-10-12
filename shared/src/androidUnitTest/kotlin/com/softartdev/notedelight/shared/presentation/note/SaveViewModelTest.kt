@@ -3,6 +3,7 @@
 package com.softartdev.notedelight.shared.presentation.note
 
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,10 +22,11 @@ class SaveViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockRouter = Mockito.mock(Router::class.java)
-    private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter)
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter, coroutineDispatchers)
 
     @Test
-    fun `Don't save and nav back`() = runTest(timeout = 5.seconds) {
+    fun `Don't save and nav back`() = runTest(timeout = 3.seconds) {
         saveViewModel.doNotSaveAndNavBack()
         advanceUntilIdle()
         assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())

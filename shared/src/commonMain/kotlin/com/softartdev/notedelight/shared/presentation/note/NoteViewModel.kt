@@ -10,9 +10,8 @@ import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
+import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +22,8 @@ class NoteViewModel(
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val router: Router
+    private val router: Router,
+    private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(
         value = NoteResult.Loading
@@ -37,7 +37,7 @@ class NoteViewModel(
         }
 
     fun createNote() = viewModelScope.launch {
-        noteId = withContext(Dispatchers.IO) {
+        noteId = withContext(coroutineDispatchers.io) {
             createNoteUseCase()
         }
         Napier.d("Created note with id=$noteId")
@@ -45,7 +45,7 @@ class NoteViewModel(
     }
 
     fun loadNote(id: Long) = viewModelScope.launch {
-        val note = withContext(Dispatchers.IO) {
+        val note = withContext(coroutineDispatchers.io) {
             noteDAO.load(id)
         }
         noteId = note.id
@@ -57,10 +57,10 @@ class NoteViewModel(
         if (title.isNullOrEmpty() && text.isEmpty()) {
             mutableStateFlow.value = NoteResult.Empty
         } else {
-            val noteTitle: String = withContext(Dispatchers.Default) {
+            val noteTitle: String = withContext(coroutineDispatchers.default) {
                 createTitleIfNeed(title, text)
             }
-            withContext(Dispatchers.IO) {
+            withContext(coroutineDispatchers.io) {
                 saveNoteUseCase(noteId, noteTitle, text)
             }
             Napier.d("Saved note with id=$noteId")
@@ -91,8 +91,8 @@ class NoteViewModel(
         }
     }
 
-    private suspend fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
-        val doSave: Boolean = withContext(Dispatchers.IO) {
+    private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
+        val doSave: Boolean = withContext(coroutineDispatchers.io) {
             SaveNoteUseCase.saveChannel.receive()
         }
         when {
@@ -120,7 +120,7 @@ class NoteViewModel(
 
     fun subscribeToDeleteNote() = viewModelScope.launch {
         router.navigate(route = AppNavGraph.DeleteNoteDialog.name)
-        val doDelete: Boolean = withContext(Dispatchers.IO) {
+        val doDelete: Boolean = withContext(coroutineDispatchers.io) {
             DeleteNoteUseCase.deleteChannel.receive()
         }
         if (doDelete) {
@@ -132,7 +132,7 @@ class NoteViewModel(
     }
 
     private suspend fun deleteNoteForResult(): NoteResult {
-        withContext(Dispatchers.IO) {
+        withContext(coroutineDispatchers.io) {
             deleteNoteUseCase.invoke(id = noteId)
         }
         Napier.d("Deleted note with id=$noteId")
@@ -140,10 +140,10 @@ class NoteViewModel(
         return NoteResult.Deleted
     }
 
-    private suspend fun subscribeToEditTitle() = viewModelScope.launch {
+    private fun subscribeToEditTitle() = viewModelScope.launch {
         mutableStateFlow.value = NoteResult.Loading
         try {
-            val title: String = withContext(Dispatchers.IO) {
+            val title: String = withContext(coroutineDispatchers.io) {
                 UpdateTitleUseCase.titleChannel.receive()
             }
             mutableStateFlow.value = NoteResult.TitleUpdated(title)

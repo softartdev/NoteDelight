@@ -3,6 +3,7 @@ package com.softartdev.notedelight.shared.presentation.main
 import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.db.SafeRepo
@@ -31,12 +32,13 @@ class MainViewModelTest {
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
-    private lateinit var mainViewModel: MainViewModel
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private var mainViewModel: MainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
 
     @Before
     fun setUp() {
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
-        mainViewModel = MainViewModel(mockSafeRepo, mockRouter)
+        mainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
     }
 
     @Test

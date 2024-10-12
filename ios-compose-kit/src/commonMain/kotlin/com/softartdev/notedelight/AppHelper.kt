@@ -1,7 +1,7 @@
 package com.softartdev.notedelight
 
 import androidx.compose.ui.window.ComposeUIViewController
-import com.softartdev.notedelight.di.navigationModule
+import com.softartdev.notedelight.di.uiModules
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.util.NapierKoinLogger
@@ -21,7 +21,7 @@ class AppHelper : KoinComponent {
         Napier.base(antilog = DebugAntilog())
         startKoin {
             logger(NapierKoinLogger(Level.DEBUG))
-            modules(sharedModules + navigationModule)
+            modules(sharedModules + uiModules)
         }
     }
 }

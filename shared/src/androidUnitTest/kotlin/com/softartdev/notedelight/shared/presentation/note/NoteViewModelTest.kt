@@ -4,6 +4,7 @@ package com.softartdev.notedelight.shared.presentation.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
@@ -37,7 +38,8 @@ class NoteViewModelTest {
     private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
-    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockDeleteNoteUseCase, mockRouter)
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
 
     private val id = 1L
     private val title: String = "title"

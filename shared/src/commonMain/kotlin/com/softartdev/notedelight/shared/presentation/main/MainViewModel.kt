@@ -5,10 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +19,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val safeRepo: SafeRepo,
-    private val router: Router
+    private val router: Router,
+    private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<NoteListResult> = MutableStateFlow(
         value = NoteListResult.Loading
@@ -32,12 +31,12 @@ class MainViewModel(
         safeRepo.relaunchListFlowCallback = this::updateNotes
     }
 
-    fun updateNotes() = viewModelScope.launch(Dispatchers.Main) {
+    fun updateNotes() = viewModelScope.launch(coroutineDispatchers.main) {
         safeRepo.noteDAO.listFlow
             .onStart { mutableStateFlow.value = NoteListResult.Loading }
             .map(transform = NoteListResult::Success)
             .onEach(action = mutableStateFlow::emit)
-            .flowOn(Dispatchers.IO)
+            .flowOn(coroutineDispatchers.io)
             .catch { throwable ->
                 Napier.e("❌", throwable)
                 mutableStateFlow.value = NoteListResult.Error(throwable.message)

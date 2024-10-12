@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.softartdev.notedelight.di.navigationModule
+import com.softartdev.notedelight.di.uiModules
 import com.softartdev.notedelight.shared.di.sharedModules
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.util.NapierKoinLogger
@@ -24,7 +24,7 @@ fun main() {
     Napier.base(antilog = DebugAntilog())
     startKoin {
         logger(NapierKoinLogger(Level.DEBUG))
-        modules(sharedModules + navigationModule)
+        modules(sharedModules + uiModules)
     }
     val router: Router = get(Router::class.java)
 
