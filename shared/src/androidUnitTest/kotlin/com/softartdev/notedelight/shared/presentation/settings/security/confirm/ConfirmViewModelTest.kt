@@ -26,7 +26,9 @@ class ConfirmViewModelTest {
 
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val router = Mockito.mock(Router::class.java)
-    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val coroutineDispatchers = CoroutineDispatchersStub(
+        scheduler = mainDispatcherRule.testDispatcher.scheduler
+    )
     private val confirmViewModel = ConfirmViewModel(changePasswordUseCase, router, coroutineDispatchers)
 
     @Test

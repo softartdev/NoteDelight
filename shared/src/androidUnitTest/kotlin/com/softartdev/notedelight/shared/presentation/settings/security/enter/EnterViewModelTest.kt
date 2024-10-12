@@ -2,9 +2,9 @@ package com.softartdev.notedelight.shared.presentation.settings.security.enter
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.StubEditable
 import com.softartdev.notedelight.shared.navigation.Router
-import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
@@ -29,7 +29,9 @@ class EnterViewModelTest {
     private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val router = Mockito.mock(Router::class.java)
-    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val coroutineDispatchers = CoroutineDispatchersStub(
+        scheduler = mainDispatcherRule.testDispatcher.scheduler
+    )
     private var enterViewModel: EnterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
 
     @Before
@@ -65,10 +67,6 @@ class EnterViewModelTest {
             enterViewModel.enterCheck(pass)
             assertEquals(EnterResult.Loading, awaitItem())
             assertEquals(EnterResult.IncorrectPasswordError, awaitItem())
-//            advanceUntilIdle()
-//            val actuals: List<EnterResult> = awaitAll<EnterResult>()
-//            assertEquals(EnterResult.Loading, actuals[0])
-//            assertEquals(EnterResult.IncorrectPasswordError, actuals[1])
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -108,6 +106,7 @@ class EnterViewModelTest {
     @Test
     fun navigateUp() = runTest {
         enterViewModel.navigateUp()
+        advanceUntilIdle()
         Mockito.verify(router).popBackStack()
     }
 }

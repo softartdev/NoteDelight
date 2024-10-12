@@ -2,8 +2,8 @@
 
 package com.softartdev.notedelight.shared.presentation.note
 
-import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.CoroutineDispatchersStub
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,7 +14,6 @@ import org.junit.Test
 import org.mockito.Mockito
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.seconds
 
 class SaveViewModelTest {
 
@@ -22,14 +21,17 @@ class SaveViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockRouter = Mockito.mock(Router::class.java)
-    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private val coroutineDispatchers = CoroutineDispatchersStub(
+        scheduler = mainDispatcherRule.testDispatcher.scheduler
+    )
     private val saveViewModel: SaveViewModel = SaveViewModel(mockRouter, coroutineDispatchers)
 
     @Test
-    fun `Don't save and nav back`() = runTest(timeout = 3.seconds) {
+    fun `Don't save and nav back`() = runTest {
         saveViewModel.doNotSaveAndNavBack()
         advanceUntilIdle()
         assertFalse(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
+        advanceUntilIdle()
         Mockito.verify(mockRouter).popBackStack()
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
@@ -39,6 +41,7 @@ class SaveViewModelTest {
         saveViewModel.saveNoteAndNavBack()
         advanceUntilIdle()
         assertTrue(SaveNoteUseCase.saveChannel.receiveCatching().getOrThrow())
+        advanceUntilIdle()
         Mockito.verify(mockRouter).popBackStack()
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
