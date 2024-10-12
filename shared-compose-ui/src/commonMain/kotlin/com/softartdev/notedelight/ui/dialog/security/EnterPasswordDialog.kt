@@ -2,8 +2,21 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.shared.presentation.settings.security.enter.EnterResult
@@ -24,19 +37,16 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewModel) {
+fun EnterPasswordDialog(enterViewModel: EnterViewModel) {
     val enterResultState: State<EnterResult> = enterViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(enterViewModel) {
-        onDispose(enterViewModel::onCleared)
-    }
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val enterResult: EnterResult = enterResultState.value) {
-        is EnterResult.InitState, is EnterResult.Loading -> Unit
-        is EnterResult.Success -> dismissDialog()
+        is EnterResult.InitState,
+        is EnterResult.Loading -> Unit
         is EnterResult.EmptyPasswordError -> {
             labelResource = Res.string.empty_password
             error = true
@@ -46,7 +56,9 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
             error = true
         }
         is EnterResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(enterResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = enterResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowEnterPasswordDialog(
@@ -55,8 +67,9 @@ fun EnterPasswordDialog(dismissDialog: () -> Unit, enterViewModel: EnterViewMode
         labelResource = labelResource,
         isError = error,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
-    ) { enterViewModel.enterCheck(password = passwordState.value) }
+        dismissDialog = enterViewModel::navigateUp,
+        onConfirmClick = { enterViewModel.enterCheck(password = passwordState.value) }
+    )
 }
 
 @Composable
@@ -79,7 +92,10 @@ fun ShowEnterPasswordDialog(
                 isError = isError,
                 contentDescription = stringResource(Res.string.enter_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },

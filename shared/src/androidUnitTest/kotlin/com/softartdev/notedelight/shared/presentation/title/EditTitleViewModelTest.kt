@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +29,8 @@ class EditTitleViewModelTest {
 
     private val noteDAO = Mockito.mock(NoteDAO::class.java)
     private val updateTitleUseCase = UpdateTitleUseCase(noteDAO)
-    private val editTitleViewModel = EditTitleViewModel(noteDAO, updateTitleUseCase)
+    private val router = Mockito.mock(Router::class.java)
+    private val editTitleViewModel = EditTitleViewModel(noteDAO, updateTitleUseCase, router)
 
     private val id = 1L
     private val title: String = "title"
@@ -43,12 +45,12 @@ class EditTitleViewModelTest {
 
     @After
     fun tearDown() = runTest {
-        editTitleViewModel.resetLoadingResult()
+//        editTitleViewModel.resetLoadingResult()
     }
 
     @Test
     fun loadTitle() = runTest {
-        editTitleViewModel.resultStateFlow.test {
+        editTitleViewModel.stateFlow.test {
             assertEquals(EditTitleResult.Loading, awaitItem())
 
             editTitleViewModel.loadTitle(id)
@@ -59,7 +61,7 @@ class EditTitleViewModelTest {
 
     @Test
     fun editTitleSuccess() = runTest {
-        editTitleViewModel.resultStateFlow.test {
+        editTitleViewModel.stateFlow.test {
             assertEquals(EditTitleResult.Loading, awaitItem())
 
             val exp = "new title"
@@ -67,7 +69,7 @@ class EditTitleViewModelTest {
             val act = UpdateTitleUseCase.titleChannel.receive()
             assertEquals(exp, act)
 
-            assertEquals(EditTitleResult.Success, awaitItem())
+            Mockito.verify(router).popBackStack()
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -75,7 +77,7 @@ class EditTitleViewModelTest {
 
     @Test
     fun editTitleEmptyTitleError() = runTest {
-        editTitleViewModel.resultStateFlow.test {
+        editTitleViewModel.stateFlow.test {
             assertEquals(EditTitleResult.Loading, awaitItem())
 
             editTitleViewModel.editTitle(id, "")
@@ -83,10 +85,5 @@ class EditTitleViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun errorResult() {
-        assertEquals(EditTitleResult.Error("$id"), editTitleViewModel.errorResult(Throwable("$id")))
     }
 }

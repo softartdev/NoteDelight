@@ -1,10 +1,13 @@
 package com.softartdev.notedelight.shared.base
 
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class BaseViewModel<T> : KmmViewModel() {
+abstract class BaseStateViewModel<T> : ViewModel() {
 
     open var initResult: T? = null
     abstract val loadingResult: T
@@ -12,10 +15,7 @@ abstract class BaseViewModel<T> : KmmViewModel() {
     private val _resultStateFlow by lazy { MutableStateFlow(initResult ?: loadingResult) }
     val resultStateFlow: StateFlow<T> by lazy { _resultStateFlow.asStateFlow() }
 
-    fun launch(
-            useIdling: Boolean = true,
-            block: suspend CoroutineScope.() -> T
-    ) {
+    fun launch(useIdling: Boolean = true, block: suspend CoroutineScope.() -> T) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (useIdling) {
@@ -32,15 +32,15 @@ abstract class BaseViewModel<T> : KmmViewModel() {
         }.start()
     }
 
-    fun launch(flow: Flow<T>) {
-        viewModelScope.launch(Dispatchers.Default) {
+    fun launch(useIdling: Boolean = true, flow: Flow<T>) {
+        viewModelScope.launch(Dispatchers.IO) {
             flow.onStart {
                 loadingResult ?: return@onStart
-                IdlingRes.increment()
+                if (useIdling) IdlingRes.increment()
                 emit(loadingResult!!)
             }.onEach { result ->
                 onResult(result)
-                if (result == loadingResult) IdlingRes.decrement()
+                if (useIdling && result == loadingResult) IdlingRes.decrement()
             }.catch { throwable ->
                 Napier.e("❌", throwable)
                 onResult(errorResult(throwable))
@@ -54,8 +54,10 @@ abstract class BaseViewModel<T> : KmmViewModel() {
 
     abstract fun errorResult(throwable: Throwable): T
 
-//    @androidx.annotation.VisibleForTesting
+    @VisibleForTesting
     fun resetLoadingResult() {
         _resultStateFlow.value = loadingResult
     }
+
+    public override fun onCleared() = super.onCleared()//FIXME
 }

@@ -29,7 +29,7 @@ class NoteUseCaseTest : BaseTest() {
     fun setUp() = runTest {
         val noteDb = safeRepo.buildDbIfNeed().noteDb
         noteDb.noteQueries.transaction {
-            notes.forEach(noteDb.noteQueries::insert)
+            notes.forEach(noteDb.noteQueries::update)
         }
     }
 

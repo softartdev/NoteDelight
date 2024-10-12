@@ -3,15 +3,17 @@ package com.softartdev.notedelight
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.arkivanov.decompose.defaultComponentContext
-import com.softartdev.notedelight.ui.MainRootUI
+import com.softartdev.notedelight.shared.navigation.Router
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val router: Router by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val root = RootComponent(defaultComponentContext())
         setContent {
-            MainRootUI(root)
+            App(router)
         }
     }
 }

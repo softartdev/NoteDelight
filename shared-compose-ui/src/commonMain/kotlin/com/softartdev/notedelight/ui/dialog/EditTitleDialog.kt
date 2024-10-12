@@ -2,6 +2,7 @@ package com.softartdev.notedelight.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
@@ -10,7 +11,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -40,14 +41,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun EditTitleDialog(
     noteId: Long,
-    dismissDialog: () -> Unit,
-    editTitleViewModel: EditTitleViewModel
+    editTitleViewModel: EditTitleViewModel,
 ) {
-    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(noteId) {
+    LaunchedEffect(noteId) {
         editTitleViewModel.loadTitle(noteId)
-        onDispose(editTitleViewModel::onCleared)
     }
+    val editTitleResultState: State<EditTitleResult> = editTitleViewModel.stateFlow.collectAsState()
     var labelResource by remember { mutableStateOf(Res.string.enter_title) }
     val textState: MutableState<String> = remember { mutableStateOf("") }
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -57,7 +56,6 @@ fun EditTitleDialog(
         is EditTitleResult.Loaded -> {
             textState.value = editTitleResult.title
         }
-        is EditTitleResult.Success -> dismissDialog()
         is EditTitleResult.EmptyTitleError -> {
             labelResource = Res.string.empty_title
         }
@@ -71,7 +69,7 @@ fun EditTitleDialog(
         label = stringResource(labelResource),
         isError = editTitleResultState.value is EditTitleResult.EmptyTitleError,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
+        dismissDialog = editTitleViewModel::navigateUp
     ) { editTitleViewModel.editTitle(noteId, textState.value) }
 }
 
@@ -88,7 +86,7 @@ fun ShowEditTitleDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_change_title)) },
     text = {
         Column {
-            if (showLoaing) LinearProgressIndicator()
+            if (showLoaing) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
                 value = textState.value,
                 onValueChange = { textState.value = it },

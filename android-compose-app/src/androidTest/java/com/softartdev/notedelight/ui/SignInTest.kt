@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.ui
 
-import androidx.compose.ui.test.*
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.PlatformSQLiteState
 import com.softartdev.notedelight.shared.db.SafeRepo
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -22,16 +24,19 @@ class SplashViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
+    private val mockRouter = Mockito.mock(Router::class.java)
 
     @Test
     fun navSignIn() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
-        val splashViewModel = SplashViewModel(mockSafeRepo)
-        splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, awaitItem())
+        val splashViewModel = SplashViewModel(mockSafeRepo, mockRouter)
+        splashViewModel.stateFlow.test {
+            assertEquals(true, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.NavSignIn, awaitItem())
+
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn.name)
+            assertEquals(false, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -40,12 +45,14 @@ class SplashViewModelTest {
     @Test
     fun navMain() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.UNENCRYPTED)
-        val splashViewModel = SplashViewModel(mockSafeRepo)
-        splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, awaitItem())
+        val splashViewModel = SplashViewModel(mockSafeRepo, mockRouter)
+        splashViewModel.stateFlow.test {
+            assertEquals(true, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.NavMain, awaitItem())
+
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main.name)
+            assertEquals(false, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -54,12 +61,16 @@ class SplashViewModelTest {
     @Test
     fun showError() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenThrow(RuntimeException::class.java)
-        val splashViewModel = SplashViewModel(mockSafeRepo)
-        splashViewModel.resultStateFlow.test {
-            assertEquals(SplashResult.Loading, awaitItem())
+        val splashViewModel = SplashViewModel(mockSafeRepo, mockRouter)
+        splashViewModel.stateFlow.test {
+            assertEquals(true, awaitItem())
 
             splashViewModel.checkEncryption()
-            assertEquals(SplashResult.ShowError(null), awaitItem())
+
+            Mockito.verify(mockRouter).navigate(
+                route = AppNavGraph.ErrorDialog.argRoute(message = null)
+            )
+            assertEquals(false, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
         }

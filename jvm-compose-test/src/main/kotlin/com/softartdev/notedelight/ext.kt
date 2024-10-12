@@ -7,7 +7,7 @@ import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import io.github.aakira.napier.Napier
 
-const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 60_000
+const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 5_000
 
 inline fun ComposeTestRule.retryUntilDisplayed(
     crossinline action: () -> Unit,

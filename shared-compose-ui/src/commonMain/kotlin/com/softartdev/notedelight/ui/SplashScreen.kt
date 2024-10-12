@@ -1,68 +1,58 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.splash.SplashResult
 import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
-import com.softartdev.notedelight.ui.dialog.showError
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.app_icon
-import org.jetbrains.compose.resources.painterResource
+import com.softartdev.notedelight.ui.icon.FileLock
 
 @Composable
-fun SplashScreen(splashViewModel: SplashViewModel, navSignIn: () -> Unit, navMain: () -> Unit) {
-    val splashResultState: State<SplashResult> = splashViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(splashViewModel) {
+fun SplashScreen(
+    splashViewModel: SplashViewModel,
+) {
+    val showLoading: Boolean by splashViewModel.stateFlow.collectAsState()
+    LaunchedEffect(splashViewModel) {
         splashViewModel.checkEncryption()
-        onDispose(splashViewModel::onCleared)
     }
-    var showError: Boolean by remember { mutableStateOf(false) }
-    when (val splashResult: SplashResult = splashResultState.value) {
-        is SplashResult.Loading -> {
-            showError = true
-        }
-        is SplashResult.NavSignIn -> navSignIn()
-        is SplashResult.NavMain -> navMain()
-        is SplashResult.ShowError -> themePrefs.dialogHolder.showError(splashResult.message)
-    }
-    SplashScreenBody(showError)
+    SplashScreenBody(showLoading)
 }
 
 @Composable
-fun SplashScreenBody(showError: Boolean = false) = Box(
+fun SplashScreenBody(showLoading: Boolean = false) = Box(
     modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.background)
 ) {
-    Image(
-        modifier = Modifier.align(Alignment.Center),
-        painter = painterResource(Res.drawable.app_icon),
-        contentDescription = null
-    )
-    if (showError) LinearProgressIndicator(
+    Icon(
         modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .padding(bottom = 32.dp)
+            .align(Alignment.Center)
+            .size(192.dp),
+        imageVector = Icons.Filled.FileLock,
+        contentDescription = null,
+        tint = Color.Cyan,
     )
-    themePrefs.showDialogIfNeed()
+    if (showLoading) {
+        LinearProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp)
+        )
+    }
 }
 
 @Preview

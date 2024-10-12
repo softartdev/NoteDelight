@@ -21,6 +21,7 @@ import notedelight.shared_compose_ui.generated.resources.create_note
 import org.jetbrains.compose.resources.getString
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -50,6 +51,7 @@ class RotationTest {
         IdlingRegistry.getInstance().unregister(IdlingRes.countingIdlingResource)
     }
 
+    @Ignore("Unable to connect to Emulator gRPC port on CI")
     @Test
     fun rotationTest() = runTest {
         composeTestRule

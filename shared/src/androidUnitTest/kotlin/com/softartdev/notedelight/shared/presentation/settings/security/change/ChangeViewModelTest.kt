@@ -2,11 +2,14 @@ package com.softartdev.notedelight.shared.presentation.settings.security.change
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -24,7 +27,11 @@ class ChangeViewModelTest {
 
     private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
-    private val changeViewModel = ChangeViewModel(checkPasswordUseCase, changePasswordUseCase)
+    private val router = Mockito.mock(Router::class.java)
+    private val coroutineDispatchers = CoroutineDispatchersStub(
+        scheduler = mainDispatcherRule.testDispatcher.scheduler
+    )
+    private val changeViewModel = ChangeViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
 
     @Test
     fun checkChangeOldEmptyPasswordError() = runTest {
@@ -81,8 +88,11 @@ class ChangeViewModelTest {
             Mockito.`when`(checkPasswordUseCase(old)).thenReturn(true)
             val new = StubEditable("new")
             changeViewModel.checkChange(old, new, new)
+            advanceUntilIdle()
             assertEquals(ChangeResult.Loading, awaitItem())
-            assertEquals(ChangeResult.Success, awaitItem())
+
+            Mockito.verify(router).popBackStack()
+            Mockito.verifyNoMoreInteractions(router)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -102,10 +112,5 @@ class ChangeViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun errorResult() {
-        assertEquals(ChangeResult.Error("err"), changeViewModel.errorResult(Throwable("err")))
     }
 }

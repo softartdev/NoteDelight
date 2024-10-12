@@ -33,10 +33,9 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
-            implementation(libs.decompose)
-            implementation(libs.decompose.extComposeJb)
             implementation(libs.koin.core)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.androidx.lifecycle.runtime.compose)
         }
         androidMain.dependencies {
             implementation(libs.koin.androidx.compose)

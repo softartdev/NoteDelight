@@ -15,10 +15,5 @@ class RootHolder : ObservableObject {
     init() {
         appHelper = AppHelper()
         appHelper.appInit()
-        appHelper.createLifecycle()
-    }
-    
-    deinit {
-        appHelper.destroyLifecycle()
     }
 }

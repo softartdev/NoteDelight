@@ -12,7 +12,7 @@ with [Cipher](https://www.zetetic.net/sqlcipher/). The Compose-UI also has dark/
 Supported platforms:
 
 - Android
-- iOS (the iPad version also works on macOS)
+- iOS (+ macOS [(Mac Catalyst)](https://developer.apple.com/mac-catalyst/))
 - Desktop JVM (macOS, Linux, Windows)x(x86_64, arm64)
 
 [![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
@@ -66,7 +66,6 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 - [SQLCipher](https://github.com/sqlcipher/sqlcipher)
 - [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
-- [Decompose](https://github.com/arkivanov/Decompose)
 - [Compose Multiplatform, by JetBrains](https://github.com/JetBrains/compose-jb)
 - [MaterialThemePrefs](https://github.com/softartdev/MaterialThemePrefs)
 - [moko-resources](https://github.com/icerockdev/moko-resources)

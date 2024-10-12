@@ -1,32 +1,52 @@
 package com.softartdev.notedelight.shared.presentation.title
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class EditTitleViewModel(
     private val noteDAO: NoteDAO,
-    private val updateTitleUseCase: UpdateTitleUseCase
-) : BaseViewModel<EditTitleResult>() {
+    private val updateTitleUseCase: UpdateTitleUseCase,
+    private val router: Router,
+) : ViewModel() {
+    private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
+        value = EditTitleResult.Loading
+    )
+    val stateFlow: StateFlow<EditTitleResult> = mutableStateFlow
 
-    override val loadingResult: EditTitleResult = EditTitleResult.Loading
-
-    fun loadTitle(noteId: Long) = launch {
-        val note = noteDAO.load(noteId)
-        EditTitleResult.Loaded(note.title)
-    }
-
-    fun editTitle(id: Long, newTitle: String) = launch {
-        val (noteId, noteTitle) = id to newTitle.trim()
-        when {
-            noteTitle.isEmpty() -> EditTitleResult.EmptyTitleError
-            else -> {
-                updateTitleUseCase(noteId, noteTitle)
-                UpdateTitleUseCase.titleChannel.send(noteTitle)
-                EditTitleResult.Success
-            }
+    fun loadTitle(noteId: Long) = viewModelScope.launch {
+        mutableStateFlow.value = EditTitleResult.Loading
+        try {
+            val note = noteDAO.load(noteId)
+            mutableStateFlow.value = EditTitleResult.Loaded(note.title)
+        } catch (t: Throwable) {
+            Napier.e("❌", t)
+            mutableStateFlow.value = EditTitleResult.Error(message = t.message)
         }
     }
 
-    override fun errorResult(throwable: Throwable) = EditTitleResult.Error(throwable.message)
+    fun editTitle(id: Long, newTitle: String) = viewModelScope.launch {
+        mutableStateFlow.value = EditTitleResult.Loading
+        try {
+            val noteTitle = newTitle.trim()
+            if (noteTitle.isEmpty()) {
+                mutableStateFlow.value = EditTitleResult.EmptyTitleError
+            } else {
+                updateTitleUseCase(id, noteTitle)
+                UpdateTitleUseCase.titleChannel.send(noteTitle)
+                navigateUp()
+            }
+        } catch (t: Throwable) {
+            Napier.e("❌", t)
+            mutableStateFlow.value = EditTitleResult.Error(message = t.message)
+        }
+    }
+
+    fun navigateUp() = router.popBackStack()
 }

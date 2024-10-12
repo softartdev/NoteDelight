@@ -16,29 +16,25 @@ abstract class BaseTestCase(val composeTestRule: ComposeContentTestRule) {
 
     private val commonDialog: CommonDialog = CommonDialogImpl(composeTestRule)
 
-    suspend fun signInScreen(block: suspend SignInScreen.() -> Unit) =
-        SignInScreen(composeTestRule).block()
+    fun signInScreen(block: SignInScreen.() -> Unit) = SignInScreen(composeTestRule).block()
 
-    suspend fun mainTestScreen(block: suspend MainTestScreen.() -> Unit) =
-        MainTestScreen(composeTestRule).block()
+    fun mainTestScreen(block: MainTestScreen.() -> Unit) = MainTestScreen(composeTestRule).block()
 
-    suspend fun noteScreen(block: suspend NoteScreen.() -> Unit) =
-        NoteScreen(composeTestRule).block()
+    fun noteScreen(block: NoteScreen.() -> Unit) = NoteScreen(composeTestRule).block()
 
-    suspend fun settingsTestScreen(block: suspend SettingsTestScreen.() -> Unit) =
+    fun settingsTestScreen(block: SettingsTestScreen.() -> Unit) =
         SettingsTestScreen(composeTestRule).block()
 
-    suspend fun commonDialog(block: suspend CommonDialog.() -> Unit) = commonDialog.block()
+    fun commonDialog(block: CommonDialog.() -> Unit) = commonDialog.block()
 
-    suspend fun editTitleDialog(block: suspend EditTitleDialog.() -> Unit) =
-        EditTitleDialog(commonDialog).block()
+    fun editTitleDialog(block: EditTitleDialog.() -> Unit) = EditTitleDialog(commonDialog).block()
 
-    suspend fun confirmPasswordDialog(block: suspend ConfirmPasswordDialog.() -> Unit) =
+    fun confirmPasswordDialog(block: ConfirmPasswordDialog.() -> Unit) =
         ConfirmPasswordDialog(commonDialog).block()
 
-    suspend fun enterPasswordDialog(block: suspend EnterPasswordDialog.() -> Unit) =
+    fun enterPasswordDialog(block: EnterPasswordDialog.() -> Unit) =
         EnterPasswordDialog(commonDialog).block()
 
-    suspend fun changePasswordDialog(block: suspend ChangePasswordDialog.() -> Unit) =
+    fun changePasswordDialog(block: ChangePasswordDialog.() -> Unit) =
         ChangePasswordDialog(commonDialog).block()
 }

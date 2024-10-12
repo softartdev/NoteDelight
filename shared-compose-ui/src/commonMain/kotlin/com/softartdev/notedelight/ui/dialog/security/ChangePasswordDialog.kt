@@ -2,8 +2,21 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeResult
@@ -27,11 +40,8 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewModel) {
+fun ChangePasswordDialog(changeViewModel: ChangeViewModel) {
     val changeResultState: State<ChangeResult> = changeViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(changeViewModel) {
-        onDispose(changeViewModel::onCleared)
-    }
     var oldLabelResource by remember { mutableStateOf(Res.string.enter_old_password) }
     var oldError by remember { mutableStateOf(false) }
     val oldPasswordState: MutableState<String> = remember { mutableStateOf("") }
@@ -45,7 +55,6 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
     val coroutineScope = rememberCoroutineScope()
     when (val changeResult: ChangeResult = changeResultState.value) {
         is ChangeResult.InitState, is ChangeResult.Loading -> Unit
-        is ChangeResult.Success -> dismissDialog()
         is ChangeResult.OldEmptyPasswordError -> {
             oldLabelResource = Res.string.empty_password
             oldError = true
@@ -63,7 +72,9 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
             oldError = true
         }
         is ChangeResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(changeResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = changeResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowChangePasswordDialog(
@@ -78,8 +89,14 @@ fun ChangePasswordDialog(dismissDialog: () -> Unit, changeViewModel: ChangeViewM
         repeatError = repeatError,
         repeatPasswordState = repeatPasswordState,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
-    ) { changeViewModel.checkChange(oldPassword = oldPasswordState.value, newPassword = newPasswordState.value, repeatNewPassword = repeatPasswordState.value) }
+        dismissDialog = changeViewModel::navigateUp,
+    ) {
+        changeViewModel.checkChange(
+            oldPassword = oldPasswordState.value,
+            newPassword = newPasswordState.value,
+            repeatNewPassword = repeatPasswordState.value
+        )
+    }
 }
 
 @Composable
@@ -120,7 +137,10 @@ fun ShowChangePasswordDialog(
                 isError = repeatError,
                 contentDescription = stringResource(Res.string.repeat_new_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onChangeClick) { Text(stringResource(Res.string.yes)) } },

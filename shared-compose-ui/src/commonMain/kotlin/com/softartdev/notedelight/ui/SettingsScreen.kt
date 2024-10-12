@@ -5,8 +5,8 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,11 +30,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -45,17 +42,12 @@ import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
-import com.softartdev.notedelight.ui.dialog.showChangePassword
-import com.softartdev.notedelight.ui.dialog.showConfirmPassword
-import com.softartdev.notedelight.ui.dialog.showEnterPassword
-import com.softartdev.notedelight.ui.dialog.showError
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.theme.material3.ThemePreferenceItem
-import com.softartdev.theme.pref.DialogHolder
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
@@ -67,41 +59,27 @@ import notedelight.shared_compose_ui.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SettingsScreen(
-    onBackClick: () -> Unit,
-    settingsViewModel: SettingsViewModel,
-) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel) {
+    val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-    val securityResultState: State<SecurityResult> = settingsViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(settingsViewModel) {
-        settingsViewModel.checkEncryption()
-        onDispose(settingsViewModel::onCleared)
-    }
-    val encryptionState = remember { mutableStateOf(false) }
-    val dialogHolder: DialogHolder = themePrefs.dialogHolder
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    when (val securityResult = securityResultState.value) {
-        is SecurityResult.Loading -> Unit
-        is SecurityResult.EncryptEnable -> {
-            encryptionState.value = securityResult.encryption
+    LifecycleResumeEffect(key1 = settingsViewModel, key2 = result ) {
+        result.checkEncryption()
+        result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
+            coroutineScope.launch { snackbarHostState.showSnackbar(message = msg) }
+            result.disposeOneTimeEvents()
         }
-
-        is SecurityResult.PasswordDialog -> dialogHolder.showEnterPassword(doAfterDismiss = settingsViewModel::checkEncryption)
-        is SecurityResult.SetPasswordDialog -> dialogHolder.showConfirmPassword(doAfterDismiss = settingsViewModel::checkEncryption)
-        is SecurityResult.ChangePasswordDialog -> dialogHolder.showChangePassword(doAfterDismiss = settingsViewModel::checkEncryption)
-        is SecurityResult.SnackBar -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(message = securityResult.message.toString())
-        }
-        is SecurityResult.Error -> dialogHolder.showError(securityResult.message)
+        onPauseOrDispose { result.checkEncryption() }
     }
     SettingsScreenBody(
-        onBackClick = onBackClick,
-        showLoading = securityResultState.value is SecurityResult.Loading,
-        encryptionState = encryptionState,
-        changeEncryption = settingsViewModel::changeEncryption,
-        changePassword = settingsViewModel::changePassword,
-        showCipherVersion = settingsViewModel::showCipherVersion,
-        snackbarHostState = snackbarHostState
+        onBackClick = result.navBack,
+        showLoading = result.loading,
+        changeTheme = result.changeTheme,
+        encryption = result.encryption,
+        changeEncryption = result.changeEncryption,
+        changePassword = result.changePassword,
+        showCipherVersion = result.showCipherVersion,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -109,7 +87,8 @@ fun SettingsScreen(
 fun SettingsScreenBody(
     onBackClick: () -> Unit = {},
     showLoading: Boolean = true,
-    encryptionState: MutableState<Boolean> = mutableStateOf(false),
+    changeTheme: () -> Unit = {},
+    encryption: Boolean = false,
     changeEncryption: (Boolean) -> Unit = {},
     changePassword: () -> Unit = {},
     showCipherVersion: () -> Unit = {},
@@ -128,43 +107,40 @@ fun SettingsScreenBody(
             },
         )
     },
-    content = {
+    content = { paddingValues: PaddingValues ->
         val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
-        Box(modifier = Modifier.padding(it)) {
-            Column {
-                if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
-                PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
-                ThemePreferenceItem()
-                PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
-                Preference(
-                    modifier = Modifier.semantics {
-                        contentDescription = enableEncryptionPrefTitle
-                        toggleableState = ToggleableState(encryptionState.value)
-                        testTag = enableEncryptionPrefTitle
-                    },
-                    title = enableEncryptionPrefTitle,
-                    vector = Icons.Default.Lock,
-                    onClick = { changeEncryption(!encryptionState.value) }
-                ) {
-                    Switch(checked = encryptionState.value, onCheckedChange = changeEncryption)
-                }
-                Preference(
-                    title = stringResource(Res.string.pref_title_set_password),
-                    vector = Icons.Default.Password,
-                    onClick = changePassword
-                )
-                Preference(
-                    title = stringResource(Res.string.pref_title_check_cipher_version),
-                    vector = Icons.Filled.FileLock,
-                    onClick = showCipherVersion
-                )
-                Spacer(Modifier.height(32.dp))
-                ListItem(
-                    headlineContent = {},
-                    supportingContent = { Text(createMultiplatformMessage()) }
-                )
+        Column(modifier = Modifier.padding(paddingValues)) {
+            if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
+            PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
+            ThemePreferenceItem(onClick = changeTheme)
+            PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
+            Preference(
+                modifier = Modifier.semantics {
+                    contentDescription = enableEncryptionPrefTitle
+                    toggleableState = ToggleableState(encryption)
+                    testTag = enableEncryptionPrefTitle
+                },
+                title = enableEncryptionPrefTitle,
+                vector = Icons.Default.Lock,
+                onClick = { changeEncryption(!encryption) }
+            ) {
+                Switch(checked = encryption, onCheckedChange = changeEncryption)
             }
-            themePrefs.showDialogIfNeed()
+            Preference(
+                title = stringResource(Res.string.pref_title_set_password),
+                vector = Icons.Default.Password,
+                onClick = changePassword
+            )
+            Preference(
+                title = stringResource(Res.string.pref_title_check_cipher_version),
+                vector = Icons.Filled.FileLock,
+                onClick = showCipherVersion
+            )
+            Spacer(Modifier.height(32.dp))
+            ListItem(
+                headlineContent = {},
+                supportingContent = { Text(createMultiplatformMessage()) }
+            )
         }
     },
     snackbarHost = { SnackbarHost(snackbarHostState) },

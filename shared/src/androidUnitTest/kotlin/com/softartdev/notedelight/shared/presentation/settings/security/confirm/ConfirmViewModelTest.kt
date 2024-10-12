@@ -2,10 +2,13 @@ package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -22,7 +25,11 @@ class ConfirmViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
-    private val confirmViewModel = ConfirmViewModel(changePasswordUseCase)
+    private val router = Mockito.mock(Router::class.java)
+    private val coroutineDispatchers = CoroutineDispatchersStub(
+        scheduler = mainDispatcherRule.testDispatcher.scheduler
+    )
+    private val confirmViewModel = ConfirmViewModel(changePasswordUseCase, router, coroutineDispatchers)
 
     @Test
     fun conformCheckPasswordsNoMatchError() = runTest {
@@ -56,15 +63,13 @@ class ConfirmViewModelTest {
             assertEquals(ConfirmResult.InitState, awaitItem())
 
             confirmViewModel.conformCheck(StubEditable("pass"), StubEditable("pass"))
+            advanceUntilIdle()
             assertEquals(ConfirmResult.Loading, awaitItem())
-            assertEquals(ConfirmResult.Success, awaitItem())
+
+            Mockito.verify(router).popBackStack()
+            Mockito.verifyNoMoreInteractions(router)
 
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun errorResult() {
-        assertEquals(ConfirmResult.Error("err"), confirmViewModel.errorResult(Throwable("err")))
     }
 }

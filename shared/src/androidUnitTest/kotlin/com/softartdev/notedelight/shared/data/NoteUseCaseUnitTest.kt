@@ -10,6 +10,7 @@ import com.softartdev.notedelight.shared.db.SafeRepo
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.db.createQueryWrapper
 import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import io.github.aakira.napier.Napier
@@ -35,6 +36,7 @@ class NoteUseCaseUnitTest {
     private val noteDAO = NoteDAO(noteDb.noteQueries)
     private val createNoteUseCase = CreateNoteUseCase(noteDAO)
     private val saveNoteUseCase = SaveNoteUseCase(noteDAO)
+    private val deleteNoteUseCase = DeleteNoteUseCase(noteDAO)
     private val updateTitleUseCase = UpdateTitleUseCase(noteDAO)
 
     @Before
@@ -103,7 +105,7 @@ class NoteUseCaseUnitTest {
     @Test(expected = NullPointerException::class)
     fun deleteNote() = runTest {
         val id: Long = 2
-        noteDAO.delete(id)
+        deleteNoteUseCase(id)
         noteDAO.load(id)
     }
 }

@@ -3,9 +3,12 @@ package com.softartdev.notedelight.shared.presentation.main
 import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
 import com.softartdev.notedelight.shared.db.SafeRepo
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -27,18 +30,20 @@ class MainViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
+    private val mockRouter = Mockito.mock(Router::class.java)
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
-    private lateinit var mainViewModel: MainViewModel
+    private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private var mainViewModel: MainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
 
     @Before
     fun setUp() {
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
-        mainViewModel = MainViewModel(mockSafeRepo, mockNoteDAO)
+        mainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
     }
 
     @Test
     fun success() = runTest {
-        mainViewModel.resultStateFlow.test {
+        mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
             val notes = emptyList<Note>()
@@ -52,20 +57,33 @@ class MainViewModelTest {
 
     @Test
     fun navMain() = runTest {
-        mainViewModel.resultStateFlow.test {
+        mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
             Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
-            assertEquals(NoteListResult.NavSignIn, awaitItem())
+            assertEquals(NoteListResult.Error(null), awaitItem())
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn.name)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
+    fun onNoteClicked() {
+        mainViewModel.onNoteClicked(1)
+        Mockito.verify(mockRouter).navigate(route = "${AppNavGraph.Details.name}/1")
+    }
+
+    @Test
+    fun onSettingsClicked() {
+        mainViewModel.onSettingsClicked()
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings.name)
+    }
+
+    @Test
     fun error() = runTest {
-        mainViewModel.resultStateFlow.test {
+        mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
             Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw Throwable() })

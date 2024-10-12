@@ -2,8 +2,21 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
@@ -25,11 +38,8 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmViewModel) {
+fun ConfirmPasswordDialog(confirmViewModel: ConfirmViewModel) {
     val confirmResultState: State<ConfirmResult> = confirmViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(confirmViewModel) {
-        onDispose(confirmViewModel::onCleared)
-    }
     var labelResource by remember { mutableStateOf(Res.string.enter_password) }
     var error by remember { mutableStateOf(false) }
     var repeatLabelResource by remember { mutableStateOf(Res.string.confirm_password) }
@@ -39,8 +49,8 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     when (val confirmResult: ConfirmResult = confirmResultState.value) {
-        is ConfirmResult.InitState, is ConfirmResult.Loading -> Unit
-        is ConfirmResult.Success -> dismissDialog()
+        is ConfirmResult.InitState,
+        is ConfirmResult.Loading -> Unit
         is ConfirmResult.EmptyPasswordError -> {
             labelResource = Res.string.empty_password
             error = true
@@ -50,7 +60,9 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
             repeatError = true
         }
         is ConfirmResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(confirmResult.message ?: getString(Res.string.error_title))
+            snackbarHostState.showSnackbar(
+                message = confirmResult.message ?: getString(Res.string.error_title)
+            )
         }
     }
     ShowConfirmPasswordDialog(
@@ -62,8 +74,14 @@ fun ConfirmPasswordDialog(dismissDialog: () -> Unit, confirmViewModel: ConfirmVi
         isError = error,
         isRepeatError = repeatError,
         snackbarHostState = snackbarHostState,
-        dismissDialog = dismissDialog
-    ) { confirmViewModel.conformCheck(password = passwordState.value, repeatPassword = repeatPasswordState.value) }
+        dismissDialog = confirmViewModel::navigateUp,
+        onConfirmClick = {
+            confirmViewModel.conformCheck(
+                password = passwordState.value,
+                repeatPassword = repeatPasswordState.value
+            )
+        }
+    )
 }
 
 @Composable
@@ -95,7 +113,10 @@ fun ShowConfirmPasswordDialog(
                 isError = isRepeatError,
                 contentDescription = stringResource(Res.string.confirm_password),
             )
-            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     },
     confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },

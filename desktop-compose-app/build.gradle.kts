@@ -24,8 +24,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(project(":shared"))
             implementation(project(":shared-compose-ui"))
-            implementation(libs.decompose)
-            implementation(libs.decompose.extComposeJb)
+            implementation(libs.androidx.navigation.compose)
             implementation(libs.coroutines.swing)
             implementation(compose.desktop.currentOs)
             implementation(libs.koin.core.jvm)

@@ -1,4 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -35,8 +36,8 @@ android {
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
     }
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = libs.versions.jdk.get()
-        kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        compilerOptions.freeCompilerArgs.add("-Xopt-in=kotlin.RequiresOptIn")
     }
     packagingOptions.resources {
         excludes += setOf(
@@ -63,7 +64,7 @@ kotlin {
             api(libs.napier)
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
-            implementation(libs.stately.common)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

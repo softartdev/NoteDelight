@@ -4,6 +4,7 @@ package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -16,7 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -26,10 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import com.softartdev.notedelight.shared.db.TestSchema
-import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.create_note
@@ -37,18 +36,16 @@ import notedelight.shared_compose_ui.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainScreen(
-    mainViewModel: MainViewModel,
-    onItemClicked: (id: Long) -> Unit,
-    onSettingsClick: () -> Unit,
-    navSignIn: () -> Unit
-) {
-    val noteListState: State<NoteListResult> = mainViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(mainViewModel) {
+fun MainScreen(mainViewModel: MainViewModel) {
+    LaunchedEffect(mainViewModel) {
         mainViewModel.updateNotes()
-        onDispose(mainViewModel::onCleared)
     }
-    MainScreen(noteListState, onItemClicked, onSettingsClick, navSignIn)
+    val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
+    MainScreen(
+        noteListState = noteListState,
+        onItemClicked = mainViewModel::onNoteClicked,
+        onSettingsClick = mainViewModel::onSettingsClicked,
+    )
 }
 
 @Composable
@@ -56,28 +53,33 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    navSignIn: () -> Unit = {},
 ) = Scaffold(
     topBar = {
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Default.Settings, contentDescription = stringResource(Res.string.settings))
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(Res.string.settings)
+                    )
                 }
             })
-    }, content = {
-        Box(modifier = Modifier.padding(it)) {
+    }, content = { paddingValues: PaddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader()
                 is NoteListResult.Success -> {
-                    val notes: List<Note> = noteListResult.result
-                    if (notes.isNotEmpty()) NoteList(notes, onItemClicked) else Empty()
+                    when {
+                        noteListResult.result.isNotEmpty() -> NoteList(
+                            noteList = noteListResult.result,
+                            onItemClicked = onItemClicked,
+                        )
+                        else -> Empty()
+                    }
                 }
-                is NoteListResult.NavSignIn -> navSignIn()
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
-            themePrefs.showDialogIfNeed()
         }
     }, floatingActionButton = {
         val text = stringResource(Res.string.create_note)

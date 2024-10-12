@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performTextReplacement
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.ui.screen.MainTestScreen.Companion.noteItemTitleText
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.enter_title
@@ -40,7 +41,7 @@ class EditTitleAfterSaveTestCase(
                     yesDialogButtonSNI.performClick()
                 }
                 composeTestRule
-                    .onNodeWithContentDescription(label = getString(Res.string.enter_title))
+                    .onNodeWithContentDescription(label = runBlocking { getString(Res.string.enter_title) })
                     .assertDoesNotExist()
                 saveNoteMenuButtonSNI.performClick()
                 backButtonSNI.performClick()

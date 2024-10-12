@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.ui.cases
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
@@ -11,6 +12,7 @@ import com.softartdev.notedelight.retryUntilDisplayed
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.empty_password
@@ -29,9 +31,9 @@ class SettingPasswordTestCase(
             settingsMenuButtonSNI.performClick()
 
             settingsTestScreen {
-                val emptyPassTitle = getString(Res.string.empty_password)
-                val passDoNotMatchTitle = getString(Res.string.passwords_do_not_match)
-                val incorrectPassTitle = getString(Res.string.incorrect_password)
+                val emptyPassTitle = runBlocking { getString(Res.string.empty_password) }
+                val passDoNotMatchTitle = runBlocking { getString(Res.string.passwords_do_not_match) }
+                val incorrectPassTitle = runBlocking { getString(Res.string.incorrect_password) }
 
                 encryptionSwitchSNI.assertIsOff()
                     .performClick()
@@ -117,6 +119,7 @@ class SettingPasswordTestCase(
                     changeOldSNI.performTextReplacement(text = "1")
                     closeSoftKeyboard()
                     yesDialogButtonSNI.performClick()
+                    composeTestRule.waitAssert(yesDialogButtonSNI::assertIsNotDisplayed)
                 }
                 encryptionSwitchSNI.assertIsOn()
                     .performClick()

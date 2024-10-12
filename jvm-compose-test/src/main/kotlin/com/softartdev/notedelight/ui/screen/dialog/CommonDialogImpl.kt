@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.ui.screen.dialog
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithText
 import kotlinx.coroutines.runBlocking
@@ -15,5 +14,4 @@ value class CommonDialogImpl(override val composeTestRule: ComposeContentTestRul
     override val yesDialogButtonSNI: SemanticsNodeInteraction
         get() = composeTestRule
             .onNodeWithText(text = runBlocking { getString(Res.string.yes) })
-            .assertIsDisplayed()
 }

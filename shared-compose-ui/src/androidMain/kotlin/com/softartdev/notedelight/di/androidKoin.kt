@@ -1,6 +1,8 @@
 package com.softartdev.notedelight.di
 
-import com.softartdev.notedelight.shared.base.KmmViewModel
-import org.koin.java.KoinJavaComponent.get
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModel
+import org.koin.androidx.compose.koinViewModel
 
-actual inline fun <reified T : KmmViewModel> getViewModel(): T  = get(T::class.java)
+@Composable
+actual inline fun <reified T : ViewModel> getViewModel(): T = koinViewModel()

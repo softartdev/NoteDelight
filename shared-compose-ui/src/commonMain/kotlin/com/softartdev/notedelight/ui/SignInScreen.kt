@@ -3,16 +3,27 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.shared.presentation.signin.SignInResult
 import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
-import com.softartdev.notedelight.ui.dialog.showError
-import com.softartdev.theme.pref.DialogHolder
-import com.softartdev.theme.pref.PreferableMaterialTheme.themePrefs
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.empty_password
@@ -23,33 +34,19 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SignInScreen(signInViewModel: SignInViewModel, navMain: () -> Unit) {
-    val signInResultState: State<SignInResult> = signInViewModel.resultStateFlow.collectAsState()
-    DisposableEffect(signInViewModel) {
-        onDispose(signInViewModel::onCleared)
-    }
-    var labelResource by remember { mutableStateOf(Res.string.enter_password) }
-    var error by remember { mutableStateOf(false) }
+fun SignInScreen(signInViewModel: SignInViewModel) {
+    val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
-    val dialogHolder: DialogHolder = themePrefs.dialogHolder
-    when (val signInResult: SignInResult = signInResultState.value) {
-        is SignInResult.ShowSignInForm, is SignInResult.ShowProgress -> Unit
-        is SignInResult.NavMain -> navMain()
-        is SignInResult.ShowEmptyPassError -> {
-            labelResource = Res.string.empty_password
-            error = true
-        }
-        is SignInResult.ShowIncorrectPassError -> {
-            labelResource = Res.string.incorrect_password
-            error = true
-        }
-        is SignInResult.ShowError -> dialogHolder.showError(signInResult.error.message)
-    }
     SignInScreenBody(
-        showLoading = signInResultState.value is SignInResult.ShowProgress,
+        showLoading = signInResultState.value == SignInResult.ShowProgress,
         passwordState = passwordState,
-        labelResource = labelResource,
-        isError = error,
+        labelResource = when (signInResultState.value) {
+            SignInResult.ShowEmptyPassError -> Res.string.empty_password
+            SignInResult.ShowIncorrectPassError -> Res.string.incorrect_password
+            else -> Res.string.enter_password
+        },
+        isError = signInResultState.value == SignInResult.ShowEmptyPassError
+                || signInResultState.value == SignInResult.ShowIncorrectPassError,
     ) { signInViewModel.signIn(pass = passwordState.value) }
 }
 
@@ -62,30 +59,23 @@ fun SignInScreenBody(
     isError: Boolean = false,
     onSignInClick: () -> Unit = {},
 ) = Scaffold(
-    topBar = {
-        TopAppBar(
-            title = { Text(text = stringResource(Res.string.app_name)) },
+    topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_name)) }) },
+) { paddingValues: PaddingValues ->
+    Column(modifier = Modifier.padding(paddingValues).fillMaxSize().padding(all = 16.dp)) {
+        if (showLoading) LinearProgressIndicator()
+        PasswordField(
+            modifier = Modifier.fillMaxWidth(),
+            passwordState = passwordState,
+            label = stringResource(labelResource),
+            isError = isError,
+            contentDescription = stringResource(Res.string.enter_password)
         )
-    }
-) {
-    Box(modifier = Modifier.padding(it)) {
-        Column(modifier = Modifier.fillMaxSize().padding(all = 16.dp)) {
-            if (showLoading) LinearProgressIndicator()
-            PasswordField(
-                modifier = Modifier.fillMaxWidth(),
-                passwordState = passwordState,
-                label = stringResource(labelResource),
-                isError = isError,
-                contentDescription = stringResource(Res.string.enter_password)
-            )
-            Button(
-                onClick = onSignInClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp)
-            ) { Text(text = stringResource(Res.string.sign_in)) }
-        }
-        themePrefs.showDialogIfNeed()
+        Button(
+            onClick = onSignInClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
+        ) { Text(text = stringResource(Res.string.sign_in)) }
     }
 }
 

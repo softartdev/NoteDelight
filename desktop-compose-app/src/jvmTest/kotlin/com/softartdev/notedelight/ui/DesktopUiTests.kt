@@ -1,19 +1,26 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package com.softartdev.notedelight.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import com.softartdev.notedelight.RootComponent
+import com.softartdev.notedelight.App
+import com.softartdev.notedelight.TestLifecycleOwner
+import com.softartdev.notedelight.di.uiTestModules
 import com.softartdev.notedelight.shared.db.NoteDAO
-import com.softartdev.notedelight.shared.di.allModules
-import com.softartdev.notedelight.shared.runOnUiThread
+import com.softartdev.notedelight.shared.di.sharedModules
+import com.softartdev.notedelight.shared.navigation.Router
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.swing.Swing
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -33,16 +40,18 @@ class DesktopUiTests : AbstractUiTests() {
     override fun setUp() {
         startKoin {
             printLogger(level = Level.DEBUG)
-            modules(allModules)
+            modules(sharedModules + uiTestModules)
         }
-        val lifecycle = LifecycleRegistry()
-        val root = runOnUiThread {
-            RootComponent(componentContext = DefaultComponentContext(lifecycle))
-        }
+        val router: Router = get(Router::class.java)
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
         super.setUp()
-        composeTestRule.setContent { MainRootUI(root) }
+        val lifecycleOwner = TestLifecycleOwner(coroutineDispatcher = Dispatchers.Swing)
+        composeTestRule.setContent {
+            CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
+                App(router)
+            }
+        }
     }
 
     @After

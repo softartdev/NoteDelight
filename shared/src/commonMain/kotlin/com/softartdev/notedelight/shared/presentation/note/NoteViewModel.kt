@@ -1,17 +1,34 @@
 package com.softartdev.notedelight.shared.presentation.note
 
-import com.softartdev.notedelight.shared.base.BaseViewModel
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.db.NoteDAO
+import com.softartdev.notedelight.shared.navigation.AppNavGraph
+import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
+import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NoteViewModel(
     private val noteDAO: NoteDAO,
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
-) : BaseViewModel<NoteResult>() {
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val router: Router,
+    private val coroutineDispatchers: CoroutineDispatchers,
+) : ViewModel() {
+    private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(
+        value = NoteResult.Loading
+    )
+    val stateFlow: StateFlow<NoteResult> = mutableStateFlow
 
     private var noteId: Long = 0
         get() = when (field) {
@@ -19,91 +36,135 @@ class NoteViewModel(
             else -> field
         }
 
-    override val loadingResult: NoteResult = NoteResult.Loading
-
-    fun createNote() = launch {
-        noteId = createNoteUseCase()
+    fun createNote() = viewModelScope.launch {
+        noteId = withContext(coroutineDispatchers.io) {
+            createNoteUseCase()
+        }
         Napier.d("Created note with id=$noteId")
-        NoteResult.Created(noteId)
+        mutableStateFlow.value = NoteResult.Created(noteId)
     }
 
-    fun loadNote(id: Long) = launch {
-        val note = noteDAO.load(id)
+    fun loadNote(id: Long) = viewModelScope.launch {
+        val note = withContext(coroutineDispatchers.io) {
+            noteDAO.load(id)
+        }
         noteId = note.id
         Napier.d("Loaded note with id=$noteId")
-        NoteResult.Loaded(note)
+        mutableStateFlow.value = NoteResult.Loaded(note)
     }
 
-    fun saveNote(title: String?, text: String) = launch {
+    fun saveNote(title: String?, text: String) = viewModelScope.launch {
         if (title.isNullOrEmpty() && text.isEmpty()) {
-            NoteResult.Empty
+            mutableStateFlow.value = NoteResult.Empty
         } else {
-            val noteTitle = createTitleIfNeed(title, text)
-            saveNoteUseCase(noteId, noteTitle, text)
+            val noteTitle: String = withContext(coroutineDispatchers.default) {
+                createTitleIfNeed(title, text)
+            }
+            withContext(coroutineDispatchers.io) {
+                saveNoteUseCase(noteId, noteTitle, text)
+            }
             Napier.d("Saved note with id=$noteId")
-            NoteResult.Saved(noteTitle)
+            mutableStateFlow.value = NoteResult.Saved(noteTitle)
         }
     }
 
-    fun editTitle() = launch {
+    fun editTitle() = viewModelScope.launch {
         subscribeToEditTitle()
-        NoteResult.NavEditTitle(noteId)
+        router.navigate(route = AppNavGraph.EditTitleDialog.argRoute(noteId = noteId))
     }
 
-    fun deleteNote() = launch { deleteNoteForResult() }
+    fun deleteNote() = viewModelScope.launch {
+        mutableStateFlow.value = deleteNoteForResult()
+    }
 
-    fun checkSaveChange(title: String?, text: String) = launch {
-        val noteTitle = createTitleIfNeed(title, text)
-        val changed = isChanged(noteId, noteTitle, text)
-        val empty = isEmpty(noteId)
+    fun checkSaveChange(title: String?, text: String) = viewModelScope.launch {
+        val noteTitle: String = createTitleIfNeed(title, text)
+        val changed: Boolean = isChanged(noteId, noteTitle, text)
+        val empty: Boolean = isEmpty(noteId)
         when {
-            changed -> NoteResult.CheckSaveChange
-            empty -> deleteNoteForResult()
-            else -> NoteResult.NavBack
+            changed -> {
+                router.navigate(route = AppNavGraph.SaveChangesDialog.name)
+                subscribeToSaveNote(title, text)
+            }
+            empty -> mutableStateFlow.value = deleteNoteForResult()
+            else -> router.popBackStack()
         }
     }
 
-    fun saveNoteAndNavBack(title: String?, text: String) = launch {
-        val noteTitle = createTitleIfNeed(title, text)
+    private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
+        val doSave: Boolean = withContext(coroutineDispatchers.io) {
+            SaveNoteUseCase.saveChannel.receive()
+        }
+        when {
+            doSave -> saveNoteAndNavBack(title, text)
+            else -> doNotSaveAndNavBack()
+        }
+    }
+
+    fun saveNoteAndNavBack(title: String?, text: String) = viewModelScope.launch {
+        val noteTitle: String = createTitleIfNeed(title, text)
         saveNoteUseCase(noteId, noteTitle, text)
         Napier.d("Saved and nav back")
-        NoteResult.NavBack
+        router.popBackStack()
     }
 
-    fun doNotSaveAndNavBack() = launch {
-        val noteIsEmpty = isEmpty(noteId)
+    fun doNotSaveAndNavBack() = viewModelScope.launch {
+        val noteIsEmpty: Boolean = isEmpty(noteId)
         if (noteIsEmpty) {
-            deleteNoteForResult()
+            mutableStateFlow.value = deleteNoteForResult()
         } else {
             Napier.d("Don't save and nav back")
-            NoteResult.NavBack
+            router.popBackStack()
         }
     }
 
-    private fun deleteNoteForResult(): NoteResult {
-        noteDAO.delete(noteId)
+    fun subscribeToDeleteNote() = viewModelScope.launch {
+        router.navigate(route = AppNavGraph.DeleteNoteDialog.name)
+        val doDelete: Boolean = withContext(coroutineDispatchers.io) {
+            DeleteNoteUseCase.deleteChannel.receive()
+        }
+        if (doDelete) {
+            mutableStateFlow.value = deleteNoteForResult()
+        } else {
+            Napier.d("Don't delete note")
+            router.popBackStack()
+        }
+    }
+
+    private suspend fun deleteNoteForResult(): NoteResult {
+        withContext(coroutineDispatchers.io) {
+            deleteNoteUseCase.invoke(id = noteId)
+        }
         Napier.d("Deleted note with id=$noteId")
+        router.popBackStack(route = AppNavGraph.Main.name, inclusive = false, saveState = false)
         return NoteResult.Deleted
     }
 
-    private suspend fun subscribeToEditTitle() = launch(useIdling = false) {
-        val title = UpdateTitleUseCase.titleChannel.receive()
-        NoteResult.TitleUpdated(title)
+    private fun subscribeToEditTitle() = viewModelScope.launch {
+        mutableStateFlow.value = NoteResult.Loading
+        try {
+            val title: String = withContext(coroutineDispatchers.io) {
+                UpdateTitleUseCase.titleChannel.receive()
+            }
+            mutableStateFlow.value = NoteResult.TitleUpdated(title)
+        } catch (e: Throwable) {
+            Napier.e("❌", e)
+            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+        }
     }
 
-    override fun errorResult(throwable: Throwable): NoteResult = NoteResult.Error(throwable.message)
-
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
-        resetLoadingResult() // workaround due to koin uses remember function of compose
+        // workaround due to koin uses remember function of compose
+        mutableStateFlow.value = NoteResult.Loading
     }
 
-    // @androidx.annotation.VisibleForTesting
+    @VisibleForTesting
     fun setIdForTest(id: Long) {
         noteId = id
     }
 
-    private fun createTitleIfNeed(title: String?, text: String) =
+    private fun createTitleIfNeed(title: String?, text: String): String =
         if (title.isNullOrEmpty()) createTitle(text) else title
 
     private fun createTitle(text: String): String {
