@@ -8,17 +8,18 @@ import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import kotlinx.coroutines.launch
 
 class SaveViewModel(
+    private val saveNoteUseCase: SaveNoteUseCase,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
 
     fun saveNoteAndNavBack() = viewModelScope.launch(context = coroutineDispatchers.default) {
-        SaveNoteUseCase.saveChannel.send(true)
+        saveNoteUseCase.sendDialogResult(true)
         navigateUp()
     }
 
     fun doNotSaveAndNavBack() = viewModelScope.launch(context = coroutineDispatchers.default) {
-        SaveNoteUseCase.saveChannel.send(false)
+        saveNoteUseCase.sendDialogResult(false)
         navigateUp()
     }
 

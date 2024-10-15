@@ -93,7 +93,7 @@ class NoteViewModel(
 
     private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
         val doSave: Boolean = withContext(coroutineDispatchers.io) {
-            SaveNoteUseCase.saveChannel.receive()
+            saveNoteUseCase.receiveDialogResult()
         }
         when {
             doSave -> saveNoteAndNavBack(title, text)

@@ -35,11 +35,11 @@ class NoteViewModelTest {
 
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
-    private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
+    private val saveNoteUseCase = SaveNoteUseCase(mockNoteDAO)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
-    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
+    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, saveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
 
     private val id = 1L
     private val title: String = "title"

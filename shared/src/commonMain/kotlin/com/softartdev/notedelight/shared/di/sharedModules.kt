@@ -49,7 +49,7 @@ val viewModelModule: Module = module {
     viewModelFactory { SignInViewModel(get(), get()) }
     viewModelFactory { MainViewModel(get(), get(), get()) }
     viewModelFactory { NoteViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModelFactory { SaveViewModel(get(), get()) }
+    viewModelFactory { SaveViewModel(get(), get(), get()) }
     viewModelFactory { DeleteViewModel(get()) }
     viewModelFactory { EditTitleViewModel(get(), get(), get()) }
     viewModelFactory { SettingsViewModel(get(), get(), get()) }
