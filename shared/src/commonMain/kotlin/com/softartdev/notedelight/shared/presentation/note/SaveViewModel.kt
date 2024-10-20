@@ -13,12 +13,12 @@ class SaveViewModel(
 ) : ViewModel() {
 
     fun saveNoteAndNavBack() = viewModelScope.launch(context = coroutineDispatchers.default) {
-        SaveNoteUseCase.saveChannel.send(true)
+        SaveNoteUseCase.dialogChannel.send(true)
         navigateUp()
     }
 
     fun doNotSaveAndNavBack() = viewModelScope.launch(context = coroutineDispatchers.default) {
-        SaveNoteUseCase.saveChannel.send(false)
+        SaveNoteUseCase.dialogChannel.send(false)
         navigateUp()
     }
 

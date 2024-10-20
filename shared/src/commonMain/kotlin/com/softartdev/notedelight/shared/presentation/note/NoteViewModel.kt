@@ -92,8 +92,9 @@ class NoteViewModel(
     }
 
     private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
+        Napier.d("Subscribe to save note dialog channel")
         val doSave: Boolean = withContext(coroutineDispatchers.io) {
-            SaveNoteUseCase.saveChannel.receive()
+            SaveNoteUseCase.dialogChannel.receive()
         }
         when {
             doSave -> saveNoteAndNavBack(title, text)

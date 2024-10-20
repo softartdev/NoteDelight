@@ -5,6 +5,7 @@ package com.softartdev.notedelight.shared.presentation.note
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.CoroutineDispatchersStub
+import com.softartdev.notedelight.shared.PrintAntilog
 import com.softartdev.notedelight.shared.date.createLocalDateTime
 import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.NoteDAO
@@ -15,6 +16,7 @@ import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
@@ -35,11 +37,11 @@ class NoteViewModelTest {
 
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
-    private val mockSaveNoteUseCase = Mockito.mock(SaveNoteUseCase::class.java)
+    private val saveNoteUseCase = SaveNoteUseCase(mockNoteDAO)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
-    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, mockSaveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
+    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, saveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
 
     private val id = 1L
     private val title: String = "title"
@@ -49,6 +51,7 @@ class NoteViewModelTest {
 
     @Before
     fun setUp() = runTest {
+        Napier.base(PrintAntilog())
         Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
     }
@@ -56,6 +59,7 @@ class NoteViewModelTest {
     @After
     fun tearDown() = runTest {
         noteViewModel.onCleared()
+        Napier.takeLogarithm()
     }
 
     @Test
@@ -146,6 +150,10 @@ class NoteViewModelTest {
             noteViewModel.checkSaveChange(title, text)
             Mockito.verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog.name)
 
+            SaveNoteUseCase.dialogChannel.send(true)
+            Mockito.verify(mockRouter).popBackStack()
+
+            Mockito.verifyNoMoreInteractions(mockRouter)
             cancelAndIgnoreRemainingEvents()
         }
     }
