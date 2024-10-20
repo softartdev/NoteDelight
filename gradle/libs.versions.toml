@@ -36,6 +36,7 @@ mockito = "5.14.1"
 turbine = "1.1.0"
 espresso = "3.6.1"
 desugar = "2.1.2"
+androidSecurityLint = "1.0.3"
 appdirs = "1.2.2"
 
 [libraries]
@@ -117,6 +118,8 @@ espresso-device = { module = "androidx.test.espresso:espresso-device", version =
 espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso" }
 
 desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
+
+android-security-lint = { module = "com.android.security.lint:lint", version.ref = "androidSecurityLint" }
 
 [plugins]
 gradle-convention = { id = "com.softartdev.notedelight.buildlogic.convention", version = "unspecified" }

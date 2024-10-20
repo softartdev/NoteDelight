@@ -95,6 +95,7 @@ dependencies {
     androidTestImplementation(compose.desktop.uiTestJUnit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
+    lintChecks(libs.android.security.lint)
 }
 tasks.withType<UploadMappingFileTask>{
     dependsOn("processDebugGoogleServices")
