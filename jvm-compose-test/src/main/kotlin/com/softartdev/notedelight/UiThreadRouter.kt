@@ -11,13 +11,13 @@ class UiThreadRouter(private val router: Router) : Router {
 
     override fun releaseController() = runOnUiThread { router.releaseController() }
 
-    override fun navigate(route: String) = runOnUiThread { router.navigate(route) }
+    override fun <T : Any> navigate(route: T) = runOnUiThread { router.navigate(route) }
 
-    override fun navigateClearingBackStack(route: String) = runOnUiThread {
+    override fun <T : Any> navigateClearingBackStack(route: T) = runOnUiThread {
         router.navigateClearingBackStack(route)
     }
 
-    override fun popBackStack(route: String, inclusive: Boolean, saveState: Boolean): Boolean =
+    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean =
         runOnUiThread { router.popBackStack(route, inclusive, saveState) }
 
     override fun popBackStack(): Boolean = runOnUiThread { router.popBackStack() }

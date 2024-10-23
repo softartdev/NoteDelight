@@ -5,13 +5,13 @@ package com.softartdev.notedelight.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.softartdev.notedelight.App
 import com.softartdev.notedelight.TestLifecycleOwner
 import com.softartdev.notedelight.di.uiTestModules

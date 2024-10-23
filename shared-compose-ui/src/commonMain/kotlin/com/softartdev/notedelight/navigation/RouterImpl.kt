@@ -15,9 +15,9 @@ class RouterImpl : Router {
         navController = null
     }
 
-    override fun navigate(route: String) = navController!!.navigate(route)
+    override fun <T : Any> navigate(route: T) = navController!!.navigate(route)
 
-    override fun navigateClearingBackStack(route: String) {
+    override fun <T : Any> navigateClearingBackStack(route: T) {
         var popped = true
         while (popped) {
             popped = navController!!.popBackStack()
@@ -25,7 +25,7 @@ class RouterImpl : Router {
         navController!!.navigate(route)
     }
 
-    override fun popBackStack(route: String, inclusive: Boolean, saveState: Boolean): Boolean =
+    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean =
         navController!!.popBackStack(route, inclusive, saveState)
 
     override fun popBackStack() = navController!!.popBackStack()

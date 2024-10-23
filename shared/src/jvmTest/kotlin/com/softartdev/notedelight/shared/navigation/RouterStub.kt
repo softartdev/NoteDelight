@@ -8,12 +8,12 @@ class RouterStub : Router {
 
     override fun releaseController() = Napier.d(message = "releaseController")
 
-    override fun navigate(route: String) = Napier.d(message = "navigate: $route")
+    override fun <T : Any> navigate(route: T) = Napier.d(message = "navigate: $route")
 
-    override fun navigateClearingBackStack(route: String) =
+    override fun <T : Any> navigateClearingBackStack(route: T) =
         Napier.d("navigateClearingBackStack: $route")
 
-    override fun popBackStack(route: String, inclusive: Boolean, saveState: Boolean): Boolean {
+    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean {
         Napier.d("popBackStack: $route, inclusive: $inclusive, saveState: $saveState")
         return true
     }

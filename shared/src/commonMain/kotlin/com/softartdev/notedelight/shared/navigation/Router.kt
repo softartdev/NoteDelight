@@ -6,11 +6,11 @@ interface Router {
 
     fun releaseController()
 
-    fun navigate(route: String)
+    fun <T : Any> navigate(route: T)
 
-    fun navigateClearingBackStack(route: String)
+    fun <T : Any> navigateClearingBackStack(route: T)
 
-    fun popBackStack(route: String, inclusive: Boolean, saveState: Boolean): Boolean
+    fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean
 
     fun popBackStack(): Boolean
 }

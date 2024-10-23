@@ -70,7 +70,7 @@ class NoteViewModel(
 
     fun editTitle() = viewModelScope.launch {
         subscribeToEditTitle()
-        router.navigate(route = AppNavGraph.EditTitleDialog.argRoute(noteId = noteId))
+        router.navigate(route = AppNavGraph.EditTitleDialog(noteId = noteId))
     }
 
     fun deleteNote() = viewModelScope.launch {
@@ -83,7 +83,7 @@ class NoteViewModel(
         val empty: Boolean = isEmpty(noteId)
         when {
             changed -> {
-                router.navigate(route = AppNavGraph.SaveChangesDialog.name)
+                router.navigate(route = AppNavGraph.SaveChangesDialog)
                 subscribeToSaveNote(title, text)
             }
             empty -> mutableStateFlow.value = deleteNoteForResult()
@@ -120,7 +120,7 @@ class NoteViewModel(
     }
 
     fun subscribeToDeleteNote() = viewModelScope.launch {
-        router.navigate(route = AppNavGraph.DeleteNoteDialog.name)
+        router.navigate(route = AppNavGraph.DeleteNoteDialog)
         val doDelete: Boolean = withContext(coroutineDispatchers.io) {
             DeleteNoteUseCase.deleteChannel.receive()
         }
@@ -137,7 +137,7 @@ class NoteViewModel(
             deleteNoteUseCase.invoke(id = noteId)
         }
         Napier.d("Deleted note with id=$noteId")
-        router.popBackStack(route = AppNavGraph.Main.name, inclusive = false, saveState = false)
+        router.popBackStack(route = AppNavGraph.Main, inclusive = false, saveState = false)
         return NoteResult.Deleted
     }
 
@@ -150,7 +150,7 @@ class NoteViewModel(
             mutableStateFlow.value = NoteResult.TitleUpdated(title)
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         }
     }
 

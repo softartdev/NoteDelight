@@ -35,7 +35,7 @@ class SplashViewModelTest {
 
             splashViewModel.checkEncryption()
 
-            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn.name)
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn)
             assertEquals(false, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -51,7 +51,7 @@ class SplashViewModelTest {
 
             splashViewModel.checkEncryption()
 
-            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main.name)
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
             assertEquals(false, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -68,7 +68,7 @@ class SplashViewModelTest {
             splashViewModel.checkEncryption()
 
             Mockito.verify(mockRouter).navigate(
-                route = AppNavGraph.ErrorDialog.argRoute(message = null)
+                route = AppNavGraph.ErrorDialog(message = null)
             )
             assertEquals(false, awaitItem())
 

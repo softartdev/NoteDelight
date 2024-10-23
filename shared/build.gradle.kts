@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.android.library)
 }
@@ -65,6 +66,7 @@ kotlin {
             implementation(libs.koin.core)
             api(libs.material.theme.prefs)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -25,14 +25,14 @@ class SignInViewModel(
             mutableStateFlow.value = when {
                 pass.isEmpty() -> SignInResult.ShowEmptyPassError
                 checkPasswordUseCase(pass) -> {
-                    router.navigateClearingBackStack(AppNavGraph.Main.name)
+                    router.navigateClearingBackStack(AppNavGraph.Main)
                     SignInResult.ShowSignInForm
                 }
                 else -> SignInResult.ShowIncorrectPassError
             }
         } catch (error: Throwable) {
             Napier.e("❌", error)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = error.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
             mutableStateFlow.value = SignInResult.ShowSignInForm
         }
     }

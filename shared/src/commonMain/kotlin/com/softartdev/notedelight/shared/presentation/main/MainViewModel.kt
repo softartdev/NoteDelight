@@ -41,12 +41,12 @@ class MainViewModel(
                 Napier.e("❌", throwable)
                 mutableStateFlow.value = NoteListResult.Error(throwable.message)
                 if (throwable::class.simpleName.orEmpty().contains("SQLite")) {
-                    router.navigateClearingBackStack(AppNavGraph.SignIn.name)
+                    router.navigateClearingBackStack(AppNavGraph.SignIn)
                 }
             }.launchIn(this)
     }
 
-    fun onNoteClicked(id: Long) = router.navigate(route = AppNavGraph.Details.argRoute(noteId = id))
+    fun onNoteClicked(id: Long) = router.navigate(route = AppNavGraph.Details(noteId = id))
 
-    fun onSettingsClicked() = router.navigate(route = AppNavGraph.Settings.name)
+    fun onSettingsClicked() = router.navigate(route = AppNavGraph.Settings)
 }

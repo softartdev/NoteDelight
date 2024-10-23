@@ -35,7 +35,7 @@ class SettingsViewModelTest {
     @Test
     fun changeTheme() = runTest {
         settingsViewModel.stateFlow.value.changeTheme.invoke()
-        Mockito.verify(mockRouter).navigate(route = AppNavGraph.ThemeDialog.name)
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.ThemeDialog)
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
@@ -65,7 +65,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.stateFlow.value.changeEncryption.invoke(true)
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog)
             expectNoEvents()
         }
         Mockito.verifyNoMoreInteractions(mockRouter)
@@ -77,7 +77,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.stateFlow.value.changeEncryption.invoke(false)
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.EnterPasswordDialog.name)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.EnterPasswordDialog)
             expectNoEvents()
         }
         Mockito.verifyNoMoreInteractions(mockRouter)
@@ -102,7 +102,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.stateFlow.value.changePassword.invoke()
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ChangePasswordDialog.name)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ChangePasswordDialog)
             expectNoEvents()
         }
         Mockito.verifyNoMoreInteractions(mockRouter)
@@ -114,7 +114,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.stateFlow.value.changePassword.invoke()
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog)
             expectNoEvents()
         }
         Mockito.verifyNoMoreInteractions(mockRouter)

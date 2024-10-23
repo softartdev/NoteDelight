@@ -118,7 +118,7 @@ class NoteViewModelTest {
 
             noteViewModel.setIdForTest(id)
             noteViewModel.editTitle()
-            Mockito.verify(mockRouter).navigate(route = "${AppNavGraph.EditTitleDialog.name}/$id")
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.EditTitleDialog(noteId = id))
 
             UpdateTitleUseCase.titleChannel.send(title)
             assertEquals(NoteResult.TitleUpdated(title), awaitItem())
@@ -148,7 +148,7 @@ class NoteViewModelTest {
             noteViewModel.setIdForTest(id)
             Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "new text"))
             noteViewModel.checkSaveChange(title, text)
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog.name)
+            Mockito.verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog)
 
             SaveNoteUseCase.dialogChannel.send(true)
             Mockito.verify(mockRouter).popBackStack()

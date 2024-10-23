@@ -22,13 +22,13 @@ class SplashViewModel(
         try {
             router.navigateClearingBackStack(
                 route = when (safeRepo.databaseState) {
-                    PlatformSQLiteState.ENCRYPTED -> AppNavGraph.SignIn.name
-                    else -> AppNavGraph.Main.name
+                    PlatformSQLiteState.ENCRYPTED -> AppNavGraph.SignIn
+                    else -> AppNavGraph.Main
                 }
             )
         } catch (error: Throwable) {
             Napier.e("❌", error)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = error.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
         }
         mutableStateFlow.value = false
     }

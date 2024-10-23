@@ -1,36 +1,45 @@
 package com.softartdev.notedelight.shared.navigation
 
-enum class AppNavGraph {
-    Splash,
-    SignIn,
-    Main,
-    Details,
-    Settings,
-    ThemeDialog,
-    SaveChangesDialog,
-    EditTitleDialog,
-    DeleteNoteDialog,
-    EnterPasswordDialog,
-    ConfirmPasswordDialog,
-    ChangePasswordDialog,
-    ErrorDialog;
+import kotlinx.serialization.Serializable
 
-    val route: String
-        get() = when (this) {
-            Details, EditTitleDialog -> "$name/{$ARG_NOTE_ID}"
-            ErrorDialog -> "$name?$ARG_MESSAGE={$ARG_MESSAGE}"
-            else -> name
-        }
+sealed interface AppNavGraph {
 
-    fun argRoute(message: String?): String = when (message) {
-        null -> name
-        else -> "$name?$ARG_MESSAGE=$message"
-    }
+    @Serializable
+    data object Splash : AppNavGraph
 
-    fun argRoute(noteId: Long): String = "$name/$noteId"
+    @Serializable
+    data object SignIn : AppNavGraph
 
-    companion object {
-        const val ARG_NOTE_ID = "noteId"
-        const val ARG_MESSAGE = "message"
-    }
+    @Serializable
+    data object Main : AppNavGraph
+
+    @Serializable
+    data class Details(val noteId: Long) : AppNavGraph
+
+    @Serializable
+    data object Settings : AppNavGraph
+
+    @Serializable
+    data object ThemeDialog : AppNavGraph
+
+    @Serializable
+    data object SaveChangesDialog : AppNavGraph
+
+    @Serializable
+    data class EditTitleDialog(val noteId: Long) : AppNavGraph
+
+    @Serializable
+    data object DeleteNoteDialog : AppNavGraph
+
+    @Serializable
+    data object EnterPasswordDialog : AppNavGraph
+
+    @Serializable
+    data object ConfirmPasswordDialog : AppNavGraph
+
+    @Serializable
+    data object ChangePasswordDialog : AppNavGraph
+
+    @Serializable
+    data class ErrorDialog(val message: String?) : AppNavGraph
 }

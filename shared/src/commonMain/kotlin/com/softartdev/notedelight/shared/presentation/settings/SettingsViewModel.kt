@@ -34,7 +34,7 @@ class SettingsViewModel(
     private val dbIsEncrypted: Boolean
         get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
 
-    private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog.name)
+    private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog)
 
     private fun checkEncryption() = viewModelScope.launch {
         mutableStateFlow.update(SecurityResult::showLoading)
@@ -42,7 +42,7 @@ class SettingsViewModel(
             mutableStateFlow.update { result -> result.copy(encryption = dbIsEncrypted) }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -52,15 +52,15 @@ class SettingsViewModel(
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             when {
-                checked -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+                checked -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog)
                 else -> when {
-                    dbIsEncrypted -> router.navigate(route = AppNavGraph.EnterPasswordDialog.name)
+                    dbIsEncrypted -> router.navigate(route = AppNavGraph.EnterPasswordDialog)
                     else -> mutableStateFlow.update(SecurityResult::hideEncryption)
                 }
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -70,12 +70,12 @@ class SettingsViewModel(
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             when {
-                dbIsEncrypted -> router.navigate(route = AppNavGraph.ChangePasswordDialog.name)
-                else -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog.name)
+                dbIsEncrypted -> router.navigate(route = AppNavGraph.ChangePasswordDialog)
+                else -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog)
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -88,7 +88,7 @@ class SettingsViewModel(
             mutableStateFlow.update { result -> result.copy(snackBarMessage = cipherVersion) }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog.argRoute(message = e.message))
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }

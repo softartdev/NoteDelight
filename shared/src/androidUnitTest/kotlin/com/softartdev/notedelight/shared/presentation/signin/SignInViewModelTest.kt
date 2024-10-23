@@ -51,7 +51,7 @@ class SignInViewModelTest {
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
             signInViewModel.signIn(pass)
-            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main.name)
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -92,7 +92,7 @@ class SignInViewModelTest {
             Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
             signInViewModel.signIn(StubEditable("pass"))
             Mockito.verify(mockRouter).navigate(
-                route = AppNavGraph.ErrorDialog.argRoute(message = throwable.message)
+                route = AppNavGraph.ErrorDialog(message = throwable.message)
             )
             cancelAndIgnoreRemainingEvents()
         }

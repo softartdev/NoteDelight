@@ -63,7 +63,7 @@ class MainViewModelTest {
             Mockito.`when`(mockNoteDAO.listFlow).thenReturn(flow { throw SQLiteException() })
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.Error(null), awaitItem())
-            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn.name)
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -72,13 +72,13 @@ class MainViewModelTest {
     @Test
     fun onNoteClicked() {
         mainViewModel.onNoteClicked(1)
-        Mockito.verify(mockRouter).navigate(route = "${AppNavGraph.Details.name}/1")
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Details(noteId = 1))
     }
 
     @Test
     fun onSettingsClicked() {
         mainViewModel.onSettingsClicked()
-        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings.name)
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings)
     }
 
     @Test
