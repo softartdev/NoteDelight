@@ -7,6 +7,7 @@ import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,13 +27,17 @@ class MainViewModel(
         value = NoteListResult.Loading
     )
     val stateFlow: StateFlow<NoteListResult> = mutableStateFlow
+    private var job: Job? = null
 
     init {
         safeRepo.relaunchListFlowCallback = this::updateNotes
     }
 
     fun updateNotes() = viewModelScope.launch(coroutineDispatchers.main) {
-        safeRepo.noteDAO.listFlow
+        if (job?.isActive == true) {
+            job?.cancel()
+        }
+        job = safeRepo.noteDAO.listFlow
             .onStart { mutableStateFlow.value = NoteListResult.Loading }
             .map(transform = NoteListResult::Success)
             .onEach(action = mutableStateFlow::emit)

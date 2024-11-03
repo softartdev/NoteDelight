@@ -8,45 +8,69 @@ import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EditTitleViewModel(
+    private val noteId: Long,
     private val noteDAO: NoteDAO,
     private val updateTitleUseCase: UpdateTitleUseCase,
     private val router: Router,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
-        value = EditTitleResult.Loading
+        value = EditTitleResult(
+            onCancel = this::cancel,
+            onEditClick = this::editTitle,
+            onEditTitle = this::onEditTitle,
+            disposeOneTimeEvents = this::disposeOneTimeEvents
+        )
     )
     val stateFlow: StateFlow<EditTitleResult> = mutableStateFlow
 
-    fun loadTitle(noteId: Long) = viewModelScope.launch {
-        mutableStateFlow.value = EditTitleResult.Loading
+    fun loadTitle() = viewModelScope.launch {
+        mutableStateFlow.update(EditTitleResult::showLoading)
         try {
             val note = noteDAO.load(noteId)
-            mutableStateFlow.value = EditTitleResult.Loaded(note.title)
+            mutableStateFlow.update { it.copy(title = note.title) }
         } catch (t: Throwable) {
             Napier.e("❌", t)
-            mutableStateFlow.value = EditTitleResult.Error(message = t.message)
+            mutableStateFlow.update { it.copy(snackBarMessageType = t.message) }
+        } finally {
+            mutableStateFlow.update(EditTitleResult::hideLoading)
         }
     }
 
-    fun editTitle(id: Long, newTitle: String) = viewModelScope.launch {
-        mutableStateFlow.value = EditTitleResult.Loading
+    private fun onEditTitle(newTitle: String) = viewModelScope.launch {
+        mutableStateFlow.update(EditTitleResult::hideError)
+        mutableStateFlow.update { it.copy(title = newTitle) }
+    }
+
+    private fun editTitle() = viewModelScope.launch {
+        mutableStateFlow.update(EditTitleResult::showLoading)
         try {
-            val noteTitle = newTitle.trim()
+            val noteTitle: String = mutableStateFlow.value.title.trim()
             if (noteTitle.isEmpty()) {
-                mutableStateFlow.value = EditTitleResult.EmptyTitleError
+                mutableStateFlow.update(EditTitleResult::showError)
             } else {
-                updateTitleUseCase(id, noteTitle)
-                UpdateTitleUseCase.titleChannel.send(noteTitle)
-                navigateUp()
+                mutableStateFlow.update(EditTitleResult::hideError)
+                updateTitleUseCase(noteId, noteTitle)
+                UpdateTitleUseCase.dialogChannel.send(noteTitle)
+                router.popBackStack()
             }
         } catch (t: Throwable) {
             Napier.e("❌", t)
-            mutableStateFlow.value = EditTitleResult.Error(message = t.message)
+            mutableStateFlow.update { it.copy(snackBarMessageType = t.message) }
+        } finally {
+            mutableStateFlow.update(EditTitleResult::hideLoading)
         }
     }
 
-    fun navigateUp() = router.popBackStack()
+    private fun cancel() = viewModelScope.launch {
+        UpdateTitleUseCase.dialogChannel.send(null)
+        router.popBackStack()
+    }
+
+    private fun disposeOneTimeEvents() = viewModelScope.launch {
+        mutableStateFlow.update(EditTitleResult::hideSnackBarMessage)
+    }
 }

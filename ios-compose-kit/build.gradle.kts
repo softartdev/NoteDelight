@@ -23,6 +23,7 @@ kotlin {
             baseName = "iosComposeKit"
             isStatic = true
             export(project(":shared"))
+            export(project.dependencies.platform(libs.koin.bom))
             export(libs.koin.core)
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
@@ -35,6 +36,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.runtime)
+            implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
         }
     }

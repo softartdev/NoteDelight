@@ -18,6 +18,7 @@ import com.softartdev.notedelight.shared.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.shared.usecase.note.UpdateTitleUseCase
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
 import org.junit.After
@@ -26,6 +27,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoMoreInteractions
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class NoteViewModelTest {
 
@@ -41,7 +48,6 @@ class NoteViewModelTest {
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
-    private val noteViewModel = NoteViewModel(mockNoteDAO, mockCreateNoteUseCase, saveNoteUseCase, mockDeleteNoteUseCase, mockRouter, coroutineDispatchers)
 
     private val id = 1L
     private val title: String = "title"
@@ -49,38 +55,56 @@ class NoteViewModelTest {
     private val ldt: LocalDateTime = createLocalDateTime()
     private val note = Note(id, title, text, ldt, ldt)
 
+    private val viewModel = NoteViewModel(
+        noteId = id,
+        noteDAO = mockNoteDAO,
+        createNoteUseCase = mockCreateNoteUseCase,
+        saveNoteUseCase = saveNoteUseCase,
+        deleteNoteUseCase = mockDeleteNoteUseCase,
+        router = mockRouter,
+        coroutineDispatchers = coroutineDispatchers
+    )
+
     @Before
     fun setUp() = runTest {
         Napier.base(PrintAntilog())
         Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
+        viewModel.createOrLoadNote()
     }
 
     @After
     fun tearDown() = runTest {
-        noteViewModel.onCleared()
+        viewModel.resetResultState(noteId = id)
         Napier.takeLogarithm()
+        Mockito.reset(mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockRouter)
     }
 
     @Test
-    fun createNote() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+    fun `init with noteId 0 creates new note`() = runTest {
+        viewModel.resetResultState()
+        viewModel.createOrLoadNote()
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
 
-            noteViewModel.createNote()
-            assertEquals(NoteResult.Created(id), awaitItem())
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
+            verify(mockCreateNoteUseCase).invoke()
+            verify(mockNoteDAO, times(2)).load(id) // 1st time in @Before
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun loadNote() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+    fun `init with existing noteId loads note`() = runTest {
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
 
-            noteViewModel.loadNote(id)
-            assertEquals(NoteResult.Loaded(note), awaitItem())
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
+            verify(mockNoteDAO).load(id)
+            verifyNoMoreInteractions(mockCreateNoteUseCase)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -88,11 +112,18 @@ class NoteViewModelTest {
 
     @Test
     fun saveNoteEmpty() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            var actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.saveNote("", "")
-            assertEquals(NoteResult.Empty, awaitItem())
+            viewModel.stateFlow.value.onSaveClick("", "")
+            actualResult = awaitItem()
+            assertEquals(NoteResult.SnackBarMessageType.EMPTY, actualResult.snackBarMessageType)
+
+            viewModel.stateFlow.value.disposeOneTimeEvents()
+            actualResult = awaitItem()
+            assertNull(actualResult.snackBarMessageType)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -100,12 +131,21 @@ class NoteViewModelTest {
 
     @Test
     fun saveNote() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            var actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
-            noteViewModel.saveNote(title, text)
-            assertEquals(NoteResult.Saved(title), awaitItem())
+            viewModel.stateFlow.value.onSaveClick(title, text)
+            verify(mockNoteDAO, times(2)).load(id)
+
+            actualResult = awaitItem()
+            assertEquals(note, actualResult.note)
+            assertTrue(actualResult.loading)
+
+            advanceUntilIdle()
+            actualResult = awaitItem()
+            assertFalse(actualResult.loading)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -113,15 +153,22 @@ class NoteViewModelTest {
 
     @Test
     fun editTitle() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            var actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
-            noteViewModel.editTitle()
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.EditTitleDialog(noteId = id))
+            viewModel.stateFlow.value.onEditClick()
+            verify(mockRouter).navigate(route = AppNavGraph.EditTitleDialog(noteId = id))
 
-            UpdateTitleUseCase.titleChannel.send(title)
-            assertEquals(NoteResult.TitleUpdated(title), awaitItem())
+            UpdateTitleUseCase.dialogChannel.send(title)
+            actualResult = awaitItem()
+            assertTrue(actualResult.loading)
+            assertEquals(title, actualResult.note?.title)
+
+            advanceUntilIdle()
+            actualResult = awaitItem()
+            assertFalse(actualResult.loading)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -129,12 +176,24 @@ class NoteViewModelTest {
 
     @Test
     fun deleteNote() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            var actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
-            noteViewModel.deleteNote()
-            assertEquals(NoteResult.Deleted, awaitItem())
+            viewModel.stateFlow.value.onDeleteClick()
+            verify(mockRouter).navigate(route = AppNavGraph.DeleteNoteDialog)
+
+            DeleteNoteUseCase.deleteChannel.send(true)
+            verify(mockDeleteNoteUseCase).invoke(id)
+
+            actualResult = awaitItem()
+            assertTrue(actualResult.loading)
+            assertNull(actualResult.snackBarMessageType)
+
+            actualResult = awaitItem()
+            verify(mockRouter).popBackStack(route = AppNavGraph.Main, inclusive = false, saveState = false)
+            assertFalse(actualResult.loading)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -142,30 +201,25 @@ class NoteViewModelTest {
 
     @Test
     fun checkSaveChange() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
-
-            noteViewModel.setIdForTest(id)
+        viewModel.stateFlow.test {
             Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "new text"))
-            noteViewModel.checkSaveChange(title, text)
-            Mockito.verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog)
+
+            viewModel.stateFlow.value.checkSaveChange(title, text)
+            verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog)
 
             SaveNoteUseCase.dialogChannel.send(true)
-            Mockito.verify(mockRouter).popBackStack()
+            verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
 
-            Mockito.verifyNoMoreInteractions(mockRouter)
+            verifyNoMoreInteractions(mockRouter)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun checkSaveChangeNavBack() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
-
-            noteViewModel.setIdForTest(id)
-            noteViewModel.checkSaveChange(title, text)
-            Mockito.verify(mockRouter).popBackStack()
+        viewModel.stateFlow.test {
+            viewModel.stateFlow.value.checkSaveChange(title, text)
+            verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -173,13 +227,15 @@ class NoteViewModelTest {
 
     @Test
     fun checkSaveChangeDeleted() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
             Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
-            noteViewModel.checkSaveChange("", "")
-            assertEquals(NoteResult.Deleted, awaitItem())
+            viewModel.stateFlow.value.checkSaveChange("", "")
+            verify(mockDeleteNoteUseCase).invoke(id)
+            verify(mockRouter).popBackStack(route = AppNavGraph.Main, inclusive = false, saveState = false)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -187,12 +243,20 @@ class NoteViewModelTest {
 
     @Test
     fun saveNoteAndNavBack() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            var actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
-            noteViewModel.saveNoteAndNavBack(title, text)
-            Mockito.verify(mockRouter).popBackStack()
+            viewModel.stateFlow.value.onSaveClick(title, text)
+            actualResult = awaitItem()
+            assertTrue(actualResult.loading)
+
+            actualResult = awaitItem()
+            assertFalse(actualResult.loading)
+
+            viewModel.stateFlow.value.checkSaveChange(title, text)
+            verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -200,12 +264,9 @@ class NoteViewModelTest {
 
     @Test
     fun doNotSaveAndNavBack() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
-
-            noteViewModel.setIdForTest(id)
-            noteViewModel.doNotSaveAndNavBack()
-            Mockito.verify(mockRouter).popBackStack()
+        viewModel.stateFlow.test {
+            viewModel.stateFlow.value.checkSaveChange(title, text)
+            verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -213,13 +274,15 @@ class NoteViewModelTest {
 
     @Test
     fun doNotSaveAndNavBackDeleted() = runTest {
-        noteViewModel.stateFlow.test {
-            assertEquals(NoteResult.Loading, awaitItem())
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
 
-            noteViewModel.setIdForTest(id)
             Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
-            noteViewModel.doNotSaveAndNavBack()
-            assertEquals(NoteResult.Deleted, awaitItem())
+            viewModel.stateFlow.value.checkSaveChange("", "")
+            verify(mockDeleteNoteUseCase).invoke(id)
+            verify(mockRouter).popBackStack(route = AppNavGraph.Main, inclusive = false, saveState = false)
 
             cancelAndIgnoreRemainingEvents()
         }

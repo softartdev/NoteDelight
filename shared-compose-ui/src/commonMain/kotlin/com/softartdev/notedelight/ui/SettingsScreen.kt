@@ -24,6 +24,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -59,46 +60,38 @@ import notedelight.shared_compose_ui.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SettingsScreen(settingsViewModel: SettingsViewModel) {
+fun SettingsScreen(
+    settingsViewModel: SettingsViewModel,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     LifecycleResumeEffect(key1 = settingsViewModel, key2 = result ) {
         result.checkEncryption()
         result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
-            coroutineScope.launch { snackbarHostState.showSnackbar(message = msg) }
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = msg, duration = SnackbarDuration.Long)
+            }
             result.disposeOneTimeEvents()
         }
         onPauseOrDispose { result.checkEncryption() }
     }
     SettingsScreenBody(
-        onBackClick = result.navBack,
-        showLoading = result.loading,
-        changeTheme = result.changeTheme,
-        encryption = result.encryption,
-        changeEncryption = result.changeEncryption,
-        changePassword = result.changePassword,
-        showCipherVersion = result.showCipherVersion,
+        result = result,
         snackbarHostState = snackbarHostState,
     )
 }
 
 @Composable
 fun SettingsScreenBody(
-    onBackClick: () -> Unit = {},
-    showLoading: Boolean = true,
-    changeTheme: () -> Unit = {},
-    encryption: Boolean = false,
-    changeEncryption: (Boolean) -> Unit = {},
-    changePassword: () -> Unit = {},
-    showCipherVersion: () -> Unit = {},
+    result: SecurityResult = SecurityResult(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     topBar = {
         TopAppBar(
             title = { Text(stringResource(Res.string.settings)) },
             navigationIcon = {
-                IconButton(onClick = onBackClick) {
+                IconButton(onClick = result.navBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
@@ -110,31 +103,31 @@ fun SettingsScreenBody(
     content = { paddingValues: PaddingValues ->
         val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
         Column(modifier = Modifier.padding(paddingValues)) {
-            if (showLoading) LinearProgressIndicator(Modifier.fillMaxWidth())
+            if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
-            ThemePreferenceItem(onClick = changeTheme)
+            ThemePreferenceItem(onClick = result.changeTheme)
             PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {
                     contentDescription = enableEncryptionPrefTitle
-                    toggleableState = ToggleableState(encryption)
+                    toggleableState = ToggleableState(result.encryption)
                     testTag = enableEncryptionPrefTitle
                 },
                 title = enableEncryptionPrefTitle,
                 vector = Icons.Default.Lock,
-                onClick = { changeEncryption(!encryption) }
+                onClick = { result.changeEncryption(!result.encryption) }
             ) {
-                Switch(checked = encryption, onCheckedChange = changeEncryption)
+                Switch(checked = result.encryption, onCheckedChange = result.changeEncryption)
             }
             Preference(
                 title = stringResource(Res.string.pref_title_set_password),
                 vector = Icons.Default.Password,
-                onClick = changePassword
+                onClick = result.changePassword
             )
             Preference(
                 title = stringResource(Res.string.pref_title_check_cipher_version),
                 vector = Icons.Filled.FileLock,
-                onClick = showCipherVersion
+                onClick = result.showCipherVersion
             )
             Spacer(Modifier.height(32.dp))
             ListItem(

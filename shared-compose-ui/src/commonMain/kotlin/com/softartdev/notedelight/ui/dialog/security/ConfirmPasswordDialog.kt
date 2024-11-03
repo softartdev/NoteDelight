@@ -2,128 +2,82 @@ package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmResult
 import com.softartdev.notedelight.shared.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.cancel
 import notedelight.shared_compose_ui.generated.resources.confirm_password
 import notedelight.shared_compose_ui.generated.resources.dialog_title_conform_password
-import notedelight.shared_compose_ui.generated.resources.empty_password
 import notedelight.shared_compose_ui.generated.resources.enter_password
-import notedelight.shared_compose_ui.generated.resources.error_title
-import notedelight.shared_compose_ui.generated.resources.passwords_do_not_match
 import notedelight.shared_compose_ui.generated.resources.yes
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ConfirmPasswordDialog(confirmViewModel: ConfirmViewModel) {
-    val confirmResultState: State<ConfirmResult> = confirmViewModel.resultStateFlow.collectAsState()
-    var labelResource by remember { mutableStateOf(Res.string.enter_password) }
-    var error by remember { mutableStateOf(false) }
-    var repeatLabelResource by remember { mutableStateOf(Res.string.confirm_password) }
-    var repeatError by remember { mutableStateOf(false) }
-    val passwordState: MutableState<String> = remember { mutableStateOf("") }
-    val repeatPasswordState: MutableState<String> = remember { mutableStateOf("") }
-    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    when (val confirmResult: ConfirmResult = confirmResultState.value) {
-        is ConfirmResult.InitState,
-        is ConfirmResult.Loading -> Unit
-        is ConfirmResult.EmptyPasswordError -> {
-            labelResource = Res.string.empty_password
-            error = true
-        }
-        is ConfirmResult.PasswordsNoMatchError -> {
-            repeatLabelResource = Res.string.passwords_do_not_match
-            repeatError = true
-        }
-        is ConfirmResult.Error -> coroutineScope.launch {
-            snackbarHostState.showSnackbar(
-                message = confirmResult.message ?: getString(Res.string.error_title)
-            )
+fun ConfirmPasswordDialog(
+    confirmViewModel: ConfirmViewModel,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+) {
+    val result: ConfirmResult by confirmViewModel.stateFlow.collectAsState()
+
+    LaunchedEffect(key1 = confirmViewModel, key2 = result, key3 = result.snackBarMessageType) {
+        result.snackBarMessageType?.let { msg: String ->
+            snackbarHostState.showSnackbar(msg)
+            result.disposeOneTimeEvents()
         }
     }
-    ShowConfirmPasswordDialog(
-        showLoaing = confirmResultState.value is ConfirmResult.Loading,
-        passwordState = passwordState,
-        repeatPasswordState = repeatPasswordState,
-        labelResource = labelResource,
-        repeatLabelResource = repeatLabelResource,
-        isError = error,
-        isRepeatError = repeatError,
-        snackbarHostState = snackbarHostState,
-        dismissDialog = confirmViewModel::navigateUp,
-        onConfirmClick = {
-            confirmViewModel.conformCheck(
-                password = passwordState.value,
-                repeatPassword = repeatPasswordState.value
-            )
-        }
-    )
+    ShowConfirmPasswordDialog(result)
 }
 
 @Composable
-fun ShowConfirmPasswordDialog(
-    showLoaing: Boolean = true,
-    passwordState: MutableState<String> = mutableStateOf("password"),
-    repeatPasswordState: MutableState<String> = mutableStateOf("repeat password"),
-    labelResource: StringResource = Res.string.enter_password,
-    repeatLabelResource: StringResource = Res.string.confirm_password,
-    isError: Boolean = false,
-    isRepeatError: Boolean = true,
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    dismissDialog: () -> Unit = {},
-    onConfirmClick: () -> Unit = {},
-) = AlertDialog(
+fun ShowConfirmPasswordDialog(result: ConfirmResult) = AlertDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_conform_password)) },
     text = {
         Column {
-            if (showLoaing) LinearProgressIndicator()
+            if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+
             PasswordField(
-                passwordState = passwordState,
-                label = stringResource(labelResource),
-                isError = isError,
-                contentDescription = stringResource(Res.string.enter_password),
+                password = result.password,
+                onPasswordChange = result.onEditPassword,
+                label = result.passwordFieldLabel.resString,
+                isError = result.isPasswordError,
+                contentDescription = stringResource(Res.string.enter_password)
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             PasswordField(
-                passwordState = repeatPasswordState,
-                label = stringResource(repeatLabelResource),
-                isError = isRepeatError,
-                contentDescription = stringResource(Res.string.confirm_password),
-            )
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                password = result.repeatPassword,
+                onPasswordChange = result.onEditRepeatPassword,
+                label = result.repeatPasswordFieldLabel.resString,
+                isError = result.isRepeatPasswordError,
+                contentDescription = stringResource(Res.string.confirm_password)
             )
         }
     },
-    confirmButton = { Button(onClick = onConfirmClick) { Text(stringResource(Res.string.yes)) } },
-    dismissButton = { Button(onClick = dismissDialog) { Text(stringResource(Res.string.cancel)) } },
-    onDismissRequest = dismissDialog,
+    confirmButton = { Button(onClick = result.onConfirmClick) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = result.onCancel) { Text(stringResource(Res.string.cancel)) } },
+    onDismissRequest = result.onCancel
 )
 
 @Preview
 @Composable
-fun PreviewConfirmPasswordDialog() = PreviewDialog { ShowConfirmPasswordDialog() }
+fun PreviewConfirmPasswordDialog() = PreviewDialog {
+    ShowConfirmPasswordDialog(ConfirmResult())
+}

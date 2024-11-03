@@ -3,47 +3,80 @@ package com.softartdev.notedelight.shared.presentation.settings.security.confirm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ConfirmViewModel (
+class ConfirmViewModel(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
-        value = ConfirmResult.InitState
+        value = ConfirmResult(
+            onCancel = this::cancel,
+            onConfirmClick = this::confirm,
+            onEditPassword = this::onEditPassword,
+            onEditRepeatPassword = this::onEditRepeatPassword,
+            disposeOneTimeEvents = this::disposeOneTimeEvents
+        )
     )
-    val resultStateFlow: MutableStateFlow<ConfirmResult> = mutableStateFlow
+    val stateFlow: StateFlow<ConfirmResult> = mutableStateFlow
 
-    fun conformCheck(
-        password: CharSequence,
-        repeatPassword: CharSequence
-    ) = viewModelScope.launch(context = coroutineDispatchers.io) {
-        mutableStateFlow.value = ConfirmResult.Loading
+    private fun onEditPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(ConfirmResult::hideErrors)
+        mutableStateFlow.update { it.copy(password = password) }
+    }
+
+    private fun onEditRepeatPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(ConfirmResult::hideErrors)
+        mutableStateFlow.update { it.copy(repeatPassword = password) }
+    }
+
+    private fun confirm() = viewModelScope.launch(context = coroutineDispatchers.io) {
+        mutableStateFlow.update(ConfirmResult::showLoading)
         try {
+            val password = mutableStateFlow.value.password
+            val repeatPassword = mutableStateFlow.value.repeatPassword
             when {
-                password.toString() != repeatPassword.toString() -> {
-                    mutableStateFlow.value = ConfirmResult.PasswordsNoMatchError
+                password != repeatPassword -> mutableStateFlow.update {
+                    it.copy(
+                        repeatPasswordFieldLabel = FieldLabel.NO_MATCH,
+                        isRepeatPasswordError = true
+                    )
                 }
-                password.isEmpty() -> {
-                    mutableStateFlow.value = ConfirmResult.EmptyPasswordError
+                password.isEmpty() -> mutableStateFlow.update {
+                    it.copy(
+                        passwordFieldLabel = FieldLabel.EMPTY,
+                        isPasswordError = true
+                    )
                 }
                 else -> {
                     changePasswordUseCase(null, password)
-                    navigateUp()
+                    withContext(coroutineDispatchers.main) {
+                        router.popBackStack()
+                    }
                 }
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            mutableStateFlow.value = ConfirmResult.Error(e.message)
+            mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
+        } finally {
+            mutableStateFlow.update(ConfirmResult::hideLoading)
         }
     }
 
-    fun navigateUp() = viewModelScope.launch(context = coroutineDispatchers.main) {
+    private fun cancel() = viewModelScope.launch {
         router.popBackStack()
+    }
+
+    private fun disposeOneTimeEvents() = viewModelScope.launch {
+        mutableStateFlow.update(ConfirmResult::hideSnackBarMessage)
     }
 }

@@ -42,8 +42,8 @@ class NoteUseCaseTest : BaseTest() {
     @Test
     fun getTitleChannel() = runTest {
         val act = "test title"
-        val deferred = async { UpdateTitleUseCase.titleChannel.receive() }
-        UpdateTitleUseCase.titleChannel.send(act)
+        val deferred = async { UpdateTitleUseCase.dialogChannel.receive() }
+        UpdateTitleUseCase.dialogChannel.send(act)
         val exp = deferred.await()
         assertEquals(exp, act)
     }

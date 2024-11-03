@@ -14,6 +14,8 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -23,6 +25,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -36,7 +39,10 @@ import notedelight.shared_compose_ui.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel) {
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+) {
     LaunchedEffect(mainViewModel) {
         mainViewModel.updateNotes()
     }
@@ -45,6 +51,7 @@ fun MainScreen(mainViewModel: MainViewModel) {
         noteListState = noteListState,
         onItemClicked = mainViewModel::onNoteClicked,
         onSettingsClick = mainViewModel::onSettingsClicked,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -53,6 +60,7 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -68,15 +76,13 @@ fun MainScreen(
     }, content = { paddingValues: PaddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val noteListResult = noteListState.value) {
-                is NoteListResult.Loading -> Loader()
-                is NoteListResult.Success -> {
-                    when {
-                        noteListResult.result.isNotEmpty() -> NoteList(
-                            noteList = noteListResult.result,
-                            onItemClicked = onItemClicked,
-                        )
-                        else -> Empty()
-                    }
+                is NoteListResult.Loading -> Loader(modifier = Modifier.align(Alignment.Center))
+                is NoteListResult.Success -> when {
+                    noteListResult.result.isNotEmpty() -> NoteList(
+                        noteList = noteListResult.result,
+                        onItemClicked = onItemClicked,
+                    )
+                    else -> Empty()
                 }
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
@@ -89,7 +95,9 @@ fun MainScreen(
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
             modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
-    })
+    },
+    snackbarHost = { SnackbarHost(snackbarHostState) },
+)
 
 @Preview
 @Composable

@@ -63,7 +63,9 @@ kotlin {
             implementation(libs.sqlDelight.coroutinesExt)
             api(libs.kotlinx.datetime)
             api(libs.napier)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
             api(libs.material.theme.prefs)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
@@ -73,6 +75,7 @@ kotlin {
             implementation(kotlin("test-common"))
             implementation(kotlin("test-annotations-common"))
             implementation(libs.coroutines.test)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.test)
         }
         androidMain.dependencies {
@@ -82,21 +85,19 @@ kotlin {
             api(libs.commonsware.saferoom)
             api(libs.android.sqlcipher)
             api(libs.androidx.lifecycle.viewmodel)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.android)
             implementation(libs.espresso.idling.resource)
         }
-        val androidUnitTest by getting {
-            dependsOn(commonTest.get())
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-                implementation(libs.junit)
-                implementation(libs.coroutines.test)
-                implementation(libs.bundles.mockito)
-                implementation(libs.sqlDelight.jvm)
-                implementation(libs.androidx.arch.core.testing)
-                implementation(libs.turbine)
-            }
+        androidUnitTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(kotlin("test-junit"))
+            implementation(libs.junit)
+            implementation(libs.coroutines.test)
+            implementation(libs.bundles.mockito)
+            implementation(libs.sqlDelight.jvm)
+            implementation(libs.androidx.arch.core.testing)
+            implementation(libs.turbine)
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native)
@@ -108,6 +109,9 @@ kotlin {
         jvmTest.dependencies {
             implementation(kotlin("test"))
             implementation(kotlin("test-junit"))
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.test)
+            implementation(libs.coroutines.swing)
         }
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")

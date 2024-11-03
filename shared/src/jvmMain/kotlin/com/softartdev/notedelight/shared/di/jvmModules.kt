@@ -3,8 +3,10 @@ package com.softartdev.notedelight.shared.di
 import com.softartdev.notedelight.shared.db.JvmSafeRepo
 import com.softartdev.notedelight.shared.db.SafeRepo
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val repoModule: Module = module {
-    single<SafeRepo> { JvmSafeRepo() }
+    singleOf(::JvmSafeRepo) bind SafeRepo::class
 }

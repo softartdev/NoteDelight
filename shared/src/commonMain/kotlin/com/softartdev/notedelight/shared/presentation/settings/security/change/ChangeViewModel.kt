@@ -3,13 +3,16 @@ package com.softartdev.notedelight.shared.presentation.settings.security.change
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChangeViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
@@ -18,42 +21,75 @@ class ChangeViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(
-        value = ChangeResult.InitState
+        value = ChangeResult(
+            onCancel = this::cancel,
+            onChangeClick = this::change,
+            onEditOldPassword = this::onEditOldPassword,
+            onEditNewPassword = this::onEditNewPassword,
+            onEditRepeatPassword = this::onEditRepeatPassword,
+            disposeOneTimeEvents = this::disposeOneTimeEvents
+        )
     )
-    val resultStateFlow: StateFlow<ChangeResult> = mutableStateFlow
+    val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
 
-    fun checkChange(
-        oldPassword: CharSequence,
-        newPassword: CharSequence,
-        repeatNewPassword: CharSequence
-    ) = viewModelScope.launch(context = coroutineDispatchers.io) {
-        mutableStateFlow.value = ChangeResult.Loading
+    private fun onEditOldPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(ChangeResult::hideErrors)
+        mutableStateFlow.update { it.copy(oldPassword = password) }
+    }
+
+    private fun onEditNewPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(ChangeResult::hideErrors)
+        mutableStateFlow.update { it.copy(newPassword = password) }
+    }
+
+    private fun onEditRepeatPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(ChangeResult::hideErrors)
+        mutableStateFlow.update { it.copy(repeatNewPassword = password) }
+    }
+
+    private fun change() = viewModelScope.launch(context = coroutineDispatchers.io) {
+        mutableStateFlow.update(ChangeResult::showLoading)
         try {
+            val oldPassword = mutableStateFlow.value.oldPassword
+            val newPassword = mutableStateFlow.value.newPassword
+            val repeatNewPassword = mutableStateFlow.value.repeatNewPassword
+
             when {
-                oldPassword.isEmpty() -> {
-                    mutableStateFlow.value = ChangeResult.OldEmptyPasswordError
+                oldPassword.isEmpty() -> mutableStateFlow.update {
+                    it.copy(oldPasswordFieldLabel = FieldLabel.EMPTY, isOldPasswordError = true)
                 }
-                newPassword.isEmpty() -> {
-                    mutableStateFlow.value = ChangeResult.NewEmptyPasswordError
+                newPassword.isEmpty() -> mutableStateFlow.update {
+                    it.copy(newPasswordFieldLabel = FieldLabel.EMPTY, isNewPasswordError = true)
                 }
-                newPassword.toString() != repeatNewPassword.toString() -> {
-                    mutableStateFlow.value = ChangeResult.PasswordsNoMatchError
+                newPassword != repeatNewPassword -> mutableStateFlow.update {
+                    it.copy(
+                        repeatPasswordFieldLabel = FieldLabel.NO_MATCH,
+                        isRepeatPasswordError = true
+                    )
                 }
                 checkPasswordUseCase(oldPassword) -> {
                     changePasswordUseCase(oldPassword, newPassword)
-                    navigateUp()
+                    withContext(coroutineDispatchers.main) {
+                        router.popBackStack()
+                    }
                 }
-                else -> {
-                    mutableStateFlow.value = ChangeResult.IncorrectPasswordError
+                else -> mutableStateFlow.update {
+                    it.copy(oldPasswordFieldLabel = FieldLabel.INCORRECT, isOldPasswordError = true)
                 }
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            mutableStateFlow.value = ChangeResult.Error(e.message)
+            mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
+        } finally {
+            mutableStateFlow.update(ChangeResult::hideLoading)
         }
     }
 
-    fun navigateUp() = viewModelScope.launch(context = coroutineDispatchers.main) {
+    private fun cancel() = viewModelScope.launch {
         router.popBackStack()
+    }
+
+    private fun disposeOneTimeEvents() = viewModelScope.launch {
+        mutableStateFlow.update(ChangeResult::hideSnackBarMessage)
     }
 }

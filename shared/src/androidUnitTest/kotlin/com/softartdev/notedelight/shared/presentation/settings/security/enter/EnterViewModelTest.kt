@@ -3,21 +3,27 @@ package com.softartdev.notedelight.shared.presentation.settings.security.enter
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.CoroutineDispatchersStub
-import com.softartdev.notedelight.shared.StubEditable
+import com.softartdev.notedelight.shared.PrintAntilog
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
+import com.softartdev.notedelight.shared.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class EnterViewModelTest {
 
     @get:Rule
@@ -26,87 +32,141 @@ class EnterViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val checkPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
-    private val changePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
-    private val router = Mockito.mock(Router::class.java)
+    private val mockCheckPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
+    private val mockChangePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
+    private val mockRouter = Mockito.mock(Router::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(
         scheduler = mainDispatcherRule.testDispatcher.scheduler
     )
-    private var enterViewModel: EnterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
+    private val viewModel = EnterViewModel(
+        checkPasswordUseCase = mockCheckPasswordUseCase,
+        changePasswordUseCase = mockChangePasswordUseCase,
+        router = mockRouter,
+        coroutineDispatchers = coroutineDispatchers
+    )
 
     @Before
-    fun setUp() {
-        enterViewModel = EnterViewModel(checkPasswordUseCase, changePasswordUseCase, router, coroutineDispatchers)
+    fun setUp() = Napier.base(PrintAntilog())
+
+    @After
+    fun tearDown() {
+        Napier.takeLogarithm()
+        Mockito.reset(mockCheckPasswordUseCase, mockChangePasswordUseCase, mockRouter)
     }
 
     @Test
-    fun enterCheckSuccess() = runTest {
-        enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, awaitItem())
-
-            val pass = StubEditable("pass")
-            Mockito.`when`(checkPasswordUseCase(pass)).thenReturn(true)
-            enterViewModel.enterCheck(pass)
-            assertEquals(EnterResult.Loading, awaitItem())
-
-            advanceUntilIdle()
-            Mockito.verify(router).popBackStack()
-            Mockito.verifyNoMoreInteractions(router)
+    fun `initial state`() = runTest {
+        viewModel.stateFlow.test {
+            val initialState = awaitItem()
+            assertFalse(initialState.loading)
+            assertTrue(initialState.password.isEmpty())
+            assertFalse(initialState.isPasswordVisible)
+            assertFalse(initialState.isError)
+            assertNull(initialState.snackBarMessageType)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun enterCheckIncorrectPasswordError() = runTest {
-        enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, awaitItem())
+    fun `enter password success`() = runTest {
+        viewModel.stateFlow.test {
+            val initialState = awaitItem()
 
-            val pass = StubEditable("pass")
-            Mockito.`when`(checkPasswordUseCase(pass)).thenReturn(false)
-            enterViewModel.enterCheck(pass)
-            assertEquals(EnterResult.Loading, awaitItem())
-            assertEquals(EnterResult.IncorrectPasswordError, awaitItem())
+            val password = "password"
+            Mockito.`when`(mockCheckPasswordUseCase(password)).thenReturn(true)
 
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+            initialState.onEditPassword(password)
+            val editedState = awaitItem()
+            assertEquals(password, editedState.password)
+            assertFalse(editedState.isError)
 
-    @Test
-    fun enterCheckEmptyPasswordError() = runTest {
-        enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, awaitItem())
+            editedState.onEnterClick()
+            val loadingState = awaitItem()
+            assertTrue(loadingState.loading)
 
-            enterViewModel.enterCheck(StubEditable(""))
-            assertEquals(EnterResult.Loading, awaitItem())
-            assertEquals(EnterResult.EmptyPasswordError, awaitItem())
+            verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun enterCheckError() = runTest {
-        enterViewModel.resultStateFlow.test {
-            assertEquals(EnterResult.InitState, awaitItem())
+    fun `empty password error`() = runTest {
+        viewModel.stateFlow.test {
+            var resultState = awaitItem()
+            assertFalse(resultState.loading)
 
-            val pass = StubEditable("pass")
-            Mockito.`when`(checkPasswordUseCase(pass)).thenReturn(true)
-            val error = RuntimeException("error message")
-            Mockito.`when`(changePasswordUseCase(pass, null)).thenThrow(error)
+            resultState.onEnterClick()
+            resultState = awaitItem()
+            assertTrue(resultState.loading)
 
-            enterViewModel.enterCheck(pass)
-            assertEquals(EnterResult.Loading, awaitItem())
-            assertEquals(EnterResult.Error(message = error.message), awaitItem())
+            resultState = awaitItem()
+            assertEquals(FieldLabel.EMPTY, resultState.fieldLabel)
+
+            resultState = awaitItem()
+            assertTrue(resultState.isError)
+
+            resultState = awaitItem()
+            assertFalse(resultState.loading)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun navigateUp() = runTest {
-        enterViewModel.navigateUp()
-        advanceUntilIdle()
-        Mockito.verify(router).popBackStack()
+    fun `incorrect password error`() = runTest {
+        val password = "wrong"
+        Mockito.`when`(mockCheckPasswordUseCase(password)).thenReturn(false)
+        viewModel.stateFlow.test {
+            var resultState = awaitItem()
+            assertFalse(resultState.loading)
+            assertFalse(resultState.isError)
+            assertEquals(FieldLabel.ENTER, resultState.fieldLabel)
+
+            resultState.onEditPassword(password)
+            resultState = awaitItem()
+
+            resultState.onEnterClick()
+            resultState = awaitItem()
+            assertTrue(resultState.loading)
+
+            resultState = awaitItem()
+            assertEquals(FieldLabel.INCORRECT, resultState.fieldLabel)
+
+            resultState = awaitItem()
+            assertTrue(resultState.isError)
+
+            resultState = awaitItem()
+            assertFalse(resultState.loading)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `toggle password visibility`() = runTest {
+        viewModel.stateFlow.test {
+            val initialState = awaitItem()
+            assertFalse(initialState.isPasswordVisible)
+
+            initialState.onTogglePasswordVisibility()
+            val toggledState = awaitItem()
+            assertTrue(toggledState.isPasswordVisible)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `cancel navigation`() = runTest {
+        viewModel.stateFlow.test {
+            val initialState = awaitItem()
+
+            initialState.onCancel()
+            verify(mockRouter).popBackStack()
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

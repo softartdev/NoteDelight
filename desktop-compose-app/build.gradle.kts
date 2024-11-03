@@ -27,7 +27,8 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.coroutines.swing)
             implementation(compose.desktop.currentOs)
-            implementation(libs.koin.core.jvm)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
         }
         jvmTest.dependencies {
             implementation(project(":jvm-compose-test"))

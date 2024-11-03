@@ -18,10 +18,10 @@ import org.jetbrains.compose.resources.stringResource
 expect fun BackHandler(enabled: Boolean = true, onBack: () -> Unit)
 
 @Composable
-fun Loader() {
+fun Loader(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxWidth().padding(20.dp)
+        modifier = modifier.fillMaxSize().padding(all = 20.dp)
     ) {
         CircularProgressIndicator()
     }

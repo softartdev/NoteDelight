@@ -48,6 +48,23 @@ fun PasswordField(
     label: String = stringResource(Res.string.enter_password),
     isError: Boolean = true,
     contentDescription: String = stringResource(Res.string.enter_password),
+) = PasswordField(
+    modifier = modifier,
+    password = passwordState.value,
+    onPasswordChange = passwordState::value::set,
+    label = label,
+    isError = isError,
+    contentDescription = contentDescription,
+)
+
+@Composable
+fun PasswordField(
+    modifier: Modifier = Modifier,
+    password: String = "password",
+    onPasswordChange: (String) -> Unit = {},
+    label: String = stringResource(Res.string.enter_password),
+    isError: Boolean = true,
+    contentDescription: String = stringResource(Res.string.enter_password),
 ) {
     val labelState by remember(label, isError) { mutableStateOf(label) } // workaround for ui-tests
     val (labelTag, visibilityTag, fieldTag) = rememberTagTriple(contentDescription)
@@ -65,8 +82,8 @@ fun PasswordField(
         },
         modifier = modifier.testTag(fieldTag),
         visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-        value = passwordState.value,
-        onValueChange = { passwordState.value = it },
+        value = password,
+        onValueChange = onPasswordChange,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         isError = isError,
         trailingIcon = { if (isError) Icon(Icons.Default.Error, Icons.Default.Error.name) else Unit },

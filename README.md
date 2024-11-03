@@ -64,11 +64,10 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 
 - [SQLDelight](https://github.com/cashapp/sqldelight)
 - [SQLCipher](https://github.com/sqlcipher/sqlcipher)
-- [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-- [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 - [Compose Multiplatform, by JetBrains](https://github.com/JetBrains/compose-jb)
 - [MaterialThemePrefs](https://github.com/softartdev/MaterialThemePrefs)
-- [moko-resources](https://github.com/icerockdev/moko-resources)
+- [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+- [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 - [Koin](https://github.com/InsertKoinIO/koin)
 - [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom)
 - [Napier](https://github.com/AAkira/Napier)

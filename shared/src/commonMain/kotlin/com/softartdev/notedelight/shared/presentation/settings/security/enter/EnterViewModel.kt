@@ -3,47 +3,78 @@ package com.softartdev.notedelight.shared.presentation.settings.security.enter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.shared.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.shared.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EnterViewModel (
+class EnterViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(
-        value = EnterResult.InitState
+        value = EnterResult(
+            onCancel = this::cancel,
+            onEnterClick = this::enterCheck,
+            onEditPassword = this::onEditPassword,
+            onTogglePasswordVisibility = this::togglePasswordVisibility,
+            disposeOneTimeEvents = this::disposeOneTimeEvents
+        )
     )
-    val resultStateFlow: StateFlow<EnterResult> = mutableStateFlow
+    val stateFlow: StateFlow<EnterResult> = mutableStateFlow
 
-    fun enterCheck(password: CharSequence) = viewModelScope.launch(context = coroutineDispatchers.io) {
-        mutableStateFlow.value = EnterResult.Loading
+    private fun onEditPassword(password: String) = viewModelScope.launch {
+        mutableStateFlow.update(EnterResult::hideError)
+        mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER) }
+        mutableStateFlow.update { it.copy(password = password) }
+    }
+
+    private fun togglePasswordVisibility() = viewModelScope.launch {
+        mutableStateFlow.update(EnterResult::togglePasswordVisibility)
+    }
+
+    private fun enterCheck() = viewModelScope.launch(context = coroutineDispatchers.io) {
+        mutableStateFlow.update(EnterResult::showLoading)
         try {
+            val password = mutableStateFlow.value.password
             when {
                 password.isEmpty() -> {
-                    mutableStateFlow.value = EnterResult.EmptyPasswordError
+                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY) }
+                    mutableStateFlow.update(EnterResult::showError)
                 }
                 checkPasswordUseCase(password) -> {
                     changePasswordUseCase(password, null)
                     navigateUp()
                 }
                 else -> {
-                    mutableStateFlow.value = EnterResult.IncorrectPasswordError
+                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT) }
+                    mutableStateFlow.update(EnterResult::showError)
                 }
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
-            mutableStateFlow.value = EnterResult.Error(e.message)
+            mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
+        } finally {
+            mutableStateFlow.update(EnterResult::hideLoading)
         }
     }
 
-    fun navigateUp() = viewModelScope.launch(context = coroutineDispatchers.main) {
+    private fun cancel() = viewModelScope.launch {
         router.popBackStack()
+    }
+
+    private fun navigateUp() = viewModelScope.launch {
+        router.popBackStack()
+    }
+
+    private fun disposeOneTimeEvents() = viewModelScope.launch {
+        mutableStateFlow.update(EnterResult::hideSnackBarMessage)
     }
 }

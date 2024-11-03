@@ -15,6 +15,6 @@ class UpdateTitleUseCase(private val noteDAO: NoteDAO) : (Long, String) -> Unit 
     }
 
     companion object {
-        val titleChannel: Channel<String> by lazy { return@lazy Channel<String>() }
+        val dialogChannel: Channel<String?> by lazy { return@lazy Channel<String?>() }
     }
 }

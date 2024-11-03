@@ -16,6 +16,6 @@ class SaveNoteUseCase(private val noteDAO: NoteDAO) : (Long, String, String) -> 
     }
 
     companion object {
-        val dialogChannel: Channel<Boolean> by lazy { return@lazy Channel<Boolean>() }
+        val dialogChannel: Channel<Boolean?> by lazy { return@lazy Channel<Boolean?>() }
     }
 }

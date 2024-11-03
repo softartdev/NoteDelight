@@ -32,15 +32,19 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel.navigation)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
         }
         androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.androidx.compose)
         }
         jvmMain.dependencies {
-            implementation(libs.koin.core.jvm)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
         }
         jvmTest.dependencies {
             implementation(kotlin("test"))
