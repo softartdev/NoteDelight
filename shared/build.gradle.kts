@@ -61,6 +61,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.coroutines.core)
             implementation(libs.sqlDelight.coroutinesExt)
+            implementation(libs.sqlDelight.paging)
             api(libs.kotlinx.datetime)
             api(libs.napier)
             implementation(project.dependencies.platform(libs.koin.bom))

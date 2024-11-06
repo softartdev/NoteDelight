@@ -1,7 +1,9 @@
 package com.softartdev.notedelight.shared.db
 
+import app.cash.paging.PagingSource
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.paging3.QueryPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +20,14 @@ class NoteDAO(private val noteQueries: NoteQueries) {
      */
     val listFlow: Flow<List<Note>>
         get() = noteQueries.getAll().asFlow().mapToList(Dispatchers.IO).distinctUntilChanged()
+
+    val pagingSource: PagingSource<Int, Note>
+        get() = QueryPagingSource(
+            countQuery = noteQueries.countNotes(),
+            transacter = noteQueries,
+            context = Dispatchers.IO,
+            queryProvider = noteQueries::pagedNotes,
+        )
 
     /**
      * Select a note by id.

@@ -2,7 +2,6 @@
 
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -20,16 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import com.softartdev.notedelight.shared.db.TestSchema
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
 import notedelight.shared_compose_ui.generated.resources.Res
@@ -77,12 +76,15 @@ fun MainScreen(
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader(modifier = Modifier.align(Alignment.Center))
-                is NoteListResult.Success -> when {
-                    noteListResult.result.isNotEmpty() -> NoteList(
-                        noteList = noteListResult.result,
-                        onItemClicked = onItemClicked,
-                    )
-                    else -> Empty()
+                is NoteListResult.Success -> {
+                    val pagingItems: LazyPagingItems<Note> = noteListResult.result.collectAsLazyPagingItems()
+                    when {
+                        pagingItems.itemCount > 0 -> NoteList(
+                            pagingItems = pagingItems,
+                            onItemClicked = onItemClicked,
+                        )
+                        else -> Empty()
+                    }
                 }
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
@@ -98,7 +100,7 @@ fun MainScreen(
     },
     snackbarHost = { SnackbarHost(snackbarHostState) },
 )
-
+/*TODO
 @Preview
 @Composable
 fun PreviewMainScreen() {
@@ -107,4 +109,4 @@ fun PreviewMainScreen() {
         mutableStateOf(NoteListResult.Success(testNotes))
     }
     MainScreen(noteListState)
-}
+}*/

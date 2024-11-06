@@ -27,6 +27,7 @@ androidxCoreSplashscreen = "1.0.1"
 androidxTracing = "1.2.0"
 androidxLifecycle = "2.8.7"
 androidxArch = "2.2.0"
+androidxPaging = "3.3.2"
 androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 androidxTestOrchestrator = "1.5.1"
@@ -51,6 +52,7 @@ sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.re
 sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
+sqlDelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqlDelight" }
 
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "androidxSqlite" }
@@ -91,6 +93,12 @@ androidx-lifecycle-runtime-testing = { module = "androidx.lifecycle:lifecycle-ru
 androidx-arch-core-common = { module = "androidx.arch.core:core-common", version.ref = "androidxArch" }
 androidx-arch-core-runtime = { module = "androidx.arch.core:core-runtime", version.ref = "androidxArch" }
 androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "androidxArch" }
+
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidxPaging" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidxPaging" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
+
+cashapp-paging-compose = { module = "app.cash.paging:paging-compose-common", version = "3.3.0-alpha02-0.5.1" }
 
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }

@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.cashapp.paging.compose)
         }
         androidMain.dependencies {
             implementation(project.dependencies.platform(libs.koin.bom))
