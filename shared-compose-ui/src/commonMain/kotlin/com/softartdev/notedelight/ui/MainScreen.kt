@@ -2,6 +2,7 @@
 
 package com.softartdev.notedelight.ui
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -19,18 +20,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.paging.PagingData
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.create_note
@@ -100,13 +107,15 @@ fun MainScreen(
     },
     snackbarHost = { SnackbarHost(snackbarHostState) },
 )
-/*TODO
+
 @Preview
 @Composable
 fun PreviewMainScreen() {
     val testNotes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
+    val pagingData: PagingData<Note> = PagingData.from(testNotes)
+    val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
-        mutableStateOf(NoteListResult.Success(testNotes))
+        mutableStateOf(NoteListResult.Success(pagingFlow))
     }
     MainScreen(noteListState)
-}*/
+}
