@@ -2,8 +2,7 @@ package com.softartdev.notedelight.shared.presentation.main
 
 import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import app.cash.paging.PagingSource
-import app.cash.paging.PagingState
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.softartdev.notedelight.shared.CoroutineDispatchersStub
 import com.softartdev.notedelight.shared.db.Note
@@ -13,6 +12,8 @@ import com.softartdev.notedelight.shared.navigation.AppNavGraph
 import com.softartdev.notedelight.shared.navigation.Router
 import com.softartdev.notedelight.shared.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -46,16 +47,10 @@ class MainViewModelTest {
         mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
-            val pagingSource = object : PagingSource<Int, Note>() {
-                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Note> {
-                    return LoadResult.Page(data = emptyList(), prevKey = null, nextKey = null)
-                }
-                override fun getRefreshKey(state: PagingState<Int, Note>): Int? = null
-            }
-            Mockito.`when`(mockNoteDAO.pagingSource).thenReturn(pagingSource)
+            val pagingFlow = flowOf(PagingData.empty<Note>())
+            Mockito.`when`(mockNoteDAO.pagingDataFlow).thenReturn(pagingFlow)
 
             mainViewModel.updateNotes()
-
             assertTrue(awaitItem() is NoteListResult.Success)
 
             cancelAndIgnoreRemainingEvents()
@@ -67,7 +62,9 @@ class MainViewModelTest {
         mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
-            Mockito.`when`(mockNoteDAO.pagingSource).thenThrow(SQLiteException())
+            val failingFlow = flow<PagingData<Note>> { throw SQLiteException() }
+            Mockito.`when`(mockNoteDAO.pagingDataFlow).thenReturn(failingFlow)
+
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.Error(null), awaitItem())
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.SignIn)
@@ -83,11 +80,19 @@ class MainViewModelTest {
     }
 
     @Test
+    fun onSettingsClicked() {
+        mainViewModel.onSettingsClicked()
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings)
+    }
+
+    @Test
     fun error() = runTest {
         mainViewModel.stateFlow.test {
             assertEquals(NoteListResult.Loading, awaitItem())
 
-            Mockito.`when`(mockNoteDAO.pagingSource).thenThrow(RuntimeException())
+            val failingFlow = flow<PagingData<Note>> { throw RuntimeException() }
+            Mockito.`when`(mockNoteDAO.pagingDataFlow).thenReturn(failingFlow)
+
             mainViewModel.updateNotes()
             assertEquals(NoteListResult.Error(null), awaitItem())
 
