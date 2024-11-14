@@ -1,7 +1,12 @@
 package com.softartdev.notedelight.shared.db
 
+import app.cash.paging.Pager
+import app.cash.paging.PagingConfig
+import app.cash.paging.PagingData
+import app.cash.paging.PagingSource
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.paging3.QueryPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +25,35 @@ class NoteDAO(private val noteQueries: NoteQueries) {
         get() = noteQueries.getAll().asFlow().mapToList(Dispatchers.IO).distinctUntilChanged()
 
     /**
+     * Select the count of notes from the notes table.
+     */
+    val count: Long
+        get() = noteQueries.countNotes().executeAsOne()
+
+    /**
+     * Get a [PagingSource] for the notes table.
+     */
+    val pagingSource: PagingSource<Int, Note>
+        get() = QueryPagingSource(
+            countQuery = noteQueries.countNotes(),
+            transacter = noteQueries,
+            context = Dispatchers.IO,
+            queryProvider = noteQueries::pagedNotes,
+        )
+
+    /**
+     * Get a [Flow] of [PagingData] for the notes table.
+     */
+    val pagingDataFlow: Flow<PagingData<Note>>
+        get() = Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = this::pagingSource
+        ).flow
+
+    /**
      * Select a note by id.
      *
-     * @param noteId the note id.
+     * @param id the note id.
      * @return the note with noteId.
      */
     fun load(id: Long): Note = noteQueries.getById(noteId = id).executeAsOne()

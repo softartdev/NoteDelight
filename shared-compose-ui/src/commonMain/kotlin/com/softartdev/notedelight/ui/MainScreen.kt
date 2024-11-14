@@ -29,9 +29,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.paging.PagingData
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
+import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.shared.db.TestSchema
 import com.softartdev.notedelight.shared.presentation.main.MainViewModel
 import com.softartdev.notedelight.shared.presentation.main.NoteListResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.create_note
@@ -44,7 +50,7 @@ fun MainScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     LaunchedEffect(mainViewModel) {
-        mainViewModel.updateNotes()
+        mainViewModel.launchNotes()
     }
     val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
     MainScreen(
@@ -77,12 +83,15 @@ fun MainScreen(
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader(modifier = Modifier.align(Alignment.Center))
-                is NoteListResult.Success -> when {
-                    noteListResult.result.isNotEmpty() -> NoteList(
-                        noteList = noteListResult.result,
-                        onItemClicked = onItemClicked,
-                    )
-                    else -> Empty()
+                is NoteListResult.Success -> {
+                    val pagingItems: LazyPagingItems<Note> = noteListResult.result.collectAsLazyPagingItems()
+                    when {
+                        pagingItems.itemCount > 0 -> NoteList(
+                            pagingItems = pagingItems,
+                            onItemClicked = onItemClicked,
+                        )
+                        else -> Empty()
+                    }
                 }
                 is NoteListResult.Error -> Error(err = noteListResult.error ?: "Error")
             }
@@ -103,8 +112,10 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen() {
     val testNotes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
+    val pagingData: PagingData<Note> = PagingData.from(testNotes)
+    val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
-        mutableStateOf(NoteListResult.Success(testNotes))
+        mutableStateOf(NoteListResult.Success(pagingFlow))
     }
     MainScreen(noteListState)
 }

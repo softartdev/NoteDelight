@@ -30,6 +30,7 @@ import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialog
 import com.softartdev.theme.pref.PreferenceHelper
+import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinNavViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -37,6 +38,14 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun App(
+    router: Router,
+    navController: NavHostController = rememberNavController()
+) = KoinContext {
+    WrappedApp(router, navController)
+}
+
+@Composable
+private fun WrappedApp(
     router: Router,
     navController: NavHostController = rememberNavController()
 ) = PreferableMaterialTheme {

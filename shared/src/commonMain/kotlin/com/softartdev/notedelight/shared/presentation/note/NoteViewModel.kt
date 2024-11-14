@@ -169,7 +169,7 @@ class NoteViewModel(
             val noteTitle: String = createTitleIfNeed(title, text)
             saveNoteUseCase(noteId, noteTitle, text)
             Napier.d("Saved and nav back")
-            router.navigateClearingBackStack(route = AppNavGraph.Main)
+            router.navigateClearingBackStack(route = AppNavGraph.Main) // FIXME
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
