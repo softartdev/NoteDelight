@@ -15,6 +15,9 @@ class JvmTestSafeRepo : SafeRepo() {
     override val noteDAO: NoteDAO
         get() = NoteDAO(databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null"))
 
+    override val dbPath: String
+        get() = TODO("Not yet implemented")
+
     override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
