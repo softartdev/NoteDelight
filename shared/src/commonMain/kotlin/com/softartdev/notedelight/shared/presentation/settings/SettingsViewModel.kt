@@ -26,6 +26,7 @@ class SettingsViewModel(
             changeEncryption = this@SettingsViewModel::changeEncryption,
             changePassword = this@SettingsViewModel::changePassword,
             showCipherVersion = this@SettingsViewModel::showCipherVersion,
+            showDatabasePath = this@SettingsViewModel::showDatabasePath,
             disposeOneTimeEvents = this@SettingsViewModel::disposeOneTimeEvents
         )
     )
@@ -86,6 +87,18 @@ class SettingsViewModel(
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
             mutableStateFlow.update { result -> result.copy(snackBarMessage = cipherVersion) }
+        } catch (e: Throwable) {
+            Napier.e("❌", e)
+            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+        } finally {
+            mutableStateFlow.update(SecurityResult::hideLoading)
+        }
+    }
+    private fun showDatabasePath() = viewModelScope.launch {
+        mutableStateFlow.update(SecurityResult::showLoading)
+        try {
+            val dbPath: String = safeRepo.dbPath
+            mutableStateFlow.update { result -> result.copy(snackBarMessage = dbPath) }
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))

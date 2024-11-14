@@ -19,6 +19,7 @@
     <string name="pref_title_enable_encryption">Включить шифрование</string>
     <string name="pref_title_set_password">Установить пароль</string>
     <string name="pref_title_check_cipher_version">Проверить версию SQLCipher</string>
+    <string name="pref_title_show_db_path">Показать путь к базе данных</string>
     <string name="enter_password">Введите пароль</string>
     <string name="confirm_password">Повторите пароль</string>
     <string name="enter_old_password">Введите старый пароль</string>

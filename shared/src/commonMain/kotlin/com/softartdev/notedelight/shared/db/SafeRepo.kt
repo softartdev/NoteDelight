@@ -8,6 +8,8 @@ abstract class SafeRepo {
 
     abstract val noteDAO: NoteDAO
 
+    abstract val dbPath: String
+
     var relaunchListFlowCallback: (() -> Any)? = null
 
     abstract fun buildDbIfNeed(passphrase: CharSequence = ""): DatabaseHolder

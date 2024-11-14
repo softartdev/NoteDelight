@@ -10,6 +10,7 @@ data class SecurityResult(
     val changeEncryption: (Boolean) -> Unit = {},
     val changePassword: () -> Unit = {},
     val showCipherVersion: () -> Unit = {},
+    val showDatabasePath: () -> Unit = {},
     val disposeOneTimeEvents: () -> Unit = {},
 ) {
     fun showLoading(): SecurityResult = copy(loading = true)

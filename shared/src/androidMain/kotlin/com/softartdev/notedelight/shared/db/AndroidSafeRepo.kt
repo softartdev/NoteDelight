@@ -20,6 +20,9 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
     override val noteDAO: NoteDAO
         get() = NoteDAO(buildDbIfNeed().noteQueries)
 
+    override val dbPath: String
+        get() = context.getDatabasePath(DB_NAME).absolutePath
+
     override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
