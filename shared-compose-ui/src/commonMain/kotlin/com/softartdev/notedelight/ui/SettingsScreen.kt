@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +55,7 @@ import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
 import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
 import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
+import notedelight.shared_compose_ui.generated.resources.pref_title_show_db_path
 import notedelight.shared_compose_ui.generated.resources.security
 import notedelight.shared_compose_ui.generated.resources.settings
 import notedelight.shared_compose_ui.generated.resources.theme
@@ -128,6 +130,11 @@ fun SettingsScreenBody(
                 title = stringResource(Res.string.pref_title_check_cipher_version),
                 vector = Icons.Filled.FileLock,
                 onClick = result.showCipherVersion
+            )
+            Preference(
+                title = stringResource(Res.string.pref_title_show_db_path),
+                vector = Icons.Default.Storage,
+                onClick = result.showDatabasePath
             )
             Spacer(Modifier.height(32.dp))
             ListItem(

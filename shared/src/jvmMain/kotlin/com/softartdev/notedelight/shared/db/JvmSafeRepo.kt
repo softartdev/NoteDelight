@@ -14,6 +14,9 @@ class JvmSafeRepo : SafeRepo() {
     override val noteDAO: NoteDAO
         get() = NoteDAO(buildDbIfNeed().noteQueries)
 
+    override val dbPath: String
+        get() = FilePathResolver().invoke()
+
     override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder {
         var instance = databaseHolder
         if (instance == null) {

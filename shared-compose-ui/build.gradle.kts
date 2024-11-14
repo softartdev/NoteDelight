@@ -37,6 +37,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.cashapp.paging.compose)
+            implementation(libs.stately.common)
         }
         androidMain.dependencies {
             implementation(project.dependencies.platform(libs.koin.bom))
@@ -49,6 +51,10 @@ kotlin {
         jvmTest.dependencies {
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
+        }
+        iosMain.dependencies {
+            implementation(libs.stately.isolate)
+            implementation(libs.stately.iso.collections)
         }
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")

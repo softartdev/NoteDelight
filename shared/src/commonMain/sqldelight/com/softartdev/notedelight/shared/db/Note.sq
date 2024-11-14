@@ -11,6 +11,12 @@ CREATE TABLE note (
 getAll:
 SELECT * FROM note ORDER BY dateModified DESC;
 
+countNotes:
+SELECT count(*) FROM note;
+
+pagedNotes:
+SELECT * FROM note ORDER BY dateModified DESC LIMIT :limit OFFSET :offset;
+
 getById:
 SELECT * FROM note WHERE id = :noteId;
 

@@ -13,6 +13,9 @@ class IosSafeRepo : SafeRepo() {
     override val noteDAO: NoteDAO
         get() = NoteDAO(buildDbIfNeed().noteQueries)
 
+    override val dbPath: String
+        get() = IosCipherUtils.getDatabasePath(DB_NAME)
+
     override fun buildDbIfNeed(passphrase: CharSequence): DatabaseHolder {
         var instance = dbHolder
         if (instance == null) {
