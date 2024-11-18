@@ -47,7 +47,7 @@ class MainViewModel(
         }
     }
 
-    private fun updateNotes() {
+    fun updateNotes() {
         job?.cancel()
         job = viewModelScope.launch(coroutineDispatchers.io) {
             try {

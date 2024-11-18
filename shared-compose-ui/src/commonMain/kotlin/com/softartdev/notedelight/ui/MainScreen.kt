@@ -3,7 +3,6 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -18,11 +17,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,6 +60,7 @@ fun MainScreen(
         noteListState = noteListState,
         onItemClicked = mainViewModel::onNoteClicked,
         onSettingsClick = mainViewModel::onSettingsClicked,
+        onRefresh = mainViewModel::updateNotes,
         snackbarHostState = snackbarHostState,
     )
 }
@@ -66,7 +70,10 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onItemClicked: (id: Long) -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    onRefresh: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
+    refreshState: State<Boolean> = remember { derivedStateOf { noteListState.value is NoteListResult.Loading } }
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -78,9 +85,18 @@ fun MainScreen(
                         contentDescription = stringResource(Res.string.settings)
                     )
                 }
-            })
+            }
+        )
     }, content = { paddingValues: PaddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        PullToRefreshBox(
+            modifier = Modifier.padding(paddingValues),
+            isRefreshing = refreshState.value,
+            onRefresh = onRefresh,
+            state = pullToRefreshState
+        ) {
+            LaunchedEffect(key1 = noteListState.value) {
+                pullToRefreshState.animateToHidden()
+            }
             when (val noteListResult = noteListState.value) {
                 is NoteListResult.Loading -> Loader(modifier = Modifier.align(Alignment.Center))
                 is NoteListResult.Success -> {
@@ -104,8 +120,7 @@ fun MainScreen(
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
             modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
-    },
-    snackbarHost = { SnackbarHost(snackbarHostState) },
+    }, snackbarHost = { SnackbarHost(snackbarHostState) },
 )
 
 @Preview
