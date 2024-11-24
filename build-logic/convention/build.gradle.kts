@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -11,9 +12,7 @@ java {
     targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
 }
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.toVersion(libs.versions.jdk.get().toInt()).toString()
-    }
+    compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
 }
 
 dependencies {

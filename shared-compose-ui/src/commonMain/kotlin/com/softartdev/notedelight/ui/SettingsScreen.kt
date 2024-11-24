@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
@@ -45,6 +44,7 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.coroutineScope
 import com.softartdev.notedelight.shared.createMultiplatformMessage
 import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
 import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
@@ -67,16 +67,15 @@ fun SettingsScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
-    LifecycleResumeEffect(key1 = settingsViewModel, key2 = result ) {
+    LifecycleResumeEffect(key1 = settingsViewModel, key2 = result) {
         result.checkEncryption()
         result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
-            coroutineScope.launch {
+            lifecycle.coroutineScope.launch {
                 snackbarHostState.showSnackbar(message = msg, duration = SnackbarDuration.Long)
             }
             result.disposeOneTimeEvents()
         }
-        onPauseOrDispose { result.checkEncryption() }
+        onPauseOrDispose { result.disposeOneTimeEvents() }
     }
     SettingsScreenBody(
         result = result,
