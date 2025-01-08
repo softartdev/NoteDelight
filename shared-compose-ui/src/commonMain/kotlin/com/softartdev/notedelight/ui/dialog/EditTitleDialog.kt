@@ -13,10 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
 import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
 import notedelight.shared_compose_ui.generated.resources.Res
@@ -53,11 +57,15 @@ fun ShowEditTitleDialog(
 ) = AlertDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_change_title)) },
     text = {
+        var textRange by remember { mutableStateOf(TextRange(0, result.title.length)) }
         Column {
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
-                value = result.title,
-                onValueChange = result.onEditTitle,
+                value = TextFieldValue(text = result.title, selection = textRange),
+                onValueChange = {
+                    textRange = it.selection
+                    result.onEditTitle(it.text)
+                },
                 label = {
                     val res = if (result.isError) Res.string.empty_title else Res.string.enter_title
                     Text(stringResource(res))

@@ -59,6 +59,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.core)
             implementation(libs.sqlDelight.coroutinesExt)
             implementation(libs.sqlDelight.paging)
@@ -75,11 +76,13 @@ kotlin {
             implementation(kotlin("test"))
             implementation(kotlin("test-common"))
             implementation(kotlin("test-annotations-common"))
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.test)
         }
         androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.android)
             api(libs.sqlDelight.android)
             implementation(libs.bundles.androidx.sqlite)
@@ -94,6 +97,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(kotlin("test-junit"))
             implementation(libs.junit)
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(libs.bundles.mockito)
             implementation(libs.sqlDelight.jvm)
@@ -112,6 +116,7 @@ kotlin {
             implementation(kotlin("test-junit"))
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.test)
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
         }
         all {
