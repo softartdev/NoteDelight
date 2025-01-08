@@ -25,6 +25,7 @@ kotlin {
             implementation(project(":shared"))
             implementation(project(":shared-compose-ui"))
             implementation(libs.androidx.navigation.compose)
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
             implementation(compose.desktop.currentOs)
             implementation(project.dependencies.platform(libs.koin.bom))

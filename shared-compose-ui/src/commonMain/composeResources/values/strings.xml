@@ -53,4 +53,5 @@
     <string name="dialog_title_conform_password">Confirming password</string>
     <string name="dialog_title_enter_password">Entering password</string>
     <string name="dialog_title_change_title">Editing title</string>
+    <string name="copy">Copy</string>
 </resources>

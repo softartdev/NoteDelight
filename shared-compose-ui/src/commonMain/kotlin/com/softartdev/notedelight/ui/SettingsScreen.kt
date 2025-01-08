@@ -28,6 +28,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,11 +39,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.coroutineScope
@@ -52,6 +57,7 @@ import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.theme.material3.ThemePreferenceItem
 import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res
+import notedelight.shared_compose_ui.generated.resources.copy
 import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
 import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
 import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
@@ -59,6 +65,7 @@ import notedelight.shared_compose_ui.generated.resources.pref_title_show_db_path
 import notedelight.shared_compose_ui.generated.resources.security
 import notedelight.shared_compose_ui.generated.resources.settings
 import notedelight.shared_compose_ui.generated.resources.theme
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -67,20 +74,24 @@ fun SettingsScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
     LifecycleResumeEffect(key1 = settingsViewModel, key2 = result) {
         result.checkEncryption()
         result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
             lifecycle.coroutineScope.launch {
-                snackbarHostState.showSnackbar(message = msg, duration = SnackbarDuration.Long)
+                val snackResult: SnackbarResult = snackbarHostState.showSnackbar(
+                    message = msg,
+                    duration = SnackbarDuration.Long,
+                    actionLabel = getString(Res.string.copy),
+                )
+                if (snackResult == ActionPerformed) clipboardManager.setText(AnnotatedString(msg))
             }
             result.disposeOneTimeEvents()
         }
         onPauseOrDispose { result.disposeOneTimeEvents() }
     }
-    SettingsScreenBody(
-        result = result,
-        snackbarHostState = snackbarHostState,
-    )
+    SettingsScreenBody(result, snackbarHostState)
 }
 
 @Composable
