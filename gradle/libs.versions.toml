@@ -32,6 +32,7 @@ androidxPaging = "3.3.5"
 androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 androidxTestOrchestrator = "1.5.1"
+cashAppPaging = "3.3.0-alpha02-0.5.1"
 firebase = "33.7.0"
 leakCanary = "2.14"
 junit = "4.13.2"
@@ -51,10 +52,10 @@ coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
 sqlDelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
 sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
-sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
 sqlDelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqlDelight" }
+sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
 stately-isolate = { module = "co.touchlab:stately-isolate", version.ref = "stately" }
@@ -104,7 +105,9 @@ androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.r
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidxPaging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
 
-cashapp-paging-compose = { module = "app.cash.paging:paging-compose-common", version = "3.3.0-alpha02-0.5.1" }
+cashapp-paging-common = { module = "app.cash.paging:paging-common", version.ref = "cashAppPaging" }
+cashapp-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "cashAppPaging" }
+cashapp-paging-testing = { module = "app.cash.paging:paging-testing", version.ref = "cashAppPaging" }
 
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
