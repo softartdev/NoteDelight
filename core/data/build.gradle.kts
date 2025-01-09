@@ -22,6 +22,7 @@ kotlin {
             implementation(libs.sqlDelight.coroutinesExt)
             implementation(libs.sqlDelight.paging)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.stately.common)
         }
         commonTest.dependencies {
         }
@@ -34,6 +35,8 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native)
+            implementation(libs.stately.isolate)
+            implementation(libs.stately.iso.collections)
         }
         iosTest.dependencies {
         }

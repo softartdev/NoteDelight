@@ -19,6 +19,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.napier)
             implementation(libs.cashapp.paging.common)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
         }
