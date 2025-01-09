@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import com.softartdev.notedelight.ComposeIdlingRes
 import com.softartdev.notedelight.ui.cases.CrudTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterCreateTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterSaveTestCase
@@ -12,9 +11,9 @@ import com.softartdev.notedelight.ui.cases.SettingPasswordTestCase
 abstract class AbstractUiTests {
     abstract val composeTestRule: ComposeContentTestRule
 
-    open fun setUp() = composeTestRule.registerIdlingResource(ComposeIdlingRes)
+    open fun setUp() = Unit
 
-    open fun tearDown() = composeTestRule.unregisterIdlingResource(ComposeIdlingRes)
+    open fun tearDown() = Unit
 
     open fun crudNoteTest() = CrudTestCase(composeTestRule).invoke()
 
