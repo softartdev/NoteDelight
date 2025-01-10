@@ -25,6 +25,11 @@ kotlin {
             implementation(libs.stately.common)
         }
         commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(project(":core:test"))
+            implementation(project.dependencies.platform(libs.coroutines.bom))
+            implementation(libs.coroutines.test)
+            implementation(libs.napier)
         }
         androidMain.dependencies {
             implementation(libs.sqlDelight.android)
@@ -32,6 +37,9 @@ kotlin {
             implementation(libs.android.sqlcipher)
         }
         androidUnitTest.dependencies {
+            implementation(kotlin("test-junit"))
+            implementation(libs.bundles.mockito)
+            implementation(libs.sqlDelight.jvm)
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native)

@@ -3,6 +3,7 @@ rootProject.name = "NoteDelight"
 include(":core:domain")
 include(":core:data")
 include(":core:presentation")
+include(":core:test")
 include(":shared")
 include(":shared-compose-ui")
 include(":jvm-compose-test")
