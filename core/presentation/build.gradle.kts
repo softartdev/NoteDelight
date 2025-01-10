@@ -56,6 +56,7 @@ android {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
     }
+    lint.disable += setOf("CoroutineCreationDuringComposition", "StateFlowValueCalledInComposition") // FIXME remove after AGP update
     dependencies {
         coreLibraryDesugaring(libs.desugar)
     }
