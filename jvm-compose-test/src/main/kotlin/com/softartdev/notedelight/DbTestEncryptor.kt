@@ -1,7 +1,7 @@
 package com.softartdev.notedelight
 
-import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.db.SafeRepo
+import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.repository.SafeRepo
 import io.github.aakira.napier.Napier
 import org.koin.java.KoinJavaComponent.inject
 

@@ -31,8 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.note.NoteResult
-import com.softartdev.notedelight.shared.presentation.note.NoteViewModel
+import com.softartdev.notedelight.presentation.note.NoteResult
+import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.action_delete_note

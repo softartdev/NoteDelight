@@ -14,8 +14,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.db.TestSchema
-import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.db.TestSchema
+import com.softartdev.notedelight.db.model
+import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.util.DateTimeFormatter
 
 @Composable
@@ -47,7 +48,7 @@ fun NoteItem(
 @Composable
 fun PreviewNoteItem() {
     NoteItem(
-        note = TestSchema.firstNote,
+        note = TestSchema.firstNote.model,
         onItemClicked = {}
     )
 }

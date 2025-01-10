@@ -1,5 +1,3 @@
-@file:OptIn(KoinExperimentalAPI::class)
-
 package com.softartdev.notedelight
 
 import androidx.compose.material3.SnackbarHostState
@@ -13,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.softartdev.notedelight.shared.navigation.AppNavGraph
-import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.navigation.AppNavGraph
+import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.ui.MainScreen
 import com.softartdev.notedelight.ui.NoteDetail
 import com.softartdev.notedelight.ui.SettingsScreen
@@ -33,7 +31,6 @@ import com.softartdev.theme.pref.PreferenceHelper
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinNavViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
 
 @Composable

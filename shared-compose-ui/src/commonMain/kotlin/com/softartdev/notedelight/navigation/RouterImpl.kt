@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.navigation
 
 import androidx.navigation.NavHostController
-import com.softartdev.notedelight.shared.navigation.Router
 
 class RouterImpl : Router {
 

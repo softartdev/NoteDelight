@@ -14,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.note.SaveViewModel
+import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.ui.dialog.AlertDialogContent
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.shared_compose_ui.generated.resources.Res

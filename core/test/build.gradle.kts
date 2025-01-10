@@ -14,6 +14,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
+            implementation(project.dependencies.platform(libs.coroutines.bom))
+            implementation(libs.coroutines.test)
             implementation(libs.napier)
         }
         androidMain.dependencies {

@@ -1,10 +1,10 @@
 package com.softartdev.notedelight
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
-import com.softartdev.notedelight.shared.di.sharedModules
-import com.softartdev.notedelight.shared.navigation.Router
-import com.softartdev.notedelight.shared.util.NapierKoinLogger
+import com.softartdev.notedelight.navigation.Router
+import com.softartdev.notedelight.util.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.core.component.KoinComponent

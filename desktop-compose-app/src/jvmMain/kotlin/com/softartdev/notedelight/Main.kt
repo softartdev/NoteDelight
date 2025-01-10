@@ -6,11 +6,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
-import com.softartdev.notedelight.shared.di.sharedModules
-import com.softartdev.notedelight.shared.navigation.Router
-import com.softartdev.notedelight.shared.util.NapierKoinLogger
+import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.ui.icon.FileLock
+import com.softartdev.notedelight.util.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import notedelight.shared_compose_ui.generated.resources.Res

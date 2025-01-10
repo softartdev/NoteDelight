@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.splash.SplashViewModel
+import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 
 @Composable

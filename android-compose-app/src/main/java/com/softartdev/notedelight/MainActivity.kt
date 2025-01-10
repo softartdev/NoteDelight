@@ -3,7 +3,7 @@ package com.softartdev.notedelight
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.softartdev.notedelight.shared.navigation.Router
+import com.softartdev.notedelight.navigation.Router
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {

@@ -65,7 +65,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(project(":core:presentation"))
     implementation(project(":shared-compose-ui"))
     implementation(kotlin("reflect"))
     implementation(libs.androidx.activity.compose)
@@ -75,6 +77,8 @@ dependencies {
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.material.theme.prefs)
+    implementation(libs.napier)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
@@ -89,6 +93,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
     androidTestImplementation(project(":jvm-compose-test"))
+    androidTestImplementation(libs.commonsware.saferoom)
+    androidTestImplementation(libs.sqlDelight.android)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)

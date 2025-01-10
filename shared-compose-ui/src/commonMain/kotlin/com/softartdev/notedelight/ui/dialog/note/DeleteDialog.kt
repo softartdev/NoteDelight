@@ -5,7 +5,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.softartdev.notedelight.shared.presentation.note.DeleteViewModel
+import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.action_delete_note

@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.ui.dialog.security
 
 import androidx.compose.runtime.Composable
-import com.softartdev.notedelight.shared.presentation.settings.security.FieldLabel
+import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.empty_password
 import notedelight.shared_compose_ui.generated.resources.enter_password

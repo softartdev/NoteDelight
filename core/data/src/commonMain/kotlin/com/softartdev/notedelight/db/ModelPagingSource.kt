@@ -29,9 +29,9 @@ class ModelPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NoteModel> =
-        when (val loadResult: LoadResult<Int, NoteModel> = load(params)) {
+        when (val loadResult: LoadResult<Int, Note> = delegate.load(params)) {
             is LoadResult.Page -> LoadResult.Page(
-                data = loadResult.data,
+                data = loadResult.data.toModel(),
                 prevKey = loadResult.prevKey,
                 nextKey = loadResult.nextKey,
                 itemsBefore = loadResult.itemsBefore,

@@ -50,10 +50,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.coroutineScope
-import com.softartdev.notedelight.shared.createMultiplatformMessage
-import com.softartdev.notedelight.shared.presentation.settings.SecurityResult
-import com.softartdev.notedelight.shared.presentation.settings.SettingsViewModel
+import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
+import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.theme.material3.ThemePreferenceItem
 import kotlinx.coroutines.launch
 import notedelight.shared_compose_ui.generated.resources.Res

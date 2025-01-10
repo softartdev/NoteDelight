@@ -12,13 +12,18 @@ java {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(project(":core:presentation"))
+    implementation(project(":core:test"))
     implementation(project(":shared-compose-ui"))
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.turbine)
+    implementation(compose.components.resources)
     implementation(compose.desktop.uiTestJUnit4)
     implementation(compose.desktop.currentOs)
+    implementation(libs.napier)
 }

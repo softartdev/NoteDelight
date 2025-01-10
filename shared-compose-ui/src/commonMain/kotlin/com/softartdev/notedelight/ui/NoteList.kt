@@ -10,10 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
-import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.db.TestSchema.firstNote
-import com.softartdev.notedelight.shared.db.TestSchema.secondNote
-import com.softartdev.notedelight.shared.db.TestSchema.thirdNote
+import com.softartdev.notedelight.db.TestSchema.firstNote
+import com.softartdev.notedelight.db.TestSchema.secondNote
+import com.softartdev.notedelight.db.TestSchema.thirdNote
+import com.softartdev.notedelight.db.toModel
+import com.softartdev.notedelight.model.Note
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -37,7 +38,7 @@ fun NoteList(
 fun PreviewNoteList() {
     val lorem = StringBuilder().apply { repeat(100) { append("lorem ipsum ") } }.toString()
     val longTitleNote = secondNote.copy(title = lorem)
-    val testNotes: List<Note> = listOf(firstNote, secondNote, thirdNote, longTitleNote)
+    val testNotes: List<Note> = listOf(firstNote, secondNote, thirdNote, longTitleNote).toModel()
     val pagingItems = flowOf(PagingData.from(testNotes)).collectAsLazyPagingItems()
     val onItemClicked: (id: Long) -> Unit = {}
     NoteList(pagingItems, onItemClicked)

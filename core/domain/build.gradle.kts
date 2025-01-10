@@ -18,6 +18,7 @@ kotlin {
             implementation(libs.napier)
         }
         commonTest.dependencies {
+            implementation(kotlin("test"))
         }
         androidMain.dependencies {
         }

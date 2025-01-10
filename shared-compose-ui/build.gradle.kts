@@ -25,7 +25,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared"))
+            implementation(project(":core:domain"))
+            implementation(project(":core:data"))
+            implementation(project(":core:presentation"))
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -37,7 +39,10 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.material.theme.prefs)
             implementation(libs.cashapp.paging.compose)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.napier)
             implementation(libs.stately.common)
         }
         androidMain.dependencies {
@@ -49,8 +54,11 @@ kotlin {
             implementation(libs.koin.core)
         }
         jvmTest.dependencies {
+            implementation(project(":core:test"))
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.test)
         }
         iosMain.dependencies {
             implementation(libs.stately.isolate)

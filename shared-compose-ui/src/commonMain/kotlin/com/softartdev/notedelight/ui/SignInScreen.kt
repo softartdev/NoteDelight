@@ -22,8 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.signin.SignInResult
-import com.softartdev.notedelight.shared.presentation.signin.SignInViewModel
+import com.softartdev.notedelight.presentation.signin.SignInResult
+import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.app_name
 import notedelight.shared_compose_ui.generated.resources.empty_password

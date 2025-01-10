@@ -21,8 +21,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import com.softartdev.notedelight.shared.presentation.title.EditTitleResult
-import com.softartdev.notedelight.shared.presentation.title.EditTitleViewModel
+import com.softartdev.notedelight.presentation.title.EditTitleResult
+import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import notedelight.shared_compose_ui.generated.resources.Res
 import notedelight.shared_compose_ui.generated.resources.cancel
 import notedelight.shared_compose_ui.generated.resources.dialog_title_change_title

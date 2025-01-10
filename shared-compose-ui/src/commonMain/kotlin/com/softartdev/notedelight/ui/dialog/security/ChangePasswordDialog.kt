@@ -17,8 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeResult
-import com.softartdev.notedelight.shared.presentation.settings.security.change.ChangeViewModel
+import com.softartdev.notedelight.presentation.settings.security.change.ChangeResult
+import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.shared_compose_ui.generated.resources.Res
