@@ -23,12 +23,12 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.softartdev.notedelight.presentation.title.EditTitleResult
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.dialog_title_change_title
-import notedelight.shared_compose_ui.generated.resources.empty_title
-import notedelight.shared_compose_ui.generated.resources.enter_title
-import notedelight.shared_compose_ui.generated.resources.yes
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.dialog_title_change_title
+import notedelight.shared.generated.resources.empty_title
+import notedelight.shared.generated.resources.enter_title
+import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -21,13 +21,13 @@ import com.softartdev.notedelight.presentation.settings.security.change.ChangeRe
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.dialog_title_change_password
-import notedelight.shared_compose_ui.generated.resources.enter_new_password
-import notedelight.shared_compose_ui.generated.resources.enter_old_password
-import notedelight.shared_compose_ui.generated.resources.repeat_new_password
-import notedelight.shared_compose_ui.generated.resources.yes
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.dialog_title_change_password
+import notedelight.shared.generated.resources.enter_new_password
+import notedelight.shared.generated.resources.enter_old_password
+import notedelight.shared.generated.resources.repeat_new_password
+import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -34,14 +34,14 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.action_delete_note
-import notedelight.shared_compose_ui.generated.resources.action_edit_title
-import notedelight.shared_compose_ui.generated.resources.action_save_note
-import notedelight.shared_compose_ui.generated.resources.note_deleted
-import notedelight.shared_compose_ui.generated.resources.note_empty
-import notedelight.shared_compose_ui.generated.resources.note_saved
-import notedelight.shared_compose_ui.generated.resources.type_text
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.action_delete_note
+import notedelight.shared.generated.resources.action_edit_title
+import notedelight.shared.generated.resources.action_save_note
+import notedelight.shared.generated.resources.note_deleted
+import notedelight.shared.generated.resources.note_empty
+import notedelight.shared.generated.resources.note_saved
+import notedelight.shared.generated.resources.type_text
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 

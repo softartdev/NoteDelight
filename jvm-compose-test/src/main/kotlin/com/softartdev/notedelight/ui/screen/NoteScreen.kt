@@ -8,11 +8,11 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import kotlinx.coroutines.runBlocking
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.action_delete_note
-import notedelight.shared_compose_ui.generated.resources.action_edit_title
-import notedelight.shared_compose_ui.generated.resources.action_save_note
-import notedelight.shared_compose_ui.generated.resources.type_text
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.action_delete_note
+import notedelight.shared.generated.resources.action_edit_title
+import notedelight.shared.generated.resources.action_save_note
+import notedelight.shared.generated.resources.type_text
 import org.jetbrains.compose.resources.getString
 
 @JvmInline

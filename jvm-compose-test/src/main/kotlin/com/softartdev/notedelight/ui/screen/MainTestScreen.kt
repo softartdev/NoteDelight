@@ -6,10 +6,10 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import kotlinx.coroutines.runBlocking
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.create_note
-import notedelight.shared_compose_ui.generated.resources.label_empty_result
-import notedelight.shared_compose_ui.generated.resources.settings
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.create_note
+import notedelight.shared.generated.resources.label_empty_result
+import notedelight.shared.generated.resources.settings
 import org.jetbrains.compose.resources.getString
 
 @JvmInline

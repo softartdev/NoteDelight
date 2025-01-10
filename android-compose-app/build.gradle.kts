@@ -68,7 +68,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
     implementation(project(":core:presentation"))
-    implementation(project(":shared-compose-ui"))
+    implementation(project(":shared"))
     implementation(kotlin("reflect"))
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)

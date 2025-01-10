@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.action_delete_note
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.note_delete_dialog_message
-import notedelight.shared_compose_ui.generated.resources.yes
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.action_delete_note
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.note_delete_dialog_message
+import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

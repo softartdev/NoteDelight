@@ -5,9 +5,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.error_title
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.error_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

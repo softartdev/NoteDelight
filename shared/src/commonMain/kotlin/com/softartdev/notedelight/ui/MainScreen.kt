@@ -42,10 +42,10 @@ import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.main.NoteListResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.app_name
-import notedelight.shared_compose_ui.generated.resources.create_note
-import notedelight.shared_compose_ui.generated.resources.settings
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.app_name
+import notedelight.shared.generated.resources.create_note
+import notedelight.shared.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

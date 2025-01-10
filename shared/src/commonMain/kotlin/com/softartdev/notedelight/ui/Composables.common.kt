@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.label_empty_result
-import notedelight.shared_compose_ui.generated.resources.press_add_note
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.label_empty_result
+import notedelight.shared.generated.resources.press_add_note
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

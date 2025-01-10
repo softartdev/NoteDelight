@@ -13,8 +13,8 @@ import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.app_name
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
@@ -32,7 +32,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = stringResource(Res.string.app_name),
-            state = rememberWindowState(width = 320.dp, height = 480.dp),
+            state = rememberWindowState(width = 480.dp, height = 640.dp),
             icon = rememberVectorPainter(image = Icons.Filled.FileLock),
         ) {
             CustomDesktopTheme {

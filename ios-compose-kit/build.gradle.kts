@@ -31,7 +31,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":core:domain"))
-            api(project(":shared-compose-ui"))
+            api(project(":shared"))
             implementation(compose.ui)
             implementation(compose.foundation)
             implementation(compose.material)

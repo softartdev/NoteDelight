@@ -3,10 +3,10 @@ package com.softartdev.notedelight.ui.screen.dialog
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithTag
 import com.softartdev.notedelight.ui.descTagTriple
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.enter_new_password
-import notedelight.shared_compose_ui.generated.resources.enter_old_password
-import notedelight.shared_compose_ui.generated.resources.repeat_new_password
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.enter_new_password
+import notedelight.shared.generated.resources.enter_old_password
+import notedelight.shared.generated.resources.repeat_new_password
 
 @JvmInline
 value class ChangePasswordDialog(val commonDialog: CommonDialog) : CommonDialog by commonDialog {

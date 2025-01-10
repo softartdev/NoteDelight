@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.ui.dialog.AlertDialogContent
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.no
-import notedelight.shared_compose_ui.generated.resources.note_changes_not_saved_dialog_title
-import notedelight.shared_compose_ui.generated.resources.note_save_change_dialog_message
-import notedelight.shared_compose_ui.generated.resources.yes
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.no
+import notedelight.shared.generated.resources.note_changes_not_saved_dialog_title
+import notedelight.shared.generated.resources.note_save_change_dialog_message
+import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

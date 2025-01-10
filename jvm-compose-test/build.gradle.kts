@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:presentation"))
     implementation(project(":core:test"))
-    implementation(project(":shared-compose-ui"))
+    implementation(project(":shared"))
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(platform(libs.koin.bom))

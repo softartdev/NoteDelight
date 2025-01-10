@@ -18,11 +18,11 @@ import com.softartdev.notedelight.presentation.settings.security.enter.EnterResu
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.cancel
-import notedelight.shared_compose_ui.generated.resources.dialog_title_enter_password
-import notedelight.shared_compose_ui.generated.resources.enter_password
-import notedelight.shared_compose_ui.generated.resources.yes
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.cancel
+import notedelight.shared.generated.resources.dialog_title_enter_password
+import notedelight.shared.generated.resources.enter_password
+import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

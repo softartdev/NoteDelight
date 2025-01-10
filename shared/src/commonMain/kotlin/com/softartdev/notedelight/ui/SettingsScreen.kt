@@ -56,15 +56,15 @@ import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.theme.material3.ThemePreferenceItem
 import kotlinx.coroutines.launch
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.copy
-import notedelight.shared_compose_ui.generated.resources.pref_title_check_cipher_version
-import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
-import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
-import notedelight.shared_compose_ui.generated.resources.pref_title_show_db_path
-import notedelight.shared_compose_ui.generated.resources.security
-import notedelight.shared_compose_ui.generated.resources.settings
-import notedelight.shared_compose_ui.generated.resources.theme
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.copy
+import notedelight.shared.generated.resources.pref_title_check_cipher_version
+import notedelight.shared.generated.resources.pref_title_enable_encryption
+import notedelight.shared.generated.resources.pref_title_set_password
+import notedelight.shared.generated.resources.pref_title_show_db_path
+import notedelight.shared.generated.resources.security
+import notedelight.shared.generated.resources.settings
+import notedelight.shared.generated.resources.theme
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 

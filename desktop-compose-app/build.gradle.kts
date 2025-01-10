@@ -21,7 +21,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:presentation"))
-            implementation(project(":shared-compose-ui"))
+            implementation(project(":shared"))
             implementation(libs.androidx.navigation.compose)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
