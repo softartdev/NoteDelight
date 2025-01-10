@@ -61,15 +61,12 @@ class DesktopUiTests : AbstractUiTests() {
         Napier.takeLogarithm()
     }
 
-    @Ignore // FIXME
     @Test
     override fun crudNoteTest() = super.crudNoteTest()
 
-    @Ignore // FIXME
     @Test
     override fun editTitleAfterCreateTest() = super.editTitleAfterCreateTest()
 
-    @Ignore // FIXME
     @Test
     override fun editTitleAfterSaveTest() = super.editTitleAfterSaveTest()
 

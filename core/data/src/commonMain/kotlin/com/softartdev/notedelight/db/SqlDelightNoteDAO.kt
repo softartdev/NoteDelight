@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.db
 
 import app.cash.paging.PagingSource
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.paging3.QueryPagingSource
@@ -29,8 +30,11 @@ class SqlDelightNoteDAO(private val noteQueries: NoteQueries) : NoteDAO {
             countQuery = noteQueries.countNotes(),
             transacter = noteQueries,
             context = Dispatchers.IO,
-            queryProvider = noteQueries::pagedNotes,
-        ).model
+            queryProvider = this::pagedNotes
+        )
+
+    private fun pagedNotes(limit: Long, offset: Long): Query<Note> =
+        noteQueries.pagedNotes(limit, offset).toModel()
 
     override fun load(id: Long): Note = noteQueries.getById(noteId = id).executeAsOne().model
 
