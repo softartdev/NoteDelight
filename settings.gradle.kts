@@ -1,8 +1,8 @@
 rootProject.name = "NoteDelight"
 
 include(":core:domain")
-include(":core:data:db-sqldelight")
-//include(":core:data:db-room")
+//include(":core:data:db-sqldelight")
+include(":core:data:db-room")
 include(":core:presentation")
 include(":core:test")
 include(":shared")
