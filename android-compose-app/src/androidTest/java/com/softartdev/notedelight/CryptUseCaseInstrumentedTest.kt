@@ -2,10 +2,9 @@ package com.softartdev.notedelight
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.softartdev.notedelight.shared.PlatformSQLiteState
-import com.softartdev.notedelight.shared.db.SafeRepo
-import com.softartdev.notedelight.shared.usecase.crypt.ChangePasswordUseCase
-import com.softartdev.notedelight.shared.usecase.crypt.CheckPasswordUseCase
+import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.crypt.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

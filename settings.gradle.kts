@@ -1,7 +1,11 @@
 rootProject.name = "NoteDelight"
 
+include(":core:domain")
+include(":core:data:db-sqldelight")
+//include(":core:data:db-room")
+include(":core:presentation")
+include(":core:test")
 include(":shared")
-include(":shared-compose-ui")
 include(":jvm-compose-test")
 include(":android-compose-app")
 include(":desktop-compose-app")
@@ -18,7 +22,7 @@ pluginManagement {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
 
 dependencyResolutionManagement {

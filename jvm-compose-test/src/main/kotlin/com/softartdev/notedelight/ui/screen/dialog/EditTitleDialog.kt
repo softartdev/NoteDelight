@@ -4,8 +4,8 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
 import kotlinx.coroutines.runBlocking
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.enter_title
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.enter_title
 import org.jetbrains.compose.resources.getString
 
 @JvmInline

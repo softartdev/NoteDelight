@@ -18,11 +18,11 @@ kotlin {
         version = "1.0"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", libs.versions.iosSqlCipher.get())
+        pod("SQLCipher", libs.versions.iosSqlCipher.get(), linkOnly = true)
         framework {
             baseName = "iosComposeKit"
             isStatic = true
-            export(project(":shared"))
+            export(project(":core:domain"))
             export(project.dependencies.platform(libs.koin.bom))
             export(libs.koin.core)
         }
@@ -30,11 +30,11 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
+            api(project(":core:domain"))
             api(project(":shared"))
-            api(project(":shared-compose-ui"))
             implementation(compose.ui)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.runtime)
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)

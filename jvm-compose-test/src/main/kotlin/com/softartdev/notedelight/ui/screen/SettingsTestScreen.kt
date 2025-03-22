@@ -7,9 +7,9 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import kotlinx.coroutines.runBlocking
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.pref_title_enable_encryption
-import notedelight.shared_compose_ui.generated.resources.pref_title_set_password
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.pref_title_enable_encryption
+import notedelight.shared.generated.resources.pref_title_set_password
 import org.jetbrains.compose.resources.getString
 
 @JvmInline

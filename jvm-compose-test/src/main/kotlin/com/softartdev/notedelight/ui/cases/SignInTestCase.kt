@@ -11,10 +11,10 @@ import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.empty_password
-import notedelight.shared_compose_ui.generated.resources.enter_password
-import notedelight.shared_compose_ui.generated.resources.incorrect_password
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.empty_password
+import notedelight.shared.generated.resources.enter_password
+import notedelight.shared.generated.resources.incorrect_password
 import org.jetbrains.compose.resources.getString
 
 class SignInTestCase(

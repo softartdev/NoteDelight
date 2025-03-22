@@ -1,7 +1,7 @@
 package com.softartdev.notedelight
 
-import com.softartdev.notedelight.shared.navigation.Router
-import com.softartdev.notedelight.shared.runOnUiThread
+import com.softartdev.notedelight.navigation.Router
+
 
 class UiThreadRouter(private val router: Router) : Router {
 

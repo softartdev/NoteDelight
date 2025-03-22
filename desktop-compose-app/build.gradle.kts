@@ -1,7 +1,4 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
-
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -22,13 +19,17 @@ kotlin {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
         jvmMain.dependencies {
+            implementation(project(":core:domain"))
+            implementation(project(":core:presentation"))
             implementation(project(":shared"))
-            implementation(project(":shared-compose-ui"))
             implementation(libs.androidx.navigation.compose)
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
             implementation(compose.desktop.currentOs)
+            implementation(compose.components.resources)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+            implementation(libs.napier)
         }
         jvmTest.dependencies {
             implementation(project(":jvm-compose-test"))

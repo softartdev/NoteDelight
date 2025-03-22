@@ -1,9 +1,9 @@
 package com.softartdev.notedelight
 
 import android.app.Application
+import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
-import com.softartdev.notedelight.shared.di.sharedModules
-import com.softartdev.notedelight.shared.util.NapierKoinLogger
+import com.softartdev.notedelight.util.NapierKoinLogger
 import com.softartdev.notedelight.util.isInLeakCanaryAnalyzerProcess
 import com.softartdev.notedelight.util.log.CrashlyticsAntilog
 import io.github.aakira.napier.DebugAntilog

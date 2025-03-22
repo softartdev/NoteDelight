@@ -10,8 +10,8 @@ import com.softartdev.notedelight.ui.screen.MainTestScreen.Companion.noteItemTit
 import com.softartdev.notedelight.waitUntilDisplayed
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import notedelight.shared_compose_ui.generated.resources.Res
-import notedelight.shared_compose_ui.generated.resources.enter_title
+import notedelight.shared.generated.resources.Res
+import notedelight.shared.generated.resources.enter_title
 import org.jetbrains.compose.resources.getString
 import java.util.UUID
 

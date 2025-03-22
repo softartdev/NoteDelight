@@ -11,7 +11,7 @@ val Context.isInLeakCanaryAnalyzerProcess: Boolean
         if (!BuildConfig.DEBUG) return false
 
         val kClass: KClass<out Any> = Class.forName("leakcanary.LeakCanaryProcess").kotlin
-        val instance: Any = kClass.objectInstance ?: kClass.java.newInstance()
+        val instance: Any = kClass.objectInstance ?: kClass.java.getDeclaredConstructor().newInstance()
 
         val memberFunction: KFunction<*>? = kClass.memberFunctions.find { kFunction ->
             kFunction.name == "isInAnalyzerProcess"

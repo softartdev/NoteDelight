@@ -25,7 +25,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
-        resourceConfigurations += setOf("en", "ru")
+        androidResources.localeFilters += setOf("en", "ru")
     }
     buildTypes {
         getByName("debug") {
@@ -65,8 +65,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
+    implementation(project(":core:presentation"))
     implementation(project(":shared"))
-    implementation(project(":shared-compose-ui"))
     implementation(kotlin("reflect"))
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
@@ -75,6 +77,9 @@ dependencies {
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.material.theme.prefs)
+    implementation(libs.napier)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
@@ -89,6 +94,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
     androidTestImplementation(project(":jvm-compose-test"))
+    androidTestImplementation(libs.commonsware.saferoom)
+    androidTestImplementation(libs.sqlDelight.android)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)

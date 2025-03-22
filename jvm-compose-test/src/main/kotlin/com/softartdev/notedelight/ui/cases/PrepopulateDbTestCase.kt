@@ -2,10 +2,10 @@ package com.softartdev.notedelight.ui.cases
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.shared.db.NoteDAO
-import com.softartdev.notedelight.shared.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.ui.BaseTestCase
+import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.koin.java.KoinJavaComponent
