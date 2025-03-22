@@ -13,18 +13,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 ]
+        api-level: [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
     steps:
       - name: Check out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Cached Konan
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-konan-
       - name: Cached Gradle
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -49,15 +49,15 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Cached Konan
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-konan-
       - name: Cached Gradle
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
