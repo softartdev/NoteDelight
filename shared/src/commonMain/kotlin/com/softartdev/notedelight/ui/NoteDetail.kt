@@ -5,7 +5,10 @@ package com.softartdev.notedelight.ui
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -24,7 +27,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,6 +92,7 @@ fun NoteDetailBody(
     textState: MutableState<String> = mutableStateOf("Text"),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
+    modifier = Modifier.imePadding(),
     topBar = {
         TopAppBar(
             title = { Text(text = titleState.value, maxLines = 1) },
@@ -127,11 +133,29 @@ fun NoteDetailBody(
             modifier = Modifier.padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            val scrollState = rememberScrollState()
+            val scrollProgressState: State<Float> = remember {
+                derivedStateOf {
+                    val progress = scrollState.value.toFloat() / scrollState.maxValue.toFloat()
+                    return@derivedStateOf if (progress.isNaN()) 0f else progress
+                }
+            }
+            when {
+                result.loading -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                scrollProgressState.value > 0f -> LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    progress = scrollProgressState::value,
+                    drawStopIndicator = {}
+                )
+            }
             TextField(
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .verticalScroll(state = scrollState),
                 value = textState.value,
-                onValueChange = { textState.value = it },
-                modifier = Modifier.weight(1F).fillMaxWidth().padding(8.dp),
+                onValueChange = textState::value::set,
                 label = { Text(stringResource(Res.string.type_text)) },
             )
         }
