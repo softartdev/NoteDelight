@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.material.theme.prefs)
+            implementation(libs.cashapp.paging.common)
             implementation(libs.cashapp.paging.compose)
             implementation(libs.kotlinx.datetime)
             implementation(libs.napier)

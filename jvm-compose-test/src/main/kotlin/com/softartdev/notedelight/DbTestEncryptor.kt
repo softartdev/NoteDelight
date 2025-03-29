@@ -13,6 +13,7 @@ object DbTestEncryptor : () -> Unit {
         val safeRepo: SafeRepo by inject(SafeRepo::class.java)
         while (safeRepo.databaseState == PlatformSQLiteState.DOES_NOT_EXIST) {
             safeRepo.buildDbIfNeed()
+            Napier.d("notes count = ${safeRepo.noteDAO.count}")
             Thread.sleep(1000)
             Napier.d("databaseState = ${safeRepo.databaseState.name}")
         }
