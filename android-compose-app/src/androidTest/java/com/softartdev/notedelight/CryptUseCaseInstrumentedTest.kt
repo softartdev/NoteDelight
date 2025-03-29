@@ -5,6 +5,7 @@ import androidx.test.filters.MediumTest
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.*
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -27,6 +28,7 @@ class CryptUseCaseInstrumentedTest {
     @Test
     fun cryptTest() = runBlocking {
         safeRepo.buildDbIfNeed()
+        Napier.d("notes count = ${safeRepo.noteDAO.count}")
         assertFalse(dbIsEncrypted)
         changePasswordUseCase(null, password)
         assertTrue(dbIsEncrypted)
