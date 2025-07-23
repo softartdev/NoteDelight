@@ -3,7 +3,7 @@ This application makes use of the following third party libraries:
 
 ## SQLCipher
 
-Copyright (c) 2008-2023, ZETETIC LLC
+Copyright (c) 2025, ZETETIC LLC
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

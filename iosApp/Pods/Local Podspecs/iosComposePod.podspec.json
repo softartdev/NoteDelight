@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "SQLCipher": [
-      "4.5.4"
+      "4.9.0"
     ]
   },
   "xcconfig": {

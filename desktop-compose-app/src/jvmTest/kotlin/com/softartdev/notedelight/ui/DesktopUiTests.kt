@@ -26,8 +26,10 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import org.koin.core.context.GlobalContext
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
+import org.koin.core.context.unloadKoinModules
 import org.koin.core.logger.Level
 import org.koin.java.KoinJavaComponent.get
 
@@ -38,9 +40,12 @@ class DesktopUiTests : AbstractUiTests() {
 
     @Before
     override fun setUp() {
-        startKoin {
-            printLogger(level = Level.DEBUG)
-            modules(sharedModules + uiTestModules)
+        when (GlobalContext.getKoinApplicationOrNull()) {
+            null -> startKoin {
+                printLogger(level = Level.DEBUG)
+                modules(sharedModules + uiTestModules)
+            }
+            else -> loadKoinModules(sharedModules + uiTestModules)
         }
         val router: Router = get(Router::class.java)
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
@@ -57,7 +62,7 @@ class DesktopUiTests : AbstractUiTests() {
     @After
     override fun tearDown() {
         super.tearDown()
-        stopKoin()
+        unloadKoinModules(sharedModules + uiTestModules)
         Napier.takeLogarithm()
     }
 

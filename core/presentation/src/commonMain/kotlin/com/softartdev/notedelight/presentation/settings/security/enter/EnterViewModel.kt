@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.presentation.settings.security.enter
 
+import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.navigation.Router
@@ -29,6 +30,7 @@ class EnterViewModel(
         )
     )
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
+    var autofillManager: AutofillManager? = null
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(EnterResult::hideError)
@@ -51,6 +53,7 @@ class EnterViewModel(
                 }
                 checkPasswordUseCase(password) -> {
                     changePasswordUseCase(password, null)
+                    autofillManager?.commit()
                     navigateUp()
                 }
                 else -> {
@@ -60,6 +63,7 @@ class EnterViewModel(
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
+            autofillManager?.cancel()
             mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
         } finally {
             mutableStateFlow.update(EnterResult::hideLoading)

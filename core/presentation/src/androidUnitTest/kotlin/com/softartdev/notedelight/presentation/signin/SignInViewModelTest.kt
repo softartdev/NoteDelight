@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.presentation.signin
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.compose.ui.autofill.AutofillManager
 import app.cash.turbine.test
 import com.softartdev.notedelight.StubEditable
 import com.softartdev.notedelight.anyObject
@@ -27,12 +28,14 @@ class SignInViewModelTest {
 
     private val mockCheckPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
+    private val mockAutofillManager = Mockito.mock(AutofillManager::class.java)
     
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
     fun setUp() {
         signInViewModel = SignInViewModel(mockCheckPasswordUseCase, mockRouter)
+        signInViewModel.autofillManager = mockAutofillManager
     }
 
     @Test
@@ -51,6 +54,7 @@ class SignInViewModelTest {
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
             signInViewModel.signIn(pass)
+            Mockito.verify(mockAutofillManager).commit()
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
 
             cancelAndIgnoreRemainingEvents()
@@ -91,6 +95,7 @@ class SignInViewModelTest {
             val throwable = Throwable()
             Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
             signInViewModel.signIn(StubEditable("pass"))
+            Mockito.verify(mockAutofillManager).cancel()
             Mockito.verify(mockRouter).navigate(
                 route = AppNavGraph.ErrorDialog(message = throwable.message)
             )

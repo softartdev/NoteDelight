@@ -22,8 +22,7 @@ class KoinModulesJvmTest : KoinTest {
     @Test
     fun verifyKoinModules() = appModule.verify(
         injections = injectedParameters(
-//            definition<NoteDAO>(NoteQueries::class),
             definition<NoteDAO>(),
         )
-    )
+    ).verify()
 }

@@ -2,6 +2,7 @@
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import com.google.firebase.crashlytics.buildtools.gradle.tasks.UploadMappingFileTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -13,6 +14,9 @@ plugins {
     alias(libs.plugins.crashlytics)
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
+
+kotlin.compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+
 android {
     namespace = "com.softartdev.notedelight"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -20,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 837
-        versionName = "8.3.7"
+        versionCode = 838
+        versionName = "8.3.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -46,9 +50,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    kotlinOptions {
-        jvmTarget = libs.versions.jdk.get()
     }
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
@@ -77,7 +78,6 @@ dependencies {
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.paging.compose)
     implementation(libs.material.theme.prefs)
     implementation(libs.napier)
     implementation(platform(libs.koin.bom))

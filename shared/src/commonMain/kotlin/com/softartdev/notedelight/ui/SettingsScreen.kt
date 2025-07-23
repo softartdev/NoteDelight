@@ -3,7 +3,7 @@
 
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,6 +54,7 @@ import com.softartdev.notedelight.presentation.settings.SecurityResult
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
+import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemePreferenceItem
 import kotlinx.coroutines.launch
 import notedelight.shared.generated.resources.Res
@@ -186,4 +187,6 @@ fun Preference(
 
 @Preview
 @Composable
-fun PreviewSettingsScreenBody() = SettingsScreenBody()
+fun PreviewSettingsScreenBody() = PreferableMaterialTheme {
+    SettingsScreenBody()
+}

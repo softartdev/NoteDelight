@@ -25,6 +25,8 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(compose.materialIconsExtended)
             implementation(compose.desktop.currentOs)
             implementation(compose.components.resources)
             implementation(project.dependencies.platform(libs.koin.bom))
@@ -36,6 +38,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
             implementation(compose.desktop.currentOs)
+            implementation(libs.koin.compose)
         }
     }
 }
@@ -46,7 +49,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Note Delight"
-            packageVersion = "1.1.7"
+            packageVersion = "1.1.8"
             description = "Note app with encryption"
             copyright = "© 2023 SoftArtDev"
             macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))

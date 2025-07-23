@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.presentation.signin
 
+import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.navigation.AppNavGraph
@@ -18,6 +19,7 @@ class SignInViewModel(
         value = SignInResult.ShowSignInForm
     )
     val stateFlow: StateFlow<SignInResult> = mutableStateFlow
+    var autofillManager: AutofillManager? = null
 
     fun signIn(pass: CharSequence) = viewModelScope.launch {
         mutableStateFlow.value = SignInResult.ShowProgress
@@ -25,6 +27,7 @@ class SignInViewModel(
             mutableStateFlow.value = when {
                 pass.isEmpty() -> SignInResult.ShowEmptyPassError
                 checkPasswordUseCase(pass) -> {
+                    autofillManager?.commit()
                     router.navigateClearingBackStack(AppNavGraph.Main)
                     SignInResult.ShowSignInForm
                 }
@@ -32,6 +35,7 @@ class SignInViewModel(
             }
         } catch (error: Throwable) {
             Napier.e("❌", error)
+            autofillManager?.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
             mutableStateFlow.value = SignInResult.ShowSignInForm
         }

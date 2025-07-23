@@ -38,11 +38,11 @@ class SqlDelightNoteDAO(private val noteQueries: NoteQueries) : NoteDAO {
 
     override fun load(id: Long): Note = noteQueries.getById(noteId = id).executeAsOne().model
 
-    override fun insert(note: Note) = noteQueries.insert(note.dbo)
+    override fun insert(note: Note): Unit = run { noteQueries.insert(note.dbo) }
 
-    override fun update(note: Note) = noteQueries.update(note.dbo)
+    override fun update(note: Note): Unit = run { noteQueries.update(note.dbo) }
 
-    override fun delete(id: Long) = noteQueries.delete(noteId = id)
+    override fun delete(id: Long): Unit = run { noteQueries.delete(noteId = id) }
 
-    override fun deleteAll() = noteQueries.deleteAll()
+    override fun deleteAll(): Unit = run { noteQueries.deleteAll() }
 }

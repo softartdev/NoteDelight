@@ -2,7 +2,6 @@
 
 package com.softartdev.notedelight.ui.dialog.note
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -24,6 +23,7 @@ import notedelight.shared.generated.resources.note_changes_not_saved_dialog_titl
 import notedelight.shared.generated.resources.note_save_change_dialog_message
 import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SaveDialog(saveViewModel: SaveViewModel) = SaveDialog(

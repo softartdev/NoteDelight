@@ -48,7 +48,7 @@ class CryptTest {
         assertEquals(expected = 3, actual = noteList.size)
 
         val cipherVersion = IosCipherUtils.checkCipherVersion(dbName = DB_NAME)
-        assertEquals(expected = "4.5.4 community", actual = cipherVersion)
+        assertEquals(expected = "4.9.0 community", actual = cipherVersion)
 
         Napier.v("1️⃣'st step - encrypt database")
         safeRepo.closeDatabase()

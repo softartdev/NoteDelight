@@ -4,6 +4,7 @@ import com.softartdev.notedelight.db.FilePathResolver
 import com.softartdev.notedelight.db.JdbcDatabaseHolder
 import com.softartdev.notedelight.db.JvmCipherUtils
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.db.RoomNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import java.util.Properties
 
@@ -15,7 +16,7 @@ class JvmSafeRepo : SafeRepo() {
         get() = JvmCipherUtils.getDatabaseState(DB_NAME)
 
     override val noteDAO: NoteDAO
-        get() = TODO()
+        get() = RoomNoteDAO(buildDbIfNeed().noteDatabase)
 
     override val dbPath: String
         get() = FilePathResolver().invoke()

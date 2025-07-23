@@ -12,16 +12,18 @@ import platform.Foundation.*
 
 object IosCipherUtils {
 
-    private val dbDirPath: String by lazy {
-        val paths: List<*> = NSSearchPathForDirectoriesInDomains(
-            directory = NSApplicationSupportDirectory,
-            domainMask = NSUserDomainMask,
-            expandTilde = true
-        )
-        val zeroPath: NSString = paths.first() as NSString
-        return@lazy zeroPath.stringByAppendingPathComponent(str = "databases")
-    }
     private val nsFileManager = NSFileManager.defaultManager
+
+    private val dbDirPath: String by lazy {
+        val documentDirectory: NSURL? = nsFileManager.URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = false,
+            error = null,
+        )
+        return@lazy requireNotNull(documentDirectory?.path)
+    }
 
     fun getDatabaseState(dbName: String): PlatformSQLiteState {
         var result = PlatformSQLiteState.DOES_NOT_EXIST

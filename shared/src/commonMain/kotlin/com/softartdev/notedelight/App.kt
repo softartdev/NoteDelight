@@ -27,23 +27,12 @@ import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
-import com.softartdev.theme.material3.ThemeDialog
-import com.softartdev.theme.pref.PreferenceHelper
-import org.koin.compose.KoinContext
-import org.koin.compose.viewmodel.koinNavViewModel
+import com.softartdev.theme.material3.ThemeDialogContent
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun App(
-    router: Router,
-    navController: NavHostController = rememberNavController()
-) = KoinContext {
-    WrappedApp(router, navController)
-}
-
-@Composable
-private fun WrappedApp(
     router: Router,
     navController: NavHostController = rememberNavController()
 ) = PreferableMaterialTheme {
@@ -71,7 +60,7 @@ private fun WrappedApp(
         }
         composable<AppNavGraph.Details> { backStackEntry: NavBackStackEntry ->
             NoteDetail(
-                noteViewModel = koinNavViewModel {
+                noteViewModel = koinViewModel {
                     parametersOf(backStackEntry.toRoute<AppNavGraph.Details>().noteId)
                 },
                 snackbarHostState = snackbarHostState
@@ -84,12 +73,7 @@ private fun WrappedApp(
             )
         }
         dialog<AppNavGraph.ThemeDialog> {
-            val preferenceHelper: PreferenceHelper = themePrefs.preferenceHelper
-            ThemeDialog(
-                darkThemeState = themePrefs.darkThemeState,
-                writePref = preferenceHelper::themeEnum::set,
-                dismissDialog = navController::navigateUp,
-            )
+            ThemeDialogContent(dismissDialog = navController::popBackStack)
         }
         dialog<AppNavGraph.SaveChangesDialog> {
             SaveDialog(saveViewModel = koinViewModel())

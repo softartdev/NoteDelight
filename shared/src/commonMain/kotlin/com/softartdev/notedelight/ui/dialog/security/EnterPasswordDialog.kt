@@ -1,8 +1,9 @@
 package com.softartdev.notedelight.ui.dialog.security
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
@@ -14,6 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillManager
+import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.text.input.ImeAction
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterResult
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -31,7 +35,10 @@ fun EnterPasswordDialog(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val result: EnterResult by enterViewModel.stateFlow.collectAsState()
-
+    val autofillManager: AutofillManager? = LocalAutofillManager.current
+    LaunchedEffect(key1 = enterViewModel, key2 = autofillManager) {
+        enterViewModel.autofillManager = autofillManager
+    }
     LaunchedEffect(key1 = enterViewModel, key2 = result, key3 = result.snackBarMessageType) {
         result.snackBarMessageType?.let { msg: String ->
             snackbarHostState.showSnackbar(msg)
@@ -53,6 +60,8 @@ fun ShowEnterPasswordDialog(result: EnterResult) = AlertDialog(
                 label = result.fieldLabel.resString,
                 isError = result.isError,
                 contentDescription = stringResource(Res.string.enter_password),
+                imeAction = ImeAction.Done,
+                keyboardActions = KeyboardActions { result.onEnterClick.invoke() }
             )
         }
     },

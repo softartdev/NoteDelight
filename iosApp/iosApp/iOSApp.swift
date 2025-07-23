@@ -14,6 +14,7 @@ struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
             ComposeController(appHelper: appHelper)
+                .ignoresSafeArea(edges: .all)
                 .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
         }
     }

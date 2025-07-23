@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.softartdev.notedelight.util
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlin.time.ExperimentalTime
 
 const val PATTERN = "HH:mm dd-MM-yyyy"
 

@@ -10,10 +10,9 @@ class AndroidDatabaseHolder(
     context: Context,
     passphrase: CharSequence,
 ) : RoomDbHolder {
-    private val dbPath: String = context.getDatabasePath(SafeRepo.DB_NAME).absolutePath
 
     val noteDatabase: NoteDatabase = Room
-        .databaseBuilder(context, NoteDatabase::class.java, dbPath)
+        .databaseBuilder(context, NoteDatabase::class.java, SafeRepo.DB_NAME)
         .openHelperFactory(SafeHelperFactory.fromUser(SpannableStringBuilder(passphrase)))
         .fallbackToDestructiveMigrationOnDowngrade(false)
         .build()

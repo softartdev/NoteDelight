@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

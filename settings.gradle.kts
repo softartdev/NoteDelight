@@ -5,8 +5,9 @@ include(":core:data:db-sqldelight")
 //include(":core:data:db-room")
 include(":core:presentation")
 include(":core:test")
-include(":shared")
 include(":jvm-compose-test")
+include(":thirdparty:androidx:paging:compose")
+include(":shared")
 include(":android-compose-app")
 include(":desktop-compose-app")
 include(":ios-compose-kit")
@@ -22,7 +23,8 @@ pluginManagement {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("com.gradle.develocity") version "4.1"
 }
 
 dependencyResolutionManagement {

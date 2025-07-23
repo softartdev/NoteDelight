@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.softartdev.notedelight.util
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -9,6 +10,8 @@ import platform.Foundation.NSDate
 import platform.Foundation.timeIntervalSince1970
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 fun LocalDateTime.toNSDate(): NSDate {
     val referenceDateTime = LocalDateTime(2001, 1, 1, 0, 0, 0, 0)

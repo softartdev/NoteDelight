@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/iosComposeKit.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14.1'
-    spec.dependency 'SQLCipher', '4.5.4'
+    spec.dependency 'SQLCipher', '4.9.0'
                 
     if !Dir.exist?('build/cocoapods/framework/iosComposeKit.framework') || Dir.empty?('build/cocoapods/framework/iosComposeKit.framework')
         raise "

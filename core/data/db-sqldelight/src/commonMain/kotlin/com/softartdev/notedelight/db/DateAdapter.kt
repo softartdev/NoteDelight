@@ -1,7 +1,14 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.softartdev.notedelight.db
 
 import app.cash.sqldelight.ColumnAdapter
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class DateAdapter : ColumnAdapter<LocalDateTime, Long> {
 

@@ -2,7 +2,7 @@
 
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -33,9 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.paging.PagingData
-import app.cash.paging.compose.LazyPagingItems
-import app.cash.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.softartdev.notedelight.db.TestSchema
+import com.softartdev.notedelight.db.toModel
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.main.NoteListResult
@@ -126,9 +127,8 @@ fun MainScreen(
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    val testNotes = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
-//    val pagingData: PagingData<Note> = PagingData.from(testNotes.toModel())
-    val pagingData: PagingData<Note> = TODO()
+    val testNotes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
+    val pagingData: PagingData<Note> = PagingData.from(testNotes)
     val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
         mutableStateOf(NoteListResult.Success(pagingFlow))

@@ -2,12 +2,12 @@
 
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -15,12 +15,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillManager
+import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
@@ -32,11 +36,16 @@ import notedelight.shared.generated.resources.incorrect_password
 import notedelight.shared.generated.resources.sign_in
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel) {
     val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
+    val autofillManager: AutofillManager? = LocalAutofillManager.current
+    LaunchedEffect(key1 = signInViewModel, key2 = autofillManager) {
+        signInViewModel.autofillManager = autofillManager
+    }
     SignInScreenBody(
         showLoading = signInResultState.value == SignInResult.ShowProgress,
         passwordState = passwordState,
@@ -45,8 +54,7 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
             SignInResult.ShowIncorrectPassError -> Res.string.incorrect_password
             else -> Res.string.enter_password
         },
-        isError = signInResultState.value == SignInResult.ShowEmptyPassError
-                || signInResultState.value == SignInResult.ShowIncorrectPassError,
+        isError = signInResultState.value.isError,
     ) { signInViewModel.signIn(pass = passwordState.value) }
 }
 
@@ -68,7 +76,9 @@ fun SignInScreenBody(
             passwordState = passwordState,
             label = stringResource(labelResource),
             isError = isError,
-            contentDescription = stringResource(Res.string.enter_password)
+            contentDescription = stringResource(Res.string.enter_password),
+            imeAction = ImeAction.Go,
+            keyboardActions = KeyboardActions { onSignInClick.invoke() },
         )
         Button(
             onClick = onSignInClick,

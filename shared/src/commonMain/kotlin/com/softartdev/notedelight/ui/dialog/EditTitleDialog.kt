@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -61,6 +61,7 @@ fun ShowEditTitleDialog(
         Column {
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
+                modifier = Modifier.semantics { contentDescription = label },
                 value = TextFieldValue(text = result.title, selection = textRange),
                 onValueChange = {
                     textRange = it.selection
@@ -71,7 +72,7 @@ fun ShowEditTitleDialog(
                     Text(stringResource(res))
                 },
                 isError = result.isError,
-                modifier = Modifier.semantics { contentDescription = label }
+                singleLine = true,
             )
         }
     },

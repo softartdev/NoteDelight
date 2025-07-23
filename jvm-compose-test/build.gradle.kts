@@ -22,6 +22,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.turbine)
+    implementation(compose.materialIconsExtended)
     implementation(compose.components.resources)
     implementation(compose.desktop.uiTestJUnit4)
     implementation(compose.desktop.currentOs)

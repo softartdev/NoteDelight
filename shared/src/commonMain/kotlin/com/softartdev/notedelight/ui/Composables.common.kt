@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +12,7 @@ import notedelight.shared.generated.resources.Res
 import notedelight.shared.generated.resources.label_empty_result
 import notedelight.shared.generated.resources.press_add_note
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 expect fun EnableEdgeToEdge()

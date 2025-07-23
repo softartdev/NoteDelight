@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
+import io.github.aakira.napier.Napier
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +22,7 @@ class CryptInstrumentedTest {
     fun cryptTest() {
         assertEquals(PlatformSQLiteState.DOES_NOT_EXIST, safeRepo.databaseState)
         safeRepo.buildDbIfNeed()
+        Napier.d("notes count = ${safeRepo.noteDAO.count}")
         assertEquals(PlatformSQLiteState.UNENCRYPTED, safeRepo.databaseState)
         safeRepo.encrypt(SpannableStringBuilder(password))
         assertEquals(PlatformSQLiteState.ENCRYPTED, safeRepo.databaseState)

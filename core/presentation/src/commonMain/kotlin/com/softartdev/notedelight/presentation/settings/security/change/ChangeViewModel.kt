@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.presentation.settings.security.change
 
+import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.navigation.Router
@@ -31,6 +32,7 @@ class ChangeViewModel(
         )
     )
     val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
+    var autofillManager: AutofillManager? = null
 
     private fun onEditOldPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(ChangeResult::hideErrors)
@@ -69,6 +71,7 @@ class ChangeViewModel(
                 }
                 checkPasswordUseCase(oldPassword) -> {
                     changePasswordUseCase(oldPassword, newPassword)
+                    autofillManager?.commit()
                     withContext(coroutineDispatchers.main) {
                         router.popBackStack()
                     }
@@ -79,6 +82,7 @@ class ChangeViewModel(
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
+            autofillManager?.cancel()
             mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
         } finally {
             mutableStateFlow.update(ChangeResult::hideLoading)
