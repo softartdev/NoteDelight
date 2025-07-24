@@ -49,9 +49,12 @@
     <string name="enter_title">Enter title</string>
     <string name="empty_title">Title must not be empty</string>
     <string name="create_note">Create note</string>
-    <string name="dialog_title_change_password">Changing password</string>
-    <string name="dialog_title_conform_password">Confirming password</string>
-    <string name="dialog_title_enter_password">Entering password</string>
+    <string name="confirm_password_dialog_title">Set password</string>
+    <string name="confirm_password_dialog_subtitle">Please create a password and enter it below.</string>
+    <string name="changing_password_dialog_title">Change password</string>
+    <string name="changing_password_dialog_subtitle">Enter your old password, then create a new one.</string>
+    <string name="enter_password_dialog_title">Enter password</string>
+    <string name="enter_password_dialog_subtitle">Enter your current password to disable password protection.</string>
     <string name="dialog_title_change_title">Editing title</string>
     <string name="copy">Copy</string>
 </resources>

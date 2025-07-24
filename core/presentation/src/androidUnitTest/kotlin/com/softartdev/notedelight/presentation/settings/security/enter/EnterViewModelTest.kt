@@ -102,7 +102,7 @@ class EnterViewModelTest {
             assertTrue(resultState.loading)
 
             resultState = awaitItem()
-            assertEquals(FieldLabel.EMPTY, resultState.fieldLabel)
+            assertEquals(FieldLabel.EMPTY_PASSWORD, resultState.fieldLabel)
 
             resultState = awaitItem()
             assertTrue(resultState.isError)
@@ -122,7 +122,7 @@ class EnterViewModelTest {
             var resultState = awaitItem()
             assertFalse(resultState.loading)
             assertFalse(resultState.isError)
-            assertEquals(FieldLabel.ENTER, resultState.fieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, resultState.fieldLabel)
 
             resultState.onEditPassword(password)
             resultState = awaitItem()
@@ -132,7 +132,7 @@ class EnterViewModelTest {
             assertTrue(resultState.loading)
 
             resultState = awaitItem()
-            assertEquals(FieldLabel.INCORRECT, resultState.fieldLabel)
+            assertEquals(FieldLabel.INCORRECT_PASSWORD, resultState.fieldLabel)
 
             resultState = awaitItem()
             assertTrue(resultState.isError)

@@ -4,7 +4,7 @@ import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 
 data class EnterResult(
     val loading: Boolean = false,
-    val fieldLabel: FieldLabel = FieldLabel.ENTER,
+    val fieldLabel: FieldLabel = FieldLabel.ENTER_PASSWORD,
     val password: String = "",
     val isPasswordVisible: Boolean = false,
     val isError: Boolean = false,

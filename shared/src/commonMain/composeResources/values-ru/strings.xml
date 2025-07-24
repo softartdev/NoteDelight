@@ -49,9 +49,12 @@
     <string name="enter_title">Введите заголовок</string>
     <string name="empty_title">Заголовок не должен быть пустым</string>
     <string name="create_note">Создать заметку</string>
-    <string name="dialog_title_change_password">Смена пароля</string>
-    <string name="dialog_title_conform_password">Подтверждение пароля</string>
-    <string name="dialog_title_enter_password">Ввод пароля</string>
+    <string name="confirm_password_dialog_title">Установка пароля</string>
+    <string name="confirm_password_dialog_subtitle">Придумайте пароль и введите его ниже.</string>
+    <string name="changing_password_dialog_title">Смена пароля</string>
+    <string name="changing_password_dialog_subtitle">Введите старый пароль, затем придумайте новый.</string>
+    <string name="enter_password_dialog_title">Ввод пароля</string>
+    <string name="enter_password_dialog_subtitle">Введите текущий пароль для отключения защиты.</string>
     <string name="dialog_title_change_title">Редактирование заголовка</string>
     <string name="copy">Копировать</string>
 </resources>

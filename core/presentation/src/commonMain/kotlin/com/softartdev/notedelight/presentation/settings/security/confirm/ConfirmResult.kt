@@ -6,8 +6,8 @@ data class ConfirmResult(
     val loading: Boolean = false,
     val password: String = "",
     val repeatPassword: String = "",
-    val passwordFieldLabel: FieldLabel = FieldLabel.ENTER,
-    val repeatPasswordFieldLabel: FieldLabel = FieldLabel.ENTER,
+    val passwordFieldLabel: FieldLabel = FieldLabel.ENTER_PASSWORD,
+    val repeatPasswordFieldLabel: FieldLabel = FieldLabel.CONFIRM_PASSWORD,
     val isPasswordError: Boolean = false,
     val isRepeatPasswordError: Boolean = false,
     val snackBarMessageType: String? = null,
@@ -22,8 +22,8 @@ data class ConfirmResult(
     fun hideErrors(): ConfirmResult = copy(
         isPasswordError = false,
         isRepeatPasswordError = false,
-        passwordFieldLabel = FieldLabel.ENTER,
-        repeatPasswordFieldLabel = FieldLabel.ENTER
+        passwordFieldLabel = FieldLabel.ENTER_PASSWORD,
+        repeatPasswordFieldLabel = FieldLabel.CONFIRM_PASSWORD
     )
     fun hideSnackBarMessage(): ConfirmResult = copy(snackBarMessageType = null)
 }

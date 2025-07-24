@@ -58,14 +58,14 @@ class ChangeViewModel(
 
             when {
                 oldPassword.isEmpty() -> mutableStateFlow.update {
-                    it.copy(oldPasswordFieldLabel = FieldLabel.EMPTY, isOldPasswordError = true)
+                    it.copy(oldPasswordFieldLabel = FieldLabel.EMPTY_PASSWORD, isOldPasswordError = true)
                 }
                 newPassword.isEmpty() -> mutableStateFlow.update {
-                    it.copy(newPasswordFieldLabel = FieldLabel.EMPTY, isNewPasswordError = true)
+                    it.copy(newPasswordFieldLabel = FieldLabel.EMPTY_PASSWORD, isNewPasswordError = true)
                 }
                 newPassword != repeatNewPassword -> mutableStateFlow.update {
                     it.copy(
-                        repeatPasswordFieldLabel = FieldLabel.NO_MATCH,
+                        repeatPasswordFieldLabel = FieldLabel.PASSWORDS_NOT_MATCH,
                         isRepeatPasswordError = true
                     )
                 }
@@ -77,7 +77,7 @@ class ChangeViewModel(
                     }
                 }
                 else -> mutableStateFlow.update {
-                    it.copy(oldPasswordFieldLabel = FieldLabel.INCORRECT, isOldPasswordError = true)
+                    it.copy(oldPasswordFieldLabel = FieldLabel.INCORRECT_PASSWORD, isOldPasswordError = true)
                 }
             }
         } catch (e: Throwable) {

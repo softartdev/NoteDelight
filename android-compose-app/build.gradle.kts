@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 838
-        versionName = "8.3.8"
+        versionCode = 839
+        versionName = "8.3.9"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -63,6 +63,7 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         emulatorControl.enable = true
     }
+    androidResources.generateLocaleConfig = true
 }
 
 dependencies {

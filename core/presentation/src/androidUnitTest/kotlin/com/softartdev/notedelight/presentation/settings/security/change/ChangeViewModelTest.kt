@@ -68,9 +68,9 @@ class ChangeViewModelTest {
             assertFalse(initialState.isNewPasswordError)
             assertFalse(initialState.isRepeatPasswordError)
             // Check initial label types
-            assertEquals(FieldLabel.ENTER, initialState.oldPasswordFieldLabel)
-            assertEquals(FieldLabel.ENTER, initialState.newPasswordFieldLabel)
-            assertEquals(FieldLabel.ENTER, initialState.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_OLD_PASSWORD, initialState.oldPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_NEW_PASSWORD, initialState.newPasswordFieldLabel)
+            assertEquals(FieldLabel.REPEAT_NEW_PASSWORD, initialState.repeatPasswordFieldLabel)
             assertNull(initialState.snackBarMessageType)
 
             cancelAndIgnoreRemainingEvents()
@@ -124,7 +124,7 @@ class ChangeViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem() // Error state
-            assertEquals(FieldLabel.EMPTY, state.oldPasswordFieldLabel)
+            assertEquals(FieldLabel.EMPTY_PASSWORD, state.oldPasswordFieldLabel)
             assertTrue(state.isOldPasswordError)
             assertFalse(state.isNewPasswordError)
             assertFalse(state.isRepeatPasswordError)
@@ -149,7 +149,7 @@ class ChangeViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem() // Error state
-            assertEquals(FieldLabel.EMPTY, state.newPasswordFieldLabel)
+            assertEquals(FieldLabel.EMPTY_PASSWORD, state.newPasswordFieldLabel)
             assertFalse(state.isOldPasswordError)
             assertTrue(state.isNewPasswordError)
             assertFalse(state.isRepeatPasswordError)
@@ -178,7 +178,7 @@ class ChangeViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem() // Error state
-            assertEquals(FieldLabel.NO_MATCH, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.PASSWORDS_NOT_MATCH, state.repeatPasswordFieldLabel)
             assertFalse(state.isOldPasswordError)
             assertFalse(state.isNewPasswordError)
             assertTrue(state.isRepeatPasswordError)
@@ -210,7 +210,7 @@ class ChangeViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem() // Error state
-            assertEquals(FieldLabel.INCORRECT, state.oldPasswordFieldLabel)
+            assertEquals(FieldLabel.INCORRECT_PASSWORD, state.oldPasswordFieldLabel)
             assertTrue(state.isOldPasswordError)
             assertFalse(state.isNewPasswordError)
             assertFalse(state.isRepeatPasswordError)
@@ -238,9 +238,9 @@ class ChangeViewModelTest {
             assertFalse(state.isOldPasswordError)
             assertFalse(state.isNewPasswordError)
             assertFalse(state.isRepeatPasswordError)
-            assertEquals(FieldLabel.ENTER, state.oldPasswordFieldLabel)
-            assertEquals(FieldLabel.ENTER, state.newPasswordFieldLabel)
-            assertEquals(FieldLabel.ENTER, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_OLD_PASSWORD, state.oldPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_NEW_PASSWORD, state.newPasswordFieldLabel)
+            assertEquals(FieldLabel.REPEAT_NEW_PASSWORD, state.repeatPasswordFieldLabel)
 
             cancelAndIgnoreRemainingEvents()
         }

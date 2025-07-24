@@ -29,7 +29,8 @@ import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.shared.generated.resources.Res
 import notedelight.shared.generated.resources.cancel
-import notedelight.shared.generated.resources.dialog_title_change_password
+import notedelight.shared.generated.resources.changing_password_dialog_subtitle
+import notedelight.shared.generated.resources.changing_password_dialog_title
 import notedelight.shared.generated.resources.enter_new_password
 import notedelight.shared.generated.resources.enter_old_password
 import notedelight.shared.generated.resources.repeat_new_password
@@ -58,10 +59,12 @@ fun ChangePasswordDialog(
 
 @Composable
 fun ShowChangePasswordDialog(result: ChangeResult) = AlertDialog(
-    title = { Text(text = stringResource(Res.string.dialog_title_change_password)) },
+    title = { Text(text = stringResource(Res.string.changing_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
         Column {
+            Text(text = stringResource(Res.string.changing_password_dialog_subtitle))
+            Spacer(modifier = Modifier.height(8.dp))
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
                 password = result.oldPassword,

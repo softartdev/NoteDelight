@@ -30,7 +30,8 @@ import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.shared.generated.resources.Res
 import notedelight.shared.generated.resources.cancel
 import notedelight.shared.generated.resources.confirm_password
-import notedelight.shared.generated.resources.dialog_title_conform_password
+import notedelight.shared.generated.resources.confirm_password_dialog_subtitle
+import notedelight.shared.generated.resources.confirm_password_dialog_title
 import notedelight.shared.generated.resources.enter_password
 import notedelight.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
@@ -57,10 +58,12 @@ fun ConfirmPasswordDialog(
 
 @Composable
 fun ShowConfirmPasswordDialog(result: ConfirmResult) = AlertDialog(
-    title = { Text(text = stringResource(Res.string.dialog_title_conform_password)) },
+    title = { Text(text = stringResource(Res.string.confirm_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
         Column {
+            Text(text = stringResource(Res.string.confirm_password_dialog_subtitle))
+            Spacer(modifier = Modifier.height(8.dp))
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
                 password = result.password,

@@ -60,8 +60,8 @@ class ConfirmViewModelTest {
             assertTrue(initialState.repeatPassword.isEmpty())
             assertFalse(initialState.isPasswordError)
             assertFalse(initialState.isRepeatPasswordError)
-            assertEquals(FieldLabel.ENTER, initialState.passwordFieldLabel)
-            assertEquals(FieldLabel.ENTER, initialState.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, initialState.passwordFieldLabel)
+            assertEquals(FieldLabel.CONFIRM_PASSWORD, initialState.repeatPasswordFieldLabel)
             assertNull(initialState.snackBarMessageType)
 
             cancelAndIgnoreRemainingEvents()
@@ -77,8 +77,8 @@ class ConfirmViewModelTest {
             initialState.onEditPassword(password)
             var state = awaitItem()
             assertEquals(password, state.password)
-            assertEquals(FieldLabel.ENTER, state.passwordFieldLabel)
-            assertEquals(FieldLabel.ENTER, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, state.passwordFieldLabel)
+            assertEquals(FieldLabel.CONFIRM_PASSWORD, state.repeatPasswordFieldLabel)
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
 
@@ -111,8 +111,8 @@ class ConfirmViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem()
-            assertEquals(FieldLabel.ENTER, state.passwordFieldLabel)
-            assertEquals(FieldLabel.NO_MATCH, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, state.passwordFieldLabel)
+            assertEquals(FieldLabel.PASSWORDS_NOT_MATCH, state.repeatPasswordFieldLabel)
             assertTrue(state.isRepeatPasswordError)
             assertFalse(state.isPasswordError)
 
@@ -141,8 +141,8 @@ class ConfirmViewModelTest {
             assertTrue(state.loading)
 
             state = awaitItem()
-            assertEquals(FieldLabel.ENTER, state.passwordFieldLabel)
-            assertEquals(FieldLabel.NO_MATCH, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, state.passwordFieldLabel)
+            assertEquals(FieldLabel.PASSWORDS_NOT_MATCH, state.repeatPasswordFieldLabel)
             assertFalse(state.isPasswordError)
             assertTrue(state.isRepeatPasswordError)
 
@@ -161,7 +161,7 @@ class ConfirmViewModelTest {
 
             state = awaitItem() // Error state
             assertTrue(state.isPasswordError)
-            assertEquals(FieldLabel.EMPTY, state.passwordFieldLabel)
+            assertEquals(FieldLabel.EMPTY_PASSWORD, state.passwordFieldLabel)
 
             state = awaitItem()
             assertFalse(state.loading)
@@ -171,8 +171,8 @@ class ConfirmViewModelTest {
             state = awaitItem()
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
-            assertEquals(FieldLabel.ENTER, state.passwordFieldLabel)
-            assertEquals(FieldLabel.ENTER, state.repeatPasswordFieldLabel)
+            assertEquals(FieldLabel.ENTER_PASSWORD, state.passwordFieldLabel)
+            assertEquals(FieldLabel.CONFIRM_PASSWORD, state.repeatPasswordFieldLabel)
 
             cancelAndIgnoreRemainingEvents()
         }

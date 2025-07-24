@@ -49,13 +49,13 @@ class ConfirmViewModel(
             when {
                 password != repeatPassword -> mutableStateFlow.update {
                     it.copy(
-                        repeatPasswordFieldLabel = FieldLabel.NO_MATCH,
+                        repeatPasswordFieldLabel = FieldLabel.PASSWORDS_NOT_MATCH,
                         isRepeatPasswordError = true
                     )
                 }
                 password.isEmpty() -> mutableStateFlow.update {
                     it.copy(
-                        passwordFieldLabel = FieldLabel.EMPTY,
+                        passwordFieldLabel = FieldLabel.EMPTY_PASSWORD,
                         isPasswordError = true
                     )
                 }

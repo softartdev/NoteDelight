@@ -34,7 +34,7 @@ class EnterViewModel(
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(EnterResult::hideError)
-        mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER) }
+        mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER_PASSWORD) }
         mutableStateFlow.update { it.copy(password = password) }
     }
 
@@ -48,7 +48,7 @@ class EnterViewModel(
             val password = mutableStateFlow.value.password
             when {
                 password.isEmpty() -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY) }
+                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
                     mutableStateFlow.update(EnterResult::showError)
                 }
                 checkPasswordUseCase(password) -> {
@@ -57,7 +57,7 @@ class EnterViewModel(
                     navigateUp()
                 }
                 else -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT) }
+                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
                     mutableStateFlow.update(EnterResult::showError)
                 }
             }

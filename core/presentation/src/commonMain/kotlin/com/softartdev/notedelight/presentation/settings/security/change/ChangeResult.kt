@@ -6,15 +6,15 @@ data class ChangeResult(
     val loading: Boolean = false,
     // Old password field
     val oldPassword: String = "",
-    val oldPasswordFieldLabel: FieldLabel = FieldLabel.ENTER,
+    val oldPasswordFieldLabel: FieldLabel = FieldLabel.ENTER_OLD_PASSWORD,
     val isOldPasswordError: Boolean = false,
     // New password field
     val newPassword: String = "",
-    val newPasswordFieldLabel: FieldLabel = FieldLabel.ENTER,
+    val newPasswordFieldLabel: FieldLabel = FieldLabel.ENTER_NEW_PASSWORD,
     val isNewPasswordError: Boolean = false,
     // Repeat new password field
     val repeatNewPassword: String = "",
-    val repeatPasswordFieldLabel: FieldLabel = FieldLabel.ENTER,
+    val repeatPasswordFieldLabel: FieldLabel = FieldLabel.REPEAT_NEW_PASSWORD,
     val isRepeatPasswordError: Boolean = false,
     // Common
     val snackBarMessageType: String? = null,
@@ -32,9 +32,9 @@ data class ChangeResult(
         isOldPasswordError = false,
         isNewPasswordError = false,
         isRepeatPasswordError = false,
-        oldPasswordFieldLabel = FieldLabel.ENTER,
-        newPasswordFieldLabel = FieldLabel.ENTER,
-        repeatPasswordFieldLabel = FieldLabel.ENTER
+        oldPasswordFieldLabel = FieldLabel.ENTER_OLD_PASSWORD,
+        newPasswordFieldLabel = FieldLabel.ENTER_NEW_PASSWORD,
+        repeatPasswordFieldLabel = FieldLabel.REPEAT_NEW_PASSWORD
     )
     fun hideSnackBarMessage(): ChangeResult = copy(snackBarMessageType = null)
 }
