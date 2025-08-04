@@ -94,7 +94,9 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
-    androidTestImplementation(project(":jvm-compose-test"))
+    androidTestImplementation(project(":jvm-compose-test")) {
+        exclude(group = "org.jetbrains.runtime", module = "jbr-api")
+    }
     androidTestImplementation(libs.commonsware.saferoom)
     androidTestImplementation(libs.sqlDelight.android)
     androidTestImplementation(libs.androidx.test.ext.junit)
