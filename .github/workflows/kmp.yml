@@ -28,7 +28,12 @@ jobs:
         with:
           cache-read-only: false
           cache-overwrite-existing: true
-      - name: Build
+      - name: Build (first attempt)
+        id: build
+        continue-on-error: true
+        run: ./gradlew build
+      - name: Build (retry on failure)
+        if: ${{ steps.build.outcome == 'failure' }}
         run: ./gradlew build
       - name: Archive build-output artifacts
         if: always()
