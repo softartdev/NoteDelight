@@ -78,11 +78,9 @@ class DesktopUiTests : AbstractUiTests() {
     @Test
     override fun prepopulateDatabase() = super.prepopulateDatabase()
 
-    @Ignore("Desktop app doesn't support encryption yet")
     @Test
     override fun flowAfterCryptTest() = super.flowAfterCryptTest()
 
-    @Ignore("Desktop app doesn't support encryption yet")
     @Test
     override fun settingPasswordTest() = super.settingPasswordTest()
 

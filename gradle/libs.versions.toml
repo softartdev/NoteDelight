@@ -45,6 +45,7 @@ desugar = "2.1.5"
 androidSecurityLint = "1.0.3"
 appdirs = "1.4.0"
 uiTooling = "1.9.1"
+sqliteMc = "2.1.0-2.2.3-0"
 
 [libraries]
 coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "coroutines" }
@@ -59,6 +60,7 @@ sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref 
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
 sqlDelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqlDelight" }
 sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+
 
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
 stately-isolate = { module = "co.touchlab:stately-isolate", version.ref = "stately" }

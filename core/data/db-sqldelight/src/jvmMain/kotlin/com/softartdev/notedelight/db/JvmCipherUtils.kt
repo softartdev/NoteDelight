@@ -1,96 +1,42 @@
 package com.softartdev.notedelight.db
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.softartdev.notedelight.model.PlatformSQLiteState
+import io.toxicity.sqlite.mc.driver.SQLiteMCDriver
+import io.toxicity.sqlite.mc.driver.config.DatabasesDir
+import io.toxicity.sqlite.mc.driver.config.encryption.Key
 import java.io.File
-import java.io.FileNotFoundException
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.Statement
 
 object JvmCipherUtils {
+    private val dbFile = File(FilePathResolver().invoke())
 
-    fun getDatabaseState(dbName: String): PlatformSQLiteState {
-        var result = PlatformSQLiteState.DOES_NOT_EXIST
-        val dbPath = File(dbName)
-        if (dbPath.exists()) {
-            result = PlatformSQLiteState.UNENCRYPTED
-            var connection: Connection? = null
-            try {
-                val url = JdbcSqliteDriver.IN_MEMORY + dbName // jdbc:sqlite:$dbName
-                connection = DriverManager.getConnection(url)
-                val statement: Statement = connection.createStatement()
-                val resultSet: ResultSet = statement.executeQuery("PRAGMA user_version;")
-                val version: Long = resultSet.getLong(1)
-                println("db version = $version")
-            } catch (throwable: Throwable) {
-                throwable.printStackTrace()
-                result = PlatformSQLiteState.ENCRYPTED
-            } finally {
-                connection?.close()
+    private val factory = SQLiteMCDriver.Factory(
+        dbName = dbFile.name,
+        schema = NoteDb.Schema
+    ) {
+        filesystem(DatabasesDir(dbFile.parentFile!!)) {
+            encryption {
+                sqlCipher { v4() }
             }
         }
-        return result
     }
 
-    fun decrypt(password: String, dbName: String) {
-        val originalFile = File(dbName)
-        if (originalFile.exists()) {
-            val newFile = File.createTempFile("sqlcipherutils", "tmp", null)
-
-            var url = JdbcSqliteDriver.IN_MEMORY + dbName // jdbc:sqlite:$dbName
-            var connection = DriverManager.getConnection(url, null, password)
-            val statement = connection.prepareStatement("ATTACH DATABASE ? AS plaintext KEY ''")
-            statement.setString(1, newFile.absolutePath)
-            statement.execute()
-            connection.createStatement().executeQuery("SELECT sqlcipher_export('plaintext')")
-            connection.createStatement().executeQuery("DETACH DATABASE plaintext")
-            val resultSet: ResultSet = statement.executeQuery("PRAGMA user_version;")
-            val version: Long = resultSet.getLong(1)
-            statement.close()
-            connection.close()
-
-            url = JdbcSqliteDriver.IN_MEMORY + newFile.absolutePath
-            connection = DriverManager.getConnection(url)
-            connection.createStatement().executeQuery("PRAGMA user_version = $version")
-            connection.close()
-
-            originalFile.delete()
-            newFile.renameTo(originalFile)
-        } else {
-            throw FileNotFoundException(originalFile.absolutePath + " not found")
+    fun getDatabaseState(): PlatformSQLiteState {
+        if (!dbFile.exists()) return PlatformSQLiteState.DOES_NOT_EXIST
+        return try {
+            factory.createBlocking(Key.Empty).close()
+            PlatformSQLiteState.UNENCRYPTED
+        } catch (_: Throwable) {
+            PlatformSQLiteState.ENCRYPTED
         }
     }
 
-    fun encrypt(password: String?, dbName: String) {
-        val originalFile = File(dbName)
-        if (originalFile.exists()) {
-            val newFile = File.createTempFile("sqlcipherutils", "tmp", null)
-
-            var url = JdbcSqliteDriver.IN_MEMORY + originalFile.absolutePath // jdbc:sqlite:${originalFile.absolutePath}
-            var connection = DriverManager.getConnection(url)
-            var statement: Statement = connection.createStatement()
-            val resultSet: ResultSet = statement.executeQuery("PRAGMA user_version;")
-            val version: Long = resultSet.getLong(1)
-            statement.close()
-            connection.close()
-
-            url = JdbcSqliteDriver.IN_MEMORY + newFile.absolutePath
-            connection = DriverManager.getConnection(url, null, password)
-            statement = connection.prepareStatement("ATTACH DATABASE ? AS plaintext KEY ''")
-            statement.setString(1, originalFile.absolutePath)
-            statement.execute()
-            connection.createStatement().executeQuery("SELECT sqlcipher_export('plaintext')")
-            connection.createStatement().executeQuery("DETACH DATABASE plaintext")
-            connection.createStatement().executeQuery("PRAGMA user_version = $version")
-            statement.close()
-            connection.close()
-
-            originalFile.delete()
-            newFile.renameTo(originalFile)
+    fun createDriver(passphrase: CharSequence = "", rekey: CharSequence? = null): SQLiteMCDriver {
+        val key = if (passphrase.isEmpty()) Key.Empty else Key.passphrase(passphrase.toString())
+        return if (rekey != null) {
+            val rekeyKey = if (rekey.isEmpty()) Key.Empty else Key.passphrase(rekey.toString())
+            factory.createBlocking(key, rekeyKey)
         } else {
-            throw FileNotFoundException(originalFile.absolutePath + " not found")
+            factory.createBlocking(key)
         }
     }
 }

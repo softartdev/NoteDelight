@@ -1,15 +1,14 @@
 package com.softartdev.notedelight.db
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.github.aakira.napier.Napier
+import io.toxicity.sqlite.mc.driver.SQLiteMCDriver
 import java.sql.SQLException
-import java.util.Properties
 
-class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder {
-    override val driver = JdbcSqliteDriver(
-        url = JdbcSqliteDriver.IN_MEMORY + FilePathResolver().invoke(),// jdbc:sqlite:/.../notes.db
-        properties = props
-    )
+class JdbcDatabaseHolder(
+    passphrase: CharSequence = "",
+    rekey: CharSequence? = null,
+) : SqlDelightDbHolder {
+    override val driver: SQLiteMCDriver = JvmCipherUtils.createDriver(passphrase, rekey)
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries = noteDb.noteQueries
 

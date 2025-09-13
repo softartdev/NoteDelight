@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.sqlDelight)
+    id("io.toxicity.sqlite-mc") version "2.1.0-2.2.3-0"
     alias(libs.plugins.kotlin.cocoapods)
 }
 
@@ -53,7 +53,6 @@ kotlin {
         iosTest.dependencies {
         }
         jvmMain.dependencies {
-            implementation(libs.sqlDelight.jvm)
             implementation(libs.appdirs)
             implementation(libs.napier)
         }
@@ -91,11 +90,10 @@ android {
     testOptions.unitTests.isReturnDefaultValues = true
 }
 
-sqldelight {
+sqliteMC {
     databases {
         create("NoteDb") {
             packageName.set("com.softartdev.notedelight.db")
         }
     }
-    linkSqlite.set(false)
 }
