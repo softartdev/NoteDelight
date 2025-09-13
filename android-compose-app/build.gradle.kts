@@ -98,7 +98,8 @@ dependencies {
         exclude(group = "org.jetbrains.runtime", module = "jbr-api")
     }
     androidTestImplementation(libs.commonsware.saferoom)
-    androidTestImplementation(libs.sqlDelight.android)
+//    androidTestImplementation(libs.sqlDelight.android)
+    androidTestImplementation(libs.sqliteMc.android)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestUtil(libs.androidx.test.orchestrator)

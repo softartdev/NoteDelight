@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    id("io.toxicity.sqlite-mc") version "2.1.0-2.2.3-0"
+//    alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.sqliteMc)
     alias(libs.plugins.kotlin.cocoapods)
 }
 
@@ -18,9 +19,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
-            implementation(libs.sqlDelight.runtime)
+            /*implementation(libs.sqlDelight.runtime)
             implementation(libs.sqlDelight.coroutinesExt)
-            implementation(libs.sqlDelight.paging)
+            implementation(libs.sqlDelight.paging)*/
+//            implementation(libs.sqliteMc.runtime)
+//            implementation(libs.sqliteMc.coroutinesExt)
+//            implementation(libs.sqliteMc.paging)
             implementation(libs.kotlinx.datetime)
             implementation(libs.stately.common)
         }
@@ -32,21 +36,24 @@ kotlin {
             implementation(libs.napier)
         }
         androidMain.dependencies {
-            implementation(libs.sqlDelight.android)
+//            implementation(libs.sqlDelight.android)
+//            implementation(libs.sqliteMc.android)
             implementation(libs.commonsware.saferoom)
             implementation(libs.android.sqlcipher)
         }
         androidUnitTest.dependencies {
             implementation(kotlin("test-junit"))
             implementation(libs.bundles.mockito)
-            implementation(libs.sqlDelight.jvm)
+//            implementation(libs.sqlDelight.jvm)
+//            implementation(libs.sqliteMc.jvm)
         }
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.test.ext.junit)
             implementation(libs.androidx.test.runner)
         }
         iosMain.dependencies {
-            implementation(libs.sqlDelight.native)
+//            implementation(libs.sqlDelight.native)
+//            implementation(libs.sqliteMc.native)
             implementation(libs.stately.isolate)
             implementation(libs.stately.iso.collections)
         }
