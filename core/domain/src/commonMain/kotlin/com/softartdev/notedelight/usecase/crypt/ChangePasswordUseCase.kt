@@ -6,9 +6,9 @@ import com.softartdev.notedelight.repository.SafeRepo
 
 class ChangePasswordUseCase(
     private val safeRepo: SafeRepo
-): (CharSequence?, CharSequence?) -> Unit {
+): suspend (CharSequence?, CharSequence?) -> Unit {
 
-    override fun invoke(oldPass: CharSequence?, newPass: CharSequence?) {
+    override suspend fun invoke(oldPass: CharSequence?, newPass: CharSequence?) {
         if (safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED) {
             requireNotNull(oldPass)
             if (newPass.isNullOrEmpty()) {

@@ -34,7 +34,7 @@ class CryptUseCaseUnitTest {
     @Test
     fun `check correct password`() = runTest {
         val pass = StubEditable("correct password")
-        Mockito.`when`(mockNoteDAO.count).thenReturn(0)
+        Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
         assertTrue(checkPasswordUseCase(pass))
     }
 
@@ -46,7 +46,7 @@ class CryptUseCaseUnitTest {
     }
 
     @Test
-    fun `change password for decrypt`() {
+    fun `change password for decrypt`() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
         val oldPass = StubEditable("old password")
         val newPass = null
@@ -55,7 +55,7 @@ class CryptUseCaseUnitTest {
     }
 
     @Test
-    fun `change password for rekey`() {
+    fun `change password for rekey`() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.ENCRYPTED)
         val oldPass = StubEditable("old password")
         val newPass = StubEditable("new password")
@@ -64,7 +64,7 @@ class CryptUseCaseUnitTest {
     }
 
     @Test
-    fun `change password for encrypt`() {
+    fun `change password for encrypt`() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(PlatformSQLiteState.UNENCRYPTED)
         val oldPass = null
         val newPass = StubEditable("new password")

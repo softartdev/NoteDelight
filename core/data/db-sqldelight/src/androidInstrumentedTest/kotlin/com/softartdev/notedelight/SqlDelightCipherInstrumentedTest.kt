@@ -12,17 +12,22 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
+import com.softartdev.notedelight.db.AsyncSchema
 import com.softartdev.notedelight.db.NoteDb
 import com.softartdev.notedelight.db.TestSchema
 import com.softartdev.notedelight.db.TestSchema.firstNote
 import com.softartdev.notedelight.db.TestSchema.secondNote
 import com.softartdev.notedelight.db.TestSchema.thirdNote
 import com.softartdev.notedelight.db.createQueryWrapper
+import com.softartdev.notedelight.db.toModel
 import com.softartdev.notedelight.repository.SafeRepo.Companion.DB_NAME
 import com.softartdev.notedelight.shared.db.Note
+import com.softartdev.notedelight.util.CoroutineDispatchersImpl
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import com.softartdev.notedelight.model.Note as NoteModel
 
 @MediumTest
 @RunWith(AndroidJUnit4::class)
@@ -38,7 +43,9 @@ class SqlDelightCipherInstrumentedTest {
         assertEquals(SQLCipherUtils.State.DOES_NOT_EXIST, databaseState)
 
         val emptyPassword: Editable = SpannableStringBuilder.valueOf("")
-        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(NoteDb.Schema)
+        val coroutineDispatchers = CoroutineDispatchersImpl()
+        val asyncSchema = AsyncSchema(NoteDb.Schema, coroutineDispatchers)
+        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(asyncSchema)
         var openDatabase: SupportSQLiteDatabase = SafeHelperFactory
             .fromUser(emptyPassword)
             .create(context, DB_NAME, callback)
@@ -50,9 +57,9 @@ class SqlDelightCipherInstrumentedTest {
         var noteQueries = createQueryWrapper(driver).noteQueries
 
         //ZERO STEP
-        TestSchema.insertTestNotes(noteQueries)
-        var exp = listOf(firstNote, secondNote, thirdNote).sortedBy(Note::id)
-        val act = noteQueries.getAll().executeAsList().sortedBy(Note::id)
+        runBlocking{ TestSchema.insertTestNotes(noteQueries) }
+        var exp: List<NoteModel> = listOf(firstNote, secondNote, thirdNote).sortedBy(NoteModel::id)
+        val act: List<NoteModel> = noteQueries.getAll().executeAsList().sortedBy(Note::id).toModel()
         assertEquals(exp, act)
 
         SQLCipherUtils.encrypt(context, DB_NAME, "password".toCharArray())// db close inside
@@ -67,16 +74,16 @@ class SqlDelightCipherInstrumentedTest {
         noteQueries = createQueryWrapper(driver).noteQueries
 
         //FIRST STEP
-        noteQueries.delete(firstNote.id)
+        runBlocking { noteQueries.delete(firstNote.id) }
         exp = listOf(secondNote, thirdNote)
-        assertEquals(exp, noteQueries.getAll().executeAsList())
+        assertEquals(exp, noteQueries.getAll().executeAsList().toModel())
 
         SafeHelperFactory.rekey(openDatabase, "new password".toCharArray())
 
         //SECOND STEP
-        noteQueries.delete(secondNote.id)
+        runBlocking { noteQueries.delete(secondNote.id) }
         exp = listOf(thirdNote)
-        assertEquals(exp, noteQueries.getAll().executeAsList())
+        assertEquals(exp, noteQueries.getAll().executeAsList().toModel())
 
         val originalFile = context.getDatabasePath(DB_NAME)
         SQLCipherUtils.decrypt(context, originalFile, "new password".toCharArray())
@@ -90,8 +97,8 @@ class SqlDelightCipherInstrumentedTest {
         noteQueries = createQueryWrapper(driver).noteQueries
 
         //THIRD STEP
-        noteQueries.delete(thirdNote.id)
+        runBlocking { noteQueries.delete(thirdNote.id) }
         exp = listOf()
-        assertEquals(exp, noteQueries.getAll().executeAsList())
+        assertEquals(exp, noteQueries.getAll().executeAsList().toModel())
     }
 }

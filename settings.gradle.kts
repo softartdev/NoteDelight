@@ -5,12 +5,14 @@ include(":core:data:db-sqldelight")
 //include(":core:data:db-room")
 include(":core:presentation")
 include(":core:test")
-include(":jvm-compose-test")
+include(":ui:shared")
+include(":ui:test-jvm")
 include(":thirdparty:androidx:paging:compose")
-include(":shared")
-include(":android-compose-app")
-include(":desktop-compose-app")
-include(":ios-compose-kit")
+include(":thirdparty:app:cash:sqldelight:paging3")
+include(":app:android")
+include(":app:desktop")
+include(":app:ios-kit")
+include(":app:web")
 
 pluginManagement {
     repositories {
@@ -24,7 +26,6 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    id("com.gradle.develocity") version "4.1"
 }
 
 dependencyResolutionManagement {

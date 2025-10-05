@@ -4,6 +4,7 @@
 [![Android CD](https://github.com/softartdev/NoteDelight/actions/workflows/android.yml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/android.yml)
 [![iOS CD](https://github.com/softartdev/NoteDelight/actions/workflows/ios.yml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/ios.yml)
 [![Desktop Java CD](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/desktop.yaml)
+[![Web CD](https://github.com/softartdev/NoteDelight/actions/workflows/web.yml/badge.svg)](https://github.com/softartdev/NoteDelight/actions/workflows/web.yml)
 
 [Kotlin Multiplatform](https://kotlinlang.org/lp/mobile/) application for create notes in SQLite
 database with [SQLDelight](https://github.com/cashapp/sqldelight) library, and encrypt it
@@ -14,10 +15,12 @@ Supported platforms:
 - Android
 - iOS (+ macOS [(Mac Catalyst)](https://developer.apple.com/mac-catalyst/))
 - Desktop JVM (macOS, Linux, Windows)x(x86_64, arm64)
+- Web (experimental - in development preview)
 
 [![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
 [![app_store_badge](screenshoots/badge-app-store.svg)](https://apps.apple.com/ge/app/note-delight/id6444444290)
-<a href="https://github.com/softartdev/NoteDelight/releases"><img src="screenshoots/badge-github.webp" alt="github_badge" height="40"></a>
+[![github_badge](screenshoots/badge-github.svg)](https://github.com/softartdev/NoteDelight/releases)
+[![web_badge](screenshoots/badge-web.svg)](https://softartdev.github.io/NoteDelight/)
 
 ## ARCHITECTURE 🏛
 
@@ -48,11 +51,11 @@ Supported platforms:
 
 ## WORK IN PROGRESS 🛠
 
-| feature \ platform | Android | iOS | Desktop Java |
-|:------------------:|:-------:|:---:|:------------:|
-|      database      |    ✅    | ✅	  |      ✅	      |
-|     encryption     |    ✅    | ✅ 	 |              |
-|         ui         |    ✅    | ✅	  |      ✅	      |
+| feature \ platform | Android | iOS | Desktop Java | Web |
+|:------------------:|:-------:|:---:|:------------:|:---:|
+|      database      |    ✅    | ✅	  |      ✅	      |  ✅  |
+|     encryption     |    ✅    | ✅ 	 |              |     |
+|         ui         |    ✅    | ✅	  |      ✅	      |  ✅  |
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing features.
 
@@ -77,7 +80,3 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 - [Turbine](https://github.com/cashapp/turbine)
 - [Orchestrator](https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/runner#use-android)
 - [Espresso](https://developer.android.com/training/testing/espresso)
-
-[![Jetbrains Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://jb.gg/OpenSourceSupport)
-
-Made with JetBrains tools

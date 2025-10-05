@@ -1,9 +1,9 @@
 package com.softartdev.notedelight.db
 
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
-import app.cash.paging.PagingData
-import app.cash.paging.PagingSource
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import com.softartdev.notedelight.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -17,11 +17,6 @@ interface NoteDAO {
      * @return all notes.
      */
     val listFlow: Flow<List<Note>>
-
-    /**
-     * Select the count of notes from the notes table.
-     */
-    val count: Long
 
     /**
      * Get a [PagingSource] for the notes table.
@@ -38,36 +33,41 @@ interface NoteDAO {
         ).flow
 
     /**
+     * Select the count of notes from the notes table.
+     */
+    suspend fun count(): Long
+
+    /**
      * Select a note by id.
      *
      * @param id the note id.
      * @return the note with noteId.
      */
-    fun load(id: Long): Note
+    suspend fun load(id: Long): Note
 
     /**
      * Insert a note in the database. If the note already exists, replace it.
      *
      * @param note the note to be inserted.
      */
-    fun insert(note: Note)
+    suspend fun insert(note: Note)
 
     /**
      * Update a note.
      *
      * @param note note to be updated
      */
-    fun update(note: Note)
+    suspend fun update(note: Note)
 
     /**
      * Delete a note by id.
      *
      * @param id the note id.
      */
-    fun delete(id: Long)
+    suspend fun delete(id: Long)
 
     /**
      * Delete all notes.
      */
-    fun deleteAll()
+    suspend fun deleteAll()
 }

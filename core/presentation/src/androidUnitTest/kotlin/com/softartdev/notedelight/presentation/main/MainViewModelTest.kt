@@ -39,9 +39,10 @@ class MainViewModelTest {
     private lateinit var mainViewModel: MainViewModel
 
     @Before
-    fun setUp() {
+    fun setUp() = runTest {
         Napier.base(PrintAntilog())
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
+        Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
         mainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
     }
 

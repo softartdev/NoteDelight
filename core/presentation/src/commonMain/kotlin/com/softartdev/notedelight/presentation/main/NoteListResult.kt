@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.presentation.main
 
-import app.cash.paging.PagingData
+import androidx.paging.PagingData
 import com.softartdev.notedelight.model.Note
 import kotlinx.coroutines.flow.Flow
 

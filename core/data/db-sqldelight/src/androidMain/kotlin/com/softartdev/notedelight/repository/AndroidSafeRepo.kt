@@ -11,8 +11,13 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.db.SqlDelightDbHolder
 import com.softartdev.notedelight.db.SqlDelightNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.util.CoroutineDispatchers
 
-class AndroidSafeRepo(private val context: Context) : SafeRepo() {
+class AndroidSafeRepo(
+    private val context: Context,
+    private val coroutineDispatchers: CoroutineDispatchers
+) : SafeRepo() {
+
     @Volatile
     private var databaseHolder: SqlDelightDbHolder? = null
 
@@ -24,22 +29,23 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         }
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(buildDbIfNeed().noteQueries)
+        get() = SqlDelightNoteDAO(databaseHolder!!.noteQueries, coroutineDispatchers)
 
     override val dbPath: String
         get() = context.getDatabasePath(DB_NAME).absolutePath
 
-    override fun buildDbIfNeed(passphrase: CharSequence): SqlDelightDbHolder = synchronized(this) {
+    override suspend fun buildDbIfNeed(passphrase: CharSequence): SqlDelightDbHolder {
         var instance = databaseHolder
         if (instance == null) {
             val passCopy = SpannableStringBuilder(passphrase) // threadsafe
             instance = AndroidDatabaseHolder(context, passCopy)
+            instance.createSchema()
             databaseHolder = instance
         }
         return instance
     }
 
-    override fun decrypt(oldPass: CharSequence) {
+    override suspend fun decrypt(oldPass: CharSequence) {
         val originalFile = context.getDatabasePath(DB_NAME)
 
         val oldCopy = SpannableStringBuilder(oldPass) // threadsafe
@@ -52,7 +58,7 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         buildDbIfNeed()
     }
 
-    override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+    override suspend fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         val androidDatabaseHolder = buildDbIfNeed(oldPass) as AndroidDatabaseHolder
@@ -62,7 +68,7 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         buildDbIfNeed(newPass)
     }
 
-    override fun encrypt(newPass: CharSequence) {
+    override suspend fun encrypt(newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         closeDatabase()
@@ -71,7 +77,7 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         buildDbIfNeed(newPass)
     }
 
-    override fun execute(query: String): String? {
+    override suspend fun execute(query: String): String? {
         val queryResult: QueryResult<String?> = buildDbIfNeed().driver.executeQuery(
             identifier = null,
             sql = query,
@@ -79,14 +85,14 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
             binders = null,
             mapper = this::map
         )
-        return queryResult.value
+        return queryResult.await()
     }
 
     private fun map(sqlCursor: SqlCursor): QueryResult<String?> = QueryResult.Value(
         value = if (sqlCursor.next().value) sqlCursor.getString(0) else null
     )
 
-    override fun closeDatabase() = synchronized(this) {
+    override suspend fun closeDatabase() = synchronized(this) {
         databaseHolder?.close()
         databaseHolder = null
     }

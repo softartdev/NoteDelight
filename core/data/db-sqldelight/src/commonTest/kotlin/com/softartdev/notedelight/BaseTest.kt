@@ -7,7 +7,7 @@ expect abstract class BaseTest() {
 
     val safeRepo: SafeRepo
 
-    val noteDB: NoteDb
+    suspend fun noteDB(): NoteDb
 
     fun deleteDb()
 }

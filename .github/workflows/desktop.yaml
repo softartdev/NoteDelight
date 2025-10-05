@@ -32,6 +32,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            desktop-compose-app/build/compose/binaries/main-release/deb/*.deb
-            desktop-compose-app/build/compose/binaries/main-release/dmg/*.dmg
-            desktop-compose-app/build/compose/binaries/main-release/msi/*.msi
+            app/desktop/build/compose/binaries/main-release/deb/*.deb
+            app/desktop/build/compose/binaries/main-release/dmg/*.dmg
+            app/desktop/build/compose/binaries/main-release/msi/*.msi

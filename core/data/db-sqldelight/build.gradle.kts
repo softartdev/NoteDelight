@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.gradle.convention)
@@ -14,15 +17,20 @@ kotlin {
     androidTarget()
     iosArm64()
     iosSimulatorArm64()
-
+    wasmJs {
+        browser()
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(libs.sqlDelight.runtime)
             implementation(libs.sqlDelight.coroutinesExt)
-            implementation(libs.sqlDelight.paging)
+            implementation(project(":thirdparty:app:cash:sqldelight:paging3"))
+            implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
             implementation(libs.stately.common)
+            implementation(libs.coroutines.core)
+            implementation(libs.napier)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -55,9 +63,17 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.sqlDelight.jvm)
             implementation(libs.appdirs)
-            implementation(libs.napier)
         }
         jvmTest.dependencies {
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
+            implementation(libs.sqlDelight.web)
+            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+            implementation(npm("@cashapp/sqldelight-sqljs-worker", libs.versions.sqlDelight.get()))
+            implementation(npm("sql.js", "1.8.0"))
+        }
+        wasmJsTest.dependencies {
         }
     }
     cocoapods {
@@ -67,7 +83,7 @@ kotlin {
         ios.deploymentTarget = "14.0"
         pod("SQLCipher", libs.versions.iosSqlCipher.get())
         framework {
-            isStatic = true
+            isStatic = false
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
@@ -95,6 +111,7 @@ sqldelight {
     databases {
         create("NoteDb") {
             packageName.set("com.softartdev.notedelight.db")
+            generateAsync.set(true)
         }
     }
     linkSqlite.set(false)

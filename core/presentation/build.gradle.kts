@@ -1,8 +1,14 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
@@ -11,14 +17,16 @@ kotlin {
     androidTarget()
     iosArm64()
     iosSimulatorArm64()
-
+    wasmJs {
+        browser()
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.napier)
-            implementation(libs.cashapp.paging.common)
+            implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
@@ -42,6 +50,10 @@ kotlin {
         }
         jvmTest.dependencies {
         }
+        wasmJsMain.dependencies {
+        }
+        wasmJsTest.dependencies {
+        }
     }
 }
 android {
@@ -61,4 +73,8 @@ android {
         coreLibraryDesugaring(libs.desugar)
     }
     testOptions.unitTests.isReturnDefaultValues = true
+}
+
+compose.experimental {
+    web.application {}
 }

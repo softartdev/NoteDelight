@@ -7,48 +7,53 @@ import com.softartdev.notedelight.db.SqlDelightNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.model.PlatformSQLiteThrowable
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.util.CoroutineDispatchers
 
 /**
  * Encryption functions are mocked
  */
-class JvmTestSafeRepo : SafeRepo() {
+class JvmTestSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : SafeRepo() {
     @Volatile
-    private var databaseHolder: JdbcDatabaseTestHolder? = buildDbIfNeed()
+    private var databaseHolder: JdbcDatabaseTestHolder? = null
 
     override val databaseState: PlatformSQLiteState
         get() = TODO("Not yet implemented")
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null"))
+        get() = SqlDelightNoteDAO(
+            noteQueries = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null"),
+            coroutineDispatchers = coroutineDispatchers
+        )
 
     override val dbPath: String
         get() = TODO("Not yet implemented")
 
-    override fun buildDbIfNeed(passphrase: CharSequence): JdbcDatabaseTestHolder = synchronized(this) {
+    override suspend fun buildDbIfNeed(passphrase: CharSequence): JdbcDatabaseTestHolder {
         var instance = databaseHolder
         if (instance == null) {
             instance = JdbcDatabaseTestHolder()
+            instance.createSchema()
             databaseHolder = instance
         }
         return instance
     }
 
-    override fun decrypt(oldPass: CharSequence) {
+    override suspend fun decrypt(oldPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed()
     }
 
-    override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+    override suspend fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed(newPass)
     }
 
-    override fun encrypt(newPass: CharSequence) {
+    override suspend fun encrypt(newPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed(newPass)
     }
 
-    override fun execute(query: String): String? {
+    override suspend fun execute(query: String): String? {
         val queryResult: QueryResult<String?> = buildDbIfNeed().driver.executeQuery(
             identifier = null,
             sql = query,
@@ -56,14 +61,14 @@ class JvmTestSafeRepo : SafeRepo() {
             binders = null,
             mapper = this::map
         )
-        return queryResult.value
+        return queryResult.await()
     }
 
     private fun map(sqlCursor: SqlCursor): QueryResult<String?> = QueryResult.Value(
         value = if (sqlCursor.next().value) sqlCursor.getString(0) else null
     )
 
-    override fun closeDatabase() = synchronized(this) {
+    override suspend fun closeDatabase() = synchronized(this) {
         databaseHolder?.close()
         databaseHolder = null
     }

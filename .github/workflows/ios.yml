@@ -28,21 +28,21 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
       - name: Download the Apple Worldwide Developer Relations Intermediate Certificate
-        working-directory: ./iosApp/fastlane
+        working-directory: ./app/iosApp/fastlane
         run: curl -o AppleWWDRCAG3.cer https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer
       - name: Install the Apple certificate and provisioning profile
-        working-directory: ./iosApp
+        working-directory: ./app/iosApp
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
           KEYCHAIN_NAME: app-signing
         run: fastlane setup_certificates_lane
       - name: Pre-build with Gradle
-        run: ./gradlew :ios-compose-kit:linkPodReleaseFrameworkIosArm64
+        run: ./gradlew :app:ios-kit:linkPodReleaseFrameworkIosArm64
       - name: AppStore build lane with gym
-        working-directory: ./iosApp
+        working-directory: ./app/iosApp
         run: fastlane appstore_build_gym_lane
       - name: AppStore publish lane with deliver
-        working-directory: ./iosApp
+        working-directory: ./app/iosApp
         run: fastlane appstore_publish_deliver_lane
       - name: Archive build artifacts
         if: ${{ always() }}
@@ -50,8 +50,8 @@ jobs:
         with:
           name: test-artifacts
           path: |
-            iosApp/iosApp.app.dSYM.zip
-            iosApp/iosApp.ipa
-            iosApp/fastlane/test_output/report.html
+            app/iosApp/iosApp.app.dSYM.zip
+            app/iosApp/iosApp.ipa
+            app/iosApp/fastlane/test_output/report.html
             /Users/runner/Library/Logs/gym/iosApp-iosApp.log
             /Users/runner/Library/Logs/scan/iosApp-iosApp.log

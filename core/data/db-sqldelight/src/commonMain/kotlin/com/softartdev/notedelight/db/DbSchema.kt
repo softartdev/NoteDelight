@@ -37,7 +37,7 @@ object TestSchema {
     )
     val notes: List<NoteModel> = listOf(firstNote, secondNote, thirdNote)
 
-    fun insertTestNotes(noteQueries: NoteQueries) = notes
+    suspend fun insertTestNotes(noteQueries: NoteQueries) = notes
         .map(NoteModel::dbo)
-        .forEach(noteQueries::insert)
+        .forEach { noteQueries.insert(it) }
 }

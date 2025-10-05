@@ -2,7 +2,7 @@ package com.softartdev.notedelight.usecase.crypt
 
 import com.softartdev.notedelight.repository.SafeRepo
 
-class CheckSqlCipherVersionUseCase(private val safeRepo: SafeRepo) : () -> String? {
+class CheckSqlCipherVersionUseCase(private val safeRepo: SafeRepo) : suspend () -> String? {
 
-    override fun invoke(): String? = safeRepo.execute(query = "PRAGMA cipher_version;")
+    override suspend fun invoke(): String? = safeRepo.execute(query = "PRAGMA cipher_version;")
 }

@@ -2,12 +2,12 @@ package com.softartdev.notedelight.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.paging.PagingData
-import app.cash.paging.cachedIn
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.softartdev.notedelight.model.Note
-import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
+import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Job
@@ -40,7 +40,7 @@ class MainViewModel(
 
     private fun checkDbConnection() = viewModelScope.launch {
         try {
-            val count: Long = safeRepo.noteDAO.count
+            val count: Long = safeRepo.noteDAO.count()
             Napier.d("check DB connection, notes: $count")
         } catch (throwable: Throwable) {
             handleError(throwable)

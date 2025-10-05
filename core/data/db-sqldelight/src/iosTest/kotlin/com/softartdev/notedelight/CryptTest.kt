@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.softartdev.notedelight
 
 import com.softartdev.notedelight.db.IosCipherUtils
@@ -7,6 +9,9 @@ import com.softartdev.notedelight.repository.IosSafeRepo
 import com.softartdev.notedelight.repository.SafeRepo.Companion.DB_NAME
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import platform.Foundation.NSFileManager
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -30,7 +35,7 @@ class CryptTest {
     }
 
     @Test
-    fun cryptTest() {
+    fun cryptTest() = runTest {
         Napier.v("0️⃣'th step - prepare database")
         val dbPath = IosCipherUtils.getDatabasePath(dbName = DB_NAME)
         Napier.d("dbPath: $dbPath")
@@ -38,7 +43,9 @@ class CryptTest {
         val dbDeleted = IosCipherUtils.deleteDatabase()
         assertEquals(dbExisted, dbDeleted, message = "must be deleted if existed")
 
-        val safeRepo = IosSafeRepo()
+        val safeRepo = IosSafeRepo(
+            coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = UnconfinedTestDispatcher())
+        )
         assertEquals(expected = PlatformSQLiteState.DOES_NOT_EXIST, actual = safeRepo.databaseState)
 
         TestSchema.insertTestNotes(safeRepo.buildDbIfNeed().noteQueries)

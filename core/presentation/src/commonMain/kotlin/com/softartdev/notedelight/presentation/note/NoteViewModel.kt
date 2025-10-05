@@ -267,12 +267,12 @@ class NoteViewModel(
         return title
     }
 
-    private fun isChanged(id: Long, title: String, text: String): Boolean {
+    private suspend fun isChanged(id: Long, title: String, text: String): Boolean {
         val note = noteDAO.load(id)
         return note.title != title || note.text != text
     }
 
-    private fun isEmpty(id: Long): Boolean {
+    private suspend fun isEmpty(id: Long): Boolean {
         val note = noteDAO.load(id)
         return note.title.isEmpty() && note.text.isEmpty()
     }

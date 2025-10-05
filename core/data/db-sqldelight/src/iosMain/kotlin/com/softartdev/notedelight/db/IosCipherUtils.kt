@@ -4,11 +4,41 @@ package com.softartdev.notedelight.db
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
+import cocoapods.SQLCipher.SQLITE_OK
+import cocoapods.SQLCipher.SQLITE_ROW
+import cocoapods.SQLCipher.sqlite3_close
+import cocoapods.SQLCipher.sqlite3_column_text
+import cocoapods.SQLCipher.sqlite3_errmsg
+import cocoapods.SQLCipher.sqlite3_exec
+import cocoapods.SQLCipher.sqlite3_finalize
+import cocoapods.SQLCipher.sqlite3_key
+import cocoapods.SQLCipher.sqlite3_open
+import cocoapods.SQLCipher.sqlite3_prepare
+import cocoapods.SQLCipher.sqlite3_prepare_v2
+import cocoapods.SQLCipher.sqlite3_step
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import io.github.aakira.napier.Napier
-import kotlinx.cinterop.*
-import platform.Foundation.*
+import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.CPointerVarOf
+import kotlinx.cinterop.CValues
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UByteVar
+import kotlinx.cinterop.allocPointerTo
+import kotlinx.cinterop.cstr
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.reinterpret
+import kotlinx.cinterop.toKString
+import kotlinx.cinterop.value
+import platform.Foundation.NSApplicationSupportDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSSearchPathForDirectoriesInDomains
+import platform.Foundation.NSString
+import platform.Foundation.NSUserDomainMask
+import platform.Foundation.create
+import platform.Foundation.stringByAppendingPathComponent
 
 object IosCipherUtils {
 

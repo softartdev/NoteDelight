@@ -6,11 +6,11 @@ import io.github.aakira.napier.Napier
 class CheckPasswordUseCase(private val safeRepo: SafeRepo) {
 
     @Throws(Throwable::class)
-    operator fun invoke(pass: CharSequence): Boolean = try {
+    suspend operator fun invoke(pass: CharSequence): Boolean = try {
         safeRepo.closeDatabase()
         val passphrase = StringBuilder(pass) // threadsafe
         safeRepo.buildDbIfNeed(passphrase)
-        val count: Long = safeRepo.noteDAO.count
+        val count: Long = safeRepo.noteDAO.count()
         Napier.i("Checked pass on DB with $count notes")
         true
     } catch (t: Throwable) {

@@ -42,7 +42,7 @@ captures/
 
 # Keystore files.
 # Real keystore are encrypted in gpg.
-note_room_key_store.jks
+app/android/note_room_key_store.jks
 # Stub keystore are published on GitHub, no need gitignore them.
 #stub_key_store.jks
 
@@ -53,9 +53,9 @@ note_room_key_store.jks
 # These keys will be hardcoded in APK's xml-resources, so no point to hide them.
 #google-services.json
 
-/fastlane/api-7350020584032910214-328107-d8d3807d1e1a.json
-/fastlane/metadata/android/
-/fastlane/report.xml
+/app/android/fastlane/api-7350020584032910214-328107-d8d3807d1e1a.json
+/app/android/fastlane/metadata/android/
+/app/android/fastlane/report.xml
 
 ### iOS
 # Generated files
@@ -67,8 +67,8 @@ note_room_key_store.jks
 /iosApp/iosApp.ipa
 
 # Code signing files
-/iosApp/fastlane/28F5CB4337.json
-/iosApp/fastlane/ios_distribution.p12
-/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
+/app/iosApp/fastlane/28F5CB4337.json
+/app/iosApp/fastlane/ios_distribution.p12
+/app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
 
 /.kotlin/

@@ -4,9 +4,9 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.util.createLocalDateTime
 import kotlinx.coroutines.channels.Channel
 
-class UpdateTitleUseCase(private val noteDAO: NoteDAO) : (Long, String) -> Unit {
+class UpdateTitleUseCase(private val noteDAO: NoteDAO) : suspend (Long, String) -> Unit {
 
-    override fun invoke(id: Long, title: String) {
+    override suspend fun invoke(id: Long, title: String) {
         val note = noteDAO.load(id).copy(
             title = title,
             dateModified = createLocalDateTime()

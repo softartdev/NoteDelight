@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
@@ -13,7 +14,7 @@ import com.softartdev.notedelight.repository.SafeRepo
 class AndroidDatabaseHolder(
     context: Context,
     passphrase: CharSequence,
-    schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema,
+    schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema.synchronous(),
     name: String? = SafeRepo.DB_NAME
 ) : SqlDelightDbHolder {
 

@@ -8,3 +8,10 @@ interface CoroutineDispatchers {
     val unconfined: CoroutineDispatcher
     val io: CoroutineDispatcher
 }
+
+expect class CoroutineDispatchersImpl() : CoroutineDispatchers {
+    override val default: CoroutineDispatcher
+    override val main: CoroutineDispatcher
+    override val unconfined: CoroutineDispatcher
+    override val io: CoroutineDispatcher
+}

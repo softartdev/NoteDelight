@@ -3,48 +3,48 @@ compileSdk = "36"
 targetSdk = "36"
 minSdk = "23"
 jdk = "17"
-kotlin = "2.1.21"
-ksp = "2.1.21-2.0.2"
-agp = "8.11.1"
+kotlin = "2.2.20"
+ksp = "2.2.10-2.0.2"
+agp = "8.13.0"
 gms = "4.4.3"
-crashlytics = "3.0.5"
-compose = "1.8.2"
+crashlytics = "3.0.6"
+compose = "1.9.0"
 coroutines = "1.10.2"
 sqlDelight = "2.1.0"
-room = "2.7.2"
-androidxSqlite = "2.5.2"
+room = "2.8.1"
+androidxSqlite = "2.6.1"
 saferoom = "1.3.0"
 androidSqlCipher = "4.5.4"
 iosSqlCipher = "4.9.0"
 stately = "2.1.0"
-koin-bom = "4.1.0"
-kotlinx-serialization = "1.8.1"
+koin-bom = "4.1.1"
+kotlinx-serialization = "1.9.0"
 kotlinx-datetime = "0.7.1"
+kotlinx-browser = "0.3"
 napier = "2.7.1"
-materialThemePrefs = "0.9.7"
-androidxViewModel = "2.9.1"
-androidxNavigation = "2.9.0-beta03"
-androidxActivityCompose = "1.10.1"
-androidxComposeTest = "1.8.3"
+materialThemePrefs = "0.9.8"
+androidxViewModel = "2.9.4"
+androidxNavigation = "2.9.0"
+androidxActivityCompose = "1.11.0"
+androidxComposeTest = "1.9.2"
 androidxCoreSplashscreen = "1.0.1"
 androidxTracing = "1.3.0"
-androidxLifecycle = "2.9.2"
+androidxLifecycle = "2.9.4"
 androidxArch = "2.2.0"
-androidxPaging = "3.3.6"
-androidxTestExt = "1.2.1"
-androidxTest = "1.6.2"
-androidxTestOrchestrator = "1.5.1"
-cashAppPaging = "3.3.0-alpha02-0.5.1"
-firebase = "34.0.0"
+androidxPaging = "3.4.0-alpha04"
+androidxTestExt = "1.3.0"
+androidxTest = "1.7.0"
+androidxTestOrchestrator = "1.6.1"
+firebase = "34.3.0"
 leakCanary = "2.14"
 junit = "4.13.2"
-mockito = "5.18.0"
+mockito = "5.20.0"
 turbine = "1.2.1"
-espresso = "3.6.1"
+espresso = "3.7.0"
 desugar = "2.1.5"
 androidSecurityLint = "1.0.3"
 appdirs = "1.4.0"
-uiTooling = "1.8.3"
+uiTooling = "1.9.2"
 
 [libraries]
 coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "coroutines" }
@@ -57,8 +57,10 @@ sqlDelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sq
 sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 sqlDelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
-sqlDelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqlDelight" }
+sqlDelight-web = { module = "app.cash.sqldelight:web-worker-driver", version.ref = "sqlDelight" }
+#sqlDelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqlDelight" } #TODO use instead of ":thirdparty:app:cash:sqldelight:paging3" when the lib will dependent of "androidx.paging" instead of "app.cash.paging"
 sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+sqlDelight-asyncExt = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqlDelight" }
 
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" } #FIXME https://github.com/cashapp/sqldelight/issues/4357
 stately-isolate = { module = "co.touchlab:stately-isolate", version.ref = "stately" }
@@ -90,6 +92,7 @@ koin-test = { module = "io.insert-koin:koin-test" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser" }
 
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
@@ -117,10 +120,6 @@ androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.r
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidxPaging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
 
-cashapp-paging-common = { module = "app.cash.paging:paging-common", version.ref = "cashAppPaging" }
-cashapp-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "cashAppPaging" }
-cashapp-paging-testing = { module = "app.cash.paging:paging-testing", version.ref = "cashAppPaging" }
-
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTest" }
@@ -146,7 +145,7 @@ appdirs = { module = "net.harawata:appdirs", version.ref = "appdirs" }
 
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espresso" }
-espresso-device = { module = "androidx.test.espresso:espresso-device", version = "1.0.1" }
+espresso-device = { module = "androidx.test.espresso:espresso-device", version = "1.1.0" }
 espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso" }
 
 desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }

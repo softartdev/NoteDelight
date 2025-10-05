@@ -15,6 +15,8 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -29,10 +31,13 @@ class NoteUseCaseUnitTest {
     private val mockDbHolder = Mockito.mock(AndroidDatabaseHolder::class.java)
 
     private val noteDb = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
-        NoteDb.Schema.create(driver)
+        runBlocking { NoteDb.Schema.create(driver).await() }
         return@let createQueryWrapper(driver)
     }
-    private val noteDAO = SqlDelightNoteDAO(noteDb.noteQueries)
+    private val noteDAO = SqlDelightNoteDAO(
+        noteQueries = noteDb.noteQueries,
+        coroutineDispatchers = CoroutineDispatchersStub(UnconfinedTestDispatcher())
+    )
     private val createNoteUseCase = CreateNoteUseCase(noteDAO)
     private val saveNoteUseCase = SaveNoteUseCase(noteDAO)
     private val deleteNoteUseCase = DeleteNoteUseCase(noteDAO)
@@ -48,7 +53,7 @@ class NoteUseCaseUnitTest {
 
     @After
     fun tearDown() = runTest {
-        noteDb.noteQueries.deleteAll()
+        noteDAO.deleteAll()
         Napier.takeLogarithm()
     }
 

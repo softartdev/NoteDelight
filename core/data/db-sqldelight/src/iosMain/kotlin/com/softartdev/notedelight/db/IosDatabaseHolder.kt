@@ -1,5 +1,6 @@
 package com.softartdev.notedelight.db
 
+import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -13,7 +14,7 @@ class IosDatabaseHolder(
     key: String? = null,
     rekey: String? = null,
     name: String = SafeRepo.DB_NAME,
-    schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema
+    schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema.synchronous()
 ) : SqlDelightDbHolder {
     private val configuration = createDatabaseConfiguration(name, schema, key, rekey)
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
@@ -25,7 +26,7 @@ class IosDatabaseHolder(
     companion object {
         fun createDatabaseConfiguration(
             name: String = SafeRepo.DB_NAME,
-            schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema,
+            schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema.synchronous(),
             key: String? = null,
             rekey: String? = null
         ): DatabaseConfiguration = DatabaseConfiguration(

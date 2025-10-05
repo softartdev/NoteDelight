@@ -20,6 +20,13 @@ class SplashViewModel(
 
     fun checkEncryption() = viewModelScope.launch {
         try {
+            Napier.d("Building database if need...")
+            safeRepo.buildDbIfNeed()
+            Napier.d("Database is ready, checking encryption state...")
+        } catch (error: Throwable) {
+            Napier.e("Error building database", error)
+        }
+        try {
             router.navigateClearingBackStack(
                 route = when (safeRepo.databaseState) {
                     PlatformSQLiteState.ENCRYPTED -> AppNavGraph.SignIn
@@ -29,7 +36,8 @@ class SplashViewModel(
         } catch (error: Throwable) {
             Napier.e("❌", error)
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
+        } finally {
+            mutableStateFlow.value = false
         }
-        mutableStateFlow.value = false
     }
 }

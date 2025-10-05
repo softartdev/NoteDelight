@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -16,7 +19,9 @@ kotlin {
   iosArm64()
   iosSimulatorArm64()
   applyDefaultHierarchyTemplate()
-
+  wasmJs {
+    browser()
+  }
   sourceSets {
     commonMain.dependencies {
       api(libs.androidx.paging.common)

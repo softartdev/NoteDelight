@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
@@ -10,7 +14,9 @@ kotlin {
     androidTarget()
     iosArm64()
     iosSimulatorArm64()
-
+    wasmJs {
+        browser()
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
@@ -24,6 +30,10 @@ kotlin {
         iosMain.dependencies {
         }
         jvmMain.dependencies {
+        }
+        wasmJsMain.dependencies {
+        }
+        wasmJsTest.dependencies {
         }
     }
 }

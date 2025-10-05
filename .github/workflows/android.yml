@@ -36,7 +36,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           target: google_apis
-          script: ./gradlew :android-compose-app:connectedCheck
+          script: ./gradlew :app:android:connectedCheck
   build_unit_test_publish_job:
     name: Build -> Unit-test -> Publish
     needs: ui_test_job
@@ -59,6 +59,7 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
       - name: Upload to Google Play
+        working-directory: ./app/android
         run: fastlane build_bundle_publish
       - name: Archive build artifacts
         if: ${{ always() }}
@@ -66,5 +67,5 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            android-compose-app/build/outputs
-            android-compose-app/build/reports
+            app/android/build/outputs
+            app/android/build/reports

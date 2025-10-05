@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
@@ -10,11 +14,19 @@ kotlin {
     androidTarget()
     iosArm64()
     iosSimulatorArm64()
-
+    wasmJs {
+        browser()
+    }
+    sourceSets.forEach {
+        it.dependencies {
+            implementation(project.dependencies.enforcedPlatform(libs.coroutines.bom))
+        }
+    }
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.coroutines.core)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.cashapp.paging.common)
+            implementation(libs.androidx.paging.common)
             implementation(libs.napier)
         }
         commonTest.dependencies {
@@ -31,6 +43,10 @@ kotlin {
         jvmMain.dependencies {
         }
         jvmTest.dependencies {
+        }
+        wasmJsMain.dependencies {
+        }
+        wasmJsTest.dependencies {
         }
     }
 }

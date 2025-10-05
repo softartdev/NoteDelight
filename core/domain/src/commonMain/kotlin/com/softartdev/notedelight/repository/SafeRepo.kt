@@ -14,17 +14,17 @@ abstract class SafeRepo {
 
     var relaunchListFlowCallback: (() -> Any)? = null
 
-    abstract fun buildDbIfNeed(passphrase: CharSequence = ""): DatabaseHolder
+    abstract suspend fun buildDbIfNeed(passphrase: CharSequence = ""): DatabaseHolder
 
-    abstract fun decrypt(oldPass: CharSequence)
+    abstract suspend fun decrypt(oldPass: CharSequence)
 
-    abstract fun rekey(oldPass: CharSequence, newPass: CharSequence)
+    abstract suspend fun rekey(oldPass: CharSequence, newPass: CharSequence)
 
-    abstract fun encrypt(newPass: CharSequence)
+    abstract suspend fun encrypt(newPass: CharSequence)
 
-    abstract fun execute(query: String): String?
+    abstract suspend fun execute(query: String): String?
 
-    abstract fun closeDatabase()
+    abstract suspend fun closeDatabase()
 
     companion object {
         const val DB_NAME = "notes.db"

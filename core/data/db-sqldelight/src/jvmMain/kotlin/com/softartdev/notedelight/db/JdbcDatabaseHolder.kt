@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.db
 
+import app.cash.sqldelight.async.coroutines.awaitCreate
+import app.cash.sqldelight.async.coroutines.awaitMigrate
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.github.aakira.napier.Napier
 import java.sql.SQLException
@@ -23,10 +25,10 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder 
             driver.execute(null, "PRAGMA user_version = $value;", 0, null)
         }
 
-    init {
+    override suspend fun createSchema() {
         if (currentVersion == 0) {
             try {
-                NoteDb.Schema.create(driver)
+                NoteDb.Schema.awaitCreate(driver)
             } catch (sqlException: SQLException) {
                 Napier.e(message = sqlException.localizedMessage)
             } catch (t: Throwable) {
@@ -34,7 +36,7 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder 
             }
             currentVersion = 1
         } else if (NoteDb.Schema.version > currentVersion) {
-            NoteDb.Schema.migrate(driver, currentVersion.toLong(), NoteDb.Schema.version)
+            NoteDb.Schema.awaitMigrate(driver, currentVersion.toLong(), NoteDb.Schema.version)
         }
     }
 
