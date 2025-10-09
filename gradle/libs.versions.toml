@@ -4,17 +4,17 @@ targetSdk = "36"
 minSdk = "23"
 jdk = "17"
 kotlin = "2.2.20"
-ksp = "2.2.10-2.0.2"
+ksp = "2.2.20-2.0.4"
 agp = "8.13.0"
 gms = "4.4.3"
 crashlytics = "3.0.6"
 compose = "1.9.0"
 coroutines = "1.10.2"
 sqlDelight = "2.1.0"
-room = "2.8.1"
+room = "2.8.2"
 androidxSqlite = "2.6.1"
-saferoom = "1.3.0"
-androidSqlCipher = "4.5.4"
+saferoom = "1.4.0"
+androidSqlCipher = "4.10.0"
 iosSqlCipher = "4.9.0"
 stately = "2.1.0"
 koin-bom = "4.1.1"
@@ -26,7 +26,7 @@ materialThemePrefs = "0.9.8"
 androidxViewModel = "2.9.4"
 androidxNavigation = "2.9.0"
 androidxActivityCompose = "1.11.0"
-androidxComposeTest = "1.9.2"
+androidxComposeTest = "1.9.3"
 androidxCoreSplashscreen = "1.0.1"
 androidxTracing = "1.3.0"
 androidxLifecycle = "2.9.4"
@@ -44,7 +44,7 @@ espresso = "3.7.0"
 desugar = "2.1.5"
 androidSecurityLint = "1.0.3"
 appdirs = "1.4.0"
-uiTooling = "1.9.2"
+uiTooling = "1.9.3"
 
 [libraries]
 coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "coroutines" }
@@ -77,9 +77,9 @@ androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "an
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidxSqlite" }
 
-commonsware-saferoom = { module = "com.commonsware.cwac:saferoom.x", version.ref = "saferoom" }
+commonsware-saferoom = { module = "io.github.softartdev:saferoom.x", version.ref = "saferoom" }
 
-android-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidSqlCipher" }
+android-sqlcipher = { module = "net.zetetic:sqlcipher-android", version.ref = "androidSqlCipher" }
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }

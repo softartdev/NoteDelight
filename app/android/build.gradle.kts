@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 840
-        versionName = "8.4.0"
+        versionCode = 841
+        versionName = "8.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -64,6 +64,7 @@ android {
         emulatorControl.enable = true
     }
     androidResources.generateLocaleConfig = true
+    lint.disable += "Aligned16KB"  // Workaround for AGP 8.13.0 PageAlignmentDetector bug
 }
 
 dependencies {

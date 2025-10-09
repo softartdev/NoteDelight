@@ -1,18 +1,19 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Core: `core/domain`, `core/data/db-sqldelight` (default), optional `core/data/db-room`, `core/presentation`, `core/test`.
+- Core: `core/domain`, `core/presentation`, `core/data/db-sqldelight` (default), `core/data/db-room` (optional), `core/test`.
 - UI: `ui/shared` (common Compose code and resources), `ui/test-jvm` (JVM Compose UI test utilities).
-- Apps: `app/android`, `app/desktop`, `app/ios-kit` (CocoaPods framework), `app/iosApp` (Xcode project).
+- Apps: `app/android`, `app/desktop`, `app/web`, `app/ios-kit` (CocoaPods framework), `app/iosApp` (Xcode project).
 - Tooling: `build-logic` (Gradle conventions), `thirdparty` (vendored modules), `gradle/libs.versions.toml` (versions).
 - Switch DB module via `gradle.properties` key `CORE_DATA_DB_MODULE`.
 
 ## Build, Test, and Development Commands
 - Build all: `./gradlew build` (compiles all modules and runs unit tests).
 - Android app: `./gradlew :app:android:assembleDebug` (APK), `:installDebug` (to device).
-- Android instrumentation tests: `./gradlew :app:android:connectedAndroidTest` (requires emulator/device; uses AndroidX Test Orchestrator).
+- Android instrumentation tests: `./gradlew :app:android:connectedCheck` (requires emulator/device; uses AndroidX Test Orchestrator).
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
 - iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
+- Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
 
 ## Coding Style & Naming Conventions
 - Kotlin official style (`kotlin.code.style=official`); 4-space indentation; organize imports.
@@ -22,7 +23,7 @@
 
 ## Testing Guidelines
 - Unit tests: Kotlin Multiplatform `kotlin("test")`/JUnit. Run all with `./gradlew test` or per module (e.g., `:ui:shared:jvmTest`).
-- Android UI tests: Espresso/Compose in `app/android/src/androidTest`. Run with `connectedAndroidTest`.
+- Android UI tests: Espresso/Compose in `app/android/src/androidTest`. Run with `connectedCheck`.
 - Desktop UI tests: in `app/desktop/src/jvmTest` using `uiTestJUnit4`.
 - Name tests `FooBarTest.kt`; prefer Given_When_Then method names.
 

@@ -17,36 +17,36 @@ Supported platforms:
 - Desktop JVM (macOS, Linux, Windows)x(x86_64, arm64)
 - Web (experimental - in development preview)
 
-[![google_play_badge](screenshoots/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
-[![app_store_badge](screenshoots/badge-app-store.svg)](https://apps.apple.com/ge/app/note-delight/id6444444290)
-[![github_badge](screenshoots/badge-github.svg)](https://github.com/softartdev/NoteDelight/releases)
-[![web_badge](screenshoots/badge-web.svg)](https://softartdev.github.io/NoteDelight/)
+[![google_play_badge](docs/badges/badge-google-play.svg)](https://play.google.com/store/apps/details?id=com.softartdev.noteroom)
+[![app_store_badge](docs/badges/badge-app-store.svg)](https://apps.apple.com/ge/app/note-delight/id6444444290)
+[![github_badge](docs/badges/badge-github.svg)](https://github.com/softartdev/NoteDelight/releases)
+[![web_badge](docs/badges/badge-web.svg)](https://softartdev.github.io/NoteDelight/)
 
 ## ARCHITECTURE 🏛
 
-![Architecture blueprint for this project](screenshoots/architecture.png)
+![Architecture blueprint for this project](docs/diagrams/architecture.png)
 
 ## SCREENSHOTS 🎞️
 
-<img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/light/5.png" height="447"> <img src="screenshoots/desktop/dark/6.png" height="447">
+<img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447">
 <details>
     <summary>More…</summary>
-    <p><img src="screenshoots/android/dark/1.png" height="447"> <img src="screenshoots/ios/dark/1.png" height="447"> <img src="screenshoots/desktop/dark/1.png" height="447"></p>
-    <p><img src="screenshoots/android/light/1.png" height="447"> <img src="screenshoots/ios/light/1.png" height="447"> <img src="screenshoots/desktop/light/1.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/2.png" height="447"> <img src="screenshoots/ios/dark/2.png" height="447"> <img src="screenshoots/desktop/dark/2.png" height="447"></p>
-    <p><img src="screenshoots/android/light/2.png" height="447"> <img src="screenshoots/ios/light/2.png" height="447"> <img src="screenshoots/desktop/light/2.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/3.png" height="447"> <img src="screenshoots/ios/dark/3.png" height="447"> <img src="screenshoots/desktop/dark/3.png" height="447"></p>
-    <p><img src="screenshoots/android/light/3.png" height="447"> <img src="screenshoots/ios/light/3.png" height="447"> <img src="screenshoots/desktop/light/3.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/4.png" height="447"> <img src="screenshoots/ios/dark/4.png" height="447"> <img src="screenshoots/desktop/dark/4.png" height="447"></p>
-    <p><img src="screenshoots/android/light/4.png" height="447"> <img src="screenshoots/ios/light/4.png" height="447"> <img src="screenshoots/desktop/light/4.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/5.png" height="447"> <img src="screenshoots/ios/dark/5.png" height="447"> <img src="screenshoots/desktop/dark/5.png" height="447"></p>
-    <p><img src="screenshoots/android/light/5.png" height="447"> <img src="screenshoots/ios/light/5.png" height="447"> <img src="screenshoots/desktop/light/5.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/6.png" height="447"> <img src="screenshoots/ios/dark/6.png" height="447"> <img src="screenshoots/desktop/dark/6.png" height="447"></p>
-    <p><img src="screenshoots/android/light/6.png" height="447"> <img src="screenshoots/ios/light/6.png" height="447"> <img src="screenshoots/desktop/light/6.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/7.png" height="447"> <img src="screenshoots/ios/dark/7.png" height="447"> <img src="screenshoots/desktop/dark/7.png" height="447"></p>
-    <p><img src="screenshoots/android/light/7.png" height="447"> <img src="screenshoots/ios/light/7.png" height="447"> <img src="screenshoots/desktop/light/7.png" height="447"></p>
-    <p><img src="screenshoots/android/dark/8.png" height="447"> <img src="screenshoots/ios/dark/8.png" height="447"> <img src="screenshoots/desktop/dark/8.png" height="447"></p>
-    <p><img src="screenshoots/android/light/8.png" height="447"> <img src="screenshoots/ios/light/8.png" height="447"> <img src="screenshoots/desktop/light/8.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/dark/1.png" height="447"> <img src="docs/screenshoots/desktop/dark/1.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/1.png" height="447"> <img src="docs/screenshoots/ios/light/1.png" height="447"> <img src="docs/screenshoots/desktop/light/1.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/2.png" height="447"> <img src="docs/screenshoots/ios/dark/2.png" height="447"> <img src="docs/screenshoots/desktop/dark/2.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/2.png" height="447"> <img src="docs/screenshoots/ios/light/2.png" height="447"> <img src="docs/screenshoots/desktop/light/2.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/3.png" height="447"> <img src="docs/screenshoots/ios/dark/3.png" height="447"> <img src="docs/screenshoots/desktop/dark/3.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/3.png" height="447"> <img src="docs/screenshoots/ios/light/3.png" height="447"> <img src="docs/screenshoots/desktop/light/3.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/4.png" height="447"> <img src="docs/screenshoots/ios/dark/4.png" height="447"> <img src="docs/screenshoots/desktop/dark/4.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/4.png" height="447"> <img src="docs/screenshoots/ios/light/4.png" height="447"> <img src="docs/screenshoots/desktop/light/4.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/5.png" height="447"> <img src="docs/screenshoots/ios/dark/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/5.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/5.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/light/5.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/6.png" height="447"> <img src="docs/screenshoots/ios/dark/6.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/6.png" height="447"> <img src="docs/screenshoots/ios/light/6.png" height="447"> <img src="docs/screenshoots/desktop/light/6.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/7.png" height="447"> <img src="docs/screenshoots/ios/dark/7.png" height="447"> <img src="docs/screenshoots/desktop/dark/7.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/7.png" height="447"> <img src="docs/screenshoots/ios/light/7.png" height="447"> <img src="docs/screenshoots/desktop/light/7.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/dark/8.png" height="447"> <img src="docs/screenshoots/ios/dark/8.png" height="447"> <img src="docs/screenshoots/desktop/dark/8.png" height="447"></p>
+    <p><img src="docs/screenshoots/android/light/8.png" height="447"> <img src="docs/screenshoots/ios/light/8.png" height="447"> <img src="docs/screenshoots/desktop/light/8.png" height="447"></p>
 </details>
 
 ## WORK IN PROGRESS 🛠
@@ -61,7 +61,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 
 ## CONTINUOUS INTEGRATION / DELIVERY ♻️
 
-![CI/CD workflows blueprint for this project](screenshoots/ci_cd.png)
+![CI/CD workflows blueprint for this project](docs/diagrams/ci_cd.png)
 
 ## LIBRARY DEPENDENCIES 📚
 
@@ -72,7 +72,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 - [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 - [Koin](https://github.com/InsertKoinIO/koin)
-- [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom)
+- [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom) - my [fork](https://github.com/softartdev/cwac-saferoom)
 - [Napier](https://github.com/AAkira/Napier)
 - [Firebase Crashlytics](https://firebase.google.com/products/crashlytics)
 - [LeakCanary 🐤](https://github.com/square/leakcanary)
