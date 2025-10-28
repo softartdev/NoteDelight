@@ -11,11 +11,6 @@ data class ConfirmResult(
     val isPasswordError: Boolean = false,
     val isRepeatPasswordError: Boolean = false,
     val snackBarMessageType: String? = null,
-    val onCancel: () -> Unit = {},
-    val onEditPassword: (password: String) -> Unit = {},
-    val onEditRepeatPassword: (password: String) -> Unit = {},
-    val onConfirmClick: () -> Unit = {},
-    val disposeOneTimeEvents: () -> Unit = {}
 ) {
     fun showLoading(): ConfirmResult = copy(loading = true)
     fun hideLoading(): ConfirmResult = copy(loading = false)
@@ -26,4 +21,11 @@ data class ConfirmResult(
         repeatPasswordFieldLabel = FieldLabel.CONFIRM_PASSWORD
     )
     fun hideSnackBarMessage(): ConfirmResult = copy(snackBarMessageType = null)
+}
+
+sealed interface ConfirmAction {
+    data object Cancel : ConfirmAction
+    data class OnEditPassword(val password: String) : ConfirmAction
+    data class OnEditRepeatPassword(val password: String) : ConfirmAction
+    data object OnConfirmClick : ConfirmAction
 }

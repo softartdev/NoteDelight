@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import notedelight.ui.shared.generated.resources.Res
+import notedelight.ui.shared.generated.resources.detail_pane_placeholder
 import notedelight.ui.shared.generated.resources.label_empty_result
 import notedelight.ui.shared.generated.resources.press_add_note
 import org.jetbrains.compose.resources.stringResource
@@ -70,28 +76,43 @@ fun Error(err: String) {
     }
 }
 
-@Preview
+@Composable
+fun DetailPanePlaceholder() = Card(shape = RoundedCornerShape(size = 0.dp)) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = 20.dp,
+            alignment = Alignment.CenterVertically,
+        ),
+    ) {
+        Icon(
+            modifier = Modifier.size(64.dp),
+            imageVector = Icons.Default.EditNote,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            text = stringResource(Res.string.detail_pane_placeholder),
+            style = MaterialTheme.typography.titleLarge,
+        )
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun PreviewLoader() = Loader()
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewEmpty() = Empty()
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewError() = Error(err = "Mock error")
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewCommons() = Column(modifier = Modifier.fillMaxWidth()) {
-    PreviewLoader()
-
-    HorizontalDivider()
-
-    PreviewEmpty()
-
-    HorizontalDivider()
-
-    PreviewError()
+fun PreviewDetailPanePlaceholder() {
+    DetailPanePlaceholder()
 }

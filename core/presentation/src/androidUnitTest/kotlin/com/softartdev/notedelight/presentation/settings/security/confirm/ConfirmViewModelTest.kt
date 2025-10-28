@@ -74,7 +74,7 @@ class ConfirmViewModelTest {
             val initialState = awaitItem()
 
             val password = "password"
-            initialState.onEditPassword(password)
+            viewModel.onAction(ConfirmAction.OnEditPassword(password))
             var state = awaitItem()
             assertEquals(password, state.password)
             assertEquals(FieldLabel.ENTER_PASSWORD, state.passwordFieldLabel)
@@ -82,13 +82,13 @@ class ConfirmViewModelTest {
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
 
-            state.onEditRepeatPassword(password)
+            viewModel.onAction(ConfirmAction.OnEditRepeatPassword(password))
             state = awaitItem()
             assertEquals(password, state.repeatPassword)
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
 
-            state.onConfirmClick()
+            viewModel.onAction(ConfirmAction.OnConfirmClick)
             state = awaitItem()
             assertTrue(state.loading)
 
@@ -103,10 +103,10 @@ class ConfirmViewModelTest {
         viewModel.stateFlow.test {
             val initialState = awaitItem()
 
-            initialState.onEditRepeatPassword("password") // Only set repeat password
+            viewModel.onAction(ConfirmAction.OnEditRepeatPassword("password")) // Only set repeat password
             var state = awaitItem()
 
-            state.onConfirmClick()
+            viewModel.onAction(ConfirmAction.OnConfirmClick)
             state = awaitItem()
             assertTrue(state.loading)
 
@@ -126,17 +126,17 @@ class ConfirmViewModelTest {
             val initialState = awaitItem()
 
             // Enter different passwords
-            initialState.onEditPassword("password1")
+            viewModel.onAction(ConfirmAction.OnEditPassword("password1"))
             var state = awaitItem()
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
 
-            state.onEditRepeatPassword("password2")
+            viewModel.onAction(ConfirmAction.OnEditRepeatPassword("password2"))
             state = awaitItem()
             assertFalse(state.isPasswordError)
             assertFalse(state.isRepeatPasswordError)
 
-            state.onConfirmClick()
+            viewModel.onAction(ConfirmAction.OnConfirmClick)
             state = awaitItem()
             assertTrue(state.loading)
 
@@ -154,7 +154,7 @@ class ConfirmViewModelTest {
     fun `edit clears errors`() = runTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
-            state.onConfirmClick() // Trigger empty password error
+            viewModel.onAction(ConfirmAction.OnConfirmClick) // Trigger empty password error
 
             state = awaitItem() // Loading
             assertTrue(state.loading)
@@ -166,7 +166,7 @@ class ConfirmViewModelTest {
             state = awaitItem()
             assertFalse(state.loading)
 
-            state.onEditPassword("password")
+            viewModel.onAction(ConfirmAction.OnEditPassword("password"))
 
             state = awaitItem()
             assertFalse(state.isPasswordError)
@@ -183,7 +183,7 @@ class ConfirmViewModelTest {
         viewModel.stateFlow.test {
             val initialState = awaitItem()
 
-            initialState.onCancel()
+            viewModel.onAction(ConfirmAction.Cancel)
             verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()

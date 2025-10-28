@@ -16,7 +16,7 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         get() = PlatformSQLiteState.UNENCRYPTED
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(dbHolder!!.noteQueries, coroutineDispatchers)
+        get() = SqlDelightNoteDAO({ dbHolder!!.noteQueries }, coroutineDispatchers)
 
     override val dbPath: String
         get() = TODO("Not yet implemented")

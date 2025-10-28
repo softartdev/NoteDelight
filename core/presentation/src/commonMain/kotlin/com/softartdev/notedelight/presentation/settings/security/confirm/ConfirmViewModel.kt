@@ -20,16 +20,17 @@ class ConfirmViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
-        value = ConfirmResult(
-            onCancel = this::cancel,
-            onConfirmClick = this::confirm,
-            onEditPassword = this::onEditPassword,
-            onEditRepeatPassword = this::onEditRepeatPassword,
-            disposeOneTimeEvents = this::disposeOneTimeEvents
-        )
+        value = ConfirmResult()
     )
     val stateFlow: StateFlow<ConfirmResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
+
+    fun onAction(action: ConfirmAction) = when (action) {
+        is ConfirmAction.Cancel -> cancel()
+        is ConfirmAction.OnEditPassword -> onEditPassword(action.password)
+        is ConfirmAction.OnEditRepeatPassword -> onEditRepeatPassword(action.password)
+        is ConfirmAction.OnConfirmClick -> confirm()
+    }
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(ConfirmResult::hideErrors)
@@ -80,7 +81,7 @@ class ConfirmViewModel(
         router.popBackStack()
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(ConfirmResult::hideSnackBarMessage)
     }
 }

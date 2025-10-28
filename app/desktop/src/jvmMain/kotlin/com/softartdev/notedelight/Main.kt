@@ -32,7 +32,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = stringResource(Res.string.app_name),
-            state = rememberWindowState(width = 480.dp, height = 640.dp),
+            state = rememberWindowState(width = 1024.dp, height = 768.dp),
             icon = rememberVectorPainter(image = Icons.Filled.FileLock),
         ) {
             CustomDesktopTheme {

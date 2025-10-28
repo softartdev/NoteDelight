@@ -21,7 +21,7 @@ class JvmTestSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : 
 
     override val noteDAO: NoteDAO
         get() = SqlDelightNoteDAO(
-            noteQueries = databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null"),
+            noteQueriesGetter = { databaseHolder?.noteQueries ?: throw PlatformSQLiteThrowable("DB is null") },
             coroutineDispatchers = coroutineDispatchers
         )
 

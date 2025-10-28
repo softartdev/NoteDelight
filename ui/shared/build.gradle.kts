@@ -39,6 +39,9 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.adaptive)
+            implementation(libs.compose.adaptive.layout)
+            implementation(libs.compose.adaptive.navigation)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel.navigation)
@@ -48,7 +51,6 @@ kotlin {
             implementation(project(":thirdparty:androidx:paging:compose"))
             implementation(libs.kotlinx.datetime)
             implementation(libs.napier)
-            implementation(libs.stately.common)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -72,8 +74,6 @@ kotlin {
             implementation(libs.koin.test)
         }
         iosMain.dependencies {
-            implementation(libs.stately.isolate)
-            implementation(libs.stately.iso.collections)
         }
         wasmJsMain.dependencies {
         }

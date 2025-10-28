@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.navigation
 
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.runBlocking
 
 class RouterStub : Router {
 
@@ -20,6 +21,20 @@ class RouterStub : Router {
 
     override fun popBackStack(): Boolean {
         Napier.d(message = "popBackStack")
+        return true
+    }
+
+    override fun setAdaptiveNavigator(adaptiveNavigator: Any) = 
+        Napier.d("setAdaptiveNavigator: $adaptiveNavigator")
+
+    override fun releaseAdaptiveNavigator() = 
+        Napier.d(message = "releaseAdaptiveNavigator")
+
+    override suspend fun adaptiveNavigateToDetail(contentKey: Long?) = 
+        Napier.d("adaptiveNavigateToDetail: $contentKey")
+
+    override suspend fun adaptiveNavigateBack(): Boolean {
+        Napier.d(message = "adaptiveNavigateBack")
         return true
     }
 }

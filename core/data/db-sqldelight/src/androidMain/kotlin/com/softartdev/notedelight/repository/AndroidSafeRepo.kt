@@ -29,7 +29,7 @@ class AndroidSafeRepo(
         }
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(databaseHolder!!.noteQueries, coroutineDispatchers)
+        get() = SqlDelightNoteDAO({ databaseHolder!!.noteQueries }, coroutineDispatchers)
 
     override val dbPath: String
         get() = context.getDatabasePath(DB_NAME).absolutePath

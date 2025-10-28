@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmAction
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmResult
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -50,14 +51,17 @@ fun ConfirmPasswordDialog(
     LaunchedEffect(key1 = confirmViewModel, key2 = result, key3 = result.snackBarMessageType) {
         result.snackBarMessageType?.let { msg: String ->
             snackbarHostState.showSnackbar(msg)
-            result.disposeOneTimeEvents()
+            confirmViewModel.disposeOneTimeEvents()
         }
     }
-    ShowConfirmPasswordDialog(result)
+    ShowConfirmPasswordDialog(result, confirmViewModel::onAction)
 }
 
 @Composable
-fun ShowConfirmPasswordDialog(result: ConfirmResult) = AlertDialog(
+fun ShowConfirmPasswordDialog(
+    result: ConfirmResult,
+    onAction: (action: ConfirmAction) -> Unit = {}
+) = AlertDialog(
     title = { Text(text = stringResource(Res.string.confirm_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
@@ -67,7 +71,7 @@ fun ShowConfirmPasswordDialog(result: ConfirmResult) = AlertDialog(
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
                 password = result.password,
-                onPasswordChange = result.onEditPassword,
+                onPasswordChange = { onAction(ConfirmAction.OnEditPassword(it)) },
                 label = result.passwordFieldLabel.resString,
                 isError = result.isPasswordError,
                 contentDescription = stringResource(Res.string.enter_password),
@@ -78,19 +82,19 @@ fun ShowConfirmPasswordDialog(result: ConfirmResult) = AlertDialog(
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 password = result.repeatPassword,
-                onPasswordChange = result.onEditRepeatPassword,
+                onPasswordChange = { onAction(ConfirmAction.OnEditRepeatPassword(it)) },
                 label = result.repeatPasswordFieldLabel.resString,
                 isError = result.isRepeatPasswordError,
                 contentDescription = stringResource(Res.string.confirm_password),
                 passwordContentType = ContentType.NewPassword,
-                keyboardActions = KeyboardActions { result.onConfirmClick.invoke() },
+                keyboardActions = KeyboardActions { onAction(ConfirmAction.OnConfirmClick) },
                 imeAction = ImeAction.Done
             )
         }
     },
-    confirmButton = { Button(onClick = result.onConfirmClick) { Text(stringResource(Res.string.yes)) } },
-    dismissButton = { Button(onClick = result.onCancel) { Text(stringResource(Res.string.cancel)) } },
-    onDismissRequest = result.onCancel
+    confirmButton = { Button(onClick = { onAction(ConfirmAction.OnConfirmClick) }) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = { onAction(ConfirmAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
+    onDismissRequest = { onAction(ConfirmAction.Cancel) }
 )
 
 @Preview

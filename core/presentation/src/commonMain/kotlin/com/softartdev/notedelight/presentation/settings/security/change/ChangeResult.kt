@@ -18,13 +18,6 @@ data class ChangeResult(
     val isRepeatPasswordError: Boolean = false,
     // Common
     val snackBarMessageType: String? = null,
-    // Events
-    val onCancel: () -> Unit = {},
-    val onEditOldPassword: (String) -> Unit = {},
-    val onEditNewPassword: (String) -> Unit = {},
-    val onEditRepeatPassword: (String) -> Unit = {},
-    val onChangeClick: () -> Unit = {},
-    val disposeOneTimeEvents: () -> Unit = {}
 ) {
     fun showLoading(): ChangeResult = copy(loading = true)
     fun hideLoading(): ChangeResult = copy(loading = false)
@@ -37,4 +30,12 @@ data class ChangeResult(
         repeatPasswordFieldLabel = FieldLabel.REPEAT_NEW_PASSWORD
     )
     fun hideSnackBarMessage(): ChangeResult = copy(snackBarMessageType = null)
+}
+
+sealed interface ChangeAction {
+    data object Cancel : ChangeAction
+    data class OnEditOldPassword(val password: String) : ChangeAction
+    data class OnEditNewPassword(val password: String) : ChangeAction
+    data class OnEditRepeatPassword(val password: String) : ChangeAction
+    data object OnChangeClick : ChangeAction
 }

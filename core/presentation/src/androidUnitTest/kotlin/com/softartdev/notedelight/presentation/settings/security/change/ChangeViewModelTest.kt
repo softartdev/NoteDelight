@@ -86,19 +86,19 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             var state = awaitItem() // Initial state
 
-            state.onEditOldPassword(oldPassword)
+            viewModel.onAction(ChangeAction.OnEditOldPassword(oldPassword))
             state = awaitItem()
             assertEquals(oldPassword, state.oldPassword)
 
-            state.onEditNewPassword(newPassword)
+            viewModel.onAction(ChangeAction.OnEditNewPassword(newPassword))
             state = awaitItem()
             assertEquals(newPassword, state.newPassword)
 
-            state.onEditRepeatPassword(newPassword)
+            viewModel.onAction(ChangeAction.OnEditRepeatPassword(newPassword))
             state = awaitItem()
             assertEquals(newPassword, state.repeatNewPassword)
 
-            state.onChangeClick()
+            viewModel.onAction(ChangeAction.OnChangeClick)
             state = awaitItem() // Loading state
             assertTrue(state.loading)
 
@@ -114,12 +114,12 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
             // Set only new passwords
-            state.onEditNewPassword("new")
+            viewModel.onAction(ChangeAction.OnEditNewPassword("new"))
             state = awaitItem()
-            state.onEditRepeatPassword("new")
+            viewModel.onAction(ChangeAction.OnEditRepeatPassword("new"))
             state = awaitItem()
 
-            state.onChangeClick()
+            viewModel.onAction(ChangeAction.OnChangeClick)
             state = awaitItem() // Loading
             assertTrue(state.loading)
 
@@ -141,10 +141,10 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
             // Set only old password
-            state.onEditOldPassword("old")
+            viewModel.onAction(ChangeAction.OnEditOldPassword("old"))
             state = awaitItem()
 
-            state.onChangeClick()
+            viewModel.onAction(ChangeAction.OnChangeClick)
             state = awaitItem() // Loading
             assertTrue(state.loading)
 
@@ -166,14 +166,14 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
 
-            state.onEditOldPassword("old")
+            viewModel.onAction(ChangeAction.OnEditOldPassword("old"))
             state = awaitItem()
-            state.onEditNewPassword("new1")
+            viewModel.onAction(ChangeAction.OnEditNewPassword("new1"))
             state = awaitItem()
-            state.onEditRepeatPassword("new2")
+            viewModel.onAction(ChangeAction.OnEditRepeatPassword("new2"))
             state = awaitItem()
 
-            state.onChangeClick()
+            viewModel.onAction(ChangeAction.OnChangeClick)
             state = awaitItem() // Loading
             assertTrue(state.loading)
 
@@ -198,14 +198,14 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
 
-            state.onEditOldPassword(oldPassword)
+            viewModel.onAction(ChangeAction.OnEditOldPassword(oldPassword))
             state = awaitItem()
-            state.onEditNewPassword("new")
+            viewModel.onAction(ChangeAction.OnEditNewPassword("new"))
             state = awaitItem()
-            state.onEditRepeatPassword("new")
+            viewModel.onAction(ChangeAction.OnEditRepeatPassword("new"))
             state = awaitItem()
 
-            state.onChangeClick()
+            viewModel.onAction(ChangeAction.OnChangeClick)
             state = awaitItem() // Loading
             assertTrue(state.loading)
 
@@ -226,14 +226,14 @@ class ChangeViewModelTest {
     fun `edit clears errors`() = runTest {
         viewModel.stateFlow.test {
             var state = awaitItem()
-            state.onChangeClick() // Trigger empty old password error
+            viewModel.onAction(ChangeAction.OnChangeClick) // Trigger empty old password error
             state = awaitItem() // Loading
             assertTrue(state.loading)
             state = awaitItem() // Error state
             assertTrue(state.isOldPasswordError)
             state = awaitItem() // Loading finished
 
-            state.onEditOldPassword("old")
+            viewModel.onAction(ChangeAction.OnEditOldPassword("old"))
             state = awaitItem()
             assertFalse(state.isOldPasswordError)
             assertFalse(state.isNewPasswordError)
@@ -251,7 +251,7 @@ class ChangeViewModelTest {
         viewModel.stateFlow.test {
             val initialState = awaitItem()
 
-            initialState.onCancel()
+            viewModel.onAction(ChangeAction.Cancel)
             verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()

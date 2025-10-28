@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.coroutineScope
 import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
@@ -78,7 +79,7 @@ fun SettingsScreen(
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     LifecycleResumeEffect(key1 = settingsViewModel, key2 = result) {
-        result.checkEncryption()
+        settingsViewModel.onAction(SettingsAction.CheckEncryption)
         result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
             lifecycle.coroutineScope.launch {
                 val snackResult: SnackbarResult = snackbarHostState.showSnackbar(
@@ -88,23 +89,24 @@ fun SettingsScreen(
                 )
                 if (snackResult == ActionPerformed) clipboardManager.setText(AnnotatedString(msg))
             }
-            result.disposeOneTimeEvents()
+            settingsViewModel.disposeOneTimeEvents()
         }
-        onPauseOrDispose { result.disposeOneTimeEvents() }
+        onPauseOrDispose { settingsViewModel.disposeOneTimeEvents() }
     }
-    SettingsScreenBody(result, snackbarHostState)
+    SettingsScreenBody(result, settingsViewModel::onAction, snackbarHostState)
 }
 
 @Composable
 fun SettingsScreenBody(
     result: SecurityResult = SecurityResult(),
+    onAction: (action: SettingsAction) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     topBar = {
         TopAppBar(
             title = { Text(stringResource(Res.string.settings)) },
             navigationIcon = {
-                IconButton(onClick = result.navBack) {
+                IconButton(onClick = { onAction(SettingsAction.NavBack) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
@@ -118,7 +120,7 @@ fun SettingsScreenBody(
         Column(modifier = Modifier.padding(paddingValues)) {
             if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
-            ThemePreferenceItem(onClick = result.changeTheme)
+            ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
             PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {
@@ -128,24 +130,24 @@ fun SettingsScreenBody(
                 },
                 title = enableEncryptionPrefTitle,
                 vector = Icons.Default.Lock,
-                onClick = { result.changeEncryption(!result.encryption) }
+                onClick = { onAction(SettingsAction.ChangeEncryption(!result.encryption)) }
             ) {
-                Switch(checked = result.encryption, onCheckedChange = result.changeEncryption)
+                Switch(checked = result.encryption, onCheckedChange = { onAction(SettingsAction.ChangeEncryption(it)) })
             }
             Preference(
                 title = stringResource(Res.string.pref_title_set_password),
                 vector = Icons.Default.Password,
-                onClick = result.changePassword
+                onClick = { onAction(SettingsAction.ChangePassword) }
             )
             Preference(
                 title = stringResource(Res.string.pref_title_check_cipher_version),
                 vector = Icons.Filled.FileLock,
-                onClick = result.showCipherVersion
+                onClick = { onAction(SettingsAction.ShowCipherVersion) }
             )
             Preference(
                 title = stringResource(Res.string.pref_title_show_db_path),
                 vector = Icons.Default.Storage,
-                onClick = result.showDatabasePath
+                onClick = { onAction(SettingsAction.ShowDatabasePath) }
             )
             Spacer(Modifier.height(32.dp))
             ListItem(

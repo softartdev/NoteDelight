@@ -2,7 +2,7 @@ name: Web CD
 
 on:
   push:
-    branches: ["master", "dev", "wasmJS"]
+    branches: ["master", "dev", "wasmJS", "web"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

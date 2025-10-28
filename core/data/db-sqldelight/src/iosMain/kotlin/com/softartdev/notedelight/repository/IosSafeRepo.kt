@@ -17,7 +17,7 @@ class IosSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         get() = IosCipherUtils.getDatabaseState(DB_NAME)
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(dbHolder!!.noteQueries, coroutineDispatchers)
+        get() = SqlDelightNoteDAO({ dbHolder!!.noteQueries }, coroutineDispatchers)
 
     override val dbPath: String
         get() = IosCipherUtils.getDatabasePath(DB_NAME)

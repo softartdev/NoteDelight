@@ -14,9 +14,6 @@ sealed interface AppNavGraph {
     data object Main : AppNavGraph
 
     @Serializable
-    data class Details(val noteId: Long) : AppNavGraph
-
-    @Serializable
     data object Settings : AppNavGraph
 
     @Serializable

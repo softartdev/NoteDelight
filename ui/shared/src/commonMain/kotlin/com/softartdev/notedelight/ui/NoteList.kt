@@ -21,12 +21,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun NoteList(
     pagingItems: LazyPagingItems<Note>,
     onItemClicked: (id: Long) -> Unit,
+    selectedNoteId: Long?
 ) {
     LazyColumn {
         items(count = pagingItems.itemCount) { index ->
             when (val note: Note? = pagingItems[index]) {
                 null -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                else -> NoteItem(note = note, onItemClicked = onItemClicked)
+                else -> NoteItem(note = note, onItemClicked = onItemClicked, selected = note.id == selectedNoteId)
             }
             HorizontalDivider()
         }
@@ -41,5 +42,5 @@ fun PreviewNoteList() = Surface {
     val testNotes: List<Note> = listOf(firstNote, secondNote, thirdNote, longTitleNote)
     val pagingItems = flowOf(PagingData.from(testNotes)).collectAsLazyPagingItems()
     val onItemClicked: (id: Long) -> Unit = {}
-    NoteList(pagingItems, onItemClicked)
+    NoteList(pagingItems, onItemClicked, thirdNote.id)
 }

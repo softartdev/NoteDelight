@@ -28,7 +28,6 @@ kotlin {
             implementation(project(":thirdparty:app:cash:sqldelight:paging3"))
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.stately.common)
             implementation(libs.coroutines.core)
             implementation(libs.napier)
         }
@@ -55,8 +54,6 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native)
-            implementation(libs.stately.isolate)
-            implementation(libs.stately.iso.collections)
         }
         iosTest.dependencies {
         }

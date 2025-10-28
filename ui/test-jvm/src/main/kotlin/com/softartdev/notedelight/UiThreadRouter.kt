@@ -1,6 +1,7 @@
 package com.softartdev.notedelight
 
 import com.softartdev.notedelight.navigation.Router
+import kotlinx.coroutines.runBlocking
 
 
 class UiThreadRouter(private val router: Router) : Router {
@@ -21,4 +22,18 @@ class UiThreadRouter(private val router: Router) : Router {
         runOnUiThread { router.popBackStack(route, inclusive, saveState) }
 
     override fun popBackStack(): Boolean = runOnUiThread { router.popBackStack() }
+
+    override fun setAdaptiveNavigator(adaptiveNavigator: Any) = runOnUiThread {
+        router.setAdaptiveNavigator(adaptiveNavigator)
+    }
+
+    override fun releaseAdaptiveNavigator() = runOnUiThread { router.releaseAdaptiveNavigator() }
+
+    override suspend fun adaptiveNavigateToDetail(contentKey: Long?) = runOnUiThread {
+        return@runOnUiThread runBlocking { router.adaptiveNavigateToDetail(contentKey) }
+    }
+
+    override suspend fun adaptiveNavigateBack(): Boolean = runOnUiThread {
+        return@runOnUiThread runBlocking { router.adaptiveNavigateBack() }
+    }
 }

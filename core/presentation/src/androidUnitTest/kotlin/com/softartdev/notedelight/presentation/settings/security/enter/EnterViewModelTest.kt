@@ -76,12 +76,12 @@ class EnterViewModelTest {
             val password = "password"
             Mockito.`when`(mockCheckPasswordUseCase(password)).thenReturn(true)
 
-            initialState.onEditPassword(password)
+            viewModel.onAction(EnterAction.OnEditPassword(password))
             val editedState = awaitItem()
             assertEquals(password, editedState.password)
             assertFalse(editedState.isError)
 
-            editedState.onEnterClick()
+            viewModel.onAction(EnterAction.OnEnterClick)
             val loadingState = awaitItem()
             assertTrue(loadingState.loading)
 
@@ -97,7 +97,7 @@ class EnterViewModelTest {
             var resultState = awaitItem()
             assertFalse(resultState.loading)
 
-            resultState.onEnterClick()
+            viewModel.onAction(EnterAction.OnEnterClick)
             resultState = awaitItem()
             assertTrue(resultState.loading)
 
@@ -124,10 +124,10 @@ class EnterViewModelTest {
             assertFalse(resultState.isError)
             assertEquals(FieldLabel.ENTER_PASSWORD, resultState.fieldLabel)
 
-            resultState.onEditPassword(password)
+            viewModel.onAction(EnterAction.OnEditPassword(password))
             resultState = awaitItem()
 
-            resultState.onEnterClick()
+            viewModel.onAction(EnterAction.OnEnterClick)
             resultState = awaitItem()
             assertTrue(resultState.loading)
 
@@ -150,7 +150,7 @@ class EnterViewModelTest {
             val initialState = awaitItem()
             assertFalse(initialState.isPasswordVisible)
 
-            initialState.onTogglePasswordVisibility()
+            viewModel.onAction(EnterAction.TogglePasswordVisibility)
             val toggledState = awaitItem()
             assertTrue(toggledState.isPasswordVisible)
 
@@ -163,7 +163,7 @@ class EnterViewModelTest {
         viewModel.stateFlow.test {
             val initialState = awaitItem()
 
-            initialState.onCancel()
+            viewModel.onAction(EnterAction.Cancel)
             verify(mockRouter).popBackStack()
 
             cancelAndIgnoreRemainingEvents()

@@ -35,7 +35,7 @@ class NoteUseCaseUnitTest {
         return@let createQueryWrapper(driver)
     }
     private val noteDAO = SqlDelightNoteDAO(
-        noteQueries = noteDb.noteQueries,
+        noteQueriesGetter = { noteDb.noteQueries },
         coroutineDispatchers = CoroutineDispatchersStub(UnconfinedTestDispatcher())
     )
     private val createNoteUseCase = CreateNoteUseCase(noteDAO)

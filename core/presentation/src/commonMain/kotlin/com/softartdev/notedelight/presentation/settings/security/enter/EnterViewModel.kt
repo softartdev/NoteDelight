@@ -20,17 +20,16 @@ class EnterViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
-    private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(
-        value = EnterResult(
-            onCancel = this::cancel,
-            onEnterClick = this::enterCheck,
-            onEditPassword = this::onEditPassword,
-            onTogglePasswordVisibility = this::togglePasswordVisibility,
-            disposeOneTimeEvents = this::disposeOneTimeEvents
-        )
-    )
+    private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
+
+    fun onAction(action: EnterAction) = when (action) {
+        is EnterAction.Cancel -> cancel()
+        is EnterAction.OnEditPassword -> onEditPassword(action.password)
+        is EnterAction.TogglePasswordVisibility -> togglePasswordVisibility()
+        is EnterAction.OnEnterClick -> enterCheck()
+    }
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(EnterResult::hideError)
@@ -78,7 +77,7 @@ class EnterViewModel(
         router.popBackStack()
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(EnterResult::hideSnackBarMessage)
     }
 }

@@ -21,18 +21,17 @@ class ChangeViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
-    private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(
-        value = ChangeResult(
-            onCancel = this::cancel,
-            onChangeClick = this::change,
-            onEditOldPassword = this::onEditOldPassword,
-            onEditNewPassword = this::onEditNewPassword,
-            onEditRepeatPassword = this::onEditRepeatPassword,
-            disposeOneTimeEvents = this::disposeOneTimeEvents
-        )
-    )
+    private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(ChangeResult())
     val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
+
+    fun onAction(action: ChangeAction) = when (action) {
+        is ChangeAction.Cancel -> cancel()
+        is ChangeAction.OnEditOldPassword -> onEditOldPassword(action.password)
+        is ChangeAction.OnEditNewPassword -> onEditNewPassword(action.password)
+        is ChangeAction.OnEditRepeatPassword -> onEditRepeatPassword(action.password)
+        is ChangeAction.OnChangeClick -> change()
+    }
 
     private fun onEditOldPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(ChangeResult::hideErrors)
@@ -93,7 +92,7 @@ class ChangeViewModel(
         router.popBackStack()
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(ChangeResult::hideSnackBarMessage)
     }
 }

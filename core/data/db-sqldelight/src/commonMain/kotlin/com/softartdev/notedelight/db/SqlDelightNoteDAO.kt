@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.map
 import com.softartdev.notedelight.shared.db.Note as NoteDBO
 
 class SqlDelightNoteDAO(
-    private val noteQueries: NoteQueries,
+    private val noteQueriesGetter: () -> NoteQueries,
     private val coroutineDispatchers: CoroutineDispatchers
 ) : NoteDAO {
+    private val noteQueries: NoteQueries
+        get() = noteQueriesGetter()
 
     override val listFlow: Flow<List<Note>>
         get() = noteQueries.getAll().asFlow()

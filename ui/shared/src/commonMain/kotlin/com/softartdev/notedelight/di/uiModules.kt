@@ -5,15 +5,16 @@ import com.softartdev.notedelight.navigation.RouterImpl
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import com.softartdev.notedelight.util.CoroutineDispatchersImpl
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val uiModules: List<Module>
     get() = listOf(navigationModule, utilModule)
 
 val navigationModule = module {
-    single<Router> { RouterImpl() }
+    singleOf<Router>(::RouterImpl)
 }
 
 val utilModule = module {
-    single<CoroutineDispatchers> { CoroutineDispatchersImpl() }
+    singleOf<CoroutineDispatchers>(::CoroutineDispatchersImpl)
 }

@@ -18,14 +18,15 @@ class EditTitleViewModel(
     private val router: Router,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
-        value = EditTitleResult(
-            onCancel = this::cancel,
-            onEditClick = this::editTitle,
-            onEditTitle = this::onEditTitle,
-            disposeOneTimeEvents = this::disposeOneTimeEvents
-        )
+        value = EditTitleResult()
     )
     val stateFlow: StateFlow<EditTitleResult> = mutableStateFlow
+
+    fun onAction(action: EditTitleAction) = when (action) {
+        is EditTitleAction.Cancel -> cancel()
+        is EditTitleAction.OnEditTitle -> onEditTitle(action.title)
+        is EditTitleAction.OnEditClick -> editTitle()
+    }
 
     fun loadTitle() = viewModelScope.launch {
         mutableStateFlow.update(EditTitleResult::showLoading)
@@ -70,7 +71,7 @@ class EditTitleViewModel(
         router.popBackStack()
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(EditTitleResult::hideSnackBarMessage)
     }
 }

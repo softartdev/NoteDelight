@@ -8,7 +8,8 @@
 
 [Kotlin Multiplatform](https://kotlinlang.org/lp/mobile/) application for create notes in SQLite
 database with [SQLDelight](https://github.com/cashapp/sqldelight) library, and encrypt it
-with [Cipher](https://www.zetetic.net/sqlcipher/). The Compose-UI also has dark/light themes.
+with [Cipher](https://www.zetetic.net/sqlcipher/). The Compose-UI also has dark/light themes and 
+adaptive phone/tablet layouts. Localizations: en/ru.
 
 Supported platforms:
 
@@ -29,8 +30,10 @@ Supported platforms:
 ## SCREENSHOTS 🎞️
 
 <img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447">
+<img src="docs/screenshoots/web/light/0.png" height="447">
 <details>
     <summary>More…</summary>
+    <p><img src="docs/screenshoots/web/dark/0.png" height="447"></p>
     <p><img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/dark/1.png" height="447"> <img src="docs/screenshoots/desktop/dark/1.png" height="447"></p>
     <p><img src="docs/screenshoots/android/light/1.png" height="447"> <img src="docs/screenshoots/ios/light/1.png" height="447"> <img src="docs/screenshoots/desktop/light/1.png" height="447"></p>
     <p><img src="docs/screenshoots/android/dark/2.png" height="447"> <img src="docs/screenshoots/ios/dark/2.png" height="447"> <img src="docs/screenshoots/desktop/dark/2.png" height="447"></p>
@@ -62,6 +65,12 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 ## CONTINUOUS INTEGRATION / DELIVERY ♻️
 
 ![CI/CD workflows blueprint for this project](docs/diagrams/ci_cd.png)
+
+## DOCUMENTATION 📖
+
+- **[docs/README.md](docs/README.md)** - Documentation index and quick reference
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines, code style, development workflow
+- **Module READMEs** - Each module folder has detailed documentation
 
 ## LIBRARY DEPENDENCIES 📚
 

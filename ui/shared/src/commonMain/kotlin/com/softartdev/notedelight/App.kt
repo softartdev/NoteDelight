@@ -11,14 +11,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
+import com.softartdev.notedelight.navigation.RouterImpl
 import com.softartdev.notedelight.ui.EnableEdgeToEdge
-import com.softartdev.notedelight.ui.MainScreen
-import com.softartdev.notedelight.ui.NoteDetail
 import com.softartdev.notedelight.ui.SettingsScreen
 import com.softartdev.notedelight.ui.SignInScreen
 import com.softartdev.notedelight.ui.SplashScreen
+import com.softartdev.notedelight.ui.adaptive.AdaptiveScreen
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
 import com.softartdev.notedelight.ui.dialog.note.DeleteDialog
@@ -28,6 +29,7 @@ import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialogContent
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -53,18 +55,7 @@ fun App(
             SignInScreen(signInViewModel = koinViewModel())
         }
         composable<AppNavGraph.Main> {
-            MainScreen(
-                mainViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
-        }
-        composable<AppNavGraph.Details> { backStackEntry: NavBackStackEntry ->
-            NoteDetail(
-                noteViewModel = koinViewModel {
-                    parametersOf(backStackEntry.toRoute<AppNavGraph.Details>().noteId)
-                },
-                snackbarHostState = snackbarHostState
-            )
+            AdaptiveScreen(router)
         }
         composable<AppNavGraph.Settings> {
             SettingsScreen(
@@ -114,4 +105,10 @@ fun App(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewApp() = PreviewKoin {
+    App(router = RouterImpl())
 }

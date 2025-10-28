@@ -12,6 +12,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -35,6 +36,7 @@ class MainViewModelTest {
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
+    private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
     private lateinit var mainViewModel: MainViewModel
 
@@ -43,7 +45,7 @@ class MainViewModelTest {
         Napier.base(PrintAntilog())
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
         Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
-        mainViewModel = MainViewModel(mockSafeRepo, mockRouter, coroutineDispatchers)
+        mainViewModel = MainViewModel(mockSafeRepo, mockRouter, adaptiveInteractor, coroutineDispatchers)
     }
 
     @After
@@ -83,14 +85,14 @@ class MainViewModelTest {
     }
 
     @Test
-    fun onNoteClicked() {
-        mainViewModel.onNoteClicked(1)
-        Mockito.verify(mockRouter).navigate(route = AppNavGraph.Details(noteId = 1))
+    fun onNoteClicked() = runTest {
+        mainViewModel.onAction(MainAction.OnNoteClick(1))
+        Mockito.verify(mockRouter).adaptiveNavigateToDetail(contentKey = 1)
     }
 
     @Test
     fun onSettingsClicked() {
-        mainViewModel.onSettingsClicked()
+        mainViewModel.onAction(MainAction.OnSettingsClick)
         Mockito.verify(mockRouter).navigate(route = AppNavGraph.Settings)
     }
 

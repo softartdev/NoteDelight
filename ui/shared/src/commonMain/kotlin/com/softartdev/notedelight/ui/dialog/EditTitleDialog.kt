@@ -20,6 +20,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.softartdev.notedelight.presentation.title.EditTitleAction
 import com.softartdev.notedelight.presentation.title.EditTitleResult
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import notedelight.ui.shared.generated.resources.Res
@@ -44,15 +45,16 @@ fun EditTitleDialog(
     LaunchedEffect(key1 = result, key2 = result, key3 = result.snackBarMessageType) {
         result.snackBarMessageType?.let { msg: String ->
             snackbarHostState.showSnackbar(msg)
-            result.disposeOneTimeEvents()
+            editTitleViewModel.disposeOneTimeEvents()
         }
     }
-    ShowEditTitleDialog(result)
+    ShowEditTitleDialog(result, editTitleViewModel::onAction)
 }
 
 @Composable
 fun ShowEditTitleDialog(
     result: EditTitleResult,
+    onAction: (action: EditTitleAction) -> Unit = {},
     label: String = stringResource(Res.string.enter_title),
 ) = AlertDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_change_title)) },
@@ -65,7 +67,7 @@ fun ShowEditTitleDialog(
                 value = TextFieldValue(text = result.title, selection = textRange),
                 onValueChange = {
                     textRange = it.selection
-                    result.onEditTitle(it.text)
+                    onAction(EditTitleAction.OnEditTitle(it.text))
                 },
                 label = {
                     val res = if (result.isError) Res.string.empty_title else Res.string.enter_title
@@ -76,9 +78,9 @@ fun ShowEditTitleDialog(
             )
         }
     },
-    confirmButton = { Button(onClick = result.onEditClick) { Text(stringResource(Res.string.yes)) } },
-    dismissButton = { Button(onClick = result.onCancel) { Text(stringResource(Res.string.cancel)) } },
-    onDismissRequest = result.onCancel,
+    confirmButton = { Button(onClick = { onAction(EditTitleAction.OnEditClick) }) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = { onAction(EditTitleAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
+    onDismissRequest = { onAction(EditTitleAction.Cancel) },
 )
 
 @Preview

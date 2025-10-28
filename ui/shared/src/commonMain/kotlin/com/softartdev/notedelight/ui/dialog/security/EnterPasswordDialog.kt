@@ -20,6 +20,7 @@ import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.presentation.settings.security.enter.EnterAction
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterResult
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -46,14 +47,17 @@ fun EnterPasswordDialog(
     LaunchedEffect(key1 = enterViewModel, key2 = result, key3 = result.snackBarMessageType) {
         result.snackBarMessageType?.let { msg: String ->
             snackbarHostState.showSnackbar(msg)
-            result.disposeOneTimeEvents()
+            enterViewModel.disposeOneTimeEvents()
         }
     }
-    ShowEnterPasswordDialog(result)
+    ShowEnterPasswordDialog(result, enterViewModel::onAction)
 }
 
 @Composable
-fun ShowEnterPasswordDialog(result: EnterResult) = AlertDialog(
+fun ShowEnterPasswordDialog(
+    result: EnterResult,
+    onAction: (action: EnterAction) -> Unit = {}
+) = AlertDialog(
     title = { Text(text = stringResource(Res.string.enter_password_dialog_title)) },
     text = {
         Column {
@@ -62,18 +66,18 @@ fun ShowEnterPasswordDialog(result: EnterResult) = AlertDialog(
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
                 password = result.password,
-                onPasswordChange = result.onEditPassword,
+                onPasswordChange = { onAction(EnterAction.OnEditPassword(it)) },
                 label = result.fieldLabel.resString,
                 isError = result.isError,
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Done,
-                keyboardActions = KeyboardActions { result.onEnterClick.invoke() }
+                keyboardActions = KeyboardActions { onAction(EnterAction.OnEnterClick) }
             )
         }
     },
-    confirmButton = { Button(onClick = result.onEnterClick) { Text(stringResource(Res.string.yes)) } },
-    dismissButton = { Button(onClick = result.onCancel) { Text(stringResource(Res.string.cancel)) } },
-    onDismissRequest = result.onCancel
+    confirmButton = { Button(onClick = { onAction(EnterAction.OnEnterClick) }) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = { onAction(EnterAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
+    onDismissRequest = { onAction(EnterAction.Cancel) }
 )
 
 @Preview

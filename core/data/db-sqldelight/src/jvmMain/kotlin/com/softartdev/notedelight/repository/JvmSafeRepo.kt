@@ -19,7 +19,7 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         get() = JvmCipherUtils.getDatabaseState(DB_NAME)
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO(databaseHolder!!.noteQueries, coroutineDispatchers)
+        get() = SqlDelightNoteDAO({ databaseHolder!!.noteQueries }, coroutineDispatchers)
 
     override val dbPath: String
         get() = FilePathResolver().invoke()

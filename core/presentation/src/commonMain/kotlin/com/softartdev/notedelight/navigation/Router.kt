@@ -13,4 +13,12 @@ interface Router {
     fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean
 
     fun popBackStack(): Boolean
+
+    fun setAdaptiveNavigator(adaptiveNavigator: Any)
+
+    fun releaseAdaptiveNavigator()
+
+    suspend fun adaptiveNavigateToDetail(contentKey: Long? = null)
+
+    suspend fun adaptiveNavigateBack(): Boolean
 }

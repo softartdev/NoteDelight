@@ -36,6 +36,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.softartdev.notedelight.db.TestSchema
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.presentation.main.MainAction
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.main.NoteListResult
 import kotlinx.coroutines.flow.Flow
@@ -58,9 +59,7 @@ fun MainScreen(
     val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
     MainScreen(
         noteListState = noteListState,
-        onItemClicked = mainViewModel::onNoteClicked,
-        onSettingsClick = mainViewModel::onSettingsClicked,
-        onRefresh = mainViewModel::updateNotes,
+        onAction = mainViewModel::onAction,
         snackbarHostState = snackbarHostState,
     )
 }
@@ -68,9 +67,7 @@ fun MainScreen(
 @Composable
 fun MainScreen(
     noteListState: State<NoteListResult>,
-    onItemClicked: (id: Long) -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    onRefresh: () -> Unit = {},
+    onAction: (action: MainAction) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     refreshState: State<Boolean> = remember { derivedStateOf { noteListState.value is NoteListResult.Loading } }
@@ -79,7 +76,7 @@ fun MainScreen(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
-                IconButton(onClick = onSettingsClick) {
+                IconButton(onClick = { onAction(MainAction.OnSettingsClick) }) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = stringResource(Res.string.settings)
@@ -91,7 +88,7 @@ fun MainScreen(
         PullToRefreshBox(
             modifier = Modifier.padding(paddingValues),
             isRefreshing = refreshState.value,
-            onRefresh = onRefresh,
+            onRefresh = { onAction(MainAction.OnRefresh) },
             state = pullToRefreshState
         ) {
             LaunchedEffect(key1 = noteListState.value) {
@@ -104,7 +101,8 @@ fun MainScreen(
                     when {
                         pagingItems.itemCount > 0 -> NoteList(
                             pagingItems = pagingItems,
-                            onItemClicked = onItemClicked,
+                            onItemClicked = { id -> onAction(MainAction.OnNoteClick(id)) },
+                            selectedNoteId = noteListResult.selectedId
                         )
                         else -> Empty()
                     }
@@ -116,7 +114,7 @@ fun MainScreen(
         val text = stringResource(Res.string.create_note)
         ExtendedFloatingActionButton(
             text = { Text(text) },
-            onClick = { onItemClicked(0) },
+            onClick = { onAction(MainAction.OnNoteClick(0)) },
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
             modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
@@ -126,11 +124,10 @@ fun MainScreen(
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    val testNotes: List<Note> = listOf(TestSchema.firstNote, TestSchema.secondNote, TestSchema.thirdNote)
-    val pagingData: PagingData<Note> = PagingData.from(testNotes)
+    val pagingData: PagingData<Note> = PagingData.from(data = TestSchema.notes)
     val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
-        mutableStateOf(NoteListResult.Success(pagingFlow))
+        mutableStateOf(NoteListResult.Success(pagingFlow, null))
     }
     MainScreen(noteListState)
 }

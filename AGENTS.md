@@ -1,6 +1,13 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+> **📚 For comprehensive documentation**, see:
+> - [CONTRIBUTING.md](CONTRIBUTING.md) - Full contribution guide with code style and architecture
+> - [docs/](docs/) - Detailed architecture, testing, and AI agent guides
+> - Module READMEs - Each module has detailed documentation in its folder
+
+## Quick Reference
+
+### Project Structure & Module Organization
 - Core: `core/domain`, `core/presentation`, `core/data/db-sqldelight` (default), `core/data/db-room` (optional), `core/test`.
 - UI: `ui/shared` (common Compose code and resources), `ui/test-jvm` (JVM Compose UI test utilities).
 - Apps: `app/android`, `app/desktop`, `app/web`, `app/ios-kit` (CocoaPods framework), `app/iosApp` (Xcode project).
@@ -37,3 +44,9 @@
 - Never commit secrets or real keystores; keep `keystore.properties` and `local.properties` local.
 - `google-services.json` should contain non-sensitive config only; sanitize before sharing.
 - Keep SDK/JDK versions in sync with `libs.versions.toml`; avoid editing CI-only settings locally.
+
+## Additional Resources
+- **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - Clean Architecture, MVVM, dependency flow
+- **Testing**: [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md) - Testing pyramid, patterns, tools
+- **AI Agents**: [docs/AI_AGENT_GUIDE.md](docs/AI_AGENT_GUIDE.md) - Comprehensive guide for AI contributors
+- **Module Docs**: Each module folder contains a detailed README.md

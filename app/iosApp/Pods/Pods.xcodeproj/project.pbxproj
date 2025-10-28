@@ -15,7 +15,7 @@
 				440BA0EBDA0DEE9315359487DDE3237D /* [CP] Copy dSYMs */,
 			);
 			dependencies = (
-				8BC4D3C8E9355FFBE1F43A02988DFB68 /* PBXTargetDependency */,
+				6142428A479809273B771F888F94A644 /* PBXTargetDependency */,
 			);
 			name = iosComposePod;
 		};
@@ -35,33 +35,33 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		22246DBCE990C3951B915E5AEDF3CD2C /* PBXContainerItemProxy */ = {
+		16AAC707340AE5A85BD5E5334D9E5FDD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 87FC595F8D2A5960F7C8C0F0CBCFBC8D;
 			remoteInfo = "SQLCipher-SQLCipher";
 		};
-		315D5E88CB388C17CEF4CD0B4D31A1AB /* PBXContainerItemProxy */ = {
+		4DCB3243DDD0B5D6BE8BDA28DC6DD555 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D21962D0DE148A440FADB55935BD4264;
 			remoteInfo = SQLCipher;
 		};
-		3F8611F13FEDE0587DB53A18F838C39D /* PBXContainerItemProxy */ = {
+		620321CB24EF74F90E65903C6D6AB9BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D21962D0DE148A440FADB55935BD4264;
+			remoteInfo = SQLCipher;
+		};
+		D0608B460AEEFB8C8A2747F1FF37E270 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8CD5AC086628776F77663F3736B36F45;
 			remoteInfo = iosComposePod;
-		};
-		812AAC516966AA542F8167365F0D1B94 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D21962D0DE148A440FADB55935BD4264;
-			remoteInfo = SQLCipher;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -70,30 +70,31 @@
 		015E0D7EA7331961AB63E5AFECA86BB5 /* Pods-iosApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iosApp-umbrella.h"; sourceTree = "<group>"; };
 		0C99301D58C326F9ABCC535678E1A176 /* SQLCipher-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SQLCipher-dummy.m"; sourceTree = "<group>"; };
 		11C9B998CE0869936AE6BE69270DAAC9 /* Pods-iosApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iosApp.modulemap"; sourceTree = "<group>"; };
-		13A23D7ACC96E5B7EA9749B85EF2A289 /* iosComposePod.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = iosComposePod.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1D390A344FF14E8415784DD86BCFABA9 /* ResourceBundle-SQLCipher-SQLCipher-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-SQLCipher-SQLCipher-Info.plist"; sourceTree = "<group>"; };
 		1FD5F5B0E4809A3AE2ECDE142F44A6BB /* SQLCipher */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SQLCipher; path = SQLCipher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		244FC2DAA936A0B07ACEFDC74E2D54B8 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		286D739766D21DB031E2D44A24F3B4EC /* SQLCipher.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SQLCipher.modulemap; sourceTree = "<group>"; };
+		2CFEF65400E44AEB29707756931AF6B3 /* iosComposePod-copy-dsyms.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "iosComposePod-copy-dsyms.sh"; sourceTree = "<group>"; };
 		2F29E5F7EEDB83D0B063DAD0B5196072 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		30B54608747A2FEC6E90E1DB87E96FE8 /* iosComposeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iosComposeKit.framework; path = build/cocoapods/framework/iosComposeKit.framework; sourceTree = "<group>"; };
-		39AB7E981852B8E1859B7D7EAF0BB085 /* iosComposePod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.release.xcconfig; sourceTree = "<group>"; };
-		3C58825769C49B02C5146639D6A438F4 /* iosComposePod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.debug.xcconfig; sourceTree = "<group>"; };
 		40B6E82B558CAB2B289F5BD57C9E2223 /* SQLCipher-SQLCipher */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "SQLCipher-SQLCipher"; path = SQLCipher.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FF5A51865F5E9B281347E25ACE8AEB7 /* SQLCipher-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SQLCipher-Info.plist"; sourceTree = "<group>"; };
+		54E88A6D867BC68F0CEAEAEA40923EB4 /* iosComposeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iosComposeKit.framework; path = build/cocoapods/framework/iosComposeKit.framework; sourceTree = "<group>"; };
 		55ABB06C8A1800962A74E007E7733796 /* Pods-iosApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-frameworks.sh"; sourceTree = "<group>"; };
 		6F3B5FED07117E377CFAC3D49B490F17 /* Pods-iosApp-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-resources.sh"; sourceTree = "<group>"; };
+		733B4F713E30254284AA3608E52709F0 /* compose-resources */ = {isa = PBXFileReference; includeInIndex = 1; name = "compose-resources"; path = "build/compose/cocoapods/compose-resources"; sourceTree = "<group>"; };
 		76A263267985B0185D85E24D40FCEE9A /* Pods-iosApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-Info.plist"; sourceTree = "<group>"; };
 		76D28488EA8CF5C697DFF07967A9960E /* Pods-iosApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-acknowledgements.plist"; sourceTree = "<group>"; };
-		7D1B6369A49F7BB6B1AD65D64535D00E /* compose-resources */ = {isa = PBXFileReference; includeInIndex = 1; name = "compose-resources"; path = "build/compose/cocoapods/compose-resources"; sourceTree = "<group>"; };
 		7F43DA6ED1058CDA38FA88DD8830DE6A /* SQLCipher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.release.xcconfig; sourceTree = "<group>"; };
-		808A25A995568A756BF5050FFDCA5FB4 /* iosComposePod-copy-dsyms.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "iosComposePod-copy-dsyms.sh"; sourceTree = "<group>"; };
 		8926833C541B466585AD7D91CA69AE70 /* SQLCipher-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SQLCipher-umbrella.h"; sourceTree = "<group>"; };
+		9BCC03A3458703C2061C0C6B65D636CD /* iosComposePod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.debug.xcconfig; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A93128B717A431FF91D25EDDC137BD25 /* iosComposePod.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = iosComposePod.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B097DD7534E741D5C41838011D755842 /* Pods-iosApp */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-iosApp"; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B771381C927BDA7BFC2F366B7A25C192 /* SQLCipher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SQLCipher.debug.xcconfig; sourceTree = "<group>"; };
 		C330BC62C9ACD3F9E7AF138812EF298C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		D79AC463B6950821231C978481F32CDA /* sqlite3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		D8B4581D613192129F4052EF76CE050C /* iosComposePod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = iosComposePod.release.xcconfig; sourceTree = "<group>"; };
+		DBCC0DEC184DE8624C3942D8A44E4519 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		DDE382A298871C6749616BA249D8D9D7 /* sqlite3.c */ = {isa = PBXFileReference; includeInIndex = 1; path = sqlite3.c; sourceTree = "<group>"; };
 		E462E23B3674BF94EAB1504D506F2803 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 		E4C923318724794E3CC670804C2D6A6B /* Pods-iosApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iosApp-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -101,19 +102,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		850293D80F164379E5A2C81579B8A331 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B911104A3CD70ECC2756DF58B8E25920 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				9BF953C258CE1DBCDF9F3BB07D3AE92F /* Foundation.framework in Frameworks */,
 				0B5570A50C24475300C63A81C6B1935B /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9BCB10B1FFE258E360396AB1C15BBB8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +129,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03789769F1830ABE2BC25C16EDFE3172 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				54E88A6D867BC68F0CEAEAEA40923EB4 /* iosComposeKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,35 +145,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		18C4F76351744D947CCBB1939172ECCE /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				A93128B717A431FF91D25EDDC137BD25 /* iosComposePod.podspec */,
+				DBCC0DEC184DE8624C3942D8A44E4519 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		354BA5DA672A2E590E03B42D51BB5541 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3969C4A1270F551FA4E718960A8BC652 /* iosComposePod */,
+				7EB881AAAF3269AEE0FD85AA5F702C75 /* iosComposePod */,
 			);
 			name = "Development Pods";
-			sourceTree = "<group>";
-		};
-		3969C4A1270F551FA4E718960A8BC652 /* iosComposePod */ = {
-			isa = PBXGroup;
-			children = (
-				7D1B6369A49F7BB6B1AD65D64535D00E /* compose-resources */,
-				6ABFBAA07F77ABE4CDA915790510B9E5 /* Frameworks */,
-				D852705EA8FE02D2D4D1182EE93073B2 /* Pod */,
-				3BFED2DC34CD8B94C8FE7753041E7BDD /* Support Files */,
-			);
-			name = iosComposePod;
-			path = "../../ios-kit";
-			sourceTree = "<group>";
-		};
-		3BFED2DC34CD8B94C8FE7753041E7BDD /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				808A25A995568A756BF5050FFDCA5FB4 /* iosComposePod-copy-dsyms.sh */,
-				3C58825769C49B02C5146639D6A438F4 /* iosComposePod.debug.xcconfig */,
-				39AB7E981852B8E1859B7D7EAF0BB085 /* iosComposePod.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../iosApp/Pods/Target Support Files/iosComposePod";
 			sourceTree = "<group>";
 		};
 		6746CCF30CAE34654B19DDA6B383D05D /* Pods */ = {
@@ -173,14 +168,6 @@
 				7D115D4ACE53D3BD56E352018B39FA9A /* SQLCipher */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		6ABFBAA07F77ABE4CDA915790510B9E5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				30B54608747A2FEC6E90E1DB87E96FE8 /* iosComposeKit.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		6F3906880344F426015F35B4FA31944D /* iOS */ = {
@@ -200,6 +187,18 @@
 			);
 			name = SQLCipher;
 			path = SQLCipher;
+			sourceTree = "<group>";
+		};
+		7EB881AAAF3269AEE0FD85AA5F702C75 /* iosComposePod */ = {
+			isa = PBXGroup;
+			children = (
+				733B4F713E30254284AA3608E52709F0 /* compose-resources */,
+				03789769F1830ABE2BC25C16EDFE3172 /* Frameworks */,
+				18C4F76351744D947CCBB1939172ECCE /* Pod */,
+				FA58D99B1F6C0D806506F3CB38A0A038 /* Support Files */,
+			);
+			name = iosComposePod;
+			path = "../../ios-kit";
 			sourceTree = "<group>";
 		};
 		86259A46F80248F53CF0662DD4E8D250 /* Products */ = {
@@ -275,12 +274,15 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		D852705EA8FE02D2D4D1182EE93073B2 /* Pod */ = {
+		FA58D99B1F6C0D806506F3CB38A0A038 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				13A23D7ACC96E5B7EA9749B85EF2A289 /* iosComposePod.podspec */,
+				2CFEF65400E44AEB29707756931AF6B3 /* iosComposePod-copy-dsyms.sh */,
+				9BCC03A3458703C2061C0C6B65D636CD /* iosComposePod.debug.xcconfig */,
+				D8B4581D613192129F4052EF76CE050C /* iosComposePod.release.xcconfig */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "../iosApp/Pods/Target Support Files/iosComposePod";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,11 +310,11 @@
 /* Begin PBXNativeTarget section */
 		87FC595F8D2A5960F7C8C0F0CBCFBC8D /* SQLCipher-SQLCipher */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 006E747B1891B99D7F66773512267B2C /* Build configuration list for PBXNativeTarget "SQLCipher-SQLCipher" */;
+			buildConfigurationList = B3D23C8987C8E0D14B55355C24D5FC22 /* Build configuration list for PBXNativeTarget "SQLCipher-SQLCipher" */;
 			buildPhases = (
-				FF1F008CC36897032526DFB0F119C771 /* Sources */,
-				850293D80F164379E5A2C81579B8A331 /* Frameworks */,
-				EE3DB61FA72A626D2883487B8606BB57 /* Resources */,
+				D4B1039EEC69FC040CBD1B0C88FC86FB /* Sources */,
+				C9BCB10B1FFE258E360396AB1C15BBB8 /* Frameworks */,
+				168DA7EB13A9B738B161FCAFA3D7BE16 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -335,7 +337,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				262F098959DA52463EC25B6A15FDE81C /* PBXTargetDependency */,
+				35DB363E6B5CB7B897D0060018AE3107 /* PBXTargetDependency */,
 			);
 			name = SQLCipher;
 			productName = SQLCipher;
@@ -354,8 +356,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				E238CA1F80A93569F2477C042A09CD29 /* PBXTargetDependency */,
-				25504A50F6C71F80D179DA7D422A5C31 /* PBXTargetDependency */,
+				6D0C8110DE3CCFA84D50FC84A8A433E1 /* PBXTargetDependency */,
+				F4A186C1C3A3E81DE1F16EED09721B5A /* PBXTargetDependency */,
 			);
 			name = "Pods-iosApp";
 			productName = Pods_iosApp;
@@ -395,6 +397,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		168DA7EB13A9B738B161FCAFA3D7BE16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D7414069A803F47DD6AD7D75DCA1E4A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -407,13 +416,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE93719D107C7390324E3F76F5330D91 /* SQLCipher-SQLCipher in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EE3DB61FA72A626D2883487B8606BB57 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,7 +469,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF1F008CC36897032526DFB0F119C771 /* Sources */ = {
+		D4B1039EEC69FC040CBD1B0C88FC86FB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -477,29 +479,29 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		25504A50F6C71F80D179DA7D422A5C31 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = iosComposePod;
-			target = 8CD5AC086628776F77663F3736B36F45 /* iosComposePod */;
-			targetProxy = 3F8611F13FEDE0587DB53A18F838C39D /* PBXContainerItemProxy */;
-		};
-		262F098959DA52463EC25B6A15FDE81C /* PBXTargetDependency */ = {
+		35DB363E6B5CB7B897D0060018AE3107 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "SQLCipher-SQLCipher";
 			target = 87FC595F8D2A5960F7C8C0F0CBCFBC8D /* SQLCipher-SQLCipher */;
-			targetProxy = 22246DBCE990C3951B915E5AEDF3CD2C /* PBXContainerItemProxy */;
+			targetProxy = 16AAC707340AE5A85BD5E5334D9E5FDD /* PBXContainerItemProxy */;
 		};
-		8BC4D3C8E9355FFBE1F43A02988DFB68 /* PBXTargetDependency */ = {
+		6142428A479809273B771F888F94A644 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SQLCipher;
 			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
-			targetProxy = 315D5E88CB388C17CEF4CD0B4D31A1AB /* PBXContainerItemProxy */;
+			targetProxy = 620321CB24EF74F90E65903C6D6AB9BC /* PBXContainerItemProxy */;
 		};
-		E238CA1F80A93569F2477C042A09CD29 /* PBXTargetDependency */ = {
+		6D0C8110DE3CCFA84D50FC84A8A433E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SQLCipher;
 			target = D21962D0DE148A440FADB55935BD4264 /* SQLCipher */;
-			targetProxy = 812AAC516966AA542F8167365F0D1B94 /* PBXContainerItemProxy */;
+			targetProxy = 4DCB3243DDD0B5D6BE8BDA28DC6DD555 /* PBXContainerItemProxy */;
+		};
+		F4A186C1C3A3E81DE1F16EED09721B5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iosComposePod;
+			target = 8CD5AC086628776F77663F3736B36F45 /* iosComposePod */;
+			targetProxy = D0608B460AEEFB8C8A2747F1FF37E270 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -568,7 +570,7 @@
 		};
 		71354FC6CEF8AE0086C9C7E9675E608F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39AB7E981852B8E1859B7D7EAF0BB085 /* iosComposePod.release.xcconfig */;
+			baseConfigurationReference = D8B4581D613192129F4052EF76CE050C /* iosComposePod.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -585,26 +587,9 @@
 			};
 			name = Release;
 		};
-		77ADE44796E421D1F00220FF3F365545 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B771381C927BDA7BFC2F366B7A25C192 /* SQLCipher.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SQLCipher";
-				IBSC_MODULE = SQLCipher;
-				INFOPLIST_FILE = "Target Support Files/SQLCipher/ResourceBundle-SQLCipher-SQLCipher-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_NAME = SQLCipher;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		997F2265FB1FBE1792573A78CFDA2500 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3C58825769C49B02C5146639D6A438F4 /* iosComposePod.debug.xcconfig */;
+			baseConfigurationReference = 9BCC03A3458703C2061C0C6B65D636CD /* iosComposePod.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -686,23 +671,6 @@
 			};
 			name = Debug;
 		};
-		C9BE919796C84B021AF1A92A8E658C80 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7F43DA6ED1058CDA38FA88DD8830DE6A /* SQLCipher.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SQLCipher";
-				IBSC_MODULE = SQLCipher;
-				INFOPLIST_FILE = "Target Support Files/SQLCipher/ResourceBundle-SQLCipher-SQLCipher-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_NAME = SQLCipher;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
 		D5FF8C600B61738DE71E9798EE26A143 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E462E23B3674BF94EAB1504D506F2803 /* Pods-iosApp.debug.xcconfig */;
@@ -780,6 +748,40 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
+		};
+		DB301CD5155BC5B90AD47C6A9F39D696 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B771381C927BDA7BFC2F366B7A25C192 /* SQLCipher.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SQLCipher";
+				IBSC_MODULE = SQLCipher;
+				INFOPLIST_FILE = "Target Support Files/SQLCipher/ResourceBundle-SQLCipher-SQLCipher-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_NAME = SQLCipher;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		E394BEE11E16742A88FF1514095C2A9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F43DA6ED1058CDA38FA88DD8830DE6A /* SQLCipher.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SQLCipher";
+				IBSC_MODULE = SQLCipher;
+				INFOPLIST_FILE = "Target Support Files/SQLCipher/ResourceBundle-SQLCipher-SQLCipher-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_NAME = SQLCipher;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
 		};
 		EB5B6D0C82B6C59050C04B8AEE1DC878 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -864,15 +866,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		006E747B1891B99D7F66773512267B2C /* Build configuration list for PBXNativeTarget "SQLCipher-SQLCipher" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				77ADE44796E421D1F00220FF3F365545 /* Debug */,
-				C9BE919796C84B021AF1A92A8E658C80 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		42CF4CC6F6A4A065F3A9DD49D9F5320D /* Build configuration list for PBXNativeTarget "SQLCipher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -896,6 +889,15 @@
 			buildConfigurations = (
 				D5FF8C600B61738DE71E9798EE26A143 /* Debug */,
 				EB5B6D0C82B6C59050C04B8AEE1DC878 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3D23C8987C8E0D14B55355C24D5FC22 /* Build configuration list for PBXNativeTarget "SQLCipher-SQLCipher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB301CD5155BC5B90AD47C6A9F39D696 /* Debug */,
+				E394BEE11E16742A88FF1514095C2A9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -9,11 +9,6 @@ data class EnterResult(
     val isPasswordVisible: Boolean = false,
     val isError: Boolean = false,
     val snackBarMessageType: String? = null,
-    val onCancel: () -> Unit = {},
-    val onEditPassword: (password: String) -> Unit = {},
-    val onTogglePasswordVisibility: () -> Unit = {},
-    val onEnterClick: () -> Unit = {},
-    val disposeOneTimeEvents: () -> Unit = {}
 ) {
     fun showLoading(): EnterResult = copy(loading = true)
     fun hideLoading(): EnterResult = copy(loading = false)
@@ -21,4 +16,11 @@ data class EnterResult(
     fun hideError(): EnterResult = copy(isError = false)
     fun hideSnackBarMessage(): EnterResult = copy(snackBarMessageType = null)
     fun togglePasswordVisibility(): EnterResult = copy(isPasswordVisible = !isPasswordVisible)
+}
+
+sealed interface EnterAction {
+    data object Cancel : EnterAction
+    data class OnEditPassword(val password: String) : EnterAction
+    data object TogglePasswordVisibility : EnterAction
+    data object OnEnterClick : EnterAction
 }

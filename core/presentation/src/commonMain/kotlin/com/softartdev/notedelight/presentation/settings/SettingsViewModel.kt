@@ -19,18 +19,19 @@ class SettingsViewModel(
     private val router: Router
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<SecurityResult> = MutableStateFlow(
-        value = SecurityResult(
-            navBack = router::popBackStack,
-            changeTheme = this@SettingsViewModel::changeTheme,
-            checkEncryption = this@SettingsViewModel::checkEncryption,
-            changeEncryption = this@SettingsViewModel::changeEncryption,
-            changePassword = this@SettingsViewModel::changePassword,
-            showCipherVersion = this@SettingsViewModel::showCipherVersion,
-            showDatabasePath = this@SettingsViewModel::showDatabasePath,
-            disposeOneTimeEvents = this@SettingsViewModel::disposeOneTimeEvents
-        )
+        value = SecurityResult()
     )
     val stateFlow: StateFlow<SecurityResult> = mutableStateFlow
+
+    fun onAction(action: SettingsAction) = when (action) {
+        is SettingsAction.NavBack -> router.popBackStack()
+        is SettingsAction.ChangeTheme -> changeTheme()
+        is SettingsAction.CheckEncryption -> checkEncryption()
+        is SettingsAction.ChangeEncryption -> changeEncryption(action.checked)
+        is SettingsAction.ChangePassword -> changePassword()
+        is SettingsAction.ShowCipherVersion -> showCipherVersion()
+        is SettingsAction.ShowDatabasePath -> showDatabasePath()
+    }
 
     private val dbIsEncrypted: Boolean
         get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
@@ -107,7 +108,7 @@ class SettingsViewModel(
         }
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(SecurityResult::hideSnackBarMessage)
     }
 }

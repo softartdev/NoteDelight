@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -56,9 +57,21 @@ fun NoteDetail(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     LaunchedEffect(noteViewModel) {
-        noteViewModel.createOrLoadNote()
+        noteViewModel.launchCollectingSelectedNoteId()
     }
     val result: NoteResult by noteViewModel.stateFlow.collectAsState()
+    when (result.note) {
+        null -> DetailPanePlaceholder()
+        else -> NoteDetail(noteViewModel, result, snackbarHostState)
+    }
+}
+
+@Composable
+fun NoteDetail(
+    noteViewModel: NoteViewModel,
+    result: NoteResult,
+    snackbarHostState: SnackbarHostState
+) {
     val titleState: MutableState<String> = remember(key1 = noteViewModel, key2 = result) {
         mutableStateOf(result.note?.title ?: "")
     }
@@ -73,16 +86,17 @@ fun NoteDetail(
                 NoteResult.SnackBarMessageType.DELETED -> getString(Res.string.note_deleted)
             }
             snackbarHostState.showSnackbar(message = msg)
-            result.disposeOneTimeEvents()
+            noteViewModel.disposeOneTimeEvents()
         }
     }
     NoteDetailBody(
         result = result,
         titleState = titleState,
         textState = textState,
+        onAction = noteViewModel::onAction,
         snackbarHostState = snackbarHostState,
     )
-    BackHandler { result.checkSaveChange(titleState.value, textState.value) }
+    BackHandler { noteViewModel.onAction(NoteAction.CheckSaveChange(titleState.value, textState.value)) }
 }
 
 @Composable
@@ -90,6 +104,7 @@ fun NoteDetailBody(
     result: NoteResult = NoteResult(),
     titleState: MutableState<String> = mutableStateOf("Title"),
     textState: MutableState<String> = mutableStateOf("Text"),
+    onAction: (action: NoteAction) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     modifier = Modifier.imePadding(),
@@ -98,7 +113,7 @@ fun NoteDetailBody(
             title = { Text(text = titleState.value, maxLines = 1) },
             navigationIcon = {
                 IconButton(onClick = {
-                    result.checkSaveChange(titleState.value, textState.value)
+                    onAction(NoteAction.CheckSaveChange(titleState.value, textState.value))
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -107,19 +122,19 @@ fun NoteDetailBody(
                 }
             },
             actions = {
-                IconButton(onClick = { result.onSaveClick(titleState.value, textState.value) }) {
+                IconButton(onClick = { onAction(NoteAction.Save(titleState.value, textState.value)) }) {
                     Icon(
                         imageVector = Icons.Default.Save,
                         contentDescription = stringResource(Res.string.action_save_note)
                     )
                 }
-                IconButton(onClick = result.onEditClick) {
+                IconButton(onClick = { onAction(NoteAction.Edit) }) {
                     Icon(
                         imageVector = Icons.Default.Title,
                         contentDescription = stringResource(Res.string.action_edit_title)
                     )
                 }
-                IconButton(onClick = result.onDeleteClick) {
+                IconButton(onClick = { onAction(NoteAction.Delete) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(Res.string.action_delete_note)

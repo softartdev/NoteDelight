@@ -18,6 +18,12 @@ out/
 .gradle/
 build/
 
+# Kotlin metadata files
+/.kotlin/
+
+# macOS indexing file
+.DS_Store
+
 # Local configuration file (sdk path, etc)
 local.properties
 # Signing keys.
@@ -70,5 +76,3 @@ app/android/note_room_key_store.jks
 /app/iosApp/fastlane/28F5CB4337.json
 /app/iosApp/fastlane/ios_distribution.p12
 /app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
-
-/.kotlin/

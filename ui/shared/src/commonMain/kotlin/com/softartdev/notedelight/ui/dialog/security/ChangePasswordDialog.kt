@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.presentation.settings.security.change.ChangeAction
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeResult
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -51,14 +52,17 @@ fun ChangePasswordDialog(
     LaunchedEffect(key1 = changeViewModel, key2 = result, key3 = result.snackBarMessageType) {
         result.snackBarMessageType?.let { msg: String ->
             snackbarHostState.showSnackbar(msg)
-            result.disposeOneTimeEvents()
+            changeViewModel.disposeOneTimeEvents()
         }
     }
-    ShowChangePasswordDialog(result)
+    ShowChangePasswordDialog(result, changeViewModel::onAction)
 }
 
 @Composable
-fun ShowChangePasswordDialog(result: ChangeResult) = AlertDialog(
+fun ShowChangePasswordDialog(
+    result: ChangeResult,
+    onAction: (action: ChangeAction) -> Unit = {}
+) = AlertDialog(
     title = { Text(text = stringResource(Res.string.changing_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
@@ -68,7 +72,7 @@ fun ShowChangePasswordDialog(result: ChangeResult) = AlertDialog(
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
                 password = result.oldPassword,
-                onPasswordChange = result.onEditOldPassword,
+                onPasswordChange = { onAction(ChangeAction.OnEditOldPassword(it)) },
                 label = result.oldPasswordFieldLabel.resString,
                 isError = result.isOldPasswordError,
                 imeAction = ImeAction.Next,
@@ -78,7 +82,7 @@ fun ShowChangePasswordDialog(result: ChangeResult) = AlertDialog(
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 password = result.newPassword,
-                onPasswordChange = result.onEditNewPassword,
+                onPasswordChange = { onAction(ChangeAction.OnEditNewPassword(it)) },
                 label = result.newPasswordFieldLabel.resString,
                 isError = result.isNewPasswordError,
                 imeAction = ImeAction.Next,
@@ -89,19 +93,19 @@ fun ShowChangePasswordDialog(result: ChangeResult) = AlertDialog(
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 password = result.repeatNewPassword,
-                onPasswordChange = result.onEditRepeatPassword,
+                onPasswordChange = { onAction(ChangeAction.OnEditRepeatPassword(it)) },
                 label = result.repeatPasswordFieldLabel.resString,
                 isError = result.isRepeatPasswordError,
                 imeAction = ImeAction.Done,
-                keyboardActions = KeyboardActions(onDone = { result.onChangeClick.invoke() }),
+                keyboardActions = KeyboardActions(onDone = { onAction(ChangeAction.OnChangeClick) }),
                 contentDescription = stringResource(Res.string.repeat_new_password),
                 passwordContentType = ContentType.NewPassword
             )
         }
     },
-    confirmButton = { Button(onClick = result.onChangeClick) { Text(stringResource(Res.string.yes)) } },
-    dismissButton = { Button(onClick = result.onCancel) { Text(stringResource(Res.string.cancel)) } },
-    onDismissRequest = result.onCancel
+    confirmButton = { Button(onClick = { onAction(ChangeAction.OnChangeClick) }) { Text(stringResource(Res.string.yes)) } },
+    dismissButton = { Button(onClick = { onAction(ChangeAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
+    onDismissRequest = { onAction(ChangeAction.Cancel) }
 )
 
 @Preview

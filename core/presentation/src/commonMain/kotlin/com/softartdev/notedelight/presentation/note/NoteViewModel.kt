@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
+import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class NoteViewModel(
-    private var noteId: Long,
+    private val adaptiveInteractor: AdaptiveInteractor,
     private val noteDAO: NoteDAO,
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
@@ -27,30 +29,48 @@ class NoteViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
-    private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(
-        value = NoteResult(
-            onSaveClick = this@NoteViewModel::saveNote,
-            onEditClick = this@NoteViewModel::editTitle,
-            onDeleteClick = this@NoteViewModel::subscribeToDeleteNote,
-            checkSaveChange = this@NoteViewModel::checkSaveChange,
-            disposeOneTimeEvents = this@NoteViewModel::disposeOneTimeEvents
-        )
-    )
+    private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(NoteResult())
     val stateFlow: StateFlow<NoteResult> = mutableStateFlow
 
-    fun createOrLoadNote() = when (noteId) {
+    private var noteId: Long
+        set(value) { adaptiveInteractor.selectedNoteIdStateFlow.value = value }
+        get() = requireNotNull(adaptiveInteractor.selectedNoteIdStateFlow.value)
+
+    var job: Job? = null
+
+    fun launchCollectingSelectedNoteId() {
+        if (job != null) return
+        job = viewModelScope.launch {
+            adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedNoteId: Long? ->
+                Napier.d("Collected note id = $selectedNoteId")
+                when (selectedNoteId) {
+                    null -> mutableStateFlow.update { result -> result.copy(note = null) }
+                    else -> createOrLoadNote()
+                }
+            }
+        }
+    }
+
+    fun onAction(action: NoteAction) = when (action) {
+        is NoteAction.Save -> saveNote(title = action.title, text = action.text)
+        is NoteAction.Edit -> editTitle()
+        is NoteAction.Delete -> subscribeToDeleteNote()
+        is NoteAction.CheckSaveChange -> checkSaveChange(title = action.title, text = action.text)
+    }
+
+    private fun createOrLoadNote() = when (noteId) {
         0L -> createNote()
-        else -> loadNote(noteId)
+        else -> loadNote()
     }
 
     private fun createNote() = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
-            noteId = withContext(coroutineDispatchers.io) {
+            val id: Long = withContext(coroutineDispatchers.io) {
                 createNoteUseCase()
             }
-            Napier.d("Created note with id=$noteId")
-            loadNote(noteId)
+            Napier.d("Created note with id=$id")
+            noteId = id
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
@@ -59,11 +79,11 @@ class NoteViewModel(
         }
     }
 
-    private fun loadNote(id: Long) = viewModelScope.launch {
+    private fun loadNote() = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
             val note = withContext(coroutineDispatchers.io) {
-                noteDAO.load(id)
+                noteDAO.load(noteId)
             }
             Napier.d("Loaded note with id = $noteId")
             mutableStateFlow.update { result -> result.copy(note = note) }
@@ -133,7 +153,7 @@ class NoteViewModel(
                     subscribeToSaveNote(title, text)
                 }
                 empty -> deleteNoteForResult()
-                else -> router.popBackStack()
+                else -> adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
@@ -169,7 +189,7 @@ class NoteViewModel(
             val noteTitle: String = createTitleIfNeed(title, text)
             saveNoteUseCase(noteId, noteTitle, text)
             Napier.d("Saved and nav back")
-            router.navigateClearingBackStack(route = AppNavGraph.Main) // FIXME
+            adaptiveNavigateBack()
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
@@ -186,7 +206,7 @@ class NoteViewModel(
                 deleteNoteForResult()
             } else {
                 Napier.d("Don't save and nav back")
-                router.popBackStack()
+                adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
@@ -207,7 +227,7 @@ class NoteViewModel(
                 deleteNoteForResult()
             } else {
                 Napier.d("Don't delete note")
-                router.popBackStack()
+                adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
@@ -225,7 +245,12 @@ class NoteViewModel(
         mutableStateFlow.update { result: NoteResult ->
             result.copy(snackBarMessageType = NoteResult.SnackBarMessageType.DELETED)
         }
-        router.popBackStack(route = AppNavGraph.Main, inclusive = false, saveState = false)
+        adaptiveNavigateBack()
+    }
+    
+    private suspend fun adaptiveNavigateBack() {
+        adaptiveInteractor.selectedNoteIdStateFlow.value = null
+        router.adaptiveNavigateBack()
     }
 
     private fun subscribeToEditTitle() = viewModelScope.launch {
@@ -277,7 +302,7 @@ class NoteViewModel(
         return note.title.isEmpty() && note.text.isEmpty()
     }
 
-    private fun disposeOneTimeEvents() = viewModelScope.launch {
+    fun disposeOneTimeEvents() = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::hideSnackBarMessage)
     }
 

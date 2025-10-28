@@ -6,6 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 sealed interface NoteListResult {
     data object Loading : NoteListResult
-    data class Success(val result: Flow<PagingData<Note>>) : NoteListResult
+    data class Success(val result: Flow<PagingData<Note>>, val selectedId: Long?) : NoteListResult
     data class Error(val error: String? = null) : NoteListResult
+}
+
+sealed interface MainAction {
+    data class OnNoteClick(val id: Long) : MainAction
+    data object OnSettingsClick : MainAction
+    data object OnRefresh : MainAction
 }

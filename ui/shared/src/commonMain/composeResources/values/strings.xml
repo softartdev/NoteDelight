@@ -57,4 +57,5 @@
     <string name="enter_password_dialog_subtitle">Enter your current password to disable password protection.</string>
     <string name="dialog_title_change_title">Editing title</string>
     <string name="copy">Copy</string>
+    <string name="detail_pane_placeholder">Select or create a note</string>
 </resources>
