@@ -8,7 +8,6 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
-import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.NapierKoinLogger
 import io.github.aakira.napier.DebugAntilog
@@ -18,7 +17,6 @@ import notedelight.ui.shared.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import org.koin.java.KoinJavaComponent.get
 
 fun main() {
     Napier.base(antilog = DebugAntilog())
@@ -26,8 +24,6 @@ fun main() {
         logger(NapierKoinLogger(Level.DEBUG))
         modules(sharedModules + uiModules)
     }
-    val router: Router = get(Router::class.java)
-
     application {
         Window(
             onCloseRequest = ::exitApplication,
@@ -36,7 +32,7 @@ fun main() {
             icon = rememberVectorPainter(image = Icons.Filled.FileLock),
         ) {
             CustomDesktopTheme {
-                App(router)
+                App()
             }
         }
     }

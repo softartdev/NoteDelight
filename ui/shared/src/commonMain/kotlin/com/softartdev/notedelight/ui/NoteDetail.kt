@@ -18,8 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -43,34 +41,26 @@ import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.action_delete_note
 import notedelight.ui.shared.generated.resources.action_edit_title
 import notedelight.ui.shared.generated.resources.action_save_note
-import notedelight.ui.shared.generated.resources.note_deleted
-import notedelight.ui.shared.generated.resources.note_empty
-import notedelight.ui.shared.generated.resources.note_saved
 import notedelight.ui.shared.generated.resources.type_text
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun NoteDetail(
-    noteViewModel: NoteViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun NoteDetail(noteViewModel: NoteViewModel) {
     LaunchedEffect(noteViewModel) {
         noteViewModel.launchCollectingSelectedNoteId()
     }
     val result: NoteResult by noteViewModel.stateFlow.collectAsState()
     when (result.note) {
         null -> DetailPanePlaceholder()
-        else -> NoteDetail(noteViewModel, result, snackbarHostState)
+        else -> NoteDetail(noteViewModel, result)
     }
 }
 
 @Composable
 fun NoteDetail(
     noteViewModel: NoteViewModel,
-    result: NoteResult,
-    snackbarHostState: SnackbarHostState
+    result: NoteResult
 ) {
     val titleState: MutableState<String> = remember(key1 = noteViewModel, key2 = result) {
         mutableStateOf(result.note?.title ?: "")
@@ -78,23 +68,11 @@ fun NoteDetail(
     val textState: MutableState<String> = remember(key1 = noteViewModel, key2 = result) {
         mutableStateOf(result.note?.text ?: "")
     }
-    LaunchedEffect(key1 = noteViewModel, key2 = result, key3 = result.snackBarMessageType) {
-        result.snackBarMessageType?.let { snackBarMessageType: NoteResult.SnackBarMessageType ->
-            val msg: String = when (snackBarMessageType) {
-                NoteResult.SnackBarMessageType.SAVED -> getString(Res.string.note_saved) + ": " + titleState.value
-                NoteResult.SnackBarMessageType.EMPTY -> getString(Res.string.note_empty)
-                NoteResult.SnackBarMessageType.DELETED -> getString(Res.string.note_deleted)
-            }
-            snackbarHostState.showSnackbar(message = msg)
-            noteViewModel.disposeOneTimeEvents()
-        }
-    }
     NoteDetailBody(
         result = result,
         titleState = titleState,
         textState = textState,
-        onAction = noteViewModel::onAction,
-        snackbarHostState = snackbarHostState,
+        onAction = noteViewModel::onAction
     )
     BackHandler { noteViewModel.onAction(NoteAction.CheckSaveChange(titleState.value, textState.value)) }
 }
@@ -105,7 +83,6 @@ fun NoteDetailBody(
     titleState: MutableState<String> = mutableStateOf("Title"),
     textState: MutableState<String> = mutableStateOf("Text"),
     onAction: (action: NoteAction) -> Unit = {},
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     modifier = Modifier.imePadding(),
     topBar = {
@@ -175,7 +152,6 @@ fun NoteDetailBody(
             )
         }
     },
-    snackbarHost = { SnackbarHost(snackbarHostState) },
 )
 
 @Preview

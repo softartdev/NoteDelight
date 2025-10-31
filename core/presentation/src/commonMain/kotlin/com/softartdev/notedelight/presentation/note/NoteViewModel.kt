@@ -4,9 +4,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
@@ -26,6 +29,7 @@ class NoteViewModel(
     private val createNoteUseCase: CreateNoteUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
@@ -99,9 +103,7 @@ class NoteViewModel(
         mutableStateFlow.update(NoteResult::showLoading)
         try {
             if (title.isNullOrEmpty() && text.isEmpty()) {
-                mutableStateFlow.update { result: NoteResult ->
-                    result.copy(snackBarMessageType = NoteResult.SnackBarMessageType.EMPTY)
-                }
+                snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
             } else {
                 val noteTitle: String = withContext(coroutineDispatchers.default) {
                     createTitleIfNeed(title, text)
@@ -112,10 +114,13 @@ class NoteViewModel(
                 Napier.d("Saved note with id=$noteId")
                 mutableStateFlow.update { result: NoteResult ->
                     result.copy(
-                        note = result.note?.copy(title = noteTitle, text = text),
-                        snackBarMessageType = NoteResult.SnackBarMessageType.SAVED
+                        note = result.note?.copy(title = noteTitle, text = text)
                     )
                 }
+                snackbarInteractor.showMessage(SnackbarMessage.Resource(
+                    res = SnackbarTextResource.SAVED,
+                    suffix = noteTitle
+                ))
             }
         } catch (e: Throwable) {
             Napier.e("❌", e)
@@ -242,9 +247,7 @@ class NoteViewModel(
             deleteNoteUseCase.invoke(id = noteId)
         }
         Napier.d("Deleted note with id=$noteId")
-        mutableStateFlow.update { result: NoteResult ->
-            result.copy(snackBarMessageType = NoteResult.SnackBarMessageType.DELETED)
-        }
+        snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.DELETED))
         adaptiveNavigateBack()
     }
     
@@ -302,13 +305,9 @@ class NoteViewModel(
         return note.title.isEmpty() && note.text.isEmpty()
     }
 
-    fun disposeOneTimeEvents() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::hideSnackBarMessage)
-    }
-
     @VisibleForTesting
     fun resetResultState(noteId: Long = 0L) = mutableStateFlow.update { noteResult ->
         this@NoteViewModel.noteId = noteId
-        return@update noteResult.copy(loading = false, note = null, snackBarMessageType = null)
+        return@update noteResult.copy(loading = false, note = null)
     }
 }

@@ -20,30 +20,33 @@ The `ui:shared` module contains the **shared Compose Multiplatform UI layer** fo
 ui:shared (UI Layer - Compose Multiplatform)
     ├── src/
     │   ├── commonMain/
-    │   │   ├── kotlin/
-    │   │   │   └── com/softartdev/notedelight/
-    │   │   │       ├── App.kt                    # App entry point
-    │   │   │       ├── di/
-    │   │   │       │   └── koinModules.kt        # DI configuration
-    │   │   │       └── ui/
-    │   │   │           ├── main/                 # Notes list screen
-    │   │   │           ├── note/                 # Note detail screen
-    │   │   │           ├── splash/               # Splash screen
-    │   │   │           ├── signin/               # Sign-in screen
-    │   │   │           ├── title/                # Title edit dialog
-    │   │   │           ├── settings/             # Settings screen
-    │   │   │           │   └── security/         # Password screens
-    │   │   │           ├── adaptive/             # Adaptive UI components
-    │   │   │           ├── component/            # Reusable components
-    │   │   │           └── theme/                # Theme & styling
-    │   │   └── composeResources/                 # Shared resources
-    │   │       ├── drawable/                     # Images, icons
-    │   │       ├── values/                       # Strings, colors
-    │   │       └── font/                         # Custom fonts
-    │   ├── androidMain/                          # Android-specific UI
-    │   ├── jvmMain/                              # Desktop-specific UI
-    │   ├── iosMain/                              # iOS-specific UI
-    │   └── wasmJsMain/                           # Web-specific UI
+    │   │   ├── kotlin/com/softartdev/notedelight/
+    │   │   │   ├── App.kt                # Root composable + navigation host
+    │   │   │   ├── di/
+    │   │   │   │   ├── sharedModules.kt  # Shared Koin module list
+    │   │   │   │   └── uiModules.kt      # UI-only singletons (Router, interactors)
+    │   │   │   ├── interactor/           # Compose-aware interactors (Adaptive, Snackbar)
+    │   │   │   ├── navigation/           # Router implementation helpers
+    │   │   │   └── ui/
+    │   │   │       ├── GlobalSnackbarHost.kt
+    │   │   │       ├── main/
+    │   │   │       ├── note/
+    │   │   │       ├── splash/
+    │   │   │       ├── signin/
+    │   │   │       ├── title/
+    │   │   │       ├── settings/
+    │   │   │       │   └── security/
+    │   │   │       ├── adaptive/
+    │   │   │       ├── component/
+    │   │   │       └── theme/
+    │   │   └── composeResources/
+    │   │       ├── drawable/
+    │   │       ├── values/
+    │   │       └── font/
+    │   ├── androidMain/
+    │   ├── jvmMain/
+    │   ├── iosMain/
+    │   └── wasmJsMain/
     └── build.gradle.kts
 ```
 
@@ -51,33 +54,27 @@ ui:shared (UI Layer - Compose Multiplatform)
 
 ### App Entry Point (`App.kt`)
 
-Main composable function initializing the app:
+`App.kt` wires theming, navigation, and the global snackbar host:
+
+- Wraps content in `PreferableMaterialTheme` and enables edge-to-edge rendering.
+- Registers a `NavHost` with destinations from `AppNavGraph` (defined in `core/presentation`).
+- Places `GlobalSnackbarHost` at the bottom of the root `Box`, injecting `SnackbarInteractor` via Koin.
 
 ```kotlin
-@Composable
-fun App() {
-    KoinContext {
-        MaterialThemePrefs {
-            NoteDelightTheme {
-                AppNavigation()
-            }
-        }
-    }
+Box(modifier = Modifier.fillMaxSize()) {
+    NavHost(...)
+    GlobalSnackbarHost(
+        modifier = Modifier.align(Alignment.BottomCenter),
+        snackbarInteractor = koinInject(),
+    )
 }
 ```
 
 ### Navigation (`navigation/`)
 
-Type-safe navigation using Jetpack Navigation Compose:
-
-```kotlin
-sealed class Screen(val route: String) {
-    object Main : Screen("main")
-    data class Details(val noteId: Long) : Screen("details/$noteId")
-    object Settings : Screen("settings")
-    // ... other screens
-}
-```
+- Uses `AppNavGraph` sealed routes from `core/presentation` to keep destination types shared across platforms.
+- `RouterImpl` bridges the generic `Router` interface to Jetpack Navigation and adaptive navigators.
+- `NavHost` in `App.kt` registers composable and dialog destinations, delegating navigation events from ViewModels via `Router`.
 
 ### Screens (`ui/`)
 
@@ -113,6 +110,12 @@ Each screen is a composable function connected to a ViewModel:
   - Material 3 Adaptive components
   - Three-pane navigation support
   - Automatic layout switching based on screen size
+
+### Global Snackbar Host (`ui/GlobalSnackbarHost.kt`)
+
+- Provides a single `SnackbarHost` for the entire app and wires `SnackbarInteractor` dependencies (`SnackbarHostState`, `ClipboardManager`, `CoroutineScope`).
+- Installed once in `App.kt`; Compose disposes it safely across Android, Desktop, Web, and iOS targets.
+- Use `SnackbarMessage` variants from `core/presentation` to trigger user messages—never create view-specific hosts.
 
 ### Reusable Components (`ui/component/`)
 
@@ -172,16 +175,10 @@ composeResources/
 
 ## Dependency Injection
 
-Uses **Koin** for dependency injection:
-
-```kotlin
-// di/koinModules.kt
-val sharedModule = module {
-    viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { parameters -> NoteViewModel(get(), parameters.get(), get()) }
-    // ... other ViewModels
-}
-```
+- `di/sharedModules.kt` exports a list combining repository, DAO, use case, and ViewModel modules (multiplatform safe).
+- `di/uiModules.kt` registers UI-only singletons: `RouterImpl`, `AdaptiveInteractor`, `SnackbarInteractorImpl`, and `CoroutineDispatchersImpl`.
+- `App.kt` loads both module lists through `PreviewKoin` or the platform-specific composition root.
+- Platform targets contribute their repository wiring via `expect val repoModule` implementations.
 
 ## State Management Pattern
 
@@ -382,6 +379,7 @@ fun AdaptiveScreen() {
 - Use ViewModels via Koin
 - Material 3 components consistently
 - Adaptive components for responsive layouts
+- Surface snackbars via `SnackbarInteractor`; the `GlobalSnackbarHost` is the only place that owns `SnackbarHostState`.
 
 ## Best Practices
 

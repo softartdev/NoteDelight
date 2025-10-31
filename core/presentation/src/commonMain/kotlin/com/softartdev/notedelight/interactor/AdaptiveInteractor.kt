@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.usecase.note
+package com.softartdev.notedelight.interactor
 
 import kotlinx.coroutines.flow.MutableStateFlow
 

@@ -12,8 +12,6 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -49,18 +47,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MainScreen(
-    mainViewModel: MainViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun MainScreen(mainViewModel: MainViewModel) {
     LaunchedEffect(mainViewModel) {
         mainViewModel.launchNotes()
     }
     val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
     MainScreen(
         noteListState = noteListState,
-        onAction = mainViewModel::onAction,
-        snackbarHostState = snackbarHostState,
+        onAction = mainViewModel::onAction
     )
 }
 
@@ -68,7 +62,6 @@ fun MainScreen(
 fun MainScreen(
     noteListState: State<NoteListResult>,
     onAction: (action: MainAction) -> Unit = {},
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     refreshState: State<Boolean> = remember { derivedStateOf { noteListState.value is NoteListResult.Loading } }
 ) = Scaffold(
@@ -118,7 +111,7 @@ fun MainScreen(
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
             modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
-    }, snackbarHost = { SnackbarHost(snackbarHostState) },
+    }
 )
 
 @Preview

@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Job

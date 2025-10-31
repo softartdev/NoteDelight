@@ -7,14 +7,12 @@ data class EnterResult(
     val fieldLabel: FieldLabel = FieldLabel.ENTER_PASSWORD,
     val password: String = "",
     val isPasswordVisible: Boolean = false,
-    val isError: Boolean = false,
-    val snackBarMessageType: String? = null,
+    val isError: Boolean = false
 ) {
     fun showLoading(): EnterResult = copy(loading = true)
     fun hideLoading(): EnterResult = copy(loading = false)
     fun showError(): EnterResult = copy(isError = true)
     fun hideError(): EnterResult = copy(isError = false)
-    fun hideSnackBarMessage(): EnterResult = copy(snackBarMessageType = null)
     fun togglePasswordVisibility(): EnterResult = copy(isPasswordVisible = !isPasswordVisible)
 }
 

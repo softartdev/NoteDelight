@@ -7,11 +7,14 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintAntilog
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
@@ -33,7 +36,6 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class NoteViewModelTest {
@@ -48,6 +50,7 @@ class NoteViewModelTest {
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
     private val saveNoteUseCase = SaveNoteUseCase(mockNoteDAO)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
@@ -64,6 +67,7 @@ class NoteViewModelTest {
         createNoteUseCase = mockCreateNoteUseCase,
         saveNoteUseCase = saveNoteUseCase,
         deleteNoteUseCase = mockDeleteNoteUseCase,
+        snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         coroutineDispatchers = coroutineDispatchers
     )
@@ -79,7 +83,7 @@ class NoteViewModelTest {
     fun tearDown() = runTest {
         viewModel.resetResultState(noteId = id)
         Napier.takeLogarithm()
-        Mockito.reset(mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockRouter)
+        Mockito.reset(mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockRouter)
     }
 
     @Test
@@ -127,12 +131,7 @@ class NoteViewModelTest {
             assertEquals(note, actualResult.note)
 
             viewModel.onAction(NoteAction.Save("", ""))
-            actualResult = awaitItem()
-            assertEquals(NoteResult.SnackBarMessageType.EMPTY, actualResult.snackBarMessageType)
-
-            viewModel.disposeOneTimeEvents()
-            actualResult = awaitItem()
-            assertNull(actualResult.snackBarMessageType)
+            verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -157,6 +156,7 @@ class NoteViewModelTest {
             advanceUntilIdle()
             actualResult = awaitItem()
             assertFalse(actualResult.loading)
+            verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Resource(SnackbarTextResource.SAVED, title))
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -204,7 +204,8 @@ class NoteViewModelTest {
 
             actualResult = awaitItem()
             assertTrue(actualResult.loading)
-            assertNull(actualResult.snackBarMessageType)
+
+            verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Resource(SnackbarTextResource.DELETED))
 
             actualResult = awaitItem()
             verify(mockRouter).adaptiveNavigateBack()

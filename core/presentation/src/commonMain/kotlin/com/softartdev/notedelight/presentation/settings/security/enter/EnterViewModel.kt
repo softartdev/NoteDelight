@@ -3,6 +3,8 @@ package com.softartdev.notedelight.presentation.settings.security.enter
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 class EnterViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
@@ -63,7 +66,7 @@ class EnterViewModel(
         } catch (e: Throwable) {
             Napier.e("❌", e)
             autofillManager?.cancel()
-            mutableStateFlow.update { it.copy(snackBarMessageType = e.message) }
+            e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EnterResult::hideLoading)
         }
@@ -75,9 +78,5 @@ class EnterViewModel(
 
     private fun navigateUp() = viewModelScope.launch {
         router.popBackStack()
-    }
-
-    fun disposeOneTimeEvents() = viewModelScope.launch {
-        mutableStateFlow.update(EnterResult::hideSnackBarMessage)
     }
 }

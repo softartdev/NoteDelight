@@ -16,14 +16,12 @@ import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -47,7 +45,6 @@ val useCaseModule: Module = module {
     factoryOf(::SaveNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::UpdateTitleUseCase)
-    singleOf(::AdaptiveInteractor)
 }
 
 val viewModelModule: Module = module {

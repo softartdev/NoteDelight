@@ -7,12 +7,12 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintAntilog
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf

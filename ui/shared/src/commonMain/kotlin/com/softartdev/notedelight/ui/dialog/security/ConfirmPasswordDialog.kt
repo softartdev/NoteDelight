@@ -8,13 +8,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.autofill.ContentType
@@ -39,20 +37,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ConfirmPasswordDialog(
-    confirmViewModel: ConfirmViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun ConfirmPasswordDialog(confirmViewModel: ConfirmViewModel) {
     val result: ConfirmResult by confirmViewModel.stateFlow.collectAsState()
     val autofillManager: AutofillManager? = LocalAutofillManager.current
     LaunchedEffect(key1 = confirmViewModel, key2 = autofillManager) {
         confirmViewModel.autofillManager = autofillManager
-    }
-    LaunchedEffect(key1 = confirmViewModel, key2 = result, key3 = result.snackBarMessageType) {
-        result.snackBarMessageType?.let { msg: String ->
-            snackbarHostState.showSnackbar(msg)
-            confirmViewModel.disposeOneTimeEvents()
-        }
     }
     ShowConfirmPasswordDialog(result, confirmViewModel::onAction)
 }

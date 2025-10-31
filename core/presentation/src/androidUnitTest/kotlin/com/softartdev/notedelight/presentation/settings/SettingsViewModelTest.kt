@@ -2,6 +2,8 @@ package com.softartdev.notedelight.presentation.settings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.model.PlatformSQLiteState.DOES_NOT_EXIST
 import com.softartdev.notedelight.model.PlatformSQLiteState.ENCRYPTED
 import com.softartdev.notedelight.model.PlatformSQLiteState.UNENCRYPTED
@@ -12,6 +14,7 @@ import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -30,7 +33,13 @@ class SettingsViewModelTest {
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val mockRouter = Mockito.mock(Router::class.java)
-    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockRouter)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
+    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter)
+
+    @After
+    fun tearDown() = runTest {
+        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter)
+    }
 
     @Test
     fun changeTheme() = runTest {
@@ -117,6 +126,24 @@ class SettingsViewModelTest {
             Mockito.verify(mockRouter).navigate(route = AppNavGraph.ConfirmPasswordDialog)
             expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun showCipherVersion() = runTest {
+        val cipherVersion = "4.5.0"
+        Mockito.`when`(mockSafeRepo.execute("PRAGMA cipher_version;")).thenReturn(cipherVersion)
+        settingsViewModel.onAction(SettingsAction.ShowCipherVersion)
+        Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(cipherVersion))
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun showDatabasePath() = runTest {
+        val dbPath = "/data/data/com.softartdev.notedelight/databases/note.db"
+        Mockito.`when`(mockSafeRepo.dbPath).thenReturn(dbPath)
+        settingsViewModel.onAction(SettingsAction.ShowDatabasePath)
+        Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(dbPath))
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
 }
