@@ -13,11 +13,13 @@ import kotlinx.browser.document
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
+// Top-level property to check cross-origin isolation (required for Wasm js() calls)
+private val isCrossOriginIsolated: Boolean = js("window.crossOriginIsolated").unsafeCast<Boolean?>() ?: false
+
 fun main() {
     Napier.base(antilog = DebugAntilog())
     
     // Verify cross-origin isolation for OPFS support
-    val isCrossOriginIsolated = js("window.crossOriginIsolated").unsafeCast<Boolean?>() ?: false
     Napier.d("Cross-origin isolated: $isCrossOriginIsolated")
     if (!isCrossOriginIsolated) {
         Napier.w("⚠️ OPFS not available: cross-origin isolation not enabled. Database may not persist across page reloads.")
