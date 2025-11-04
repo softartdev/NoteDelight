@@ -31,7 +31,7 @@ jobs:
         run: fastlane build_bundle_publish
       - name: Archive build artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-artifacts
           path: |
