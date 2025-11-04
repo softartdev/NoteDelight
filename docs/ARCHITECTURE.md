@@ -204,13 +204,11 @@ class NoteViewModel(...) : ViewModel() {
 @Composable
 fun NoteDetail(
     noteViewModel: NoteViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val result: NoteResult by noteViewModel.stateFlow.collectAsState()
     NoteDetailBody(
         result = result,
         onAction = noteViewModel::onAction,  // Single action handler
-        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -218,7 +216,6 @@ fun NoteDetail(
 fun NoteDetailBody(
     result: NoteResult,
     onAction: (action: NoteAction) -> Unit = {},  // Simplified signature
-    snackbarHostState: SnackbarHostState
 ) {
     // Usage in UI components
     IconButton(onClick = { onAction(NoteAction.Save(title, text)) })

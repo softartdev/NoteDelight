@@ -12,7 +12,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val uiModules: List<Module>
-    get() = listOf(navigationModule, utilModule)
+    get() = listOf(navigationModule, interactorModule, utilModule)
 
 val navigationModule = module {
     single<Router> { RouterStub() }

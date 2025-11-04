@@ -5,13 +5,9 @@ import com.softartdev.notedelight.model.Note
 data class NoteResult(
     val loading: Boolean = false,
     val note: Note? = null,
-    val snackBarMessageType: SnackBarMessageType? = null,
 ) {
-    enum class SnackBarMessageType { SAVED, EMPTY, DELETED }
-
     fun showLoading(): NoteResult = copy(loading = true)
     fun hideLoading(): NoteResult = copy(loading = false)
-    fun hideSnackBarMessage(): NoteResult = copy(snackBarMessageType = null)
 }
 
 sealed interface NoteAction {

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
@@ -14,7 +15,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -33,11 +33,13 @@ class ConfirmViewModelTest {
 
     private val mockChangePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(
         scheduler = mainDispatcherRule.testDispatcher.scheduler
     )
     private val viewModel = ConfirmViewModel(
         changePasswordUseCase = mockChangePasswordUseCase,
+        snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         coroutineDispatchers = coroutineDispatchers
     )
@@ -48,7 +50,7 @@ class ConfirmViewModelTest {
     @After
     fun tearDown() {
         Napier.takeLogarithm()
-        Mockito.reset(mockChangePasswordUseCase, mockRouter)
+        Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter)
     }
 
     @Test
@@ -62,7 +64,6 @@ class ConfirmViewModelTest {
             assertFalse(initialState.isRepeatPasswordError)
             assertEquals(FieldLabel.ENTER_PASSWORD, initialState.passwordFieldLabel)
             assertEquals(FieldLabel.CONFIRM_PASSWORD, initialState.repeatPasswordFieldLabel)
-            assertNull(initialState.snackBarMessageType)
 
             cancelAndIgnoreRemainingEvents()
         }

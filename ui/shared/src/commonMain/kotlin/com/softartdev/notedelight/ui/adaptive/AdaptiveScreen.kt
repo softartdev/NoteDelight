@@ -7,7 +7,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -33,10 +32,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AdaptiveScreen(
-    router: Router = RouterImpl(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun AdaptiveScreen(router: Router = RouterImpl()) {
     val coroutineScope = rememberCoroutineScope()
     val navigator: ThreePaneScaffoldNavigator<Long> = rememberListDetailPaneScaffoldNavigator<Long>()
     val paneExpansionState: PaneExpansionState = rememberPaneExpansionState()
@@ -53,16 +49,10 @@ fun AdaptiveScreen(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
-            MainScreen(
-                mainViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
+            MainScreen(mainViewModel = koinViewModel())
         },
         detailPane = {
-            NoteDetail(
-                noteViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
+            NoteDetail(noteViewModel = koinViewModel())
         },
         paneExpansionDragHandle = {
             VerticalDragHandle(

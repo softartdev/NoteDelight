@@ -8,13 +8,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
@@ -35,20 +33,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EnterPasswordDialog(
-    enterViewModel: EnterViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun EnterPasswordDialog(enterViewModel: EnterViewModel) {
     val result: EnterResult by enterViewModel.stateFlow.collectAsState()
     val autofillManager: AutofillManager? = LocalAutofillManager.current
     LaunchedEffect(key1 = enterViewModel, key2 = autofillManager) {
         enterViewModel.autofillManager = autofillManager
-    }
-    LaunchedEffect(key1 = enterViewModel, key2 = result, key3 = result.snackBarMessageType) {
-        result.snackBarMessageType?.let { msg: String ->
-            snackbarHostState.showSnackbar(msg)
-            enterViewModel.disposeOneTimeEvents()
-        }
     }
     ShowEnterPasswordDialog(result, enterViewModel::onAction)
 }

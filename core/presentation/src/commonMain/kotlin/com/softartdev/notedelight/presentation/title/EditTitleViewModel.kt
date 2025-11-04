@@ -3,6 +3,8 @@ package com.softartdev.notedelight.presentation.title
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import io.github.aakira.napier.Napier
@@ -15,6 +17,7 @@ class EditTitleViewModel(
     private val noteId: Long,
     private val noteDAO: NoteDAO,
     private val updateTitleUseCase: UpdateTitleUseCase,
+    private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
@@ -33,9 +36,9 @@ class EditTitleViewModel(
         try {
             val note = noteDAO.load(noteId)
             mutableStateFlow.update { it.copy(title = note.title) }
-        } catch (t: Throwable) {
-            Napier.e("❌", t)
-            mutableStateFlow.update { it.copy(snackBarMessageType = t.message) }
+        } catch (e: Throwable) {
+            Napier.e("❌", e)
+            e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EditTitleResult::hideLoading)
         }
@@ -58,9 +61,9 @@ class EditTitleViewModel(
                 UpdateTitleUseCase.dialogChannel.send(noteTitle)
                 router.popBackStack()
             }
-        } catch (t: Throwable) {
-            Napier.e("❌", t)
-            mutableStateFlow.update { it.copy(snackBarMessageType = t.message) }
+        } catch (e: Throwable) {
+            Napier.e("❌", e)
+            e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EditTitleResult::hideLoading)
         }
@@ -69,9 +72,5 @@ class EditTitleViewModel(
     private fun cancel() = viewModelScope.launch {
         UpdateTitleUseCase.dialogChannel.send(null)
         router.popBackStack()
-    }
-
-    fun disposeOneTimeEvents() = viewModelScope.launch {
-        mutableStateFlow.update(EditTitleResult::hideSnackBarMessage)
     }
 }

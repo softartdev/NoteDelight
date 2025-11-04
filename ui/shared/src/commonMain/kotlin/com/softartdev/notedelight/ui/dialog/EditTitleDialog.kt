@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,21 +32,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EditTitleDialog(
-    editTitleViewModel: EditTitleViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-) {
+fun EditTitleDialog(editTitleViewModel: EditTitleViewModel) {
     LaunchedEffect(editTitleViewModel) {
         editTitleViewModel.loadTitle()
     }
     val result: EditTitleResult by editTitleViewModel.stateFlow.collectAsState()
-
-    LaunchedEffect(key1 = result, key2 = result, key3 = result.snackBarMessageType) {
-        result.snackBarMessageType?.let { msg: String ->
-            snackbarHostState.showSnackbar(msg)
-            editTitleViewModel.disposeOneTimeEvents()
-        }
-    }
     ShowEditTitleDialog(result, editTitleViewModel::onAction)
 }
 

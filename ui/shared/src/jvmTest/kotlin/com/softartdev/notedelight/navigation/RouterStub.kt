@@ -1,7 +1,6 @@
 package com.softartdev.notedelight.navigation
 
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.runBlocking
 
 class RouterStub : Router {
 

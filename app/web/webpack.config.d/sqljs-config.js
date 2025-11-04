@@ -33,17 +33,39 @@ const normalizeSqlJsWasmPaths = (text) => {
 config.plugins.push(
     new CopyWebpackPlugin({
         patterns: [
+            // Use official SQLite WASM files downloaded by Gradle
+            {
+                from: '../../../build/sqlite/sqlite3.wasm',
+                to: 'sqlite3.wasm',
+                noErrorOnMissing: true
+            },
+            {
+                from: '../../../build/sqlite/sqlite3.js',
+                to: 'sqlite3.js',
+                noErrorOnMissing: true
+            },
+            // Copy OPFS async proxy for OPFS support
+            {
+                from: '../../../build/sqlite/sqlite3-opfs-async-proxy.js',
+                to: 'sqlite3-opfs-async-proxy.js',
+                noErrorOnMissing: true
+            },
+            // Custom OPFS worker script is handled by Gradle resource processing
+            // Keep legacy SQL.js files for backward compatibility
             {
                 from: '../../node_modules/sql.js/dist/sql-wasm.wasm',
-                to: 'sql-wasm.wasm'
+                to: 'sql-wasm.wasm',
+                noErrorOnMissing: true
             },
             {
                 from: '../../node_modules/sql.js/dist/sql-wasm.js',
-                to: 'sql-wasm.js'
+                to: 'sql-wasm.js',
+                noErrorOnMissing: true
             },
             {
                 from: '../../node_modules/@cashapp/sqldelight-sqljs-worker/sqljs.worker.js',
-                to: 'sqljs.worker.js'
+                to: 'sqljs.worker.js',
+                noErrorOnMissing: true
             }
         ]
     })

@@ -17,7 +17,6 @@ import com.softartdev.notedelight.TestLifecycleOwner
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiTestModules
-import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
@@ -51,14 +50,13 @@ class DesktopUiTests : AbstractUiTests() {
         }
         val safeRepo: SafeRepo = get(SafeRepo::class.java)
         safeRepo.buildDbIfNeed()
-        val router: Router = get(Router::class.java)
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
         super.setUp()
         val lifecycleOwner = TestLifecycleOwner(coroutineDispatcher = Dispatchers.Swing)
         composeTestRule.setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
-                App(router)
+                App()
             }
         }
     }

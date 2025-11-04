@@ -15,9 +15,7 @@ data class ChangeResult(
     // Repeat new password field
     val repeatNewPassword: String = "",
     val repeatPasswordFieldLabel: FieldLabel = FieldLabel.REPEAT_NEW_PASSWORD,
-    val isRepeatPasswordError: Boolean = false,
-    // Common
-    val snackBarMessageType: String? = null,
+    val isRepeatPasswordError: Boolean = false
 ) {
     fun showLoading(): ChangeResult = copy(loading = true)
     fun hideLoading(): ChangeResult = copy(loading = false)
@@ -29,7 +27,6 @@ data class ChangeResult(
         newPasswordFieldLabel = FieldLabel.ENTER_NEW_PASSWORD,
         repeatPasswordFieldLabel = FieldLabel.REPEAT_NEW_PASSWORD
     )
-    fun hideSnackBarMessage(): ChangeResult = copy(snackBarMessageType = null)
 }
 
 sealed interface ChangeAction {

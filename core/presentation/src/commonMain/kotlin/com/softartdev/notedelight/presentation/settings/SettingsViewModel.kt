@@ -2,6 +2,8 @@ package com.softartdev.notedelight.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val safeRepo: SafeRepo,
     private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase,
+    private val snackbarInteractor: SnackbarInteractor,
     private val router: Router
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<SecurityResult> = MutableStateFlow(
@@ -87,7 +90,7 @@ class SettingsViewModel(
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
-            mutableStateFlow.update { result -> result.copy(snackBarMessage = cipherVersion) }
+            cipherVersion?.let { snackbarInteractor.showMessage(SnackbarMessage.Copyable(it)) }
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
@@ -99,16 +102,12 @@ class SettingsViewModel(
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             val dbPath: String = safeRepo.dbPath
-            mutableStateFlow.update { result -> result.copy(snackBarMessage = dbPath) }
+            snackbarInteractor.showMessage(SnackbarMessage.Copyable(dbPath))
         } catch (e: Throwable) {
             Napier.e("❌", e)
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
-    }
-
-    fun disposeOneTimeEvents() = viewModelScope.launch {
-        mutableStateFlow.update(SecurityResult::hideSnackBarMessage)
     }
 }

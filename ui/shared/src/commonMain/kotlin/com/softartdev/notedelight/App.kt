@@ -1,9 +1,11 @@
 package com.softartdev.notedelight
 
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,8 +16,8 @@ import androidx.navigation.toRoute
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
-import com.softartdev.notedelight.navigation.RouterImpl
 import com.softartdev.notedelight.ui.EnableEdgeToEdge
+import com.softartdev.notedelight.ui.GlobalSnackbarHost
 import com.softartdev.notedelight.ui.SettingsScreen
 import com.softartdev.notedelight.ui.SignInScreen
 import com.softartdev.notedelight.ui.SplashScreen
@@ -30,85 +32,84 @@ import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialogContent
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun App(
-    router: Router,
-    navController: NavHostController = rememberNavController()
+    router: Router = koinInject(),
+    navController: NavHostController = rememberNavController(),
 ) = PreferableMaterialTheme {
     EnableEdgeToEdge()
     DisposableEffect(key1 = router, key2 = navController) {
         router.setController(navController)
         onDispose(router::releaseController)
     }
-    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    NavHost(
-        navController = navController,
-        startDestination = AppNavGraph.Splash,
-    ) {
-        composable<AppNavGraph.Splash> {
-            SplashScreen(splashViewModel = koinViewModel())
+    Box(modifier = Modifier.fillMaxSize()) {
+        NavHost(
+            navController = navController,
+            startDestination = AppNavGraph.Splash,
+        ) {
+            composable<AppNavGraph.Splash> {
+                SplashScreen(splashViewModel = koinViewModel())
+            }
+            composable<AppNavGraph.SignIn> {
+                SignInScreen(signInViewModel = koinViewModel())
+            }
+            composable<AppNavGraph.Main> {
+                AdaptiveScreen(router)
+            }
+            composable<AppNavGraph.Settings> {
+                SettingsScreen(
+                    settingsViewModel = koinViewModel()
+                )
+            }
+            dialog<AppNavGraph.ThemeDialog> {
+                ThemeDialogContent(dismissDialog = navController::popBackStack)
+            }
+            dialog<AppNavGraph.SaveChangesDialog> {
+                SaveDialog(saveViewModel = koinViewModel())
+            }
+            dialog<AppNavGraph.EditTitleDialog> { backStackEntry: NavBackStackEntry ->
+                EditTitleDialog(
+                    editTitleViewModel = koinViewModel {
+                        parametersOf(backStackEntry.toRoute<AppNavGraph.EditTitleDialog>().noteId)
+                    }
+                )
+            }
+            dialog<AppNavGraph.DeleteNoteDialog> {
+                DeleteDialog(deleteViewModel = koinViewModel())
+            }
+            dialog<AppNavGraph.EnterPasswordDialog> {
+                EnterPasswordDialog(
+                    enterViewModel = koinViewModel()
+                )
+            }
+            dialog<AppNavGraph.ConfirmPasswordDialog> {
+                ConfirmPasswordDialog(
+                    confirmViewModel = koinViewModel()
+                )
+            }
+            dialog<AppNavGraph.ChangePasswordDialog> {
+                ChangePasswordDialog(
+                    changeViewModel = koinViewModel()
+                )
+            }
+            dialog<AppNavGraph.ErrorDialog> { backStackEntry: NavBackStackEntry ->
+                ErrorDialog(
+                    message = backStackEntry.toRoute<AppNavGraph.ErrorDialog>().message,
+                    dismissDialog = navController::navigateUp
+                )
+            }
         }
-        composable<AppNavGraph.SignIn> {
-            SignInScreen(signInViewModel = koinViewModel())
-        }
-        composable<AppNavGraph.Main> {
-            AdaptiveScreen(router)
-        }
-        composable<AppNavGraph.Settings> {
-            SettingsScreen(
-                settingsViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
-        }
-        dialog<AppNavGraph.ThemeDialog> {
-            ThemeDialogContent(dismissDialog = navController::popBackStack)
-        }
-        dialog<AppNavGraph.SaveChangesDialog> {
-            SaveDialog(saveViewModel = koinViewModel())
-        }
-        dialog<AppNavGraph.EditTitleDialog> { backStackEntry: NavBackStackEntry ->
-            EditTitleDialog(
-                editTitleViewModel = koinViewModel {
-                    parametersOf(backStackEntry.toRoute<AppNavGraph.EditTitleDialog>().noteId)
-                },
-                snackbarHostState = snackbarHostState
-            )
-        }
-        dialog<AppNavGraph.DeleteNoteDialog> {
-            DeleteDialog(deleteViewModel = koinViewModel())
-        }
-        dialog<AppNavGraph.EnterPasswordDialog> {
-            EnterPasswordDialog(
-                enterViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
-        }
-        dialog<AppNavGraph.ConfirmPasswordDialog> {
-            ConfirmPasswordDialog(
-                confirmViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
-        }
-        dialog<AppNavGraph.ChangePasswordDialog> {
-            ChangePasswordDialog(
-                changeViewModel = koinViewModel(),
-                snackbarHostState = snackbarHostState
-            )
-        }
-        dialog<AppNavGraph.ErrorDialog> { backStackEntry: NavBackStackEntry ->
-            ErrorDialog(
-                message = backStackEntry.toRoute<AppNavGraph.ErrorDialog>().message,
-                dismissDialog = navController::navigateUp
-            )
-        }
+        GlobalSnackbarHost(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            snackbarInteractor = koinInject(),
+        )
     }
 }
 
 @Preview
 @Composable
-fun PreviewApp() = PreviewKoin {
-    App(router = RouterImpl())
-}
+fun PreviewApp() = PreviewKoin { App() }

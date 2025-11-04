@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.PrintAntilog
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -43,10 +45,12 @@ class EditTitleViewModelTest {
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private val updateTitleUseCase = UpdateTitleUseCase(mockNoteDAO)
     private val mockRouter = Mockito.mock(Router::class.java)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val viewModel = EditTitleViewModel(
         noteId = id,
         noteDAO = mockNoteDAO,
         updateTitleUseCase = updateTitleUseCase,
+        snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter
     )
 
@@ -59,7 +63,7 @@ class EditTitleViewModelTest {
     @After
     fun tearDown() = runTest {
         Napier.takeLogarithm()
-        Mockito.reset(mockNoteDAO, mockRouter)
+        Mockito.reset(mockNoteDAO, mockSnackbarInteractor, mockRouter)
     }
 
     @Test
@@ -100,17 +104,8 @@ class EditTitleViewModelTest {
         val error = RuntimeException("Load error")
         Mockito.`when`(mockNoteDAO.load(id)).thenThrow(error)
 
-        viewModel.stateFlow.test {
-            val initialState = awaitItem()
-            assertFalse(initialState.loading)
+        viewModel.loadTitle()
 
-            viewModel.loadTitle()
-
-            val errorState = awaitItem()
-            assertFalse(errorState.loading)
-            assertEquals(error.message, errorState.snackBarMessageType)
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Simple(error.message!!))
     }
 }

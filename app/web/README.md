@@ -84,8 +84,9 @@ HTML entry point:
 
 ### Database
 
-- **SQL.js**: SQLite compiled to JavaScript/Wasm
-- **IndexedDB**: Browser storage backend
+- **Official SQLite WASM**: Native SQLite compiled to WebAssembly
+- **OPFS Storage**: Origin-Private FileSystem for persistent database storage
+- **Web Worker**: Database operations run off the main thread
 - **No encryption**: SQLCipher not available in browsers
 
 ### Webpack
@@ -118,11 +119,15 @@ Output: `app/web/build/dist/wasmJs/productionExecutable/`
 
 ```
 build/dist/wasmJs/productionExecutable/
-├── index.html           # Entry HTML
-├── web.js              # JavaScript loader
-├── web.wasm            # WebAssembly binary
-├── skiko.wasm          # Skia graphics engine
-└── sql-wasm.wasm       # SQLite Wasm
+├── index.html                    # Entry HTML
+├── composeApp.js                 # JavaScript loader
+├── composeApp.wasm              # Application WebAssembly binary
+├── skiko.wasm                   # Skia graphics engine
+├── sqlite3.js                   # SQLite JavaScript
+├── sqlite3.wasm                 # Official SQLite WASM
+├── sqlite.worker.js             # Custom OPFS worker
+├── coi-serviceworker.js         # Service worker for headers
+└── sql-wasm.wasm               # Legacy SQL.js (fallback)
 ```
 
 ## Deployment
@@ -276,7 +281,7 @@ fun isWasmSupported(): Boolean = js("""
 ### Current Limitations
 
 1. ❌ **No encryption**: SQLCipher not available in browsers
-2. ⚠️ **Storage**: Limited to browser storage (IndexedDB)
+2. ✅ **Storage**: OPFS provides persistent database storage
 3. ⚠️ **File access**: Restricted browser file API
 4. ⚠️ **Performance**: Slower than native (improving)
 5. ⚠️ **Binary size**: Larger initial download than native apps
@@ -284,10 +289,35 @@ fun isWasmSupported(): Boolean = js("""
 
 ### Workarounds
 
-- **Storage**: Use IndexedDB with generous quota
 - **Files**: Use File System Access API when available
 - **Performance**: Lazy loading, code splitting
 - **Size**: Compression, caching, CDN
+
+## OPFS Database Storage
+
+The web app now uses OPFS (Origin-Private FileSystem) for persistent database storage, providing better performance and reliability than IndexedDB.
+
+### Requirements
+
+1. **Secure context**: HTTPS or localhost
+2. **Cross-Origin headers**: Automatically configured
+   - `Cross-Origin-Embedder-Policy: require-corp`
+   - `Cross-Origin-Opener-Policy: same-origin`
+
+### Benefits
+
+- ✅ **Persistent storage**: Survives browser sessions
+- ✅ **Better performance**: Direct file system access  
+- ✅ **Larger capacity**: Not limited by IndexedDB quotas
+- ✅ **Real SQLite**: Uses official SQLite WASM build
+
+### Browser Support
+
+- **Chrome/Edge**: 86+ (OPFS support)
+- **Firefox**: 111+ (OPFS support)
+- **Safari**: 15.2+ (OPFS support)
+
+For deployment on static hosts like GitHub Pages, a service worker (`coi-serviceworker.js`) automatically enables the required headers.
 
 ## Progressive Web App (PWA)
 

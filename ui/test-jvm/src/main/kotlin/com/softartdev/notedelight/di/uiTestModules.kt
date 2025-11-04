@@ -9,7 +9,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val uiTestModules: List<Module>
-    get() = listOf(navigationTestModule, utilTestModule)
+    get() = listOf(navigationTestModule, interactorModule, utilTestModule)
 
 val navigationTestModule = module {
     single<Router> { UiThreadRouter(router = RouterImpl()) }

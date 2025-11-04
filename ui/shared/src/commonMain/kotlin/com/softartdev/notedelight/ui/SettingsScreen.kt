@@ -24,31 +24,21 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.coroutineScope
 import com.softartdev.notedelight.presentation.settings.SecurityResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
@@ -56,9 +46,7 @@ import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemePreferenceItem
-import kotlinx.coroutines.launch
 import notedelight.ui.shared.generated.resources.Res
-import notedelight.ui.shared.generated.resources.copy
 import notedelight.ui.shared.generated.resources.pref_title_check_cipher_version
 import notedelight.ui.shared.generated.resources.pref_title_enable_encryption
 import notedelight.ui.shared.generated.resources.pref_title_set_password
@@ -66,41 +54,25 @@ import notedelight.ui.shared.generated.resources.pref_title_show_db_path
 import notedelight.ui.shared.generated.resources.security
 import notedelight.ui.shared.generated.resources.settings
 import notedelight.ui.shared.generated.resources.theme
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SettingsScreen(
-    settingsViewModel: SettingsViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    settingsViewModel: SettingsViewModel
 ) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
-
-    LifecycleResumeEffect(key1 = settingsViewModel, key2 = result) {
+    LifecycleResumeEffect(key1 = settingsViewModel) {
         settingsViewModel.onAction(SettingsAction.CheckEncryption)
-        result.snackBarMessage?.takeIf(String::isNotEmpty)?.let { msg: String ->
-            lifecycle.coroutineScope.launch {
-                val snackResult: SnackbarResult = snackbarHostState.showSnackbar(
-                    message = msg,
-                    duration = SnackbarDuration.Long,
-                    actionLabel = getString(Res.string.copy),
-                )
-                if (snackResult == ActionPerformed) clipboardManager.setText(AnnotatedString(msg))
-            }
-            settingsViewModel.disposeOneTimeEvents()
-        }
-        onPauseOrDispose { settingsViewModel.disposeOneTimeEvents() }
+        onPauseOrDispose {}
     }
-    SettingsScreenBody(result, settingsViewModel::onAction, snackbarHostState)
+    SettingsScreenBody(result, settingsViewModel::onAction)
 }
 
 @Composable
 fun SettingsScreenBody(
     result: SecurityResult = SecurityResult(),
     onAction: (action: SettingsAction) -> Unit = {},
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -156,7 +128,6 @@ fun SettingsScreenBody(
             )
         }
     },
-    snackbarHost = { SnackbarHost(snackbarHostState) },
 )
 
 @Composable

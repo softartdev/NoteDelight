@@ -6,6 +6,8 @@ import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintAntilog
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -15,7 +17,6 @@ import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.note.AdaptiveInteractor
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
@@ -49,6 +50,7 @@ class AdaptiveInteractorTest {
     private val mockNoteDAO = Mockito.mock(NoteDAO::class.java)
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher)
     
@@ -77,6 +79,7 @@ class AdaptiveInteractorTest {
             createNoteUseCase = mockCreateNoteUseCase,
             saveNoteUseCase = SaveNoteUseCase(mockNoteDAO),
             deleteNoteUseCase = mockDeleteNoteUseCase,
+            snackbarInteractor = mockSnackbarInteractor,
             router = mockRouter,
             coroutineDispatchers = coroutineDispatchers
         )
@@ -89,7 +92,7 @@ class AdaptiveInteractorTest {
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase)
+        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor)
         Napier.takeLogarithm()
     }
 

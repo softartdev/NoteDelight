@@ -27,6 +27,7 @@ core:presentation (Presentation Layer - Platform-independent ViewModels)
     │           ├── enter/  # Enter password
     │           ├── confirm/# Confirm password
     │           └── change/ # Change password
+    ├── interactor/         # Presentation-facing interactors (Adaptive, Snackbar)
     └── navigation/
         ├── AppNavGraph.kt  # Navigation graph definition
         └── Router.kt       # Navigation abstraction
@@ -39,8 +40,8 @@ core:presentation (Presentation Layer - Platform-independent ViewModels)
 Each screen has a dedicated ViewModel following **MVVM pattern**:
 
 #### Main Screen
-- `MainViewModel`: Manages note list with pagination, handles database connection
-- `NoteListResult`: Sealed class representing list states (Loading, Success, Error)
+- `MainViewModel`: Manages the note list, keeps the encrypted database alive, and coordinates `AdaptiveInteractor` so adaptive layouts stay in sync.
+- `NoteListResult`: Sealed interface with `Loading`, `Success(result: Flow<PagingData<Note>>, selectedId: Long?)`, and `Error` variants.
 
 #### Note Screen
 - `NoteViewModel`: Manages note editing state and content
@@ -65,10 +66,15 @@ Each screen has a dedicated ViewModel following **MVVM pattern**:
 - `EditTitleViewModel`: Note title editing
 - `EditTitleResult`: Title editing states
 
+### Interactors (`interactor/`)
+
+- `AdaptiveInteractor`: Shared state holder that bridges adaptive navigation between `MainViewModel`, router, and UI panes.
+- `SnackbarInteractor`: Multiplatform contract used by ViewModels to emit UI messages without depending on Compose APIs.
+
 ### Navigation (`navigation/`)
 
 - `AppNavGraph`: Type-safe navigation destinations using sealed classes
-- `Router`: Navigation abstraction decoupling ViewModels from platform-specific navigation
+- `Router`: Navigation abstraction that sets controllers, propagates adaptive navigator hooks, and exposes generic navigation methods used across ViewModels.
 
 ## Design Patterns
 
@@ -84,34 +90,19 @@ Each screen has a dedicated ViewModel following **MVVM pattern**:
 
 ## State Management
 
-ViewModels use **Kotlin Flow** and **StateFlow** for reactive state management:
-
-```kotlin
-class MainViewModel(
-    private val safeRepo: SafeRepo,
-    private val router: Router,
-    private val coroutineDispatchers: CoroutineDispatchers,
-) : ViewModel() {
-    private val mutableStateFlow: MutableStateFlow<NoteListResult> = MutableStateFlow(
-        value = NoteListResult.Loading
-    )
-    val stateFlow: StateFlow<NoteListResult> = mutableStateFlow
-    
-    // UI observes stateFlow for updates
-}
-```
+- Every ViewModel exposes immutable `StateFlow` (for example, `MainViewModel.stateFlow`).
+- Internal state is kept in private `MutableStateFlow` instances and updated from `viewModelScope` using `CoroutineDispatchers` for threading.
+- Long-lived collectors (like adaptive selection synchronization) keep a `Job` reference to avoid leaking multiple collectors.
 
 ### Result Classes
 
-Sealed classes represent UI states:
+Result types live next to their ViewModels (`*Result.kt`) and follow these patterns:
 
-```kotlin
-sealed class NoteListResult {
-    data object Loading : NoteListResult()
-    data class Success(val result: Flow<PagingData<Note>>) : NoteListResult()
-    data class Error(val message: String?) : NoteListResult()
-}
-```
+- `NoteListResult` tracks loading/success/error and the currently selected note ID for adaptive layouts.
+- `NoteResult` represents the editor state, including validation errors and password prompts.
+- `SecurityResult`, `EnterResult`, `ConfirmResult`, and `ChangeResult` model password flows with explicit one-shot events.
+
+When extending behaviour, prefer adding new sealed interface branches instead of ad-hoc booleans in the state.
 
 ## Multiplatform Support
 
@@ -145,42 +136,15 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 
 ### Unit Tests (`androidUnitTest/`)
 
-All ViewModels have comprehensive unit tests:
-
-```kotlin
-class MainViewModelTest {
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-    
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-    
-    @Test
-    fun testNotesList() = runTest {
-        // Test ViewModel logic
-    }
-}
-```
-
-### Test Coverage
-
-- ✅ `MainViewModelTest` - Note list loading and pagination
-- ✅ `NoteViewModelTest` - Note editing and saving
-- ✅ `DeleteViewModelTest` - Note deletion flow
-- ✅ `SaveViewModelTest` - Note save operations
-- ✅ `SignInViewModelTest` - Authentication flow
-- ✅ `SplashViewModelTest` - App initialization
-- ✅ `SettingsViewModelTest` - Settings management
-- ✅ `EnterViewModelTest`, `ConfirmViewModelTest`, `ChangeViewModelTest` - Password flows
+- `MainViewModelTest`, `NoteViewModelTest`, and the security test suite validate action routing, paging integration, and error handling. Use `MainDispatcherRule` and fakes for repositories/interactors to keep tests deterministic.
+- Password flows (`EnterViewModelTest`, `ConfirmViewModelTest`, `ChangeViewModelTest`) ensure dialog ViewModels stay in sync with encryption use cases.
+- When adding a new ViewModel, follow the existing pattern: configure coroutine rules, provide fake `Router`/`SnackbarInteractor`, drive `onAction`, and assert on the exposed `StateFlow`.
 
 ### Running Tests
 
 ```bash
-# Run all presentation tests
-./gradlew :core:presentation:test
-
-# Run Android unit tests specifically
-./gradlew :core:presentation:testDebugUnitTest
+./gradlew :core:presentation:test             # Multiplatform tests
+./gradlew :core:presentation:testDebugUnitTest # Android unit tests
 ```
 
 ## ViewModel Lifecycle
@@ -194,37 +158,18 @@ ViewModels follow Android Architecture Components lifecycle:
 
 ## Navigation Abstraction
 
-The `Router` interface decouples ViewModels from platform-specific navigation:
+The `Router` interface (see `navigation/Router.kt`) keeps ViewModels platform-agnostic:
 
-```kotlin
-interface Router {
-    fun navigate(route: AppNavGraph)
-    fun navigateClearingBackStack(route: AppNavGraph)
-    fun popBackStack()
-}
-```
-
-ViewModels use Router for navigation:
-
-```kotlin
-fun onNoteClicked(id: Long) = router.navigate(route = AppNavGraph.Details(noteId = id))
-```
-
-Platform-specific UI layers implement Router using their navigation frameworks (Jetpack Navigation, etc.).
+- `setController` / `releaseController` store the platform navigation controller.
+- Generic `navigate`, `navigateClearingBackStack`, and `popBackStack` accept strongly typed destinations (`AppNavGraph`).
+- Adaptive helpers (`setAdaptiveNavigator`, `adaptiveNavigateToDetail`, `adaptiveNavigateBack`) coordinate multi-pane navigation via `AdaptiveInteractor`.
+- `RouterImpl` in the UI layer backs these calls with Jetpack Navigation and compose-adaptive primitives.
 
 ## Error Handling
 
-ViewModels handle errors gracefully and expose them through state:
-
-```kotlin
-private fun handleError(throwable: Throwable) {
-    Napier.e("❌", throwable)
-    if (isDbError(throwable)) {
-        router.navigateClearingBackStack(AppNavGraph.Splash)
-    }
-    mutableStateFlow.value = NoteListResult.Error(throwable.message)
-}
-```
+- Each ViewModel centralizes failures in a `handleError` helper that logs with Napier and emits the proper `Result` state.
+- Database failures send the user back to `AppNavGraph.Splash` using `Router.navigateClearingBackStack`.
+- Surface user-facing errors via `SnackbarInteractor` rather than duplicating dialog logic.
 
 ## AI Agent Guidelines
 
@@ -237,89 +182,20 @@ private fun handleError(throwable: Throwable) {
 - No UI logic in ViewModels
 - All async operations in `viewModelScope`
 - Use Router for navigation, not direct calls
+- Interact with UI toasts/snackbars exclusively through `SnackbarInteractor`
+- Keep adaptive navigation in sync by writing selected IDs to `AdaptiveInteractor`
 
 ## Best Practices
 
 ### ViewModel Structure with Action Interface Pattern
 
-**All ViewModels follow this pattern** to reduce callback hell and simplify Composable signatures:
+- Define a `sealed interface <Screen>Action` alongside the result/state file.
+- Expose a single `onAction(action: <Screen>Action)` entry point; branch internally to small, private helpers.
+- Apply the pattern on screens with three or more UI callbacks (Main, Note, Settings, password flows).
+- Keep lightweight dialogs simple—`SignInViewModel`, `SaveViewModel`, and `DeleteViewModel` call methods directly instead of introducing actions.
+- Always provide a `disposeOneTimeEvents()` (or similar) when the UI needs to clear transient signals after handling them.
 
-```kotlin
-// 1. Define Actions (in *Result.kt file)
-sealed interface ScreenAction {
-    data class LoadData(val id: Long) : ScreenAction
-    data class Save(val title: String) : ScreenAction
-    data object Delete : ScreenAction
-}
-
-// 2. Define State (in *Result.kt file)
-data class ScreenResult(
-    val loading: Boolean = false,
-    val data: DataType? = null,
-    val error: String? = null,
-) {
-    fun showLoading(): ScreenResult = copy(loading = true)
-    fun hideLoading(): ScreenResult = copy(loading = false)
-}
-
-// 3. ViewModel with single onAction() dispatcher
-class ScreenViewModel(
-    private val useCase: SomeUseCase,
-    private val router: Router,
-    private val dispatchers: CoroutineDispatchers,
-) : ViewModel() {
-    
-    // Private mutable state
-    private val mutableStateFlow = MutableStateFlow(ScreenResult())
-    
-    // Public immutable state
-    val stateFlow: StateFlow<ScreenResult> = mutableStateFlow
-    
-    // Single action dispatcher
-    fun onAction(action: ScreenAction) = when (action) {
-        is ScreenAction.LoadData -> loadData(action.id)
-        is ScreenAction.Save -> saveData(action.title)
-        is ScreenAction.Delete -> deleteData()
-    }
-    
-    // Private implementation methods
-    private fun loadData(id: Long) {
-        viewModelScope.launch(dispatchers.io) {
-            try {
-                val data = useCase.load(id)
-                mutableStateFlow.value = ScreenResult(data = data)
-            } catch (e: Throwable) {
-                handleError(e)
-            }
-        }
-    }
-    
-    private fun saveData(title: String) { /* ... */ }
-    private fun deleteData() { /* ... */ }
-}
-```
-
-**Benefits**:
-- ✅ Single `onAction()` parameter in Composables (instead of 5+ callbacks)
-- ✅ Type-safe actions with sealed interfaces
-- ✅ Centralized event handling
-- ✅ Easier testing (mock one method, not many)
-- ✅ Clear separation between public API and private implementation
-
-**When to Use**:
-- ✅ Complex screens with **3+ actions** passed through Composables
-- ❌ Simple 1-2 action ViewModels (call methods directly)
-- ❌ Methods called where ViewModel is obtained (e.g., `disposeOneTimeEvents()`)
-
-**ViewModels Using Action Pattern**:
-- `NoteViewModel` (4 actions), `MainViewModel` (3 actions), `SettingsViewModel` (7 actions)
-- `EditTitleViewModel` (3 actions), `EnterViewModel` (4 actions)
-- `ChangeViewModel` (5 actions), `ConfirmViewModel` (4 actions)
-
-**ViewModels NOT Using Actions** (kept simple):
-- `SignInViewModel` - Single `signIn()` method
-- `SaveViewModel`, `DeleteViewModel` - Simple dialogs
-- All ViewModels keep `disposeOneTimeEvents()` as public method (called directly)
+**Benefits**: fewer composable parameters, type-safe events, easier snapshot testing, and centralized navigation/error handling.
 
 ## Related Modules
 
