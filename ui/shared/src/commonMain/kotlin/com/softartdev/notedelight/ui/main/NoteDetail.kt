@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
+import com.softartdev.notedelight.ui.BackHandler
+import com.softartdev.notedelight.ui.MainDetailPanePlaceholder
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.action_delete_note
@@ -52,7 +54,7 @@ fun NoteDetail(noteViewModel: NoteViewModel) {
     }
     val result: NoteResult by noteViewModel.stateFlow.collectAsState()
     when (result.note) {
-        null -> DetailPanePlaceholder()
+        null -> MainDetailPanePlaceholder()
         else -> NoteDetail(noteViewModel, result)
     }
 }

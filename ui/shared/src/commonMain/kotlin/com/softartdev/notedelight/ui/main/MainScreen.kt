@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -37,6 +37,9 @@ import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.presentation.main.MainAction
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.main.NoteListResult
+import com.softartdev.notedelight.ui.Empty
+import com.softartdev.notedelight.ui.Error
+import com.softartdev.notedelight.ui.Loader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import notedelight.ui.shared.generated.resources.Res

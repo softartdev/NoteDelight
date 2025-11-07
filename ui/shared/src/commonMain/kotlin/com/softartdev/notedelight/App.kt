@@ -18,10 +18,8 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.ui.EnableEdgeToEdge
 import com.softartdev.notedelight.ui.GlobalSnackbarHost
-import com.softartdev.notedelight.ui.SettingsScreen
 import com.softartdev.notedelight.ui.SignInScreen
 import com.softartdev.notedelight.ui.SplashScreen
-import com.softartdev.notedelight.ui.adaptive.AdaptiveScreen
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
 import com.softartdev.notedelight.ui.dialog.note.DeleteDialog
@@ -29,6 +27,8 @@ import com.softartdev.notedelight.ui.dialog.note.SaveDialog
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
+import com.softartdev.notedelight.ui.main.AdaptiveMainScreen
+import com.softartdev.notedelight.ui.settings.AdaptiveSettingsScreen
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialogContent
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -58,12 +58,10 @@ fun App(
                 SignInScreen(signInViewModel = koinViewModel())
             }
             composable<AppNavGraph.Main> {
-                AdaptiveScreen(router)
+                AdaptiveMainScreen(router)
             }
             composable<AppNavGraph.Settings> {
-                SettingsScreen(
-                    settingsViewModel = koinViewModel()
-                )
+                AdaptiveSettingsScreen()
             }
             dialog<AppNavGraph.ThemeDialog> {
                 ThemeDialogContent(dismissDialog = navController::popBackStack)
@@ -72,29 +70,21 @@ fun App(
                 SaveDialog(saveViewModel = koinViewModel())
             }
             dialog<AppNavGraph.EditTitleDialog> { backStackEntry: NavBackStackEntry ->
-                EditTitleDialog(
-                    editTitleViewModel = koinViewModel {
-                        parametersOf(backStackEntry.toRoute<AppNavGraph.EditTitleDialog>().noteId)
-                    }
-                )
+                EditTitleDialog(editTitleViewModel = koinViewModel {
+                    parametersOf(backStackEntry.toRoute<AppNavGraph.EditTitleDialog>().noteId)
+                })
             }
             dialog<AppNavGraph.DeleteNoteDialog> {
                 DeleteDialog(deleteViewModel = koinViewModel())
             }
             dialog<AppNavGraph.EnterPasswordDialog> {
-                EnterPasswordDialog(
-                    enterViewModel = koinViewModel()
-                )
+                EnterPasswordDialog(enterViewModel = koinViewModel())
             }
             dialog<AppNavGraph.ConfirmPasswordDialog> {
-                ConfirmPasswordDialog(
-                    confirmViewModel = koinViewModel()
-                )
+                ConfirmPasswordDialog(confirmViewModel = koinViewModel())
             }
             dialog<AppNavGraph.ChangePasswordDialog> {
-                ChangePasswordDialog(
-                    changeViewModel = koinViewModel()
-                )
+                ChangePasswordDialog(changeViewModel = koinViewModel())
             }
             dialog<AppNavGraph.ErrorDialog> { backStackEntry: NavBackStackEntry ->
                 ErrorDialog(

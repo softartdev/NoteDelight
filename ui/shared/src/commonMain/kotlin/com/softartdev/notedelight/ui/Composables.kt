@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -34,6 +35,44 @@ expect fun EnableEdgeToEdge()
 
 @Composable
 expect fun BackHandler(enabled: Boolean = true, onBack: () -> Unit)
+
+@Composable
+fun MainDetailPanePlaceholder() = Card(shape = RoundedCornerShape(size = 0.dp)) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = 20.dp,
+            alignment = Alignment.CenterVertically,
+        ),
+    ) {
+        Icon(
+            modifier = Modifier.size(64.dp),
+            imageVector = Icons.Default.EditNote,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            text = stringResource(Res.string.detail_pane_placeholder),
+            style = MaterialTheme.typography.titleLarge,
+        )
+    }
+}
+
+@Composable
+fun SettingsDetailPanePlaceholder() = Card(shape = RoundedCornerShape(size = 0.dp)) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            modifier = Modifier.size(128.dp),
+            imageVector = Icons.TwoTone.Settings,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
 
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
@@ -76,27 +115,16 @@ fun Error(err: String) {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun DetailPanePlaceholder() = Card(shape = RoundedCornerShape(size = 0.dp)) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(
-            space = 20.dp,
-            alignment = Alignment.CenterVertically,
-        ),
-    ) {
-        Icon(
-            modifier = Modifier.size(64.dp),
-            imageVector = Icons.Default.EditNote,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-        )
-        Text(
-            text = stringResource(Res.string.detail_pane_placeholder),
-            style = MaterialTheme.typography.titleLarge,
-        )
-    }
+fun PreviewMainDetailPanePlaceholder() {
+    MainDetailPanePlaceholder()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSettingsDetailPanePlaceholder() {
+    SettingsDetailPanePlaceholder()
 }
 
 @Preview(showBackground = true)
@@ -110,9 +138,3 @@ fun PreviewEmpty() = Empty()
 @Preview(showBackground = true)
 @Composable
 fun PreviewError() = Error(err = "Mock error")
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewDetailPanePlaceholder() {
-    DetailPanePlaceholder()
-}

@@ -18,8 +18,7 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     override val noteDAO: NoteDAO
         get() = SqlDelightNoteDAO({ dbHolder!!.noteQueries }, coroutineDispatchers)
 
-    override val dbPath: String
-        get() = TODO("Not yet implemented")
+    override val dbPath: String = "database.db"
 
     override suspend fun buildDbIfNeed(passphrase: CharSequence): WebDatabaseHolder {
         var instance = dbHolder

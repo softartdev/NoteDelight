@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.main
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn

@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 843
-        versionName = "8.4.3"
+        versionCode = 844
+        versionName = "8.4.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -72,6 +72,7 @@ dependencies {
     implementation(project(":core:presentation"))
     implementation(project(":ui:shared"))
     implementation(kotlin("reflect"))
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
     implementation(compose.ui)
     implementation(compose.material3)

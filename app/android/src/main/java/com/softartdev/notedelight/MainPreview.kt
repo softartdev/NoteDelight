@@ -4,11 +4,11 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.softartdev.notedelight.ui.NoteDetailBody
-import com.softartdev.notedelight.ui.PreviewMainScreen
+import com.softartdev.notedelight.ui.main.NoteDetailBody
+import com.softartdev.notedelight.ui.main.PreviewMainScreen
 import com.softartdev.notedelight.ui.SignInScreenBody
 import com.softartdev.notedelight.ui.SplashScreenBody
-import com.softartdev.notedelight.ui.adaptive.PreviewAdaptiveScreen
+import com.softartdev.notedelight.ui.main.PreviewAdaptiveScreen
 import com.softartdev.theme.material3.PreferableMaterialTheme
 
 @Preview(name = "Adaptive", group = "light", showSystemUi = true, showBackground = true, device = Devices.TABLET)

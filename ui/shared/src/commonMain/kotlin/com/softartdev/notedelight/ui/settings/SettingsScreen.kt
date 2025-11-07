@@ -1,7 +1,7 @@
 @file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
@@ -89,7 +91,7 @@ fun SettingsScreenBody(
     },
     content = { paddingValues: PaddingValues ->
         val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(modifier = Modifier.padding(paddingValues).verticalScroll(rememberScrollState())) {
             if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
             ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
