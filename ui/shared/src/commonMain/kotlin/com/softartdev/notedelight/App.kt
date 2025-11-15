@@ -18,7 +18,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.ui.EnableEdgeToEdge
 import com.softartdev.notedelight.ui.GlobalSnackbarHost
-import com.softartdev.notedelight.ui.SignInScreen
+import com.softartdev.notedelight.ui.signin.SignInScreen
 import com.softartdev.notedelight.ui.SplashScreen
 import com.softartdev.notedelight.ui.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.dialog.ErrorDialog
@@ -27,6 +27,7 @@ import com.softartdev.notedelight.ui.dialog.note.SaveDialog
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog
+import com.softartdev.notedelight.ui.files.FileListScreen
 import com.softartdev.notedelight.ui.main.AdaptiveMainScreen
 import com.softartdev.notedelight.ui.settings.AdaptiveSettingsScreen
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -62,6 +63,12 @@ fun App(
             }
             composable<AppNavGraph.Settings> {
                 AdaptiveSettingsScreen()
+            }
+            composable<AppNavGraph.FileList> {
+                FileListScreen(
+                    onBackClick = navController::popBackStack,
+                    filesViewModel = koinViewModel()
+                )
             }
             dialog<AppNavGraph.ThemeDialog> {
                 ThemeDialogContent(dismissDialog = navController::popBackStack)

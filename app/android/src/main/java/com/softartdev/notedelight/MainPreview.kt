@@ -1,52 +1,48 @@
 package com.softartdev.notedelight
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.softartdev.notedelight.ui.main.NoteDetailBody
-import com.softartdev.notedelight.ui.main.PreviewMainScreen
-import com.softartdev.notedelight.ui.SignInScreenBody
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.softartdev.notedelight.ui.SplashScreenBody
+import com.softartdev.notedelight.ui.main.NoteDetailBody
 import com.softartdev.notedelight.ui.main.PreviewAdaptiveScreen
+import com.softartdev.notedelight.ui.main.PreviewMainScreen
+import com.softartdev.notedelight.ui.settings.PreviewAdaptiveSettingsScreen
+import com.softartdev.notedelight.ui.signin.SignInScreenBody
 import com.softartdev.theme.material3.PreferableMaterialTheme
 
-@Preview(name = "Adaptive", group = "light", showSystemUi = true, showBackground = true, device = Devices.TABLET)
-@Composable
-fun PreviewAdaptiveScreenLight() = PreferableMaterialTheme { PreviewAdaptiveScreen() }
+/**
+ * A MultiPreview annotation for displaying a @[Composable] method using different device types
+ * and UI modes.
+ */
+@Preview(name = "TabletLight", group = "Device & UI-mode", device = Devices.TABLET, uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true)
+@Preview(name = "TabletDark", group = "Device & UI-mode", device = Devices.TABLET, uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(name = "PhoneLight", group = "Device & UI-mode", device = Devices.PHONE, uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true)
+@Preview(name = "PhoneDark", group = "Device & UI-mode", device = Devices.PHONE, uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+annotation class PreviewDeviceMode
 
-@Preview(name = "Note", group = "light", showSystemUi = true, showBackground = true)
+@PreviewDeviceMode
 @Composable
-fun PreviewNoteDetailBodyLight() = PreferableMaterialTheme { NoteDetailBody() }
+fun SignInScreenPreview() = PreferableMaterialTheme { SignInScreenBody() }
 
-@Preview(name = "Main", group = "light", showSystemUi = true, showBackground = true)
+@PreviewDeviceMode
 @Composable
-fun DefaultPreviewLight() = PreferableMaterialTheme { PreviewMainScreen() }
+fun AdaptiveScreenPreview() = PreferableMaterialTheme { PreviewAdaptiveScreen() }
 
-@Preview(name = "Sign In", group = "light", showSystemUi = true, showBackground = true)
+@PreviewDeviceMode
 @Composable
-fun PreviewSignInScreenLight() = PreferableMaterialTheme { SignInScreenBody() }
+fun AdaptiveSettingsScreenPreview() = PreferableMaterialTheme { PreviewAdaptiveSettingsScreen() }
 
-@Preview(name = "Splash", group = "light", showSystemUi = true, showBackground = true)
+@PreviewLightDark
 @Composable
-fun PreviewSplashScreenLight() = PreferableMaterialTheme { SplashScreenBody(true) }
+fun NoteDetailBodyPreview() = PreferableMaterialTheme { NoteDetailBody() }
 
-@Preview(name = "Adaptive", group = "dark", showSystemUi = true, showBackground = true, device = Devices.TABLET, uiMode = UI_MODE_NIGHT_YES)
+@PreviewLightDark
 @Composable
-fun PreviewAdaptiveScreenDark() = PreferableMaterialTheme { PreviewAdaptiveScreen() }
+fun MainScreenPreview() = PreferableMaterialTheme { PreviewMainScreen() }
 
-@Preview(name = "Note", group = "dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@PreviewLightDark
 @Composable
-fun PreviewNoteDetailBodyDark() = PreferableMaterialTheme { NoteDetailBody() }
-
-@Preview(name = "Main", group = "dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreviewDark() = PreferableMaterialTheme { PreviewMainScreen() }
-
-@Preview(name = "Sign In", group = "dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun PreviewSignInScreenDark() = PreferableMaterialTheme { SignInScreenBody() }
-
-@Preview(name = "Splash", group = "dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun PreviewSplashScreenDark() = PreferableMaterialTheme { SplashScreenBody(true) }
+fun SplashScreenPreview() = PreferableMaterialTheme { SplashScreenBody(true) }

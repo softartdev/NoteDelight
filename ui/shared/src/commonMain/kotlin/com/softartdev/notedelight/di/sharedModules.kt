@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.di
 
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.presentation.files.FilesViewModel
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.presentation.note.NoteViewModel
@@ -12,10 +13,12 @@ import com.softartdev.notedelight.presentation.settings.security.enter.EnterView
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
+import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
@@ -29,7 +32,7 @@ val sharedModules: List<Module>
     get() = repoModule + daoModule + useCaseModule + viewModelModule
 
 /**
-Provide the [SafeRepo]
+Provide the [SafeRepo] and [FileRepo]
  */
 expect val repoModule: Module
 
@@ -45,6 +48,7 @@ val useCaseModule: Module = module {
     factoryOf(::SaveNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::UpdateTitleUseCase)
+    factoryOf(::RevealFileListUseCase)
 }
 
 val viewModelModule: Module = module {
@@ -59,4 +63,5 @@ val viewModelModule: Module = module {
     viewModelOf(::EnterViewModel)
     viewModelOf(::ConfirmViewModel)
     viewModelOf(::ChangeViewModel)
+    viewModelOf(::FilesViewModel)
 }

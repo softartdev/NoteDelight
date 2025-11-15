@@ -1,0 +1,6 @@
+<paths xmlns:tools="http://schemas.android.com/tools">
+    <external-path
+        name="external_files"
+        path="."
+        tools:ignore="SensitiveExternalPath" />
+</paths>

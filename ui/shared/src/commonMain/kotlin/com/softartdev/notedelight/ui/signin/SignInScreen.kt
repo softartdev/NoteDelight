@@ -1,10 +1,9 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.ui.signin
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
+import com.softartdev.notedelight.ui.PasswordField
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.app_name
 import notedelight.ui.shared.generated.resources.empty_password
@@ -69,23 +69,27 @@ fun SignInScreenBody(
 ) = Scaffold(
     topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_name)) }) },
 ) { paddingValues: PaddingValues ->
-    Column(modifier = Modifier.padding(paddingValues).fillMaxSize().padding(all = 16.dp)) {
-        if (showLoading) LinearProgressIndicator()
-        PasswordField(
-            modifier = Modifier.fillMaxWidth(),
-            passwordState = passwordState,
-            label = stringResource(labelResource),
-            isError = isError,
-            contentDescription = stringResource(Res.string.enter_password),
-            imeAction = ImeAction.Go,
-            keyboardActions = KeyboardActions { onSignInClick.invoke() },
-        )
-        Button(
-            onClick = onSignInClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-        ) { Text(text = stringResource(Res.string.sign_in)) }
+    AdaptiveFrame(modifier = Modifier.padding(paddingValues)) { framePaddingValues: PaddingValues ->
+        if (showLoading) {
+            LinearProgressIndicator(Modifier.fillMaxWidth())
+        }
+        Column(modifier = Modifier.padding(framePaddingValues)) {
+            PasswordField(
+                modifier = Modifier.fillMaxWidth(),
+                passwordState = passwordState,
+                label = stringResource(labelResource),
+                isError = isError,
+                contentDescription = stringResource(Res.string.enter_password),
+                imeAction = ImeAction.Go,
+                keyboardActions = KeyboardActions { onSignInClick.invoke() },
+            )
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+                onClick = onSignInClick,
+            ) { Text(text = stringResource(Res.string.sign_in)) }
+        }
     }
 }
 

@@ -9,6 +9,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,8 @@ class SettingsViewModel(
     private val safeRepo: SafeRepo,
     private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase,
     private val snackbarInteractor: SnackbarInteractor,
-    private val router: Router
+    private val router: Router,
+    private val revealFileListUseCase: RevealFileListUseCase,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<SecurityResult> = MutableStateFlow(
         value = SecurityResult()
@@ -34,6 +36,8 @@ class SettingsViewModel(
         is SettingsAction.ChangePassword -> changePassword()
         is SettingsAction.ShowCipherVersion -> showCipherVersion()
         is SettingsAction.ShowDatabasePath -> showDatabasePath()
+        is SettingsAction.ShowFileList -> showFileList()
+        is SettingsAction.RevealFileList -> revealFileList()
     }
 
     private val dbIsEncrypted: Boolean
@@ -108,6 +112,17 @@ class SettingsViewModel(
             router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+        }
+    }
+
+    private fun showFileList() {
+        router.navigate(route = AppNavGraph.FileList)
+    }
+
+    private fun revealFileList() {
+        if (mutableStateFlow.value.fileListVisible) return
+        revealFileListUseCase.onTap(viewModelScope) {
+            mutableStateFlow.update(SecurityResult::showFileList)
         }
     }
 }

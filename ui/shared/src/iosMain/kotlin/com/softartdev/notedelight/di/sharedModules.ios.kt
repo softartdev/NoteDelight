@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.di
 
+import com.softartdev.notedelight.repository.FileRepo
+import com.softartdev.notedelight.repository.IosFileRepo
 import com.softartdev.notedelight.repository.IosSafeRepo
 import com.softartdev.notedelight.repository.SafeRepo
 import org.koin.core.module.Module
@@ -9,4 +11,5 @@ import org.koin.dsl.module
 
 actual val repoModule: Module = module {
     singleOf(::IosSafeRepo) bind SafeRepo::class
+    singleOf(::IosFileRepo) bind FileRepo::class
 }

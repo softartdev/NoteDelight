@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Security
@@ -50,6 +51,7 @@ import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemePreferenceItem
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.pref_title_check_cipher_version
+import notedelight.ui.shared.generated.resources.pref_title_file_list
 import notedelight.ui.shared.generated.resources.pref_title_enable_encryption
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
@@ -123,8 +125,16 @@ fun SettingsScreenBody(
                 vector = Icons.Default.Storage,
                 onClick = { onAction(SettingsAction.ShowDatabasePath) }
             )
+            if (result.fileListVisible) {
+                Preference(
+                    title = stringResource(Res.string.pref_title_file_list),
+                    vector = Icons.Default.Folder,
+                    onClick = { onAction(SettingsAction.ShowFileList) }
+                )
+            }
             Spacer(Modifier.height(32.dp))
             ListItem(
+                modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
                 headlineContent = {},
                 supportingContent = { Text(createMultiplatformMessage()) }
             )

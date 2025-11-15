@@ -20,6 +20,7 @@
     <string name="pref_title_set_password">Set password</string>
     <string name="pref_title_check_cipher_version">Check SQLCipher version</string>
     <string name="pref_title_show_db_path">Show database path</string>
+    <string name="pref_title_file_list">File list</string>
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="enter_old_password">Enter old password</string>

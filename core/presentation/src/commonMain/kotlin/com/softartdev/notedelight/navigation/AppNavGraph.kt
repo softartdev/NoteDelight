@@ -17,6 +17,9 @@ sealed interface AppNavGraph {
     data object Settings : AppNavGraph
 
     @Serializable
+    data object FileList : AppNavGraph
+
+    @Serializable
     data object ThemeDialog : AppNavGraph
 
     @Serializable

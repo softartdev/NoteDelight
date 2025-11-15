@@ -31,6 +31,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
+            implementation(project(":core:data:file-explorer"))
             implementation(project(":core:presentation"))
             implementation(compose.ui)
             implementation(compose.runtime)
@@ -61,6 +62,7 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(compose.preview)
             implementation(libs.androidx.ui.tooling)
+            implementation(libs.accompanist.permissions)
         }
         jvmMain.dependencies {
             implementation(project.dependencies.platform(libs.koin.bom))

@@ -12,6 +12,7 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -34,7 +35,7 @@ class SettingsViewModelTest {
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
-    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter)
+    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter, RevealFileListUseCase())
 
     @After
     fun tearDown() = runTest {
@@ -145,5 +146,35 @@ class SettingsViewModelTest {
         settingsViewModel.onAction(SettingsAction.ShowDatabasePath)
         Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(dbPath))
         Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun fileListHiddenByDefault() = runTest {
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().fileListVisible)
+        }
+    }
+
+    @Test
+    fun revealFileListAfterRapidTaps() = runTest {
+        repeat(5) {
+            settingsViewModel.onAction(SettingsAction.RevealFileList)
+        }
+        assertTrue(settingsViewModel.stateFlow.value.fileListVisible)
+    }
+
+    @Test
+    fun slowTapsDoNotRevealFileList() = runTest {
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().fileListVisible)
+        }
+        repeat(3) {
+            settingsViewModel.onAction(SettingsAction.RevealFileList)
+        }
+        mainDispatcherRule.testDispatcher.scheduler.advanceTimeBy(2_000)
+        repeat(2) {
+            settingsViewModel.onAction(SettingsAction.RevealFileList)
+        }
+        assertFalse(settingsViewModel.stateFlow.value.fileListVisible)
     }
 }
