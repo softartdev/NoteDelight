@@ -32,6 +32,7 @@ import com.softartdev.notedelight.ui.main.AdaptiveMainScreen
 import com.softartdev.notedelight.ui.settings.AdaptiveSettingsScreen
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialogContent
+import com.softartdev.notedelight.ui.dialog.LanguageDialog
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -72,6 +73,9 @@ fun App(
             }
             dialog<AppNavGraph.ThemeDialog> {
                 ThemeDialogContent(dismissDialog = navController::popBackStack)
+            }
+            dialog<AppNavGraph.LanguageDialog> {
+                LanguageDialog(languageViewModel = koinViewModel())
             }
             dialog<AppNavGraph.SaveChangesDialog> {
                 SaveDialog(saveViewModel = koinViewModel())

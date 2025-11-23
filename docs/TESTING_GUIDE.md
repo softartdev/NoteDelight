@@ -308,6 +308,7 @@ fun setup() {
 - ✅ Navigation paths
 - ✅ Form validation
 - ✅ Error messages
+- ✅ Locale switching and localization
 
 **Screen Object Pattern** (Kaspresso-inspired):
 ```kotlin
@@ -363,6 +364,49 @@ fun `given network error when loading then shows error state`() { }
 @Test
 fun `given empty database when querying then returns empty list`() { }
 ```
+
+### Locale Testing
+
+Test locale switching and localization:
+
+```kotlin
+class LocaleTestCase(
+    composeTestRule: ComposeContentTestRule,
+    private val pressBack: () -> Unit
+) : BaseTestCase(composeTestRule) {
+    
+    private val localeInteractor: LocaleInteractor by lazy {
+        get(LocaleInteractor::class.java)
+    }
+    
+    override fun invoke() = runTest {
+        // Set locale
+        localeInteractor.languageEnum = LanguageEnum.RUSSIAN
+        
+        // Navigate to settings
+        mainTestScreen {
+            settingsMenuButtonSNI.performClick()
+        }
+        
+        // Verify localized strings
+        val settingsText = runBlocking { getString(Res.string.settings) }
+        composeTestRule.onNodeWithText(settingsText).assertIsDisplayed()
+        
+        // Test language dialog
+        settingsTestScreen {
+            languageSNI.performClick()
+        }
+        
+        // Verify language options
+        val chooseLanguageText = runBlocking { getString(Res.string.choose_language) }
+        composeTestRule.onNodeWithText(chooseLanguageText).assertIsDisplayed()
+    }
+}
+```
+
+**Android**: Locale changes via `LocaleInteractor` update system locale
+**Desktop/JVM**: Locale changes via `Locale.setDefault()`
+**Web**: Locale changes via `window.__customLocale` (requires `index.html` script)
 
 ### Test Fixtures
 

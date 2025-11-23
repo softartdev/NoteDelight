@@ -5,6 +5,7 @@ import com.softartdev.notedelight.ui.cases.CrudTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterCreateTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterSaveTestCase
 import com.softartdev.notedelight.ui.cases.FlowAfterCryptTestCase
+import com.softartdev.notedelight.ui.cases.LocaleTestCase
 import com.softartdev.notedelight.ui.cases.PrepopulateDbTestCase
 import com.softartdev.notedelight.ui.cases.SettingPasswordTestCase
 
@@ -32,6 +33,11 @@ abstract class AbstractUiTests {
     open fun settingPasswordTest() = SettingPasswordTestCase(
         composeTestRule = composeTestRule,
         closeSoftKeyboard = ::closeSoftKeyboard
+    ).invoke()
+
+    open fun localeTest() = LocaleTestCase(
+        composeTestRule = composeTestRule,
+        pressBack = ::pressBack
     ).invoke()
 
     abstract fun pressBack()

@@ -18,6 +18,7 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiTestModules
 import com.softartdev.notedelight.repository.SafeRepo
+import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
@@ -41,6 +42,7 @@ class DesktopUiTests : AbstractUiTests() {
 
     @Before
     override fun setUp() = runTest {
+        Napier.base(antilog = DebugAntilog())
         when (GlobalContext.getKoinApplicationOrNull()) {
             null -> startKoin {
                 printLogger(level = Level.DEBUG)
@@ -87,6 +89,9 @@ class DesktopUiTests : AbstractUiTests() {
     @Ignore("Desktop app doesn't support encryption yet")
     @Test
     override fun settingPasswordTest() = super.settingPasswordTest()
+
+    @Test
+    override fun localeTest() = super.localeTest()
 
     override fun pressBack() {
         composeTestRule.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)

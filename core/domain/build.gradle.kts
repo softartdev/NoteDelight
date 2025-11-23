@@ -53,10 +53,8 @@ kotlin {
 android {
     namespace = "com.softartdev.notedelight.core.domain"
     compileSdk = libs.versions.compileSdk.get().toInt()
+    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())

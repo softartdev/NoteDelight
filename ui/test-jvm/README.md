@@ -466,6 +466,26 @@ nodeSNI.performTextClearance()
 nodeSNI.performScrollTo()
 ```
 
+## Locale Testing
+
+The module includes `LocaleTestCase` to verify locale switching works correctly across platforms:
+
+```kotlin
+@Test
+override fun localeTest() = super.localeTest()
+```
+
+The test verifies:
+- Setting locale via `LocaleInteractor`
+- Localized strings are displayed correctly
+- Language dialog displays all language options
+- Locale switching between English, Russian
+
+**Platform-specific behavior**:
+- **Android**: Uses `AppCompatDelegate.setApplicationLocales()`
+- **Desktop/JVM**: Uses `Locale.setDefault()`
+- **Web**: Uses `window.__customLocale` (requires script in `index.html`)
+
 ## Running UI Tests
 
 ### Android

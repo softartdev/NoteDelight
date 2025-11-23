@@ -102,6 +102,7 @@ android {
     namespace = "com.softartdev.notedelight.shared.compose"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())

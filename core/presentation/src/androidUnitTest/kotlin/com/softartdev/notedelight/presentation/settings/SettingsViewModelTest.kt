@@ -2,8 +2,10 @@ package com.softartdev.notedelight.presentation.settings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.model.LanguageEnum
 import com.softartdev.notedelight.model.PlatformSQLiteState.DOES_NOT_EXIST
 import com.softartdev.notedelight.model.PlatformSQLiteState.ENCRYPTED
 import com.softartdev.notedelight.model.PlatformSQLiteState.UNENCRYPTED
@@ -35,7 +37,8 @@ class SettingsViewModelTest {
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
-    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter, RevealFileListUseCase())
+    private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter, RevealFileListUseCase(), mockLocaleInteractor)
 
     @After
     fun tearDown() = runTest {
@@ -58,6 +61,7 @@ class SettingsViewModelTest {
     private fun assertEncryption(encryption: Boolean) = runTest {
         val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(platformSQLiteState)
+        Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.onAction(SettingsAction.CheckEncryption)

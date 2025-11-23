@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Security
@@ -47,12 +48,14 @@ import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
+import com.softartdev.notedelight.util.stringResource
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemePreferenceItem
 import notedelight.ui.shared.generated.resources.Res
+import notedelight.ui.shared.generated.resources.language
 import notedelight.ui.shared.generated.resources.pref_title_check_cipher_version
-import notedelight.ui.shared.generated.resources.pref_title_file_list
 import notedelight.ui.shared.generated.resources.pref_title_enable_encryption
+import notedelight.ui.shared.generated.resources.pref_title_file_list
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
 import notedelight.ui.shared.generated.resources.security
@@ -97,6 +100,12 @@ fun SettingsScreenBody(
             if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
             ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
+            Preference(
+                title = stringResource(Res.string.language),
+                vector = Icons.Default.Language,
+                onClick = { onAction(SettingsAction.ChangeLanguage) },
+                secondaryText = { Text(stringResource(result.language.stringResource)) }
+            )
             PreferenceCategory(stringResource(Res.string.security), Icons.Default.Security)
             Preference(
                 modifier = Modifier.semantics {

@@ -6,6 +6,7 @@ import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.presentation.note.SaveViewModel
+import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
@@ -63,5 +64,6 @@ val viewModelModule: Module = module {
     viewModelOf(::EnterViewModel)
     viewModelOf(::ConfirmViewModel)
     viewModelOf(::ChangeViewModel)
+    viewModelOf(::LanguageViewModel)
     viewModelOf(::FilesViewModel)
 }

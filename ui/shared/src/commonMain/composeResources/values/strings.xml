@@ -44,6 +44,10 @@
     <string name="dark">Dark</string>
     <string name="system_default">System default</string>
     <string name="set_by_byttery_saver">Set by Battery Saver</string>
+    <string name="language">Language</string>
+    <string name="choose_language">Choose language</string>
+    <string name="en_lang">English</string>
+    <string name="ru_lang">Russian</string>
     <string name="hide_screen_contents">Hide screen contents</string>
     <string name="hide_screen_contents_summary">Turn on to hide the contents of the screen when switching between applications. Also, the ability to take a screenshot will be disabled.</string>
     <string name="action_edit_title">Edit title</string>

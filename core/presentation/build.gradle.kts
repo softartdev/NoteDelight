@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.turbine)
         }
         androidMain.dependencies {
+            implementation(libs.androidx.appcompat)
         }
         androidUnitTest.dependencies {
             implementation(kotlin("test-junit"))
@@ -55,14 +56,13 @@ kotlin {
         wasmJsTest.dependencies {
         }
     }
+    compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 android {
     namespace = "com.softartdev.notedelight.core.presentation"
     compileSdk = libs.versions.compileSdk.get().toInt()
+    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())

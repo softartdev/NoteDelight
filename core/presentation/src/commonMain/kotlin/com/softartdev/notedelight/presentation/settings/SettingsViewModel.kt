@@ -2,6 +2,7 @@ package com.softartdev.notedelight.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.model.PlatformSQLiteState
@@ -22,16 +23,23 @@ class SettingsViewModel(
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val revealFileListUseCase: RevealFileListUseCase,
+    private val localeInteractor: LocaleInteractor,
 ) : ViewModel() {
     private val mutableStateFlow: MutableStateFlow<SecurityResult> = MutableStateFlow(
         value = SecurityResult()
     )
     val stateFlow: StateFlow<SecurityResult> = mutableStateFlow
 
+    private val dbIsEncrypted: Boolean
+        get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
+
+    private var cancelableThrowable: Throwable? = null // for skipping repeated error dialogs
+
     fun onAction(action: SettingsAction) = when (action) {
         is SettingsAction.NavBack -> router.popBackStack()
         is SettingsAction.ChangeTheme -> changeTheme()
-        is SettingsAction.CheckEncryption -> checkEncryption()
+        is SettingsAction.ChangeLanguage -> changeLanguage()
+        is SettingsAction.CheckEncryption -> checkEncryption() //TODO use directly
         is SettingsAction.ChangeEncryption -> changeEncryption(action.checked)
         is SettingsAction.ChangePassword -> changePassword()
         is SettingsAction.ShowCipherVersion -> showCipherVersion()
@@ -40,18 +48,21 @@ class SettingsViewModel(
         is SettingsAction.RevealFileList -> revealFileList()
     }
 
-    private val dbIsEncrypted: Boolean
-        get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
-
     private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog)
+
+    private fun changeLanguage() = router.navigate(route = AppNavGraph.LanguageDialog)
 
     private fun checkEncryption() = viewModelScope.launch {
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
-            mutableStateFlow.update { result -> result.copy(encryption = dbIsEncrypted) }
+            mutableStateFlow.update { result ->
+                result.copy(
+                    encryption = dbIsEncrypted,
+                    language = localeInteractor.languageEnum //TODO move to separate function
+                )
+            }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError("error checking encryption", e)
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -68,8 +79,7 @@ class SettingsViewModel(
                 }
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError("error changing encryption", e)
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -83,8 +93,7 @@ class SettingsViewModel(
                 else -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog)
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError("error changing password", e)
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
@@ -96,33 +105,49 @@ class SettingsViewModel(
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
             cipherVersion?.let { snackbarInteractor.showMessage(SnackbarMessage.Copyable(it)) }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError("error checking sqlcipher version", e)
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
     }
+
     private fun showDatabasePath() = viewModelScope.launch {
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             val dbPath: String = safeRepo.dbPath
             snackbarInteractor.showMessage(SnackbarMessage.Copyable(dbPath))
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError("error getting database path", e)
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
         }
     }
 
-    private fun showFileList() {
-        router.navigate(route = AppNavGraph.FileList)
-    }
+    private fun showFileList() = router.navigate(route = AppNavGraph.FileList)
 
     private fun revealFileList() {
         if (mutableStateFlow.value.fileListVisible) return
         revealFileListUseCase.onTap(viewModelScope) {
             mutableStateFlow.update(SecurityResult::showFileList)
         }
+    }
+
+    private fun handleError(logMessage: String = "❌", throwable: Throwable) {
+        Napier.e(logMessage, throwable)
+        if (sameErrors(cancelableThrowable, throwable)) return
+        cancelableThrowable = throwable
+        router.navigate(route = AppNavGraph.ErrorDialog(message = throwable.message))
+    }
+
+    private fun sameErrors(a: Throwable?, b: Throwable): Boolean {
+        a ?: return false
+        if (a::class != b::class) return false
+        if (a.message != b.message) return false
+        if (a.cause != null) {
+            b.cause ?: return false
+            if (a.cause!!::class != b.cause!!::class) return false
+            if (a.cause!!.message != b.cause!!.message) return false
+        }
+        return true
     }
 }

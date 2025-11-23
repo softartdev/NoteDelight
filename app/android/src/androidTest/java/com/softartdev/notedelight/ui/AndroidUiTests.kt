@@ -41,6 +41,9 @@ class AndroidUiTests : AbstractUiTests() {
     @Test
     override fun settingPasswordTest() = super.settingPasswordTest()
 
+    @Test
+    override fun localeTest() = super.localeTest()
+
     override fun pressBack() = Espresso.pressBack()
 
     override fun closeSoftKeyboard() = Espresso.closeSoftKeyboard()

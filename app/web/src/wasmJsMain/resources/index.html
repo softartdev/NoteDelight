@@ -8,6 +8,20 @@
     <link type="text/css" rel="stylesheet" href="styles.css">
     <!-- OPFS support: Service worker to enable required headers on GitHub Pages -->
     <script src="coi-serviceworker.js"></script>
+    <!-- Locale override: Enable custom locale handling for Compose Multiplatform resources -->
+    <script>
+        var currentLanguagesImplementation = Object.getOwnPropertyDescriptor(Navigator.prototype, "languages");
+        var newLanguagesImplementation = Object.assign({}, currentLanguagesImplementation, {
+            get: function () {
+                if (window.__customLocale) {
+                    return [window.__customLocale];
+                } else {
+                    return currentLanguagesImplementation.get.apply(this);
+                }
+            }
+        });
+        Object.defineProperty(Navigator.prototype, "languages", newLanguagesImplementation);
+    </script>
     <script type="application/javascript" src="composeApp.js"></script>
 </head>
 <body>

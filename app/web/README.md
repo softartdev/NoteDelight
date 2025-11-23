@@ -319,6 +319,16 @@ The web app now uses OPFS (Origin-Private FileSystem) for persistent database st
 
 For deployment on static hosts like GitHub Pages, a service worker (`coi-serviceworker.js`) automatically enables the required headers.
 
+## Locale Management
+
+The web app supports dynamic locale switching through Compose Multiplatform resources:
+
+- **Locale Override**: JavaScript code in `index.html` overrides `navigator.languages` to support custom locale selection
+- **Locale Storage**: The `LocaleInteractor.wasmJs` implementation uses `window.__customLocale` to persist locale preferences
+- **Supported Languages**: English and Russian
+
+The locale override script must be loaded before `composeApp.js` to ensure proper initialization. The script checks for `window.__customLocale` and returns it when set, otherwise falls back to the default `navigator.languages` behavior.
+
 ## Progressive Web App (PWA)
 
 ### Service Worker

@@ -11,6 +11,7 @@ import com.softartdev.notedelight.ui.screen.dialog.CommonDialogImpl
 import com.softartdev.notedelight.ui.screen.dialog.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.screen.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.screen.dialog.EnterPasswordDialog
+import com.softartdev.notedelight.ui.screen.dialog.LanguageDialog
 
 abstract class BaseTestCase(val composeTestRule: ComposeContentTestRule) {
 
@@ -37,4 +38,7 @@ abstract class BaseTestCase(val composeTestRule: ComposeContentTestRule) {
 
     fun changePasswordDialog(block: ChangePasswordDialog.() -> Unit) =
         ChangePasswordDialog(commonDialog).block()
+
+    fun languageDialog(block: LanguageDialog.() -> Unit) =
+        LanguageDialog(commonDialog).block()
 }
