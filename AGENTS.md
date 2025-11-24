@@ -21,6 +21,10 @@
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
 - iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
 - Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
+- Build without iOS link tasks:
+  ```
+  ./gradlew build -x :app:ios-kit:linkPodDebugFrameworkIosArm64 -x :app:ios-kit:linkPodReleaseFrameworkIosArm64 -x :app:ios-kit:linkPodDebugFrameworkIosSimulatorArm64 -x :app:ios-kit:linkDebugTestIosSimulatorArm64 -x :app:ios-kit:linkPodReleaseFrameworkIosSimulatorArm64 -x :core:domain:linkDebugTestIosSimulatorArm64 -x :core:presentation:linkDebugTestIosSimulatorArm64 -x :core:test:linkDebugTestIosSimulatorArm64 -x :ui:shared:linkPodDebugFrameworkIosArm64 -x :ui:shared:linkPodReleaseFrameworkIosArm64 -x :ui:shared:linkPodDebugFrameworkIosSimulatorArm64 -x :ui:shared:linkPodReleaseFrameworkIosSimulatorArm64 -x :ui:shared:linkDebugTestIosSimulatorArm64 -x :core:data:db-sqldelight:linkPodDebugFrameworkIosArm64 -x :core:data:db-sqldelight:linkPodDebugFrameworkIosSimulatorArm64 -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosArm64 -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosSimulatorArm64 -x :core:data:db-sqldelight:linkDebugTestIosSimulatorArm64 -x :core:data:file-explorer:linkDebugTestIosSimulatorArm64 -x :thirdparty:androidx:paging:compose:linkDebugTestIosSimulatorArm64 -x :thirdparty:app:cash:sqldelight:paging3:linkDebugTestIosSimulatorArm64
+  ```
 
 ## Coding Style & Naming Conventions
 - Kotlin official style (`kotlin.code.style=official`); 4-space indentation; organize imports.
