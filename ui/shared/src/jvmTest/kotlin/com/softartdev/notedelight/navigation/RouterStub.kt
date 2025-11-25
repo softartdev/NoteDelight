@@ -23,7 +23,7 @@ class RouterStub : Router {
         return true
     }
 
-    override fun setAdaptiveNavigator(adaptiveNavigator: Any) = 
+    override fun setAdaptiveNavigator(adaptiveNavigator: Any) =
         Napier.d("setAdaptiveNavigator: $adaptiveNavigator")
 
     override fun releaseAdaptiveNavigator() = 

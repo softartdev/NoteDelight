@@ -36,7 +36,7 @@ class SettingsViewModel(
     private var cancelableThrowable: Throwable? = null // for skipping repeated error dialogs
 
     fun onAction(action: SettingsAction) = when (action) {
-        is SettingsAction.NavBack -> router.popBackStack()
+        is SettingsAction.NavBack -> navBack()
         is SettingsAction.ChangeTheme -> changeTheme()
         is SettingsAction.ChangeLanguage -> changeLanguage()
         is SettingsAction.CheckEncryption -> checkEncryption() //TODO use directly
@@ -46,6 +46,10 @@ class SettingsViewModel(
         is SettingsAction.ShowDatabasePath -> showDatabasePath()
         is SettingsAction.ShowFileList -> showFileList()
         is SettingsAction.RevealFileList -> revealFileList()
+    }
+
+    private fun navBack() {
+        if (!router.popBackStack()) router.navigate(route = AppNavGraph.Splash)
     }
 
     private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog)

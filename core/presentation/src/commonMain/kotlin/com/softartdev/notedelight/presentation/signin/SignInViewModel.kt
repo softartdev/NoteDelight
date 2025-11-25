@@ -21,7 +21,12 @@ class SignInViewModel(
     val stateFlow: StateFlow<SignInResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
 
-    fun signIn(pass: CharSequence) = viewModelScope.launch {
+    fun onAction(action: SignInAction) = when (action) {
+        is SignInAction.OnSettingsClick -> router.navigateClearingBackStack(AppNavGraph.Settings)
+        is SignInAction.OnSignInClick -> signIn(action.pass)
+    }
+
+    private fun signIn(pass: CharSequence) = viewModelScope.launch {
         mutableStateFlow.value = SignInResult.ShowProgress
         try {
             mutableStateFlow.value = when {

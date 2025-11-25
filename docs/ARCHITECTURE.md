@@ -465,16 +465,23 @@ fun Screen(viewModel: ScreenViewModel) {
 ```kotlin
 // Interface (in presentation layer)
 interface Router {
-    fun navigate(route: AppNavGraph)
-    fun navigateClearingBackStack(route: AppNavGraph)
-    fun popBackStack()
+    fun <T : Any> navigate(route: T)
+    fun <T : Any> navigateClearingBackStack(route: T)
+    fun popBackStack(): Boolean
+    suspend fun adaptiveNavigateToDetail(contentKey: Long? = null)
+    suspend fun adaptiveNavigateBack(): Boolean
 }
 
-// Sealed class for type-safe routes
-sealed class AppNavGraph {
-    object Main : AppNavGraph()
-    data class Details(val noteId: Long) : AppNavGraph()
-    object Settings : AppNavGraph()
+// Sealed interface for type-safe routes
+sealed interface AppNavGraph {
+    @Serializable
+    data object Main : AppNavGraph
+    
+    @Serializable
+    data class Details(val noteId: Long) : AppNavGraph // managed by adaptive navigation
+    
+    @Serializable
+    data object Settings : AppNavGraph
 }
 
 // ViewModel uses Router

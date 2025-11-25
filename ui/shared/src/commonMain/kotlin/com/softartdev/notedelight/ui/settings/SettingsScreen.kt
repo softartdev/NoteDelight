@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.presentation.settings.SecurityResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
+import com.softartdev.notedelight.ui.BackHandler
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.notedelight.util.stringResource
@@ -65,15 +66,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsScreen(
-    settingsViewModel: SettingsViewModel
-) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
     LifecycleResumeEffect(key1 = settingsViewModel) {
         settingsViewModel.onAction(SettingsAction.CheckEncryption)
         onPauseOrDispose {}
     }
     SettingsScreenBody(result, settingsViewModel::onAction)
+    BackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
 }
 
 @Composable
