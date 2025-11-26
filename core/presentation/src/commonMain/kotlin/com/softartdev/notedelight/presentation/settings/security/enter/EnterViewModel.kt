@@ -3,6 +3,7 @@ package com.softartdev.notedelight.presentation.settings.security.enter
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
@@ -10,7 +11,6 @@ import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -23,6 +23,7 @@ class EnterViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
+    private val logger = Logger.withTag(this@EnterViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
@@ -64,7 +65,7 @@ class EnterViewModel(
                 }
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
+            logger.e(e) { "Error entering password" }
             autofillManager?.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {

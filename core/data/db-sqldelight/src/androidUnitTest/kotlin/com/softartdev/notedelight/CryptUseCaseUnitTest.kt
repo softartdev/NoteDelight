@@ -1,11 +1,11 @@
 package com.softartdev.notedelight
 
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.AndroidSafeRepo
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -25,11 +25,11 @@ class CryptUseCaseUnitTest {
     @Before
     fun setUp() {
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
     }
 
     @After
-    fun tearDown() = Napier.takeLogarithm()
+    fun tearDown() = Logger.setLogWriters()
 
     @Test
     fun `check correct password`() = runTest {

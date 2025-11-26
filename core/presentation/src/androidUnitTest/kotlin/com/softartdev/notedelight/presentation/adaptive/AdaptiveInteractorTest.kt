@@ -3,8 +3,9 @@ package com.softartdev.notedelight.presentation.adaptive
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import app.cash.turbine.test
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
-import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
@@ -21,7 +22,6 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -65,7 +65,7 @@ class AdaptiveInteractorTest {
 
     @Before
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
 
         mainViewModel = MainViewModel(
             safeRepo = mockSafeRepo,
@@ -93,7 +93,7 @@ class AdaptiveInteractorTest {
     @After
     fun tearDown() = runTest {
         Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor)
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
     }
 
     @Test

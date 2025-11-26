@@ -3,6 +3,7 @@ package com.softartdev.notedelight.presentation.note
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
@@ -15,7 +16,6 @@ import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +33,7 @@ class NoteViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
+    private val logger = Logger.withTag(this@NoteViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(NoteResult())
     val stateFlow: StateFlow<NoteResult> = mutableStateFlow
 
@@ -46,7 +47,7 @@ class NoteViewModel(
         if (job != null) return
         job = viewModelScope.launch {
             adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedNoteId: Long? ->
-                Napier.d("Collected note id = $selectedNoteId")
+                logger.d { "Collected note id = $selectedNoteId" }
                 when (selectedNoteId) {
                     null -> mutableStateFlow.update { result -> result.copy(note = null) }
                     else -> createOrLoadNote()
@@ -73,11 +74,10 @@ class NoteViewModel(
             val id: Long = withContext(coroutineDispatchers.io) {
                 createNoteUseCase()
             }
-            Napier.d("Created note with id=$id")
+            logger.d { "Created note with id=$id" }
             noteId = id
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error creating note" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -89,11 +89,10 @@ class NoteViewModel(
             val note = withContext(coroutineDispatchers.io) {
                 noteDAO.load(noteId)
             }
-            Napier.d("Loaded note with id = $noteId")
+            logger.d { "Loaded note with id = $noteId" }
             mutableStateFlow.update { result -> result.copy(note = note) }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error loading note" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -111,7 +110,7 @@ class NoteViewModel(
                 withContext(coroutineDispatchers.io) {
                     saveNoteUseCase(noteId, noteTitle, text)
                 }
-                Napier.d("Saved note with id=$noteId")
+                logger.d { "Saved note with id=$noteId" }
                 mutableStateFlow.update { result: NoteResult ->
                     result.copy(
                         note = result.note?.copy(title = noteTitle, text = text)
@@ -123,8 +122,7 @@ class NoteViewModel(
                 ))
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error saving note" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -136,8 +134,7 @@ class NoteViewModel(
             subscribeToEditTitle()
             router.navigate(route = AppNavGraph.EditTitleDialog(noteId = noteId))
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error navigating to edit title dialog" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -161,8 +158,7 @@ class NoteViewModel(
                 else -> adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error checking save changes" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -171,18 +167,17 @@ class NoteViewModel(
     private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
-            Napier.d("Subscribe to save note dialog channel")
+            logger.d { "Subscribe to save note dialog channel" }
             val doSave: Boolean? = withContext(coroutineDispatchers.io) {
                 SaveNoteUseCase.dialogChannel.receive()
             }
             when (doSave) {
-                null -> Napier.d("Cancel")
+                null -> logger.d { "Cancel" }
                 true -> saveNoteAndNavBack(title, text)
                 false -> doNotSaveAndNavBack()
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error subscribing to save note dialog channel" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -193,11 +188,10 @@ class NoteViewModel(
         try {
             val noteTitle: String = createTitleIfNeed(title, text)
             saveNoteUseCase(noteId, noteTitle, text)
-            Napier.d("Saved and nav back")
+            logger.d { "Saved and nav back" }
             adaptiveNavigateBack()
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error saving note and navigating back" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -210,12 +204,11 @@ class NoteViewModel(
             if (noteIsEmpty) {
                 deleteNoteForResult()
             } else {
-                Napier.d("Don't save and nav back")
+                logger.d { "Don't save and nav back" }
                 adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error not saving note and navigating back" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -231,12 +224,11 @@ class NoteViewModel(
             if (doDelete) {
                 deleteNoteForResult()
             } else {
-                Napier.d("Don't delete note")
+                logger.d { "Don't delete note" }
                 adaptiveNavigateBack()
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error subscribing to delete note dialog channel" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -246,7 +238,7 @@ class NoteViewModel(
         withContext(coroutineDispatchers.io) {
             deleteNoteUseCase.invoke(id = noteId)
         }
-        Napier.d("Deleted note with id=$noteId")
+        logger.d { "Deleted note with id=$noteId" }
         snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.DELETED))
         adaptiveNavigateBack()
     }
@@ -269,8 +261,7 @@ class NoteViewModel(
                 result.copy(note = updatedNote)
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
-            router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
+            handleError(e) { "Error subscribing to edit title dialog channel" }
         } finally {
             mutableStateFlow.update(NoteResult::hideLoading)
         }
@@ -280,17 +271,17 @@ class NoteViewModel(
         if (title.isNullOrEmpty()) createTitle(text) else title
 
     private fun createTitle(text: String): String {
-        var title = text.substring(0, 30.coerceAtMost(text.length))
+        var title = text.take(30.coerceAtMost(text.length))
 
         if (text.length > 30) {
             val lastSpace: Int = title.lastIndexOf(' ')
             if (lastSpace > 0) {
-                title = title.substring(0, lastSpace)
+                title = title.take(lastSpace)
             }
         }
         val firstLine = title.indexOf('\n')
         if (firstLine > 0) {
-            title = title.substring(0, firstLine)
+            title = title.take(firstLine)
         }
         return title
     }
@@ -303,6 +294,11 @@ class NoteViewModel(
     private suspend fun isEmpty(id: Long): Boolean {
         val note = noteDAO.load(id)
         return note.title.isEmpty() && note.text.isEmpty()
+    }
+
+    private inline fun handleError(e: Throwable, messageSupplier: () -> String) {
+        logger.e(throwable = e, message = messageSupplier)
+        router.navigate(route = AppNavGraph.ErrorDialog(message = e.message))
     }
 
     @VisibleForTesting

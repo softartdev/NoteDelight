@@ -2,8 +2,8 @@ package com.softartdev.notedelight.db
 
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.SqlDriver
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.shared.db.NoteQueries
-import io.github.aakira.napier.Napier
 
 interface SqlDelightDbHolder : DatabaseHolder {
     val driver: SqlDriver
@@ -12,11 +12,15 @@ interface SqlDelightDbHolder : DatabaseHolder {
 
     suspend fun createSchema() {
         try {
-            Napier.d("Creating database schema")
+            Logger.d(LOG_TAG) { "Creating database schema" }
             NoteDb.Schema.awaitCreate(driver)
-            Napier.d("Database schema created")
+            Logger.d(LOG_TAG) { "Database schema created" }
         } catch (t: Throwable) {
-            Napier.e("Error creating database schema", t)
+            Logger.e(t, LOG_TAG) { "Error creating database schema" }
         }
+    }
+
+    companion object {
+        private const val LOG_TAG: String = "SqlDelightDbHolder"
     }
 }

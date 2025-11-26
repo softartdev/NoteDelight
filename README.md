@@ -82,7 +82,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 - [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 - [Koin](https://github.com/InsertKoinIO/koin)
 - [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom) - my [fork](https://github.com/softartdev/cwac-saferoom)
-- [Napier](https://github.com/AAkira/Napier)
+- [Kermit](https://github.com/touchlab/Kermit)
 - [Firebase Crashlytics](https://firebase.google.com/products/crashlytics)
 - [LeakCanary 🐤](https://github.com/square/leakcanary)
 - [Mockito](https://github.com/mockito/mockito)

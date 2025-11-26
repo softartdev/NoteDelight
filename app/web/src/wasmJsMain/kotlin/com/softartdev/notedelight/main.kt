@@ -4,19 +4,18 @@ package com.softartdev.notedelight
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
-import com.softartdev.notedelight.util.NapierKoinLogger
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
+import com.softartdev.notedelight.util.DEFAULT_APP_LOG_TAG
+import com.softartdev.notedelight.util.kermitLogger
 import kotlinx.browser.document
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 fun main() {
-    Napier.base(antilog = DebugAntilog())
+    Logger.setTag(DEFAULT_APP_LOG_TAG)
     startKoin {
-        logger(NapierKoinLogger(Level.DEBUG))
+        kermitLogger()
         modules(sharedModules + uiModules)
     }
     ComposeViewport(document.body!!) {

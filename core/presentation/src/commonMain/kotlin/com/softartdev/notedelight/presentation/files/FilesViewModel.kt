@@ -2,8 +2,8 @@ package com.softartdev.notedelight.presentation.files
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.repository.FileRepo
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
+    private val logger = Logger.withTag(this@FilesViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<FilesResult> = MutableStateFlow(
         value = FilesResult.Loading
     )
@@ -27,7 +28,7 @@ class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
         try {
             fileRepo.goToStartPath()
         } catch (e: Throwable) {
-            Napier.e("Error goToStartPath", e)
+            logger.e(e) { "Error goToStartPath" }
             mutableStateFlow.value = FilesResult.Error(e.message)
         }
     }
@@ -36,7 +37,7 @@ class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
         try {
             fileRepo.goTo(fileName)
         } catch (e: Throwable) {
-            Napier.e("Error onItemClicked: $fileName", e)
+            logger.e(e) { "Error onItemClicked: $fileName" }
             mutableStateFlow.value = FilesResult.Error(e.message)
         }
     }

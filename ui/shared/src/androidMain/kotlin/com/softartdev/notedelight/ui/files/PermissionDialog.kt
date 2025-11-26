@@ -6,10 +6,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import co.touchlab.kermit.Logger
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import io.github.aakira.napier.Napier
 
 @Composable
 actual fun PermissionDialog(dismissCallback: () -> Unit) {
@@ -21,7 +21,7 @@ actual fun PermissionDialog(dismissCallback: () -> Unit) {
             android.Manifest.permission.READ_MEDIA_VIDEO,
             android.Manifest.permission.READ_MEDIA_AUDIO
         ), onPermissionsResult = { map: Map<String, Boolean> ->
-            Napier.d("🦄 onPermissionsResult: $map")
+            Logger.d("PermissionDialog") { "onPermissionsResult: $map" }
         })
     val descriptionText = when {
         permissionState.allPermissionsGranted -> "All permissions granted"

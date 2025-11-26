@@ -2,13 +2,13 @@
 
 package com.softartdev.notedelight.presentation.note
 
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
-import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -39,13 +39,13 @@ class SaveViewModelTest {
 
     @Before
     fun setUp() = runTest(context = coroutineDispatchers.default) {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         saveNoteUseCase = SaveNoteUseCase(mockNoteDAO)
         saveViewModel = SaveViewModel(mockRouter, coroutineDispatchers)
     }
 
     @After
-    fun tearDown() = Napier.takeLogarithm()
+    fun tearDown() = Logger.setLogWriters()
 
     @Test
     fun `save and nav back`() = runTest(timeout = 3.seconds) {

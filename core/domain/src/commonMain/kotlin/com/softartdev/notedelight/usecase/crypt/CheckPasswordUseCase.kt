@@ -1,9 +1,10 @@
 package com.softartdev.notedelight.usecase.crypt
 
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.repository.SafeRepo
-import io.github.aakira.napier.Napier
 
 class CheckPasswordUseCase(private val safeRepo: SafeRepo) {
+    private val logger = Logger.withTag(this@CheckPasswordUseCase::class.simpleName.toString())
 
     @Throws(Throwable::class)
     suspend operator fun invoke(pass: CharSequence): Boolean = try {
@@ -11,10 +12,10 @@ class CheckPasswordUseCase(private val safeRepo: SafeRepo) {
         val passphrase = StringBuilder(pass) // threadsafe
         safeRepo.buildDbIfNeed(passphrase)
         val count: Long = safeRepo.noteDAO.count()
-        Napier.i("Checked pass on DB with $count notes")
+        logger.i { "Checked pass on DB with $count notes" }
         true
     } catch (t: Throwable) {
-        Napier.i(message = "Incorrect password", throwable = t)
+        logger.i(t) { "Incorrect password" }
         false
     }
 }

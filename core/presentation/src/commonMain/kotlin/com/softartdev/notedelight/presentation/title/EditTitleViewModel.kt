@@ -2,12 +2,12 @@ package com.softartdev.notedelight.presentation.title
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -20,6 +20,7 @@ class EditTitleViewModel(
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
 ) : ViewModel() {
+    private val logger = Logger.withTag(this@EditTitleViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
         value = EditTitleResult()
     )
@@ -37,7 +38,7 @@ class EditTitleViewModel(
             val note = noteDAO.load(noteId)
             mutableStateFlow.update { it.copy(title = note.title) }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
+            logger.e(e) { "Error loading note title" }
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EditTitleResult::hideLoading)
@@ -62,7 +63,7 @@ class EditTitleViewModel(
                 router.popBackStack()
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
+            logger.e(e) { "Error updating note title" }
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EditTitleResult::hideLoading)

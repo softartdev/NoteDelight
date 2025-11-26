@@ -2,14 +2,14 @@ package com.softartdev.notedelight.presentation.settings.security.confirm
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
-import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -45,11 +45,11 @@ class ConfirmViewModelTest {
     )
 
     @Before
-    fun setUp() = Napier.base(PrintAntilog())
+    fun setUp() = Logger.setLogWriters(PrintLogWriter())
 
     @After
     fun tearDown() {
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
         Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter)
     }
 

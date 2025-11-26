@@ -1,5 +1,6 @@
 package com.softartdev.notedelight
 
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.db.TestSchema
 import com.softartdev.notedelight.db.dbo
@@ -8,7 +9,6 @@ import com.softartdev.notedelight.shared.db.Note
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -41,7 +41,7 @@ class NoteUseCaseTest : BaseTest() {
 
     @BeforeTest
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         val noteDB = noteDB()
         noteDAO = safeRepo.noteDAO
         createNoteUseCase = CreateNoteUseCase(noteDAO!!)
@@ -57,7 +57,7 @@ class NoteUseCaseTest : BaseTest() {
         createNoteUseCase = null
         saveNoteUseCase = null
         updateTitleUseCase = null
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
     }
 
     @Test

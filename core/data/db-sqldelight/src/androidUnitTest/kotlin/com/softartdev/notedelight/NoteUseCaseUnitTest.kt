@@ -1,6 +1,7 @@
 package com.softartdev.notedelight
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.AndroidDatabaseHolder
 import com.softartdev.notedelight.db.NoteDb
 import com.softartdev.notedelight.db.SqlDelightNoteDAO
@@ -11,7 +12,6 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -45,7 +45,7 @@ class NoteUseCaseUnitTest {
 
     @Before
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         TestSchema.insertTestNotes(noteDb.noteQueries)
         Mockito.`when`(mockSafeRepo.buildDbIfNeed()).thenReturn(mockDbHolder)
         Mockito.`when`(mockDbHolder.noteDb).thenReturn(noteDb)
@@ -54,7 +54,7 @@ class NoteUseCaseUnitTest {
     @After
     fun tearDown() = runTest {
         noteDAO.deleteAll()
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
     }
 
     @Test

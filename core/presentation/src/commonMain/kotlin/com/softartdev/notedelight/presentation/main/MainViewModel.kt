@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.util.CoroutineDispatchers
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +23,7 @@ class MainViewModel(
     private val adaptiveInteractor: AdaptiveInteractor,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
+    private val logger = Logger.withTag(this@MainViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<NoteListResult> = MutableStateFlow(
         value = NoteListResult.Loading
     )
@@ -52,9 +53,9 @@ class MainViewModel(
     private fun checkDbConnection() = viewModelScope.launch(coroutineDispatchers.io) {
         try {
             val count: Long = safeRepo.noteDAO.count()
-            Napier.d("check DB connection, notes: $count")
+            logger.d { "check DB connection, notes: $count" }
         } catch (throwable: Throwable) {
-            handleError(throwable)
+            handleError("Error checking DB connection", throwable)
         }
     }
 
@@ -66,7 +67,7 @@ class MainViewModel(
                 .cachedIn(viewModelScope)
             mutableStateFlow.value = NoteListResult.Success(result = pagingDataFlow, selectedId = null)
         } catch (throwable: Throwable) {
-            handleError(throwable)
+            handleError("Error loading notes", throwable)
         }
         job = viewModelScope.launch {
             adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedId: Long? ->
@@ -78,8 +79,8 @@ class MainViewModel(
         }
     }
 
-    private fun handleError(throwable: Throwable) {
-        Napier.e("❌", throwable)
+    private fun handleError(message: String, throwable: Throwable) {
+        logger.e(message, throwable)
         if (isDbError(throwable)) {
             router.navigateClearingBackStack(AppNavGraph.Splash)
         }

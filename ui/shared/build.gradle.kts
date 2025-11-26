@@ -51,7 +51,8 @@ kotlin {
             implementation(libs.material.theme.prefs)
             implementation(project(":thirdparty:androidx:paging:compose"))
             implementation(libs.kotlinx.datetime)
-            implementation(libs.napier)
+            implementation(libs.kermit)
+            implementation(libs.kermit.koin)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

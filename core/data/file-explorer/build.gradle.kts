@@ -26,7 +26,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(libs.coroutines.core)
-            implementation(libs.napier)
+            implementation(libs.kermit)
             implementation(libs.okio)
         }
         commonTest.dependencies {

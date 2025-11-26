@@ -31,7 +31,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         jvmTest.dependencies {
             implementation(project(":ui:test-jvm"))

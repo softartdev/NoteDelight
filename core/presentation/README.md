@@ -123,7 +123,7 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 - `kotlinx-serialization-json` - Serialization support
 - `kotlinx-coroutines` - Asynchronous programming
 - `androidx-paging-common` - Pagination support
-- `napier` - Logging
+- `kermit` - Logging
 
 ### Testing Dependencies
 - `core:test` - Test utilities
@@ -167,7 +167,7 @@ The `Router` interface (see `navigation/Router.kt`) keeps ViewModels platform-ag
 
 ## Error Handling
 
-- Each ViewModel centralizes failures in a `handleError` helper that logs with Napier and emits the proper `Result` state.
+- Each ViewModel centralizes failures in a `handleError` helper that logs with Kermit and emits the proper `Result` state.
 - Database failures send the user back to `AppNavGraph.Splash` using `Router.navigateClearingBackStack`.
 - Surface user-facing errors via `SnackbarInteractor` rather than duplicating dialog logic.
 

@@ -4,8 +4,9 @@ import android.database.sqlite.SQLiteException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import app.cash.turbine.test
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
-import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.model.Note
@@ -13,7 +14,6 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -42,7 +42,7 @@ class MainViewModelTest {
 
     @Before
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
         Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
         mainViewModel = MainViewModel(mockSafeRepo, mockRouter, adaptiveInteractor, coroutineDispatchers)
@@ -51,7 +51,7 @@ class MainViewModelTest {
     @After
     fun tearDown() = runTest {
         Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO)
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
     }
 
     @Test

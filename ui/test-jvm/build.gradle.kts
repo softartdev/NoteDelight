@@ -27,5 +27,5 @@ dependencies {
     implementation(compose.desktop.uiTestJUnit4)
     implementation(compose.desktop.currentOs)
     implementation(libs.material.theme.prefs)
-    implementation(libs.napier)
+    implementation(libs.kermit)
 }

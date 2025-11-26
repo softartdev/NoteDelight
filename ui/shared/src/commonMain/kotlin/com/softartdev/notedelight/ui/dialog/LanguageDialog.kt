@@ -25,11 +25,11 @@ import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.notedelight.util.testTag
 import io.github.softartdev.theme_prefs.generated.resources.ok
-import io.github.softartdev.theme_prefs.generated.resources.Res as ThemePrefsRes
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.choose_language
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import io.github.softartdev.theme_prefs.generated.resources.Res as ThemePrefsRes
 
 @Composable
 fun LanguageDialog(languageViewModel: LanguageViewModel) {

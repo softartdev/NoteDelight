@@ -31,7 +31,7 @@ kotlin {
             implementation(libs.room.testing)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         androidMain.dependencies {
             implementation(libs.commonsware.saferoom)
@@ -47,7 +47,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.appdirs)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         jvmTest.dependencies {
         }

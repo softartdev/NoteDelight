@@ -25,7 +25,7 @@ kotlin {
             implementation(project(":core:domain"))
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.napier)
+            implementation(libs.kermit)
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
         }

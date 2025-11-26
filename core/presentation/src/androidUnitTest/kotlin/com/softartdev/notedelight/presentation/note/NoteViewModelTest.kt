@@ -4,8 +4,9 @@ package com.softartdev.notedelight.presentation.note
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
-import com.softartdev.notedelight.PrintAntilog
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
@@ -20,7 +21,6 @@ import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -74,7 +74,7 @@ class NoteViewModelTest {
 
     @Before
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
     }
@@ -82,7 +82,7 @@ class NoteViewModelTest {
     @After
     fun tearDown() = runTest {
         viewModel.resetResultState(noteId = id)
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
         Mockito.reset(mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockRouter)
     }
 
