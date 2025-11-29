@@ -67,10 +67,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
-    implementation(project(":core:presentation"))
-    implementation(project(":ui:shared"))
+    implementation(projects.core.presentation)
+    implementation(projects.ui.shared)
     implementation(kotlin("reflect"))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
@@ -97,7 +97,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
-    androidTestImplementation(project(":ui:test-jvm")) {
+    androidTestImplementation(projects.ui.testJvm) {
         exclude(group = "org.jetbrains.runtime", module = "jbr-api")
     }
     androidTestImplementation(libs.commonsware.saferoom)

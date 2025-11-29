@@ -19,9 +19,9 @@ kotlin {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
         jvmMain.dependencies {
-            implementation(project(":core:domain"))
-            implementation(project(":core:presentation"))
-            implementation(project(":ui:shared"))
+            implementation(projects.core.domain)
+            implementation(projects.core.presentation)
+            implementation(projects.ui.shared)
             implementation(libs.androidx.navigation.compose)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
@@ -34,7 +34,7 @@ kotlin {
             implementation(libs.kermit)
         }
         jvmTest.dependencies {
-            implementation(project(":ui:test-jvm"))
+            implementation(projects.ui.testJvm)
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
             implementation(compose.desktop.currentOs)

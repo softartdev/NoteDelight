@@ -12,11 +12,11 @@ java {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
-    implementation(project(":core:presentation"))
-    implementation(project(":core:test"))
-    implementation(project(":ui:shared"))
+    implementation(projects.core.presentation)
+    implementation(projects.core.test)
+    implementation(projects.ui.shared)
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(platform(libs.koin.bom))

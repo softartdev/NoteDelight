@@ -24,7 +24,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
+            implementation(projects.core.domain)
             implementation(libs.coroutines.core)
             implementation(libs.kermit)
             implementation(libs.okio)
