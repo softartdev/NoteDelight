@@ -63,7 +63,6 @@ android {
         emulatorControl.enable = true
     }
     androidResources.generateLocaleConfig = true
-    lint.disable += "Aligned16KB"  // Workaround for AGP 8.13.0 PageAlignmentDetector bug
 }
 
 dependencies {
