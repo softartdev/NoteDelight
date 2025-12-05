@@ -27,7 +27,7 @@ kotlin {
             implementation(libs.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.androidx.paging.common)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

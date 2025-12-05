@@ -3,11 +3,12 @@ package com.softartdev.notedelight.db
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitMigrate
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import io.github.aakira.napier.Napier
+import co.touchlab.kermit.Logger
 import java.sql.SQLException
 import java.util.Properties
 
 class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder {
+    private val logger = Logger.withTag(this@JdbcDatabaseHolder::class.simpleName.toString())
     override val driver = JdbcSqliteDriver(
         url = JdbcSqliteDriver.IN_MEMORY + FilePathResolver().invoke(),// jdbc:sqlite:/.../notes.db
         properties = props
@@ -30,9 +31,9 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder 
             try {
                 NoteDb.Schema.awaitCreate(driver)
             } catch (sqlException: SQLException) {
-                Napier.e(message = sqlException.localizedMessage)
+                logger.e { sqlException.localizedMessage }
             } catch (t: Throwable) {
-                Napier.e(message = "Error creating database schema", throwable = t)
+                logger.e(t) { "Error creating database schema" }
             }
             currentVersion = 1
         } else if (NoteDb.Schema.version > currentVersion) {

@@ -19,10 +19,10 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
+            implementation(projects.core.domain)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         androidMain.dependencies {
             implementation(libs.bundles.mockito)

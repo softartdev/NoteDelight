@@ -29,10 +29,10 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
+            implementation(projects.core.domain)
             implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
-            implementation(project(":core:data:file-explorer"))
-            implementation(project(":core:presentation"))
+            implementation(projects.core.data.fileExplorer)
+            implementation(projects.core.presentation)
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -49,9 +49,10 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.material.theme.prefs)
-            implementation(project(":thirdparty:androidx:paging:compose"))
+            implementation(projects.thirdparty.androidx.paging.compose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.napier)
+            implementation(libs.kermit)
+            implementation(libs.kermit.koin)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -69,7 +70,7 @@ kotlin {
             implementation(libs.koin.core)
         }
         jvmTest.dependencies {
-            implementation(project(":core:test"))
+            implementation(projects.core.test)
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
             implementation(project.dependencies.platform(libs.koin.bom))

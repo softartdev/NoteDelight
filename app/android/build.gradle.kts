@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 846
-        versionName = "8.4.6"
+        versionCode = 847
+        versionName = "8.4.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -63,14 +63,13 @@ android {
         emulatorControl.enable = true
     }
     androidResources.generateLocaleConfig = true
-    lint.disable += "Aligned16KB"  // Workaround for AGP 8.13.0 PageAlignmentDetector bug
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
-    implementation(project(":core:presentation"))
-    implementation(project(":ui:shared"))
+    implementation(projects.core.presentation)
+    implementation(projects.ui.shared)
     implementation(kotlin("reflect"))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
@@ -82,7 +81,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material.theme.prefs)
-    implementation(libs.napier)
+    implementation(libs.kermit)
+    implementation(libs.kermit.crashlytics)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
@@ -96,7 +96,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
-    androidTestImplementation(project(":ui:test-jvm")) {
+    androidTestImplementation(projects.ui.testJvm) {
         exclude(group = "org.jetbrains.runtime", module = "jbr-api")
     }
     androidTestImplementation(libs.commonsware.saferoom)

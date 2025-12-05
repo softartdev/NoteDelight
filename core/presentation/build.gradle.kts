@@ -22,15 +22,15 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
+            implementation(projects.core.domain)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.napier)
+            implementation(libs.kermit)
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
-            implementation(project(":core:test"))
+            implementation(projects.core.test)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(libs.turbine)

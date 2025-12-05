@@ -3,13 +3,13 @@ package com.softartdev.notedelight.presentation.settings.security.confirm
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -22,6 +22,7 @@ class ConfirmViewModel(
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
+    private val logger = Logger.withTag(this@ConfirmViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
         value = ConfirmResult()
     )
@@ -72,7 +73,7 @@ class ConfirmViewModel(
                 }
             }
         } catch (e: Throwable) {
-            Napier.e("❌", e)
+            logger.e(e) { "Error confirming password" }
             autofillManager?.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {

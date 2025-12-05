@@ -1,9 +1,10 @@
-@file:OptIn(ExperimentalForeignApi::class)
+@file:OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 
 package com.softartdev.notedelight.db
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
+import co.touchlab.kermit.Logger
 import cocoapods.SQLCipher.SQLITE_OK
 import cocoapods.SQLCipher.SQLITE_ROW
 import cocoapods.SQLCipher.sqlite3_close
@@ -17,7 +18,7 @@ import cocoapods.SQLCipher.sqlite3_prepare
 import cocoapods.SQLCipher.sqlite3_prepare_v2
 import cocoapods.SQLCipher.sqlite3_step
 import com.softartdev.notedelight.model.PlatformSQLiteState
-import io.github.aakira.napier.Napier
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CPointerVarOf
@@ -41,6 +42,7 @@ import platform.Foundation.create
 import platform.Foundation.stringByAppendingPathComponent
 
 object IosCipherUtils {
+    private val logger = Logger.withTag(this@IosCipherUtils::class.simpleName.toString())
 
     private val dbDirPath: String by lazy {
         val paths: List<*> = NSSearchPathForDirectoriesInDomains(
@@ -57,7 +59,7 @@ object IosCipherUtils {
         var result = PlatformSQLiteState.DOES_NOT_EXIST
         val dbPath = getDatabasePath(dbName)
         val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
-        Napier.d("db file is exist = $dbFileIsExist, dbPath = $dbPath")
+        logger.d { "db file is exist = $dbFileIsExist, dbPath = $dbPath" }
         if (dbFileIsExist) {
             result = PlatformSQLiteState.ENCRYPTED
             memScoped {
@@ -73,13 +75,13 @@ object IosCipherUtils {
                         result = PlatformSQLiteState.UNENCRYPTED
                         val verPointer = sqlite3_column_text(stmt.value, 0)
                         val version = verPointer?.pointed?.value?.toByte()?.toInt()?.toChar()
-                        Napier.d("user_version: $version")
+                        logger.d { "user_version: $version" }
                     } else {
                         checkError(rc, db, "Error retrieving user_version")
                         throw RuntimeException("Error retrieving user_version, result code: $rc")
                     }
                 } catch (t: Throwable) {
-                    Napier.e(message = t.message ?: "Error while getting database state")
+                    logger.e { t.message ?: "Error while getting database state" }
                 } finally {
                     sqlite3_finalize(stmt.value)
                     sqlite3_close(db.value)
@@ -98,14 +100,14 @@ object IosCipherUtils {
                 var rc: Int = sqlite3_open(dbPath, db.ptr)
                 checkError(rc, db, "Error opening database")
                 val key: CValues<ByteVar>? = password?.cstr
-                Napier.d("sqlite3_key key: ${key?.ptr?.toKString()}, rc: $rc, db: $db, dbPath: ${db.value}")
+                logger.d { "sqlite3_key key: ${key?.ptr?.toKString()}, rc: $rc, db: $db, dbPath: ${db.value}" }
                 rc = sqlite3_key(db.value, key?.ptr, key?.size ?: 0)
                 checkError(rc, db, "Error key database")
                 rc = sqlite3_exec(db.value, "SELECT count(*) FROM sqlite_master;", null, null, null)
                 checkError(rc, db, "Error executing database")
                 result = rc == SQLITE_OK
             } catch (t: Throwable) {
-                Napier.e(message = t.message ?: "Error while checking key")
+                logger.e { t.message ?: "Error while checking key" }
             } finally {
                 sqlite3_close(db.value)
             }
@@ -119,7 +121,7 @@ object IosCipherUtils {
             throw RuntimeException("$dbName not found")
         }
         val newDbPath = getDatabasePath("sqlcipherutils.tmp")
-        Napier.d("new file path = $newDbPath")
+        logger.d { "new file path = $newDbPath" }
         var newFileIsExist = nsFileManager.fileExistsAtPath(newDbPath)
         if (!newFileIsExist) {
             nsFileManager.createFileAtPath(newDbPath, null, null)
@@ -186,7 +188,7 @@ object IosCipherUtils {
             throw RuntimeException("$dbName not found")
         }
         val newDbPath = getDatabasePath("sqlcipherutils.tmp")
-        Napier.d("new file path = $newDbPath")
+        logger.d { "new file path = $newDbPath" }
         var newFileIsExist = nsFileManager.fileExistsAtPath(newDbPath)
         if (!newFileIsExist) {
             nsFileManager.createFileAtPath(newDbPath, null, null)
@@ -256,7 +258,7 @@ object IosCipherUtils {
     //Visible for tests
     fun deleteDatabase(): Boolean {
         val path = dbDirPath
-        Napier.d("db dir exists before = ${nsFileManager.fileExistsAtPath(path)}")
+        logger.d { "db dir exists before = ${nsFileManager.fileExistsAtPath(path)}" }
         return nsFileManager.removeItemAtPath(path, null)
     }
 
@@ -264,7 +266,7 @@ object IosCipherUtils {
         var result: String? = null
         val dbPath = getDatabasePath(dbName)
         val dbFileIsExist = nsFileManager.fileExistsAtPath(dbPath)
-        Napier.d("db file is exist = $dbFileIsExist, dbPath = $dbPath")
+        logger.d { "db file is exist = $dbFileIsExist, dbPath = $dbPath" }
         memScoped {
             val db = allocPointerTo<sqlite3>()
             val stmt = allocPointerTo<sqlite3_stmt>()

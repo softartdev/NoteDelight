@@ -47,13 +47,25 @@ class SignInViewModelTest {
     }
 
     @Test
+    fun onSettingsClick() = runTest {
+        signInViewModel.stateFlow.test {
+            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+
+            signInViewModel.onAction(SignInAction.OnSettingsClick)
+            Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Settings)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun navMain() = runTest {
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
-            signInViewModel.signIn(pass)
+            signInViewModel.onAction(SignInAction.OnSignInClick(pass))
             Mockito.verify(mockAutofillManager).commit()
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
 
@@ -66,7 +78,7 @@ class SignInViewModelTest {
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
 
-            signInViewModel.signIn(pass = StubEditable(""))
+            signInViewModel.onAction(SignInAction.OnSignInClick(pass = StubEditable("")))
             assertEquals(SignInResult.ShowEmptyPassError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -80,7 +92,7 @@ class SignInViewModelTest {
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
-            signInViewModel.signIn(pass)
+            signInViewModel.onAction(SignInAction.OnSignInClick(pass))
             assertEquals(SignInResult.ShowIncorrectPassError, awaitItem())
 
             cancelAndIgnoreRemainingEvents()
@@ -94,7 +106,7 @@ class SignInViewModelTest {
 
             val throwable = Throwable()
             Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
-            signInViewModel.signIn(StubEditable("pass"))
+            signInViewModel.onAction(SignInAction.OnSignInClick(StubEditable("pass")))
             Mockito.verify(mockAutofillManager).cancel()
             Mockito.verify(mockRouter).navigate(
                 route = AppNavGraph.ErrorDialog(message = throwable.message)

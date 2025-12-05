@@ -21,6 +21,13 @@
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
 - iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
 - Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
+- Build without iOS link tasks: `./gradle/build_quick.sh` (see [gradle/build_quick.sh](gradle/build_quick.sh))
+
+## AI Agent Workflow for Verifying Changes
+After making changes, AI agents must perform the following checks sequentially. If any step fails, the changes must be fixed and all checks must be re-run until they all succeed.
+1.  Quick Build (No iOS): `./gradle/build_quick.sh` (see [gradle/build_quick.sh](gradle/build_quick.sh))
+2.  Android Instrumentation Tests: `./gradlew :app:android:connectedCheck`
+3.  Full Project Build: `./gradlew build`
 
 ## Coding Style & Naming Conventions
 - Kotlin official style (`kotlin.code.style=official`); 4-space indentation; organize imports.
@@ -41,9 +48,13 @@
 - Before opening a PR: run `./gradlew build` locally and ensure no Android Lint/security lint regressions.
 
 ## Security & Configuration Tips
-- Never commit secrets or real keystores; keep `keystore.properties` and `local.properties` local.
+- Never commit secrets or real keystores; keep platform-specific `keystore.properties` files local:
+  - `app/android/keystore.properties` - Android signing configuration
+  - `app/desktop/keystore.properties` - Desktop macOS signing configuration
+- Keep `local.properties` local (contains SDK paths).
 - `google-services.json` should contain non-sensitive config only; sanitize before sharing.
 - Keep SDK/JDK versions in sync with `libs.versions.toml`; avoid editing CI-only settings locally.
+- Real signing credentials are encrypted in `.github/secrets/*.gpg` for CI/CD use only.
 
 ## Additional Resources
 - **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - Clean Architecture, MVVM, dependency flow

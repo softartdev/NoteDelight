@@ -1,8 +1,8 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import de.undercouch.gradle.tasks.download.Download
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import de.undercouch.gradle.tasks.download.Download
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -34,13 +34,13 @@ kotlin {
     sourceSets {
         val wasmJsMain by getting {
             dependencies {
-                implementation(project(":core:presentation"))
-                implementation(project(":ui:shared"))
+                implementation(projects.core.presentation)
+                implementation(projects.ui.shared)
                 implementation(compose.ui)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
-                implementation(libs.napier)
+                implementation(libs.kermit)
             }
             resources.srcDir(layout.buildDirectory.dir("sqlite"))
         }

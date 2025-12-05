@@ -7,8 +7,9 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import io.github.aakira.napier.Napier
+import co.touchlab.kermit.Logger
 
+const val UI_TEST_EXT_LOG_TAG: String = "UI_TEST_EXT"
 const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 5_000
 
 inline fun ComposeTestRule.retryUntilDisplayed(
@@ -31,7 +32,7 @@ inline fun ComposeTestRule.waitUntilDisplayed(
         val sni = blockSNI()
         sni.assertIsDisplayed()
     } catch (e: AssertionError) {
-        Napier.e("Node is not displayed while waiting", e)
+        Logger.e(UI_TEST_EXT_LOG_TAG, e) { "Node is not displayed while waiting" }
         return@waitUntil false
     }
     return@waitUntil true
@@ -43,7 +44,7 @@ inline fun ComposeTestRule.waitAssert(
     try {
         assert()
     } catch (e: AssertionError) {
-        Napier.e("Assertion failed while waiting", e)
+        Logger.e(UI_TEST_EXT_LOG_TAG, e) { "Assertion failed while waiting" }
         return@waitUntil false
     }
     return@waitUntil true
@@ -56,7 +57,7 @@ inline fun ComposeTestRule.waitUntilSelected(
     try {
         sni.assertIsSelected()
     } catch (e: AssertionError) {
-        Napier.e("Node is not selected while waiting", e)
+        Logger.e(UI_TEST_EXT_LOG_TAG, e) { "Node is not selected while waiting" }
         return@waitUntil false
     }
     return@waitUntil true

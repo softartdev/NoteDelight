@@ -22,7 +22,7 @@ kotlin {
         framework {
             baseName = "iosComposeKit"
             isStatic = false
-            export(project(":core:domain"))
+            export(projects.core.domain)
             export(project.dependencies.platform(libs.koin.bom))
             export(libs.koin.core)
         }
@@ -30,8 +30,8 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            api(project(":core:domain"))
-            api(project(":ui:shared"))
+            api(projects.core.domain)
+            api(projects.ui.shared)
             implementation(compose.ui)
             implementation(compose.foundation)
             implementation(compose.material3)

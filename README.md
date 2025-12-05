@@ -23,34 +23,16 @@ Supported platforms:
 [![github_badge](docs/badges/badge-github.svg)](https://github.com/softartdev/NoteDelight/releases)
 [![web_badge](docs/badges/badge-web.svg)](https://softartdev.github.io/NoteDelight/)
 
-## ARCHITECTURE 🏛
-
-![Architecture blueprint for this project](docs/diagrams/architecture.png)
-
 ## SCREENSHOTS 🎞️
 
 <img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447">
 <img src="docs/screenshoots/web/light/0.png" height="447">
-<details>
-    <summary>More…</summary>
-    <p><img src="docs/screenshoots/web/dark/0.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/dark/1.png" height="447"> <img src="docs/screenshoots/desktop/dark/1.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/1.png" height="447"> <img src="docs/screenshoots/ios/light/1.png" height="447"> <img src="docs/screenshoots/desktop/light/1.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/2.png" height="447"> <img src="docs/screenshoots/ios/dark/2.png" height="447"> <img src="docs/screenshoots/desktop/dark/2.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/2.png" height="447"> <img src="docs/screenshoots/ios/light/2.png" height="447"> <img src="docs/screenshoots/desktop/light/2.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/3.png" height="447"> <img src="docs/screenshoots/ios/dark/3.png" height="447"> <img src="docs/screenshoots/desktop/dark/3.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/3.png" height="447"> <img src="docs/screenshoots/ios/light/3.png" height="447"> <img src="docs/screenshoots/desktop/light/3.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/4.png" height="447"> <img src="docs/screenshoots/ios/dark/4.png" height="447"> <img src="docs/screenshoots/desktop/dark/4.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/4.png" height="447"> <img src="docs/screenshoots/ios/light/4.png" height="447"> <img src="docs/screenshoots/desktop/light/4.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/5.png" height="447"> <img src="docs/screenshoots/ios/dark/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/5.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/5.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/light/5.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/6.png" height="447"> <img src="docs/screenshoots/ios/dark/6.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/6.png" height="447"> <img src="docs/screenshoots/ios/light/6.png" height="447"> <img src="docs/screenshoots/desktop/light/6.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/7.png" height="447"> <img src="docs/screenshoots/ios/dark/7.png" height="447"> <img src="docs/screenshoots/desktop/dark/7.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/7.png" height="447"> <img src="docs/screenshoots/ios/light/7.png" height="447"> <img src="docs/screenshoots/desktop/light/7.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/dark/8.png" height="447"> <img src="docs/screenshoots/ios/dark/8.png" height="447"> <img src="docs/screenshoots/desktop/dark/8.png" height="447"></p>
-    <p><img src="docs/screenshoots/android/light/8.png" height="447"> <img src="docs/screenshoots/ios/light/8.png" height="447"> <img src="docs/screenshoots/desktop/light/8.png" height="447"></p>
-</details>
+
+[More screenshoots…](/docs/screenshoots/screenshots.md)
+
+## ARCHITECTURE 🏛
+
+![Architecture blueprint for this project](docs/diagrams/architecture.png)
 
 ## WORK IN PROGRESS 🛠
 
@@ -69,6 +51,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 ## DOCUMENTATION 📖
 
 - **[docs/README.md](docs/README.md)** - Documentation index and quick reference
+- **[docs/MANUAL_BUILD_INSTALL.md](docs/MANUAL_BUILD_INSTALL.md)** - Manual build and install guide for all platforms
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines, code style, development workflow
 - **Module READMEs** - Each module folder has detailed documentation
 
@@ -82,7 +65,7 @@ Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing fea
 - [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 - [Koin](https://github.com/InsertKoinIO/koin)
 - [CWAC-SafeRoom](https://github.com/commonsguy/cwac-saferoom) - my [fork](https://github.com/softartdev/cwac-saferoom)
-- [Napier](https://github.com/AAkira/Napier)
+- [Kermit](https://github.com/touchlab/Kermit)
 - [Firebase Crashlytics](https://firebase.google.com/products/crashlytics)
 - [LeakCanary 🐤](https://github.com/square/leakcanary)
 - [Mockito](https://github.com/mockito/mockito)

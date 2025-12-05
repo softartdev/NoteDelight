@@ -12,14 +12,15 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.platformLogWriter
 import com.softartdev.notedelight.App
 import com.softartdev.notedelight.TestLifecycleOwner
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiTestModules
 import com.softartdev.notedelight.repository.SafeRepo
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
+import com.softartdev.notedelight.util.kermitLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.test.runTest
@@ -32,7 +33,6 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
-import org.koin.core.logger.Level
 import org.koin.java.KoinJavaComponent.get
 
 class DesktopUiTests : AbstractUiTests() {
@@ -42,10 +42,10 @@ class DesktopUiTests : AbstractUiTests() {
 
     @Before
     override fun setUp() = runTest {
-        Napier.base(antilog = DebugAntilog())
+        Logger.setLogWriters(platformLogWriter())
         when (GlobalContext.getKoinApplicationOrNull()) {
             null -> startKoin {
-                printLogger(level = Level.DEBUG)
+                kermitLogger()
                 modules(sharedModules + uiTestModules)
             }
             else -> loadKoinModules(sharedModules + uiTestModules)
@@ -67,7 +67,7 @@ class DesktopUiTests : AbstractUiTests() {
     override fun tearDown() = runTest {
         super.tearDown()
         unloadKoinModules(sharedModules + uiTestModules)
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
     }
 
     @Test

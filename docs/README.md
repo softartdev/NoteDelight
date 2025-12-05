@@ -10,6 +10,7 @@ Welcome to the NoteDelight documentation! This directory contains comprehensive 
 - **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Code style, development workflow, commit conventions
 - **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing strategy, patterns, and tools
 - **[AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md)** - AI agent quick reference and common tasks
+- **[MANUAL_BUILD_INSTALL.md](MANUAL_BUILD_INSTALL.md)** - Step-by-step manual build and install instructions for all platforms
 
 ### 📦 Module Documentation
 
@@ -50,6 +51,7 @@ Each module has its own detailed README.md:
 - **Development & Code Style** → [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Testing** → [TESTING_GUIDE.md](TESTING_GUIDE.md)
 - **AI Agent Tasks** → [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md)
+- **Manual Build & Install** → [MANUAL_BUILD_INSTALL.md](MANUAL_BUILD_INSTALL.md)
 - **Version Management & CI/CD** → [VERSION_MANAGEMENT_GUIDE.md](VERSION_MANAGEMENT_GUIDE.md)
 - **Platform-Specific** → Module READMEs in `app/` directories
 - **Data & Persistence** → Module READMEs in `core/data/` directories

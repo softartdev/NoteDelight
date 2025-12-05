@@ -2,7 +2,8 @@ package com.softartdev.notedelight.presentation.title
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.softartdev.notedelight.PrintAntilog
+import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -11,7 +12,6 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -56,13 +56,13 @@ class EditTitleViewModelTest {
 
     @Before
     fun setUp() = runTest {
-        Napier.base(PrintAntilog())
+        Logger.setLogWriters(PrintLogWriter())
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
     }
 
     @After
     fun tearDown() = runTest {
-        Napier.takeLogarithm()
+        Logger.setLogWriters()
         Mockito.reset(mockNoteDAO, mockSnackbarInteractor, mockRouter)
     }
 

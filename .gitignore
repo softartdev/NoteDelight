@@ -80,3 +80,7 @@ app/android/note_room_key_store.jks
 ### Kotlin/JS & Kotlin/Wasm
 # Kotlin/JS store for dependencies
 kotlin-js-store/
+
+### desktop
+# Code signing files (macOS)
+/app/desktop/macOS_development.p12

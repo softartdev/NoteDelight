@@ -235,6 +235,8 @@ class ScreenViewModel(
     private val dispatchers: CoroutineDispatchers
 ) : ViewModel() {
     
+    private val logger = Logger.withTag("ScreenViewModel")
+
     // Private mutable state
     private val _stateFlow = MutableStateFlow<ScreenState>(ScreenState.Initial)
     
@@ -255,11 +257,24 @@ class ScreenViewModel(
     
     // Private helpers
     private fun handleError(error: Throwable) {
-        Napier.e("Error", error)
+        logger.e(error) { "Error" }
         _stateFlow.value = ScreenState.Error(error.message)
     }
 }
 ```
+
+### Logging Guidelines
+
+We use **Kermit** for logging.
+
+- **Initialization**: `Logger` is initialized in `MainApplication.kt` (Android), `Main.kt` (Desktop), `main.kt` (Web), and `AppHelper.kt` (iOS).
+- **Tags**: Unlike Napier, Kermit does not automatically infer tags from class names.
+    - The default tag is set to "NoteDelight".
+    - To use a custom tag, use `Logger.withTag("MyTag")` or `Logger.d(tag = "MyTag") { ... }`.
+    - For classes, you can define a logger property: `private val logger = Logger.withTag("MyClass")`.
+- **Lambda usage**: Always pass the message in a lambda to avoid unnecessary string construction if logging is disabled.
+    - Good: `Logger.d { "Message with $param" }`
+    - Bad: `Logger.d("Message with $param")`
 
 ### Use Case Style
 
@@ -587,10 +602,14 @@ All PRs must pass:
 
 ## Security
 
-- ❌ **Never commit**: API keys, passwords, keystores
-- ✅ **Use**: Local files (keystore.properties, local.properties)
+- ❌ **Never commit**: API keys, passwords, keystores, certificates
+- ✅ **Use**: Local files for signing configuration:
+  - `app/android/keystore.properties` - Android signing config
+  - `app/desktop/keystore.properties` - Desktop macOS signing config
+  - `local.properties` - Local SDK paths
 - ✅ **Sanitize**: Firebase configs before committing
 - ✅ **Review**: Check for accidental secrets before committing
+- ✅ **Encrypted secrets**: Real signing credentials are stored encrypted in `.github/secrets/*.gpg` for CI/CD
 
 ## License
 

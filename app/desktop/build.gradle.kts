@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
+apply(from = "$rootDir/gradle/common-desktop-mac-sign-conf.gradle")
 group = "com.softartdev"
 
 kotlin {
@@ -19,9 +20,9 @@ kotlin {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
         jvmMain.dependencies {
-            implementation(project(":core:domain"))
-            implementation(project(":core:presentation"))
-            implementation(project(":ui:shared"))
+            implementation(projects.core.domain)
+            implementation(projects.core.presentation)
+            implementation(projects.ui.shared)
             implementation(libs.androidx.navigation.compose)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
@@ -31,10 +32,10 @@ kotlin {
             implementation(compose.components.resources)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         jvmTest.dependencies {
-            implementation(project(":ui:test-jvm"))
+            implementation(projects.ui.testJvm)
             implementation(kotlin("test"))
             implementation(compose.desktop.uiTestJUnit4)
             implementation(compose.desktop.currentOs)
@@ -49,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Note Delight"
-            packageVersion = "8.4.6"
+            packageVersion = "8.4.7"
             description = "Note app with encryption"
             copyright = "© 2023 SoftArtDev"
             macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))

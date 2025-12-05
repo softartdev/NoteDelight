@@ -1,4 +1,5 @@
 rootProject.name = "NoteDelight"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":core:domain")
 //include(":core:data:db-room")

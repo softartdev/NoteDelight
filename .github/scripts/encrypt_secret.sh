@@ -4,7 +4,7 @@
 # --batch to prevent interactive command --yes to assume "yes" for questions
 
 gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
---output ./.github/secrets/keystore.properties.gpg ./app/android/keystore.properties
+--output ./.github/secrets/android.keystore.properties.gpg ./app/android/keystore.properties
 
 gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./.github/secrets/note_room_key_store.jks.gpg ./app/android/note_room_key_store.jks
@@ -20,3 +20,9 @@ gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_P
 
 gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./.github/secrets/NoteDelight_Distribution_Profile.mobileprovision.gpg ./app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
+
+gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./.github/secrets/desktop.keystore.properties.gpg ./app/desktop/keystore.properties
+
+gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./.github/secrets/macOS_development.p12.gpg ./app/desktop/macOS_development.p12

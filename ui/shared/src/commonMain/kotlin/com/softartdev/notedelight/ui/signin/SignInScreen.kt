@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +29,7 @@ import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.presentation.signin.SignInAction
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -33,6 +38,7 @@ import notedelight.ui.shared.generated.resources.app_name
 import notedelight.ui.shared.generated.resources.empty_password
 import notedelight.ui.shared.generated.resources.enter_password
 import notedelight.ui.shared.generated.resources.incorrect_password
+import notedelight.ui.shared.generated.resources.settings
 import notedelight.ui.shared.generated.resources.sign_in
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +61,8 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
             else -> Res.string.enter_password
         },
         isError = signInResultState.value.isError,
-    ) { signInViewModel.signIn(pass = passwordState.value) }
+        onAction = signInViewModel::onAction
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,9 +72,21 @@ fun SignInScreenBody(
     passwordState: MutableState<String> = mutableStateOf("password"),
     labelResource: StringResource = Res.string.enter_password,
     isError: Boolean = false,
-    onSignInClick: () -> Unit = {},
+    onAction: (SignInAction) -> Unit = {},
 ) = Scaffold(
-    topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_name)) }) },
+    topBar = {
+        TopAppBar(
+            title = { Text(stringResource(Res.string.app_name)) },
+            actions = {
+                IconButton(onClick = { onAction(SignInAction.OnSettingsClick) }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(Res.string.settings)
+                    )
+                }
+            }
+        )
+    },
 ) { paddingValues: PaddingValues ->
     AdaptiveFrame(modifier = Modifier.padding(paddingValues)) { framePaddingValues: PaddingValues ->
         if (showLoading) {
@@ -81,13 +100,13 @@ fun SignInScreenBody(
                 isError = isError,
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Go,
-                keyboardActions = KeyboardActions { onSignInClick.invoke() },
+                keyboardActions = KeyboardActions { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             )
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp),
-                onClick = onSignInClick,
+                onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             ) { Text(text = stringResource(Res.string.sign_in)) }
         }
     }

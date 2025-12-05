@@ -18,7 +18,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
+            implementation(projects.core.domain)
             implementation(libs.room.runtime)
             implementation(libs.room.paging)
             implementation(libs.androidx.sqlite.bundled)
@@ -27,11 +27,11 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(project(":core:test"))
+            implementation(projects.core.test)
             implementation(libs.room.testing)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         androidMain.dependencies {
             implementation(libs.commonsware.saferoom)
@@ -47,7 +47,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.appdirs)
-            implementation(libs.napier)
+            implementation(libs.kermit)
         }
         jvmTest.dependencies {
         }

@@ -4,15 +4,15 @@ targetSdk = "36"
 minSdk = "23"
 jdk = "17"
 kotlin = "2.2.21"
-ksp = "2.3.1"
+ksp = "2.3.2"
 agp = "8.13.1"
 gms = "4.4.4"
 crashlytics = "3.0.6"
 compose = "1.9.3"
 coroutines = "1.10.2"
 sqlDelight = "2.2.1"
-room = "2.8.3"
-androidxSqlite = "2.6.1"
+room = "2.8.4"
+androidxSqlite = "2.6.2"
 saferoom = "1.4.0"
 androidSqlCipher = "4.11.0"
 iosSqlCipher = "4.9.0"
@@ -20,17 +20,17 @@ koin-bom = "4.1.1"
 kotlinx-serialization = "1.9.0"
 kotlinx-datetime = "0.7.1"
 kotlinx-browser = "0.5.0"
-napier = "2.7.1"
+kermit = "2.0.8"
 materialThemePrefs = "0.9.8"
 adaptive = "1.2.0"
-androidxAppcompat = "1.7.0"
+androidxAppcompat = "1.7.1"
 androidxViewModel = "2.9.6"
 androidxNavigation = "2.9.1"
-androidxActivityCompose = "1.11.0"
-androidxComposeTest = "1.9.4"
+androidxActivityCompose = "1.12.0"
+androidxComposeTest = "1.9.5"
 androidxCoreSplashscreen = "1.2.0"
 androidxTracing = "1.3.0"
-androidxLifecycle = "2.9.4"
+androidxLifecycle = "2.10.0"
 androidxArch = "2.2.0"
 androidxPaging = "3.4.0-alpha04"
 androidxTestExt = "1.3.0"
@@ -45,9 +45,9 @@ espresso = "3.7.0"
 desugar = "2.1.5"
 androidSecurityLint = "1.0.3"
 appdirs = "1.5.0"
-uiTooling = "1.9.4"
+uiTooling = "1.9.5"
 download = "5.6.0"
-okio = "3.16.3"
+okio = "3.16.4"
 accompanist-permissions = "0.37.3"
 
 [libraries]
@@ -94,7 +94,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser" }
 
-napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "kermit" }
+kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
 
 material-theme-prefs = { module = "io.github.softartdev:theme-material3", version.ref = "materialThemePrefs" }
 

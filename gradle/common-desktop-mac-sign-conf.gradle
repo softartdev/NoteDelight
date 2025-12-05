@@ -1,0 +1,21 @@
+apply {
+    plugin('org.jetbrains.compose')
+}
+
+def keystorePropertiesFile = rootProject.file("app/desktop/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+compose.desktop.application.nativeDistributions.macOS {
+    bundleID keystoreProperties['compose.desktop.mac.bundleID']
+    signing {
+        sign = keystoreProperties['compose.desktop.mac.signing.sign'].toBoolean()
+        identity = keystoreProperties['compose.desktop.mac.signing.identity']
+//        keychain = System.getProperty("user.home") + keystoreProperties['compose.desktop.mac.signing.keychain']
+    }
+    notarization {
+        appleID = keystoreProperties['compose.desktop.mac.notarization.appleID']
+        password = keystoreProperties['compose.desktop.mac.notarization.password']
+        teamID = keystoreProperties['compose.desktop.mac.notarization.teamID']
+    }
+}

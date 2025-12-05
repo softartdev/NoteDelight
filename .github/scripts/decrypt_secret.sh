@@ -4,7 +4,7 @@
 # --batch to prevent interactive command --yes to assume "yes" for questions
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
---output ./app/android/keystore.properties ./.github/secrets/keystore.properties.gpg
+--output ./app/android/keystore.properties ./.github/secrets/android.keystore.properties.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./app/android/note_room_key_store.jks ./.github/secrets/note_room_key_store.jks.gpg
@@ -20,3 +20,9 @@ gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision ./.github/secrets/NoteDelight_Distribution_Profile.mobileprovision.gpg
+
+gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./app/desktop/keystore.properties ./.github/secrets/desktop.keystore.properties.gpg
+
+gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./app/desktop/macOS_development.p12 ./.github/secrets/macOS_development.p12.gpg

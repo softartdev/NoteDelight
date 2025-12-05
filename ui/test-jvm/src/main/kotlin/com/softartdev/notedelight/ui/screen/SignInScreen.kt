@@ -3,17 +3,24 @@ package com.softartdev.notedelight.ui.screen
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import com.softartdev.notedelight.ui.descTagTriple
 import kotlinx.coroutines.runBlocking
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.enter_password
+import notedelight.ui.shared.generated.resources.settings
 import notedelight.ui.shared.generated.resources.sign_in
 import org.jetbrains.compose.resources.getString
 
 @JvmInline
 value class SignInScreen(val composeTestRule: ComposeContentTestRule) {
+
+    val settingsButtonSNI: SemanticsNodeInteraction
+        get() = composeTestRule
+            .onNodeWithContentDescription(runBlocking { getString(Res.string.settings) })
+            .assertIsDisplayed()
 
     val passwordFieldSNI
         get() = composeTestRule.onNodeWithTag(enterFieldTag, useUnmergedTree = true)
