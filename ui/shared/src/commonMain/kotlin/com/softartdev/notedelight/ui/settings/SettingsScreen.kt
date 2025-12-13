@@ -16,6 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
@@ -36,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -53,12 +56,15 @@ import com.softartdev.notedelight.util.stringResource
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemePreferenceItem
 import notedelight.ui.shared.generated.resources.Res
+import notedelight.ui.shared.generated.resources.info
 import notedelight.ui.shared.generated.resources.language
+import notedelight.ui.shared.generated.resources.pref_subtitle_open_github
 import notedelight.ui.shared.generated.resources.pref_title_check_cipher_version
 import notedelight.ui.shared.generated.resources.pref_title_enable_encryption
 import notedelight.ui.shared.generated.resources.pref_title_file_list
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
+import notedelight.ui.shared.generated.resources.pref_title_source_code
 import notedelight.ui.shared.generated.resources.security
 import notedelight.ui.shared.generated.resources.settings
 import notedelight.ui.shared.generated.resources.theme
@@ -96,6 +102,7 @@ fun SettingsScreenBody(
     },
     content = { paddingValues: PaddingValues ->
         val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
+        val uriHandler = LocalUriHandler.current
         Column(modifier = Modifier.padding(paddingValues).verticalScroll(rememberScrollState())) {
             if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
@@ -129,18 +136,23 @@ fun SettingsScreenBody(
                 vector = Icons.Filled.FileLock,
                 onClick = { onAction(SettingsAction.ShowCipherVersion) }
             )
+            PreferenceCategory(stringResource(Res.string.info), Icons.Default.Info)
+            Preference(
+                title = stringResource(Res.string.pref_title_source_code),
+                vector = Icons.Default.Code,
+                onClick = { uriHandler.openUri("https://github.com/softartdev/NoteDelight") },
+                secondaryText = { Text(stringResource(Res.string.pref_subtitle_open_github)) }
+            )
             Preference(
                 title = stringResource(Res.string.pref_title_show_db_path),
                 vector = Icons.Default.Storage,
                 onClick = { onAction(SettingsAction.ShowDatabasePath) }
             )
-            if (result.fileListVisible) {
-                Preference(
-                    title = stringResource(Res.string.pref_title_file_list),
-                    vector = Icons.Default.Folder,
-                    onClick = { onAction(SettingsAction.ShowFileList) }
-                )
-            }
+            if (result.fileListVisible) Preference(
+                title = stringResource(Res.string.pref_title_file_list),
+                vector = Icons.Default.Folder,
+                onClick = { onAction(SettingsAction.ShowFileList) }
+            )
             Spacer(Modifier.height(32.dp))
             ListItem(
                 modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
@@ -182,5 +194,5 @@ fun Preference(
 @Preview
 @Composable
 fun PreviewSettingsScreenBody() = PreferableMaterialTheme {
-    SettingsScreenBody()
+    SettingsScreenBody(result = SecurityResult(fileListVisible = true))
 }

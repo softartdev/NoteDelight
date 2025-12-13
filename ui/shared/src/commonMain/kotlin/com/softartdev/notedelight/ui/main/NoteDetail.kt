@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
@@ -46,6 +47,8 @@ import notedelight.ui.shared.generated.resources.action_save_note
 import notedelight.ui.shared.generated.resources.type_text
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+const val NOTE_TEXT_FIELD_TAG: String = "NOTE_TEXT_FIELD_TAG"
 
 @Composable
 fun NoteDetail(noteViewModel: NoteViewModel) {
@@ -144,6 +147,7 @@ fun NoteDetailBody(
             }
             TextField(
                 modifier = Modifier
+                    .testTag(tag = NOTE_TEXT_FIELD_TAG)
                     .weight(1F)
                     .fillMaxWidth()
                     .padding(8.dp)

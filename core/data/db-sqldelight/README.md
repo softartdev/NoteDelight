@@ -8,7 +8,7 @@ The `core:data:db-sqldelight` module implements the **data layer** using [SQLDel
 
 - Implement data access layer using SQLDelight
 - Provide multiplatform SQLite database access
-- Support database encryption via SQLCipher (Android, iOS)
+- Support database encryption via SQLCipher (Android, iOS, Desktop JVM)
 - Implement `NoteDAO` and `DatabaseHolder` interfaces from domain layer
 - Manage database migrations and schema evolution
 
@@ -71,7 +71,7 @@ SQLDelight **generates type-safe Kotlin code** from these SQL statements at comp
 ### Database Factory
 
 - `NoteDatabaseSQLDelightFactory`: Creates platform-specific database drivers
-- Handles encryption setup (SQLCipher) for Android and iOS
+- Handles encryption setup (SQLCipher) for Android, iOS, and Desktop JVM
 - Manages database file paths
 
 ### Repository Implementation
@@ -109,12 +109,13 @@ SQLDelight **generates type-safe Kotlin code** from these SQL statements at comp
 
 ### Desktop JVM (`jvmMain/`)
 
-- **Driver**: `JdbcSqliteDriver` (SQLite JDBC)
-- **Encryption**: ❌ Not implemented yet
+- **Driver**: `JdbcSqliteDriver` (SQLite JDBC with SQLCipher support)
+- **Encryption**: ✅ SQLCipher support via `sqlite-jdbc-crypt` (Willena's fork)
 - **Storage**: User home directory via `appdirs` library
 - **Dependencies**:
   - `sqlDelight.jvm`
   - `appdirs` (for platform-specific app directories)
+  - `sqlite-jdbc-crypt` (SQLCipher-enabled JDBC driver via SQLite3 Multiple Ciphers)
 
 ### Web (`wasmJsMain/`)
 
@@ -130,7 +131,7 @@ SQLDelight **generates type-safe Kotlin code** from these SQL statements at comp
 
 ### SQLCipher Integration
 
-Encryption is supported on **Android** and **iOS** using SQLCipher:
+Encryption is supported on **Android**, **iOS**, and **Desktop JVM** using SQLCipher:
 
 ```kotlin
 // Android
@@ -146,6 +147,12 @@ val driver = NativeSqliteDriver(
     schema = NoteDb.Schema,
     name = "notes.db",
     key = password // SQLCipher key
+)
+
+// Desktop JVM
+val driver = JdbcSqliteDriver(
+    url = "jdbc:sqlite:file:/path/to/notes.db?cipher=sqlcipher&legacy=4&key=${URLEncoder.encode(password, StandardCharsets.UTF_8)}",
+    properties = Properties()
 )
 ```
 
@@ -184,7 +191,7 @@ Migration SQL is defined in `.sqm` files.
 
 - ✅ **Android** - Full support with encryption
 - ✅ **iOS** - Full support with encryption
-- ✅ **Desktop JVM** - Full support (no encryption)
+- ✅ **Desktop JVM** - Full support with encryption
 - ✅ **Web** - Full support (no encryption, sql.js)
 
 ## Dependencies
@@ -258,7 +265,7 @@ Generated files are in `build/generated/sqldelight/`.
 - Write SQL in `.sq` files, not Kotlin
 - Leverage SQLDelight's generated code
 - Use `expect`/`actual` for platform-specific drivers
-- SQLCipher only on Android/iOS
+- SQLCipher on Android/iOS/Desktop JVM
 - Test with in-memory databases
 - Use Flow for reactive queries
 

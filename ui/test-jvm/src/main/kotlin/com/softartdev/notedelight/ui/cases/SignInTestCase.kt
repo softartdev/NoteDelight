@@ -24,7 +24,7 @@ class SignInTestCase(
 
     override fun invoke() = runTest {
         signInScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::passwordFieldSNI)
+            composeTestRule.waitUntilDisplayed("passwordField", blockSNI = ::passwordFieldSNI)
 
             passwordLabelSNI.assertIsDisplayed()
                 .assertTextEquals(runBlocking { getString(Res.string.enter_password) })
@@ -34,7 +34,7 @@ class SignInTestCase(
 
             signInButtonSNI.performClick()
             val emptyPassTitle = runBlocking { getString(Res.string.empty_password) }
-            composeTestRule.waitAssert {
+            composeTestRule.waitAssert("password label has empty pass text") {
                 passwordLabelSNI.assertTextEquals(emptyPassTitle)
             }
             passwordFieldSNI.performTextReplacement(text = "incorrect password")
@@ -48,7 +48,7 @@ class SignInTestCase(
             signInButtonSNI.performClick()
 
             mainTestScreen {
-                composeTestRule.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
+                composeTestRule.waitUntilDisplayed("emptyResultLabel", blockSNI = ::emptyResultLabelSNI)
             }
         }
     }

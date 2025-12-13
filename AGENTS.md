@@ -19,6 +19,7 @@
 - Android app: `./gradlew :app:android:assembleDebug` (APK), `:installDebug` (to device).
 - Android instrumentation tests: `./gradlew :app:android:connectedCheck` (requires emulator/device; uses AndroidX Test Orchestrator).
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
+- Desktop UI tests: `./gradlew :app:desktop:jvmTest` (uses `uiTestJUnit4`).
 - iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
 - Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
 - Build without iOS link tasks: `./gradle/build_quick.sh` (see [gradle/build_quick.sh](gradle/build_quick.sh))

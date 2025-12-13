@@ -5,6 +5,7 @@ package com.softartdev.notedelight
 import android.app.Application
 import co.touchlab.kermit.ExperimentalKermitApi
 import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Severity
 import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
 import co.touchlab.kermit.platformLogWriter
 import com.softartdev.notedelight.di.sharedModules
@@ -21,7 +22,7 @@ class MainApplication : Application() {
         super.onCreate()
         if (isInLeakCanaryAnalyzerProcess) return
         Logger.setTag(DEFAULT_APP_LOG_TAG)
-        Logger.setLogWriters(if (BuildConfig.DEBUG) platformLogWriter() else CrashlyticsLogWriter())
+        Logger.setLogWriters(if (BuildConfig.DEBUG) platformLogWriter() else CrashlyticsLogWriter(minSeverity = Severity.Debug))
         startKoin {
             kermitLogger()
             androidContext(this@MainApplication)

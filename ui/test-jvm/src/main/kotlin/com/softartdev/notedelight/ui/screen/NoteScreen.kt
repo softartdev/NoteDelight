@@ -6,13 +6,13 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
+import com.softartdev.notedelight.ui.main.NOTE_TEXT_FIELD_TAG
 import kotlinx.coroutines.runBlocking
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.action_delete_note
 import notedelight.ui.shared.generated.resources.action_edit_title
 import notedelight.ui.shared.generated.resources.action_save_note
-import notedelight.ui.shared.generated.resources.type_text
 import org.jetbrains.compose.resources.getString
 
 @JvmInline
@@ -40,6 +40,6 @@ value class NoteScreen(val composeTestRule: ComposeContentTestRule) {
 
     val textFieldSNI: SemanticsNodeInteraction
         get() = composeTestRule
-            .onNodeWithText(text = runBlocking { getString(Res.string.type_text) })
+            .onNodeWithTag(testTag = NOTE_TEXT_FIELD_TAG)
             .assertIsDisplayed()
 }

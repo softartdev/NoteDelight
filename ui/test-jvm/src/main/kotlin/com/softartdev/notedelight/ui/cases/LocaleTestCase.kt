@@ -28,16 +28,16 @@ class LocaleTestCase(
     override fun invoke() = runTest {
         val localeInteractor: LocaleInteractor = KoinJavaComponent.get(LocaleInteractor::class.java)
         mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::settingsMenuButtonSNI)
+            composeTestRule.waitUntilDisplayed("settingsMenuButton", blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
             settingsTestScreen {
-                composeTestRule.waitUntilDisplayed(blockSNI = ::languageSNI)
+                composeTestRule.waitUntilDisplayed("language", blockSNI = ::languageSNI)
                 LanguageEnum.entries.forEach { languageEnum ->
                     languageSNI.performClick()
                     languageDialog {
-                        composeTestRule.waitUntilDisplayed(::langDialogTitleSNI)
+                        composeTestRule.waitUntilDisplayed("langDialogTitle", ::langDialogTitleSNI)
                         languageEnum.radioButtonSNI.performClick()
-                        composeTestRule.waitUntilSelected { languageEnum.radioButtonSNI }
+                        composeTestRule.waitUntilSelected("radioButton") { languageEnum.radioButtonSNI }
                         yesDialogButtonSNI.performClick()
                     }
                     composeTestRule.waitUntilDoesNotExist(

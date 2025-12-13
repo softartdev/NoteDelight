@@ -92,7 +92,7 @@ NoteDelight/
 **Database:**
 - SQLDelight (default, multiplatform)
 - Room (alternative, experimental KMP)
-- SQLCipher (encryption for Android/iOS)
+- SQLCipher (encryption for Android/iOS/Desktop JVM)
 
 **Architecture:**
 - Clean Architecture
@@ -125,7 +125,7 @@ NoteDelight/
 |----------|--------|------------|----|---------|----------|
 | Android  | ✅ Production | ✅ SQLCipher | ✅ Compose | ✅ Full | ✅ |
 | iOS      | ✅ Production | ✅ SQLCipher | ✅ Compose | ⚠️ Manual | ✅ |
-| Desktop  | ✅ Production | ❌ Not yet | ✅ Compose | ✅ Full | ✅ |
+| Desktop  | ✅ Production | ✅ SQLCipher | ✅ Compose | ✅ Full | ✅ |
 | Web      | ⚠️ Experimental | ❌ Browser limitation | ✅ Compose | ⚠️ Limited | ✅ |
 
 ## Contributing

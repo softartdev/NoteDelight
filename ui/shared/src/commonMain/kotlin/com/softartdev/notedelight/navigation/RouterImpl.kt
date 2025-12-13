@@ -36,33 +36,48 @@ class RouterImpl : Router, NavController.OnDestinationChangedListener {
         navController = null
     }
 
-    override fun <T : Any> navigate(route: T) = navController!!.navigate(route)
-
-    override fun <T : Any> navigateClearingBackStack(route: T) {
-        var popped = true
-        while (popped) {
-            popped = navController!!.popBackStack()
-        }
-        navController!!.navigate(route)
+    override fun <T : Any> navigate(route: T) {
+        val navHostController = requireNotNull(navController) { "navController is null while navigate to $route" }
+        navHostController.navigate(route)
     }
 
-    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean =
-        navController!!.popBackStack(route, inclusive, saveState)
+    override fun <T : Any> navigateClearingBackStack(route: T) {
+        val navHostController = requireNotNull(navController) { "navController is null while navigateClearingBackStack to $route" }
+        var popped = true
+        while (popped) {
+            popped = navHostController.popBackStack()
+        }
+        navHostController.navigate(route)
+    }
 
-    override fun popBackStack() = navController!!.popBackStack()
+    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean {
+        val navHostController = requireNotNull(navController) { "navController is null while popBackStack to $route" }
+        return navHostController.popBackStack(route, inclusive, saveState)
+    }
+
+    override fun popBackStack(): Boolean {
+        val navHostController = requireNotNull(navController) { "navController is null while popBackStack" }
+        return navHostController.popBackStack()
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun setAdaptiveNavigator(adaptiveNavigator: Any) {
+        logger.d { "Setting AdaptiveNavigator" }
         this.adaptiveNavigator = adaptiveNavigator as ThreePaneScaffoldNavigator<Long>
     }
 
     override fun releaseAdaptiveNavigator() {
+        logger.d { "Releasing AdaptiveNavigator" }
         adaptiveNavigator = null
     }
 
     override suspend fun adaptiveNavigateToDetail(contentKey: Long?) {
-        adaptiveNavigator!!.navigateTo(ListDetailPaneScaffoldRole.Detail, contentKey)
+        val threePaneScaffoldNavigator = requireNotNull(adaptiveNavigator) { "adaptiveNavigator is null while adaptiveNavigateToDetail, contentKey = $contentKey" }
+        threePaneScaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail, contentKey)
     }
 
-    override suspend fun adaptiveNavigateBack(): Boolean = adaptiveNavigator!!.navigateBack()
+    override suspend fun adaptiveNavigateBack(): Boolean {
+        val threePaneScaffoldNavigator = requireNotNull(adaptiveNavigator) { "adaptiveNavigator is null while adaptiveNavigateBack" }
+        return threePaneScaffoldNavigator.navigateBack()
+    }
 }

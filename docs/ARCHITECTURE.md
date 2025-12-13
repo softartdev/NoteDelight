@@ -265,7 +265,7 @@ Skip Action interfaces for **simple cases with 1-2 actions** or functions called
 **Technologies**:
 - **SQLDelight** (default): Type-safe SQL, multiplatform
 - **Room** (alternative): Android-first ORM, experimental KMP support
-- **SQLCipher**: Database encryption (Android, iOS)
+- **SQLCipher**: Database encryption (Android, iOS, Desktop JVM)
 
 **Rules**:
 - ✅ Implements domain interfaces

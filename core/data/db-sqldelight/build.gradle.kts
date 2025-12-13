@@ -11,6 +11,13 @@ plugins {
     alias(libs.plugins.kotlin.cocoapods)
 }
 
+// Replace standard sqlite-jdbc with sqlite-jdbc-crypt for encryption support
+// Using Willena's fork (io.github.willena:sqlite-jdbc) which provides SQLCipher support
+// via SQLite3 Multiple Ciphers
+configurations.matching { !it.name.contains("test", ignoreCase = true) }.all {
+    exclude(group = "org.xerial", module = "sqlite-jdbc")
+}
+
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
@@ -60,6 +67,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.sqlDelight.jvm)
             implementation(libs.appdirs)
+            implementation(libs.sqlite.jdbc)
         }
         jvmTest.dependencies {
         }

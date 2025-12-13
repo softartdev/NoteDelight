@@ -23,14 +23,14 @@ class EditTitleAfterCreateTestCase(
 
     override fun invoke() = runTest {
         mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
+            composeTestRule.waitUntilDisplayed("fab", blockSNI = ::fabSNI)
             fabSNI.performClick()
             noteScreen {
                 val actualNoteText = UUID.randomUUID().toString().substring(0, 30)
                 textFieldSNI.performTextInput(actualNoteText)
                 editTitleMenuButtonSNI.performClick()
                 editTitleDialog {
-                    composeTestRule.waitUntilDisplayed(blockSNI = ::editTitleSNI)
+                    composeTestRule.waitUntilDisplayed("editTitle", blockSNI = ::editTitleSNI)
                     editTitleSNI.performTextReplacement(actualNoteTitle)
                     yesDialogButtonSNI.performClick()
                 }
@@ -41,7 +41,7 @@ class EditTitleAfterCreateTestCase(
                 backButtonSNI.performClick()
             }
             noteItemTitleText = actualNoteTitle
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
+            composeTestRule.waitUntilDisplayed("noteListItem", blockSNI = ::noteListItemSNI)
         }
     }
 }

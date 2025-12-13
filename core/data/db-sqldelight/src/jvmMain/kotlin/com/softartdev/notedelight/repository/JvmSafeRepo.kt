@@ -16,7 +16,7 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     private var databaseHolder: JdbcDatabaseHolder? = null
 
     override val databaseState: PlatformSQLiteState
-        get() = JvmCipherUtils.getDatabaseState(DB_NAME)
+        get() = JvmCipherUtils.getDatabaseState(dbPath)
 
     override val noteDAO: NoteDAO
         get() = SqlDelightNoteDAO({ databaseHolder!!.noteQueries }, coroutineDispatchers)
@@ -40,7 +40,7 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         closeDatabase()
         JvmCipherUtils.decrypt(
             password = StringBuilder(oldPass).toString(),
-            dbName = DB_NAME
+            dbName = dbPath
         )
         buildDbIfNeed()
     }
@@ -69,7 +69,7 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         closeDatabase()
         JvmCipherUtils.encrypt(
             password = StringBuilder(newPass).toString(),
-            dbName = DB_NAME
+            dbName = dbPath
         )
         buildDbIfNeed(newPass)
     }

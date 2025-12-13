@@ -22,28 +22,28 @@ class SignInToSettingsTestCase(
 
     override fun invoke() = runTest {
         signInScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::settingsButtonSNI)
+            composeTestRule.waitUntilDisplayed("settingsButton", blockSNI = ::settingsButtonSNI)
             settingsButtonSNI.performClick()
         }
         settingsTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::encryptionSwitchSNI)
+            composeTestRule.waitUntilDisplayed("encryptionSwitch", blockSNI = ::encryptionSwitchSNI)
             encryptionSwitchSNI.assertIsDisplayed()
                 .assertIsOn()
                 .performClick()
 
             enterPasswordDialog {
-                composeTestRule.waitUntilDisplayed(blockSNI = ::enterPasswordSNI)
+                composeTestRule.waitUntilDisplayed("enterPassword", blockSNI = ::enterPasswordSNI)
                 enterPasswordSNI.performTextReplacement(DbTestEncryptor.PASSWORD)
                 closeSoftKeyboard()
                 yesDialogButtonSNI.performClick()
             }
-            composeTestRule.waitAssert(encryptionSwitchSNI::assertIsOff)
+            composeTestRule.waitAssert("encryption switch is OFF", encryptionSwitchSNI::assertIsOff)
 
             composeTestRule.onNodeWithContentDescription(Icons.AutoMirrored.Filled.ArrowBack.name)
                 .performClick()
         }
         mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
+            composeTestRule.waitUntilDisplayed("emptyResultLabel", blockSNI = ::emptyResultLabelSNI)
         }
     }
 }

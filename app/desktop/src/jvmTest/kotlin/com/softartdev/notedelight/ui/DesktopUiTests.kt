@@ -11,6 +11,7 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.platformLogWriter
@@ -26,7 +27,6 @@ import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.context.GlobalContext
@@ -34,6 +34,7 @@ import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
 import org.koin.java.KoinJavaComponent.get
+import java.io.File
 
 class DesktopUiTests : AbstractUiTests() {
 
@@ -51,16 +52,22 @@ class DesktopUiTests : AbstractUiTests() {
             else -> loadKoinModules(sharedModules + uiTestModules)
         }
         val safeRepo: SafeRepo = get(SafeRepo::class.java)
+        safeRepo.closeDatabase()
+        File(safeRepo.dbPath).takeIf(File::exists)?.delete()
         safeRepo.buildDbIfNeed()
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
         super.setUp()
-        val lifecycleOwner = TestLifecycleOwner(coroutineDispatcher = Dispatchers.Swing)
+        val lifecycleOwner = TestLifecycleOwner(
+            initialState = Lifecycle.State.RESUMED,
+            coroutineDispatcher = Dispatchers.Swing
+        )
         composeTestRule.setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
                 App()
             }
         }
+        composeTestRule.waitForIdle()
     }
 
     @After
@@ -82,11 +89,9 @@ class DesktopUiTests : AbstractUiTests() {
     @Test
     override fun prepopulateDatabase() = super.prepopulateDatabase()
 
-    @Ignore("Desktop app doesn't support encryption yet")
     @Test
     override fun flowAfterCryptTest() = super.flowAfterCryptTest()
 
-    @Ignore("Desktop app doesn't support encryption yet")
     @Test
     override fun settingPasswordTest() = super.settingPasswordTest()
 

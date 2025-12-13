@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `app:desktop` module is the **Desktop JVM application** for NoteDelight, built with Compose Multiplatform. It provides a native desktop experience on Windows, macOS, and Linux with full feature parity to the mobile apps.
+The `app:desktop` module is the **Desktop JVM application** for NoteDelight, built with Compose Multiplatform. It provides a native desktop experience on Windows, macOS, and Linux with full feature parity to the mobile apps, including database encryption support via SQLCipher.
 
 ## Purpose
 
@@ -78,7 +78,7 @@ See `app/desktop/keystore.properties` for the stub template. For CI/CD, the cert
 
 ### Desktop UI Tests
 
-Located in `src/jvmTest/`:
+Located in `src/jvmTest/`. The desktop UI tests include full encryption test coverage (setting password, flow after encryption, etc.).
 
 ### Running Tests
 

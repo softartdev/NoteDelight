@@ -39,7 +39,7 @@ Supported platforms:
 | feature \ platform | Android | iOS | Desktop Java | Web |
 |:------------------:|:-------:|:---:|:------------:|:---:|
 |      database      |    ✅    | ✅	  |      ✅	      |  ✅  |
-|     encryption     |    ✅    | ✅ 	 |              |     |
+|     encryption     |    ✅    | ✅ 	 |      ✅	      |     |
 |         ui         |    ✅    | ✅	  |      ✅	      |  ✅  |
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing features.

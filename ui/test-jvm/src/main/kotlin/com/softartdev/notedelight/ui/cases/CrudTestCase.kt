@@ -17,7 +17,7 @@ class CrudTestCase(
 
     override fun invoke() = runTest {
         mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
+            composeTestRule.waitUntilDisplayed("fab", blockSNI = ::fabSNI)
             fabSNI.performClick()
             noteScreen {
                 textFieldSNI.performTextInput(actualNoteText)
@@ -25,7 +25,7 @@ class CrudTestCase(
                 backButtonSNI.performClick()
             }
             noteItemTitleText = actualNoteText
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
+            composeTestRule.waitUntilDisplayed("noteListItem", blockSNI = ::noteListItemSNI)
             noteListItemSNI.performClick()
             noteScreen {
                 deleteNoteMenuButtonSNI.performClick()
@@ -33,7 +33,7 @@ class CrudTestCase(
                     yesDialogButtonSNI.performClick()
                 }
             }
-            composeTestRule.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
+            composeTestRule.waitUntilDisplayed("emptyResultLabel", blockSNI = ::emptyResultLabelSNI)
         }
     }
 }

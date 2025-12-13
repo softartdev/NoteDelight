@@ -24,7 +24,7 @@ class EditTitleAfterSaveTestCase(
 
     override fun invoke() = runTest {
         mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
+            composeTestRule.waitUntilDisplayed("fab", blockSNI = ::fabSNI)
             fabSNI.performClick()
             noteScreen {
                 textFieldSNI.performTextInput(actualNoteText)
@@ -32,7 +32,7 @@ class EditTitleAfterSaveTestCase(
                 backButtonSNI.performClick()
             }
             noteItemTitleText = actualNoteText
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
+            composeTestRule.waitUntilDisplayed("noteListItem", blockSNI = ::noteListItemSNI)
             noteListItemSNI.performClick()
             noteScreen {
                 editTitleMenuButtonSNI.performClick()
@@ -47,7 +47,7 @@ class EditTitleAfterSaveTestCase(
                 backButtonSNI.performClick()
             }
             noteItemTitleText = actualNoteTitle
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
+            composeTestRule.waitUntilDisplayed("noteListItem", blockSNI = ::noteListItemSNI)
         }
     }
 }

@@ -19,6 +19,8 @@
     <string name="pref_title_enable_encryption">Enable encryption</string>
     <string name="pref_title_set_password">Set password</string>
     <string name="pref_title_check_cipher_version">Check SQLCipher version</string>
+    <string name="pref_title_source_code">Source code</string>
+    <string name="pref_subtitle_open_github">Open on GitHub</string>
     <string name="pref_title_show_db_path">Show database path</string>
     <string name="pref_title_file_list">File list</string>
     <string name="enter_password">Enter password</string>
@@ -63,4 +65,5 @@
     <string name="dialog_title_change_title">Editing title</string>
     <string name="copy">Copy</string>
     <string name="detail_pane_placeholder">Select or create a note</string>
+    <string name="info">Info</string>
 </resources>
