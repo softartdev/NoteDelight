@@ -10,6 +10,7 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
+import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -47,6 +48,7 @@ class ConfirmViewModel(
     }
 
     private fun confirm() = viewModelScope.launch(context = coroutineDispatchers.io) {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(ConfirmResult::showLoading)
         try {
             val password = mutableStateFlow.value.password
@@ -78,6 +80,7 @@ class ConfirmViewModel(
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(ConfirmResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 

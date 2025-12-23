@@ -66,4 +66,5 @@
     <string name="copy">Copy</string>
     <string name="detail_pane_placeholder">Select or create a note</string>
     <string name="info">Info</string>
+    <string name="save">Save</string>
 </resources>

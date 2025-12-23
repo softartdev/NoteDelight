@@ -11,6 +11,7 @@ import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
+import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -46,6 +47,7 @@ class EnterViewModel(
     }
 
     private fun enterCheck() = viewModelScope.launch(context = coroutineDispatchers.io) {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(EnterResult::showLoading)
         try {
             val password = mutableStateFlow.value.password
@@ -70,6 +72,7 @@ class EnterViewModel(
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EnterResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 

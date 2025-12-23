@@ -36,29 +36,24 @@ class RouterImpl : Router, NavController.OnDestinationChangedListener {
         navController = null
     }
 
-    override fun <T : Any> navigate(route: T) {
-        val navHostController = requireNotNull(navController) { "navController is null while navigate to $route" }
-        navHostController.navigate(route)
-    }
+    override fun <T : Any> navigate(route: T) = navController?.navigate(route) {
+        launchSingleTop = true
+    } ?: logger.e { "navController is null while navigate to $route" }
 
-    override fun <T : Any> navigateClearingBackStack(route: T) {
-        val navHostController = requireNotNull(navController) { "navController is null while navigateClearingBackStack to $route" }
+    override fun <T : Any> navigateClearingBackStack(route: T) = navController?.let { navHostController ->
         var popped = true
         while (popped) {
             popped = navHostController.popBackStack()
         }
         navHostController.navigate(route)
-    }
+    } ?: logger.e { "navController is null while navigateClearingBackStack to $route" }
 
-    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean {
-        val navHostController = requireNotNull(navController) { "navController is null while popBackStack to $route" }
-        return navHostController.popBackStack(route, inclusive, saveState)
-    }
+    override fun <T : Any> popBackStack(route: T, inclusive: Boolean, saveState: Boolean): Boolean =
+        navController?.popBackStack(route, inclusive, saveState)
+            ?: logger.e { "navController is null while popBackStack to $route" }.let { false }
 
-    override fun popBackStack(): Boolean {
-        val navHostController = requireNotNull(navController) { "navController is null while popBackStack" }
-        return navHostController.popBackStack()
-    }
+    override fun popBackStack(): Boolean = navController?.popBackStack()
+        ?: logger.e { "navController is null while popBackStack" }.let { false }
 
     @Suppress("UNCHECKED_CAST")
     override fun setAdaptiveNavigator(adaptiveNavigator: Any) {
@@ -71,13 +66,10 @@ class RouterImpl : Router, NavController.OnDestinationChangedListener {
         adaptiveNavigator = null
     }
 
-    override suspend fun adaptiveNavigateToDetail(contentKey: Long?) {
-        val threePaneScaffoldNavigator = requireNotNull(adaptiveNavigator) { "adaptiveNavigator is null while adaptiveNavigateToDetail, contentKey = $contentKey" }
-        threePaneScaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail, contentKey)
-    }
+    override suspend fun adaptiveNavigateToDetail(contentKey: Long?) =
+        adaptiveNavigator?.navigateTo(ListDetailPaneScaffoldRole.Detail, contentKey)
+            ?: logger.e { "adaptiveNavigator is null while adaptiveNavigateToDetail, contentKey = $contentKey" }
 
-    override suspend fun adaptiveNavigateBack(): Boolean {
-        val threePaneScaffoldNavigator = requireNotNull(adaptiveNavigator) { "adaptiveNavigator is null while adaptiveNavigateBack" }
-        return threePaneScaffoldNavigator.navigateBack()
-    }
+    override suspend fun adaptiveNavigateBack(): Boolean = adaptiveNavigator?.navigateBack()
+        ?: logger.e { "adaptiveNavigator is null while adaptiveNavigateBack" }.let { false }
 }

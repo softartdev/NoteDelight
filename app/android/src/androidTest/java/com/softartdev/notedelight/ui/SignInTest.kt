@@ -1,10 +1,15 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package com.softartdev.notedelight.ui
 
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import com.softartdev.notedelight.DbTestEncryptor
 import com.softartdev.notedelight.MainActivity
+import com.softartdev.notedelight.reflect
 import com.softartdev.notedelight.ui.cases.SignInTestCase
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
@@ -26,6 +31,8 @@ class SignInTest {
         .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
 
+    private val composeUiTest: ComposeUiTest = reflect(composeTestRule)
+
     @Test
-    fun signInTest() = SignInTestCase(composeTestRule, Espresso::closeSoftKeyboard).invoke()
+    fun signInTest() = SignInTestCase(composeUiTest, Espresso::closeSoftKeyboard).invoke()
 }

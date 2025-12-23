@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 848
-        versionName = "8.4.8"
+        versionCode = 849
+        versionName = "8.4.9"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -96,6 +96,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
+    androidTestImplementation(projects.ui.test)
     androidTestImplementation(projects.ui.testJvm) {
         exclude(group = "org.jetbrains.runtime", module = "jbr-api")
     }

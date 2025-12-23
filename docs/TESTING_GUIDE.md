@@ -142,18 +142,21 @@ class NoteSQLDelightDAOTest {
 **Location**:
 - `app/android/src/androidTest/` (Android)
 - `app/desktop/src/jvmTest/` (Desktop)
-- `ui/test-jvm/src/main/kotlin/` (Shared test framework)
+- `ui/test/src/commonMain/kotlin/` (Multiplatform test framework)
+- `ui/test-jvm/src/main/kotlin/` (JVM-specific test utilities)
 
 **Framework**:
-- Compose Test
-- Espresso (Android)
-- Kaspresso-inspired pattern (custom)
+- Compose Multiplatform Test (`compose.uiTest`) - Common multiplatform testing API
+- Compose Desktop Test (`compose.desktop.uiTestJUnit4`) - Desktop JVM testing
+- AndroidX Compose Test (`androidx.compose.ui:ui-test-junit4-android`) - Android instrumented tests
+- Kaspresso-inspired pattern (custom) - Screen objects and test cases
 
 **Example**:
 ```kotlin
+// Multiplatform test case (ui/test module)
 class CrudTestCase(
-    composeTestRule: ComposeContentTestRule
-) : () -> Unit, BaseTestCase(composeTestRule) {
+    composeUiTest: ComposeUiTest
+) : () -> Unit, BaseTestCase(composeUiTest) {
     
     override fun invoke() = runTest {
         // Navigate and create note
@@ -168,7 +171,7 @@ class CrudTestCase(
             
             // Verify note appears
             noteItemTitleText = "Test Note"
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
+            composeUiTest.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
             noteListItemSNI.assertIsDisplayed()
             
             // Delete note
@@ -181,11 +184,76 @@ class CrudTestCase(
             }
             
             // Verify empty state
-            composeTestRule.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
+            composeUiTest.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
         }
     }
 }
 ```
+
+**Multiplatform Testing**:
+The `ui/test` module provides multiplatform UI tests that can run on all platforms (Android, iOS, JVM Desktop, Web) using the Compose Multiplatform testing API. Test cases are written once in `commonMain` and executed on each platform.
+
+**Platform-Specific Test Utilities**:
+The `ui/test-jvm` module provides JVM-specific utilities and abstractions for Android and Desktop tests, including platform-specific implementations of `runOnUiThread` and test setup.
+
+### Idling Resources for UI Tests
+
+UI tests need to wait for async operations to complete before making assertions. The project uses `CountingIdlingRes` to track ongoing async operations in ViewModels.
+
+**Purpose**:
+- Prevents flaky tests by ensuring async operations complete before assertions
+- Allows tests to wait for ViewModel operations (database queries, network calls, etc.)
+- Integrates with Compose UI test framework via `ComposeCountingIdlingResource`
+
+**Usage in ViewModels**:
+
+All async operations in ViewModels should be wrapped with `CountingIdlingRes`:
+
+```kotlin
+private fun loadData() = viewModelScope.launch {
+    CountingIdlingRes.increment()
+    mutableStateFlow.update(Result::showLoading)
+    try {
+        val data = withContext(Dispatchers.IO) {
+            repository.loadData()
+        }
+        mutableStateFlow.update { Result.Success(data) }
+    } catch (e: Throwable) {
+        handleError(e)
+    } finally {
+        mutableStateFlow.update(Result::hideLoading)
+        CountingIdlingRes.decrement()
+    }
+}
+```
+
+**Pattern**:
+1. Call `CountingIdlingRes.increment()` at the start of the coroutine
+2. Perform the async operation
+3. Call `CountingIdlingRes.decrement()` in the `finally` block
+
+**Integration with Tests**:
+
+The `ComposeCountingIdlingResource` wraps `CountingIdlingRes` and implements `IdlingResource` for Compose UI tests:
+
+```kotlin
+// In AbstractJvmUiTests (ui/test-jvm)
+override fun setUp() {
+    super.setUp()
+    composeTestRule.registerIdlingResource(ComposeCountingIdlingResource)
+}
+
+override fun tearDown() {
+    super.tearDown()
+    composeTestRule.unregisterIdlingResource(ComposeCountingIdlingResource)
+}
+```
+
+Tests automatically wait for `CountingIdlingRes.counter` to reach zero before proceeding, ensuring all ViewModel operations complete.
+
+**See also**:
+- [CountingIdlingRes](../core/domain/src/commonMain/kotlin/com/softartdev/notedelight/util/CountingIdlingRes.kt) - Core idling resource implementation
+- [ComposeCountingIdlingResource](../ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/util/ComposeCountingIdlingResource.kt) - Compose UI test integration
 
 ## Testing by Layer
 
@@ -312,18 +380,18 @@ fun setup() {
 
 **Screen Object Pattern** (Kaspresso-inspired):
 ```kotlin
-// Screen object
-class MainTestScreen(private val composeTestRule: ComposeContentTestRule) {
+// Screen object (multiplatform - uses ComposeUiTest)
+class MainTestScreen(private val composeUiTest: ComposeUiTest) {
     val fabSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithContentDescription("Create Note")
+        get() = composeUiTest.onNodeWithContentDescription("Create Note")
     
     fun screen(block: MainTestScreen.() -> Unit) = apply(block)
 }
 
-// Test case
+// Test case (multiplatform)
 class FeatureTestCase(
-    composeTestRule: ComposeContentTestRule
-) : BaseTestCase(composeTestRule) {
+    composeUiTest: ComposeUiTest
+) : BaseTestCase(composeUiTest) {
     
     override fun invoke() = runTest {
         mainTestScreen {
@@ -332,6 +400,8 @@ class FeatureTestCase(
     }
 }
 ```
+
+**Note**: Screen objects and test cases in `ui/test` use the multiplatform `ComposeUiTest` API. For JVM platforms, `AbstractJvmUiTests` in `ui/test-jvm` bridges `ComposeContentTestRule` to `ComposeUiTest`.
 
 ## Testing Patterns
 
@@ -371,9 +441,9 @@ Test locale switching and localization:
 
 ```kotlin
 class LocaleTestCase(
-    composeTestRule: ComposeContentTestRule,
+    composeUiTest: ComposeUiTest,
     private val pressBack: () -> Unit
-) : BaseTestCase(composeTestRule) {
+) : BaseTestCase(composeUiTest) {
     
     private val localeInteractor: LocaleInteractor by lazy {
         get(LocaleInteractor::class.java)
@@ -390,7 +460,7 @@ class LocaleTestCase(
         
         // Verify localized strings
         val settingsText = runBlocking { getString(Res.string.settings) }
-        composeTestRule.onNodeWithText(settingsText).assertIsDisplayed()
+        composeUiTest.onNodeWithText(settingsText).assertIsDisplayed()
         
         // Test language dialog
         settingsTestScreen {
@@ -399,10 +469,12 @@ class LocaleTestCase(
         
         // Verify language options
         val chooseLanguageText = runBlocking { getString(Res.string.choose_language) }
-        composeTestRule.onNodeWithText(chooseLanguageText).assertIsDisplayed()
+        composeUiTest.onNodeWithText(chooseLanguageText).assertIsDisplayed()
     }
 }
 ```
+
+**Note**: This test case is in `ui/test` module and uses the multiplatform `ComposeUiTest` API, enabling it to run on all platforms.
 
 **Android**: Locale changes via `LocaleInteractor` update system locale
 **Desktop/JVM**: Locale changes via `Locale.setDefault()`
@@ -457,6 +529,30 @@ class FakeNoteDAO : NoteDAO {
         notes.find { it.id == id }
 }
 ```
+
+## Navigation Testing
+
+### Testing Navigation Behavior
+
+Navigation testing verifies that the `Router` implementation correctly prevents duplicate navigation using `launchSingleTop`. This is especially important for dialogs which can stack if navigated to multiple times.
+
+**Location**: [`ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt`](ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt)
+
+**Pattern**: Abstract base class with platform-specific implementations
+
+**Platform Implementations**:
+- **Android**: [`app/android/src/androidTest/java/com/softartdev/notedelight/ui/AndroidNavTest.kt`](app/android/src/androidTest/java/com/softartdev/notedelight/ui/AndroidNavTest.kt)
+- **Desktop**: [`app/desktop/src/jvmTest/kotlin/com/softartdev/notedelight/ui/DesktopNavTest.kt`](app/desktop/src/jvmTest/kotlin/com/softartdev/notedelight/ui/DesktopNavTest.kt)
+
+**Key Tests**:
+1. `routerLaunchSingleTopTest()` verifies that `Router.navigate()` (which uses `launchSingleTop = true` in [`RouterImpl.kt:40`](ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/navigation/RouterImpl.kt)) prevents duplicate navigation
+2. `navControllerLaunchDoubleTopTest()` demonstrates the difference - direct `NavController.navigate()` without `launchSingleTop` creates duplicates
+
+**Why This Matters**:
+- Prevents duplicate dialogs when navigation is triggered multiple times (e.g., by `retryUntilDisplayed` in `SettingPasswordTestCase`)
+- Ensures `launchSingleTop = true` is correctly implemented in `RouterImpl.navigate()`
+- Validates navigation behavior across platforms
+- Provides a unit-level test that's faster and more reliable than UI tests
 
 ## Testing Tools
 
@@ -579,6 +675,10 @@ node.assertTextContains("partial")
 ./gradlew :core:domain:test       # Specific module
 ./gradlew :app:android:connectedCheck  # Android UI tests
 ./gradlew :app:desktop:jvmTest    # Desktop tests
+./gradlew :ui:test:jvmTest        # Multiplatform UI tests (JVM)
+./gradlew :ui:test:iosSimulatorArm64Test  # Multiplatform UI tests (iOS)
+./gradlew :ui:test:connectedAndroidTest  # Multiplatform UI tests (Android)
+./gradlew :ui:test:wasmJsTest     # Multiplatform UI tests (Web)
 ```
 
 ### IDE

@@ -44,6 +44,10 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+const val SIGN_IN_PASSWORD_LABEL_TAG = "SIGN_IN_PASSWORD_FIELD_LABEL_TAG"
+const val SIGN_IN_PASSWORD_VISIBILITY_TAG = "SIGN_IN_PASSWORD_FIELD_VISIBILITY_TAG"
+const val SIGN_IN_PASSWORD_FIELD_TAG = "SIGN_IN_PASSWORD_FIELD_TAG"
+
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel) {
     val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
@@ -101,6 +105,9 @@ fun SignInScreenBody(
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Go,
                 keyboardActions = KeyboardActions { onAction(SignInAction.OnSignInClick(passwordState.value)) },
+                labelTag = SIGN_IN_PASSWORD_LABEL_TAG,
+                visibilityTag = SIGN_IN_PASSWORD_VISIBILITY_TAG,
+                fieldTag = SIGN_IN_PASSWORD_FIELD_TAG,
             )
             Button(
                 modifier = Modifier

@@ -52,6 +52,7 @@ Level 3 (Depends on presentation/data):
 └── core:test
 
 Level 4 (Integration):
+├── ui:test
 ├── ui:test-jvm
 └── app:ios-kit
 
@@ -509,7 +510,8 @@ Let Kotlin's type system guide you:
 ### Read Tests
 Tests often show how to use code correctly. Look at:
 - `core/presentation/src/androidUnitTest/` for ViewModel examples
-- `ui/test-jvm/src/main/kotlin/ui/cases/` for UI test examples
+- `ui/test/src/commonMain/kotlin/ui/cases/` for multiplatform UI test examples
+- `ui/test-jvm/src/main/kotlin/` for JVM-specific test utilities
 
 ## Getting Unstuck
 

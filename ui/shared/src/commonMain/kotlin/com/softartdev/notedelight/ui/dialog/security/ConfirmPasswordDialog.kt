@@ -19,6 +19,7 @@ import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusDirection.Companion.Down
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmAction
@@ -32,7 +33,6 @@ import notedelight.ui.shared.generated.resources.confirm_password
 import notedelight.ui.shared.generated.resources.confirm_password_dialog_subtitle
 import notedelight.ui.shared.generated.resources.confirm_password_dialog_title
 import notedelight.ui.shared.generated.resources.enter_password
-import notedelight.ui.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -51,6 +51,7 @@ fun ShowConfirmPasswordDialog(
     result: ConfirmResult,
     onAction: (action: ConfirmAction) -> Unit = {}
 ) = AlertDialog(
+    modifier = Modifier.testTag(CONFIRM_PASSWORD_DIALOG_TAG),
     title = { Text(text = stringResource(Res.string.confirm_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
@@ -66,7 +67,10 @@ fun ShowConfirmPasswordDialog(
                 contentDescription = stringResource(Res.string.enter_password),
                 passwordContentType = ContentType.NewPassword,
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(Down) }),
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                labelTag = CONFIRM_PASSWORD_DIALOG_LABEL_TAG,
+                visibilityTag = CONFIRM_PASSWORD_DIALOG_VISIBILITY_TAG,
+                fieldTag = CONFIRM_PASSWORD_DIALOG_FIELD_TAG
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
@@ -77,11 +81,14 @@ fun ShowConfirmPasswordDialog(
                 contentDescription = stringResource(Res.string.confirm_password),
                 passwordContentType = ContentType.NewPassword,
                 keyboardActions = KeyboardActions { onAction(ConfirmAction.OnConfirmClick) },
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                labelTag = CONFIRM_PASSWORD_DIALOG_REPEAT_LABEL_TAG,
+                visibilityTag = CONFIRM_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG,
+                fieldTag = CONFIRM_PASSWORD_DIALOG_REPEAT_FIELD_TAG
             )
         }
     },
-    confirmButton = { Button(onClick = { onAction(ConfirmAction.OnConfirmClick) }) { Text(stringResource(Res.string.yes)) } },
+    confirmButton = { PasswordSaveButton(tag = CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG, onClick = { onAction(ConfirmAction.OnConfirmClick) }) },
     dismissButton = { Button(onClick = { onAction(ConfirmAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = { onAction(ConfirmAction.Cancel) }
 )

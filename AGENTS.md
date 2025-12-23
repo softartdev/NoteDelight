@@ -9,7 +9,7 @@
 
 ### Project Structure & Module Organization
 - Core: `core/domain`, `core/presentation`, `core/data/db-sqldelight` (default), `core/data/db-room` (optional), `core/test`.
-- UI: `ui/shared` (common Compose code and resources), `ui/test-jvm` (JVM Compose UI test utilities).
+- UI: `ui/shared` (common Compose code and resources), `ui/test` (multiplatform Compose UI tests), `ui/test-jvm` (JVM-specific UI test utilities).
 - Apps: `app/android`, `app/desktop`, `app/web`, `app/ios-kit` (CocoaPods framework), `app/iosApp` (Xcode project).
 - Tooling: `build-logic` (Gradle conventions), `thirdparty` (vendored modules), `gradle/libs.versions.toml` (versions).
 - Switch DB module via `gradle.properties` key `CORE_DATA_DB_MODULE`.

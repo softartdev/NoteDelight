@@ -19,37 +19,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.softartdev.notedelight.util.runBlockingAll
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.enter_password
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-private const val PASSWORD_LABEL_TAG = "PASSWORD_LABEL_TAG"
-private const val PASSWORD_VISIBILITY_TAG = "PASSWORD_VISIBILITY_TAG"
-private const val PASSWORD_FIELD_TAG = "PASSWORD_FIELD_TAG"
-
-fun StringResource.descTagTriple(): Triple<String, String, String> = this
-    .let { runBlockingAll { getString(it) } }
-    .let(String::descTagTriple)
-
-fun String.descTagTriple(): Triple<String, String, String> = Triple(
-    first = "${this}_$PASSWORD_LABEL_TAG",
-    second = "${this}_$PASSWORD_VISIBILITY_TAG",
-    third = "${this}_$PASSWORD_FIELD_TAG"
-)
-
-@Composable
-fun rememberTagTriple(desc: String): Triple<String, String, String> =
-    remember(desc, desc::descTagTriple)
 
 @Composable
 fun PasswordField(
@@ -61,6 +41,9 @@ fun PasswordField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     contentDescription: String = stringResource(Res.string.enter_password),
     passwordContentType: ContentType = ContentType.Password,
+    labelTag: String,
+    visibilityTag: String,
+    fieldTag: String,
 ) = PasswordField(
     modifier = modifier,
     password = passwordState.value,
@@ -71,6 +54,9 @@ fun PasswordField(
     keyboardActions = keyboardActions,
     contentDescription = contentDescription,
     passwordContentType = passwordContentType,
+    labelTag = labelTag,
+    visibilityTag = visibilityTag,
+    fieldTag = fieldTag,
 )
 
 @Composable
@@ -84,12 +70,17 @@ fun PasswordField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     contentDescription: String = stringResource(Res.string.enter_password),
     passwordContentType: ContentType = ContentType.Password,
+    labelTag: String,
+    visibilityTag: String,
+    fieldTag: String,
 ) {
     val labelState by remember(label, isError) { mutableStateOf(label) } // workaround for ui-tests
-    val (labelTag, visibilityTag, fieldTag) = rememberTagTriple(contentDescription)
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     TextField(
-        modifier = modifier.testTag(fieldTag).semantics { contentType = passwordContentType },
+        modifier = modifier.testTag(fieldTag).semantics {
+            contentType = passwordContentType
+            this@semantics.contentDescription = contentDescription
+        },
         label = { Text(labelState, modifier = Modifier.testTag(labelTag)) },
         leadingIcon = {
             IconButton(onClick = { passwordVisibility = !passwordVisibility },
@@ -113,4 +104,8 @@ fun PasswordField(
 
 @Preview
 @Composable
-fun PreviewPasswordField() = PasswordField()
+fun PreviewPasswordField() = PasswordField(
+    labelTag = "PREVIEW_PASSWORD_FIELD_LABEL_TAG",
+    visibilityTag = "PREVIEW_PASSWORD_FIELD_VISIBILITY_TAG",
+    fieldTag = "PREVIEW_PASSWORD_FIELD_FIELD_TAG",
+)

@@ -3,25 +3,61 @@
 # Excludes all iOS linking tasks to speed up builds on non-iOS development
 
 ./gradlew build \
-  -x :app:ios-kit:linkPodDebugFrameworkIosArm64 \
-  -x :app:ios-kit:linkPodReleaseFrameworkIosArm64 \
-  -x :app:ios-kit:linkPodDebugFrameworkIosSimulatorArm64 \
+  -x :app:ios-kit:linkDebugTestIosArm64 \
   -x :app:ios-kit:linkDebugTestIosSimulatorArm64 \
+  -x :app:ios-kit:linkIosArm64 \
+  -x :app:ios-kit:linkIosSimulatorArm64 \
+  -x :app:ios-kit:linkPodDebugFrameworkIosArm64 \
+  -x :app:ios-kit:linkPodDebugFrameworkIosSimulatorArm64 \
+  -x :app:ios-kit:linkPodIosArm64 \
+  -x :app:ios-kit:linkPodIosSimulatorArm64 \
+  -x :app:ios-kit:linkPodReleaseFrameworkIosArm64 \
   -x :app:ios-kit:linkPodReleaseFrameworkIosSimulatorArm64 \
-  -x :core:domain:linkDebugTestIosSimulatorArm64 \
-  -x :core:presentation:linkDebugTestIosSimulatorArm64 \
-  -x :core:test:linkDebugTestIosSimulatorArm64 \
-  -x :ui:shared:linkPodDebugFrameworkIosArm64 \
-  -x :ui:shared:linkPodReleaseFrameworkIosArm64 \
-  -x :ui:shared:linkPodDebugFrameworkIosSimulatorArm64 \
-  -x :ui:shared:linkPodReleaseFrameworkIosSimulatorArm64 \
-  -x :ui:shared:linkDebugTestIosSimulatorArm64 \
+  -x :core:data:db-sqldelight:linkDebugTestIosArm64 \
+  -x :core:data:db-sqldelight:linkDebugTestIosSimulatorArm64 \
+  -x :core:data:db-sqldelight:linkIosArm64 \
+  -x :core:data:db-sqldelight:linkIosSimulatorArm64 \
   -x :core:data:db-sqldelight:linkPodDebugFrameworkIosArm64 \
   -x :core:data:db-sqldelight:linkPodDebugFrameworkIosSimulatorArm64 \
+  -x :core:data:db-sqldelight:linkPodIosArm64 \
+  -x :core:data:db-sqldelight:linkPodIosSimulatorArm64 \
   -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosArm64 \
   -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosSimulatorArm64 \
-  -x :core:data:db-sqldelight:linkDebugTestIosSimulatorArm64 \
+  -x :core:data:file-explorer:linkDebugTestIosArm64 \
   -x :core:data:file-explorer:linkDebugTestIosSimulatorArm64 \
+  -x :core:data:file-explorer:linkIosArm64 \
+  -x :core:data:file-explorer:linkIosSimulatorArm64 \
+  -x :core:domain:linkDebugTestIosArm64 \
+  -x :core:domain:linkDebugTestIosSimulatorArm64 \
+  -x :core:domain:linkIosArm64 \
+  -x :core:domain:linkIosSimulatorArm64 \
+  -x :core:presentation:linkDebugTestIosArm64 \
+  -x :core:presentation:linkDebugTestIosSimulatorArm64 \
+  -x :core:presentation:linkIosArm64 \
+  -x :core:presentation:linkIosSimulatorArm64 \
+  -x :core:test:linkDebugTestIosArm64 \
+  -x :core:test:linkDebugTestIosSimulatorArm64 \
+  -x :core:test:linkIosArm64 \
+  -x :core:test:linkIosSimulatorArm64 \
+  -x :thirdparty:androidx:paging:compose:linkDebugTestIosArm64 \
   -x :thirdparty:androidx:paging:compose:linkDebugTestIosSimulatorArm64 \
-  -x :thirdparty:app:cash:sqldelight:paging3:linkDebugTestIosSimulatorArm64
-
+  -x :thirdparty:androidx:paging:compose:linkIosArm64 \
+  -x :thirdparty:androidx:paging:compose:linkIosSimulatorArm64 \
+  -x :thirdparty:app:cash:sqldelight:paging3:linkDebugTestIosArm64 \
+  -x :thirdparty:app:cash:sqldelight:paging3:linkDebugTestIosSimulatorArm64 \
+  -x :thirdparty:app:cash:sqldelight:paging3:linkIosArm64 \
+  -x :thirdparty:app:cash:sqldelight:paging3:linkIosSimulatorArm64 \
+  -x :ui:shared:linkDebugTestIosArm64 \
+  -x :ui:shared:linkDebugTestIosSimulatorArm64 \
+  -x :ui:shared:linkIosArm64 \
+  -x :ui:shared:linkIosSimulatorArm64 \
+  -x :ui:shared:linkPodDebugFrameworkIosArm64 \
+  -x :ui:shared:linkPodDebugFrameworkIosSimulatorArm64 \
+  -x :ui:shared:linkPodIosArm64 \
+  -x :ui:shared:linkPodIosSimulatorArm64 \
+  -x :ui:shared:linkPodReleaseFrameworkIosArm64 \
+  -x :ui:shared:linkPodReleaseFrameworkIosSimulatorArm64 \
+  -x :ui:test:linkDebugTestIosArm64 \
+  -x :ui:test:linkDebugTestIosSimulatorArm64 \
+  -x :ui:test:linkIosArm64 \
+  -x :ui:test:linkIosSimulatorArm64

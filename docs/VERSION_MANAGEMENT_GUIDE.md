@@ -118,9 +118,8 @@ The project uses GitHub Actions workflows that are triggered by specific git tag
 
 **Commands to trigger**:
 ```bash
-# Create and push Android release tag
+# Create Android release tag
 git tag android/8.4.2
-git push origin android/8.4.2
 ```
 
 **What it does**:
@@ -136,9 +135,8 @@ git push origin android/8.4.2
 
 **Commands to trigger**:
 ```bash
-# Create and push Desktop release tag
+# Create Desktop release tag
 git tag desktop/4.0.0
-git push origin desktop/4.0.0
 ```
 
 **What it does**:
@@ -153,9 +151,8 @@ git push origin desktop/4.0.0
 
 **Commands to trigger**:
 ```bash
-# Create and push iOS release tag
+# Create iOS release tag
 git tag ios/4.0.0
-git push origin ios/4.0.0
 ```
 
 **What it does**:
@@ -163,6 +160,100 @@ git push origin ios/4.0.0
 - Runs tests
 - Publishes to App Store via Fastlane
 - Archives build artifacts and logs
+
+## Changelog Update Process
+
+The project maintains a `CHANGELOG.md` file that documents all notable changes. This file follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
+
+### When to Update the Changelog
+
+1. **Before Release**: Create a new version section with the current date and add all changes since the last release
+2. **During Development**: Keep track of changes in commit messages for the next release
+
+### Changelog Structure
+
+The changelog uses the following categories:
+- **Features**: New features or functionality
+- **Bug Fixes**: Bug fixes and corrections
+- **Refactoring**: Code refactoring without changing functionality
+- **Documentation**: Documentation updates
+- **Tests**: Test additions or improvements
+- **Chores**: Maintenance tasks, dependency updates, etc.
+- **Other**: Changes that don't fit other categories
+
+### How to Update the Changelog
+
+#### Step 1: Gather Changes Since Last Release
+
+Get all commits since the last tag:
+
+```bash
+# Get commits since last tag
+git log --pretty=format:"%s" --no-merges $(git describe --tags --abbrev=0)..HEAD
+```
+
+#### Step 2: Categorize Commits
+
+Categorize commits based on commit message prefixes:
+- `feat:` → **Features**
+- `fix:` → **Bug Fixes**
+- `refactor:` → **Refactoring**
+- `docs:` → **Documentation**
+- `test:` → **Tests**
+- `chore:` → **Chores**
+
+#### Step 3: Create New Version Section
+
+Add a new version section at the top of `CHANGELOG.md` with the current date:
+
+```markdown
+## [8.4.9] - 2025-12-23
+
+### Features
+- Upgrade Kotlin and dependencies
+- Add test tag for Enter Password dialog
+
+### Bug Fixes
+- Stabilize UI tests with Idling Resources
+
+## [8.4.8] - 2025-12-13
+```
+
+### Example: Complete Changelog Update Workflow
+
+1. **Before release** (create new version section with current date):
+   ```markdown
+   ## [8.4.9] - 2025-12-23
+   
+   ### Features
+   - New authentication feature
+   - Upgrade Kotlin and dependencies
+   
+   ### Bug Fixes
+   - Fix crash on login screen
+   
+   ## [8.4.8] - 2025-12-13
+   ```
+
+### Automated Changelog Generation
+
+You can generate changelog entries from git commits:
+
+```bash
+# Get commits since last tag
+git log --pretty=format:"%s" --no-merges $(git describe --tags --abbrev=0)..HEAD
+
+# Categorize and format manually based on commit prefixes
+```
+
+### Best Practices
+
+1. **Be descriptive**: Write clear, user-facing descriptions
+2. **Group related changes**: Combine similar changes in one entry
+3. **Remove duplicates**: Don't duplicate entries when moving from Unreleased
+4. **Include breaking changes**: Clearly mark breaking changes if any
+5. **Link to issues/PRs**: Reference issue numbers or PRs when relevant
+6. **Update before tagging**: Always update changelog before creating release tags
 
 ## Complete Version Update Workflow
 
@@ -187,25 +278,37 @@ Update versions in all platform files:
    CFBundleShortVersionString = "4.0.1"
    ```
 
-### Step 2: Commit Changes
+### Step 2: Update Changelog
 
-```bash
-git add app/android/build.gradle.kts app/desktop/build.gradle.kts app/iosApp/iosApp.xcodeproj/project.pbxproj app/iosApp/iosApp/Info.plist
-git commit -m "chore: bump version to 8.4.3 (Android), 4.0.1 (Desktop/iOS)"
+Create a new version section at the top of `CHANGELOG.md` with the current date and all changes since the last release:
+
+```markdown
+## [8.4.9] - 2025-12-23
+
+### Features
+- Upgrade Kotlin and dependencies
+- Add test tag for Enter Password dialog
+
+### Bug Fixes
+- Stabilize UI tests with Idling Resources
+
+## [8.4.8] - 2025-12-13
 ```
 
-### Step 3: Create and Push Tags
+### Step 3: Commit Changes
+
+```bash
+git add app/android/build.gradle.kts app/desktop/build.gradle.kts app/iosApp/iosApp.xcodeproj/project.pbxproj app/iosApp/iosApp/Info.plist CHANGELOG.md
+git commit -m "chore: bump version to 8.4.9 (Android), 4.0.1 (Desktop/iOS)"
+```
+
+### Step 4: Create and Push Tags
 
 ```bash
 # Create tags for each platform
 git tag android/8.4.3
 git tag desktop/4.0.1
 git tag ios/4.0.1
-
-# Push all tags
-git push origin android/8.4.3
-git push origin desktop/4.0.1
-git push origin ios/4.0.1
 ```
 
 ## Version Numbering Guidelines
@@ -360,6 +463,7 @@ MARKETING_VERSION = 8.4.2;  // ✅ Same as others
 - `app/desktop/build.gradle.kts` - Desktop version
 - `app/iosApp/iosApp.xcodeproj/project.pbxproj` - iOS project version
 - `app/iosApp/iosApp/Info.plist` - iOS bundle version
+- `CHANGELOG.md` - Release notes and change history
 
 ### Tag Patterns
 - `android/*` - Triggers Android workflow
@@ -368,14 +472,14 @@ MARKETING_VERSION = 8.4.2;  // ✅ Same as others
 
 ### Commands
 ```bash
-# Update and commit
-git add app/*/build.gradle.kts app/iosApp/iosApp.xcodeproj/project.pbxproj app/iosApp/iosApp/Info.plist
+# Update and commit (including changelog)
+git add app/*/build.gradle.kts app/iosApp/iosApp.xcodeproj/project.pbxproj app/iosApp/iosApp/Info.plist CHANGELOG.md
 git commit -m "chore: bump version to X.Y.Z"
 
-# Create and push tags
-git tag android/X.Y.Z && git push origin android/X.Y.Z
-git tag desktop/X.Y.Z && git push origin desktop/X.Y.Z
-git tag ios/X.Y.Z && git push origin ios/X.Y.Z
+# Create tags
+git tag android/X.Y.Z
+git tag desktop/X.Y.Z
+git tag ios/X.Y.Z
 ```
 
 This guide ensures AI agents can reliably update versions and trigger CI/CD workflows across all platforms in the NoteDelight project.

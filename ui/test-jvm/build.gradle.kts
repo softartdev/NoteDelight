@@ -12,6 +12,7 @@ java {
 }
 
 dependencies {
+    implementation(projects.ui.test)
     implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
     implementation(projects.core.presentation)
@@ -19,6 +20,8 @@ dependencies {
     implementation(projects.ui.shared)
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.runtime.testing)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.turbine)
@@ -27,5 +30,6 @@ dependencies {
     implementation(compose.desktop.uiTestJUnit4)
     implementation(compose.desktop.currentOs)
     implementation(libs.material.theme.prefs)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.kermit)
 }

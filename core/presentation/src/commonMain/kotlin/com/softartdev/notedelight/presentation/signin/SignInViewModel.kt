@@ -7,6 +7,7 @@ import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
+import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ class SignInViewModel(
     }
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.value = SignInResult.ShowProgress
         try {
             mutableStateFlow.value = when {
@@ -44,6 +46,8 @@ class SignInViewModel(
             autofillManager?.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
             mutableStateFlow.value = SignInResult.ShowSignInForm
+        } finally {
+            CountingIdlingRes.decrement()
         }
     }
 }

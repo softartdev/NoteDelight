@@ -12,6 +12,7 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
+import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -58,6 +59,7 @@ class SettingsViewModel(
     private fun changeLanguage() = router.navigate(route = AppNavGraph.LanguageDialog)
 
     private fun checkEncryption() = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             mutableStateFlow.update { result ->
@@ -70,10 +72,12 @@ class SettingsViewModel(
             handleError(e) { "error checking encryption" }
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 
     private fun changeEncryption(checked: Boolean) = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             when {
@@ -87,10 +91,12 @@ class SettingsViewModel(
             handleError(e) { "error changing encryption" }
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 
     private fun changePassword() = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             when {
@@ -101,10 +107,12 @@ class SettingsViewModel(
             handleError(e) { "error changing password" }
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 
     private fun showCipherVersion() = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
@@ -113,10 +121,12 @@ class SettingsViewModel(
             handleError(e) { "error checking sqlcipher version" }
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 
     private fun showDatabasePath() = viewModelScope.launch {
+        CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             val dbPath: String = safeRepo.dbPath
@@ -125,6 +135,7 @@ class SettingsViewModel(
             handleError(e) { "error getting database path" }
         } finally {
             mutableStateFlow.update(SecurityResult::hideLoading)
+            CountingIdlingRes.decrement()
         }
     }
 

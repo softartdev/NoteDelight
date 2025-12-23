@@ -13,10 +13,10 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.testing.TestLifecycleOwner
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.platformLogWriter
 import com.softartdev.notedelight.App
-import com.softartdev.notedelight.TestLifecycleOwner
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiTestModules
@@ -36,13 +36,14 @@ import org.koin.core.context.unloadKoinModules
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
 
-class DesktopUiTests : AbstractUiTests() {
+class DesktopUiTests : AbstractJvmUiTests() {
 
     @get:Rule
     override val composeTestRule: ComposeContentTestRule = createComposeRule()
 
     @Before
     override fun setUp() = runTest {
+        super.setUp()
         Logger.setLogWriters(platformLogWriter())
         when (GlobalContext.getKoinApplicationOrNull()) {
             null -> startKoin {
@@ -57,7 +58,6 @@ class DesktopUiTests : AbstractUiTests() {
         safeRepo.buildDbIfNeed()
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
-        super.setUp()
         val lifecycleOwner = TestLifecycleOwner(
             initialState = Lifecycle.State.RESUMED,
             coroutineDispatcher = Dispatchers.Swing

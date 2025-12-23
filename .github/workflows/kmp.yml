@@ -50,7 +50,6 @@ jobs:
 
   android_ui_test_job:
     name: Android UI-tests on emulator
-    needs: build_job
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:

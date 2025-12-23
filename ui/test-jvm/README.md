@@ -2,95 +2,103 @@
 
 ## Overview
 
-The `ui:test-jvm` module provides a **comprehensive UI testing framework** for Compose Multiplatform applications, specifically designed for **JVM-based platforms** (Android and Desktop). The testing approach is **inspired by the Kaspresso library**, using screen objects, test cases, and fluent DSL for readable and maintainable UI tests.
+The `ui:test-jvm` module provides **JVM-specific UI testing utilities** for Compose Multiplatform applications, specifically designed for **JVM-based platforms** (Android and Desktop). This module depends on `ui:test` which contains the multiplatform test framework with screen objects, test cases, and fluent DSL inspired by the Kaspresso library.
 
 ## Purpose
 
-- Provide reusable UI testing infrastructure for Android and Desktop
-- Implement **Kaspresso-inspired** testing patterns
-- Define screen objects (Page Object Model)
-- Create reusable test cases for common user flows
-- Enable consistent UI testing across JVM platforms
-- Support future expansion to other platforms
+- Provide JVM-specific test utilities and abstractions
+- Bridge between JVM-specific Compose Test APIs (`ComposeContentTestRule`) and multiplatform APIs (`ComposeUiTest`)
+- Implement platform-specific `runOnUiThread` for JVM platforms
+- Provide JVM-specific test setup and lifecycle management
+- Enable Android and Desktop tests to use the multiplatform test framework from `ui:test`
 
 ## Architecture
 
 ```
-ui:test-jvm (UI Testing Framework - Kaspresso-inspired)
+ui:test-jvm (JVM-Specific UI Test Utilities)
     ├── src/
     │   └── main/
     │       └── kotlin/
     │           └── com/softartdev/notedelight/
     │               ├── ui/
-    │               │   ├── AbstractUiTests.kt         # Base test class
-    │               │   ├── BaseTestCase.kt            # Base test case
-    │               │   ├── cases/                     # Reusable test cases
-    │               │   │   ├── CrudTestCase.kt
-    │               │   │   ├── EditTitleAfterCreateTestCase.kt
-    │               │   │   ├── EditTitleAfterSaveTestCase.kt
-    │               │   │   ├── FlowAfterCryptTestCase.kt
-    │               │   │   ├── PrepopulateDbTestCase.kt
-    │               │   │   ├── SettingPasswordTestCase.kt
-    │               │   │   └── SignInTestCase.kt
-    │               │   └── screen/                    # Screen objects (Page Objects)
-    │               │       ├── MainTestScreen.kt
-    │               │       ├── NoteScreen.kt
-    │               │       ├── SettingsTestScreen.kt
-    │               │       ├── SignInScreen.kt
-    │               │       └── dialog/
-    │               │           ├── ChangePasswordDialog.kt
-    │               │           ├── ConfirmPasswordDialog.kt
-    │               │           ├── EditTitleDialog.kt
-    │               │           ├── EnterPasswordDialog.kt
-    │               │           └── CommonDialog.kt
-    │               ├── di/
-    │               │   └── uiTestModules.kt           # Test DI modules
-    │               ├── DbTestEncryptor.kt             # Database test utilities
-    │               ├── TestLifecycleOwner.kt          # Lifecycle for tests
-    │               ├── UiThreadRouter.kt              # Test navigation
-    │               ├── ext.kt                         # Extension functions
-    │               └── runOnUiThread.kt               # UI thread utilities
+    │               │   ├── AbstractJvmUiTests.kt      # JVM bridge to AbstractUITests
+    │               │   └── AbstractNavigationTest.kt   # Navigation testing utilities
+    │               ├── ComposeTestNodeProvider.kt     # JVM-specific test node provider
+    │               └── (depends on ui:test for test cases, screen objects, etc.)
+    └── build.gradle.kts
+
+ui:test (Multiplatform UI Test Framework - Kaspresso-inspired)
+    ├── src/
+    │   ├── commonMain/
+    │   │   └── kotlin/
+    │   │       └── com/softartdev/notedelight/
+    │   │           ├── ui/
+    │   │           │   ├── AbstractUITests.kt         # Base test class (multiplatform)
+    │   │           │   ├── BaseTestCase.kt            # Base test case
+    │   │           │   ├── cases/                     # Reusable test cases
+    │   │           │   └── screen/                    # Screen objects (Page Objects)
+    │   │           ├── di/
+    │   │           │   └── uiTestModules.kt           # Test DI modules
+    │   │           ├── DbTestEncryptor.kt            # Database test utilities
+    │   │           ├── UiThreadRouter.kt              # Test navigation
+    │   │           └── ext.kt                         # Extension functions
+    │   ├── jvmMain/
+    │   │   └── kotlin/
+    │   │       └── runOnUiThread.jvm.kt              # JVM UI thread implementation
+    │   ├── androidMain/
+    │   │   └── kotlin/
+    │   │       └── runOnUiThread.android.kt           # Android UI thread implementation
+    │   └── commonTest/
+    │       └── kotlin/
+    │           └── CommonUiTests.kt                  # Shared test implementations
     └── build.gradle.kts
 ```
 
-## Kaspresso-Inspired Design
+## Relationship to ui:test Module
 
-### What is Kaspresso?
+This module **depends on** `ui:test`, which contains the multiplatform test framework. The `ui:test` module provides:
 
-[Kaspresso](https://github.com/KasperskyLab/Kaspresso) is a popular Android UI testing framework that provides:
-- **Fluent DSL** for readable tests
-- **Screen objects** (Page Object Model)
-- **Test cases** for reusable scenarios
-- **Automatic flakiness handling**
-- **Readable test reports**
+- **Screen Objects**: Page Object Model for screens (in `commonMain`)
+- **Test Cases**: Reusable test scenarios (in `commonMain`)
+- **Fluent DSL**: Readable, expressive test syntax
+- **Abstract Base**: `AbstractUITests` - multiplatform test base class
+- **Platform Support**: Works on Android, iOS, JVM Desktop, and Web
 
-### Our Adaptation
-
-This module adapts Kaspresso's principles for **Compose Multiplatform**:
-
-1. **Screen Objects**: Page Object Model for screens
-2. **Test Cases**: Reusable test scenarios
-3. **Fluent DSL**: Readable, expressive test syntax
-4. **Abstract Base**: Common test infrastructure
-5. **Platform Support**: Works on Android and Desktop (with future iOS/Web support)
+This `ui:test-jvm` module provides:
+- **JVM Bridge**: `AbstractJvmUiTests` - bridges JVM-specific `ComposeContentTestRule` to multiplatform `ComposeUiTest`
+- **JVM Utilities**: Platform-specific test utilities for Android and Desktop
+- **Compose Test Node Provider**: JVM-specific implementation for test node access
 
 ## Key Components
 
-### Abstract Test Base (`AbstractUiTests.kt`)
+### Abstract JVM Test Base (`AbstractJvmUiTests.kt`)
 
-Base class for all UI tests:
+JVM-specific bridge class that extends the multiplatform `AbstractUITests`:
 
 ```kotlin
-abstract class AbstractUiTests {
+abstract class AbstractJvmUiTests : AbstractUITests() {
     abstract val composeTestRule: ComposeContentTestRule
+    override val composeUiTest: ComposeUiTest by lazy { reflect(composeTestRule) }
+}
+```
+
+This class bridges the JVM-specific `ComposeContentTestRule` (from Compose Desktop/Android) to the multiplatform `ComposeUiTest` API used by `ui:test` module.
+
+### Multiplatform Test Base (`AbstractUITests.kt` in `ui:test`)
+
+The actual base class is in `ui:test` module:
+
+```kotlin
+abstract class AbstractUITests {
+    abstract val composeUiTest: ComposeUiTest
     
     // Lifecycle
     open fun setUp() = Unit
     open fun tearDown() = Unit
     
     // Test cases (can be overridden per platform)
-    open fun crudNoteTest() = CrudTestCase(composeTestRule).invoke()
-    open fun editTitleAfterCreateTest() = EditTitleAfterCreateTestCase(composeTestRule).invoke()
+    open fun crudNoteTest() = CrudTestCase(composeUiTest).invoke()
+    open fun editTitleAfterCreateTest() = EditTitleAfterCreateTestCase(composeUiTest).invoke()
     // ... more test cases
     
     // Platform-specific actions
@@ -99,182 +107,38 @@ abstract class AbstractUiTests {
 }
 ```
 
-### Screen Objects (`screen/`)
+### Screen Objects and Test Cases
 
-**Page Object Model** for each screen:
+Screen objects and test cases are now in the `ui:test` module (see [ui/test/README.md](../test/README.md)). They use the multiplatform `ComposeUiTest` API and can run on all platforms.
+
+**Note**: Screen objects and test cases have been moved to `ui/test/src/commonMain/kotlin/` to enable multiplatform testing. This module (`ui:test-jvm`) provides JVM-specific utilities and bridges.
+
+### Compose Test Node Provider (`ComposeTestNodeProvider.kt`)
+
+JVM-specific utility for accessing test nodes:
 
 ```kotlin
-class MainTestScreen(private val composeTestRule: ComposeContentTestRule) {
-    val fabSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithContentDescription("Create Note")
-    
-    val noteListItemSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithText(noteItemTitleText)
-    
-    val emptyResultLabelSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithText("No notes yet")
-    
-    // Screen context for fluent DSL
-    fun screen(block: MainTestScreen.() -> Unit) = apply(block)
-    
-    companion object {
-        var noteItemTitleText: String = ""
+object ComposeTestNodeProvider {
+    fun getComposeUiTest(composeTestRule: ComposeContentTestRule): ComposeUiTest {
+        // Reflection-based bridge to access ComposeUiTest from ComposeContentTestRule
     }
 }
 ```
 
-#### Available Screen Objects
+This enables the bridge between JVM-specific test APIs and the multiplatform test framework.
 
-1. **MainTestScreen**: Notes list screen
-2. **NoteScreen**: Note editor screen
-3. **SignInScreen**: Authentication screen
-4. **SettingsTestScreen**: Settings screen
-5. **Dialog Screens**:
-   - `CommonDialog`: Generic dialogs
-   - `EditTitleDialog`: Title editing
-   - `EnterPasswordDialog`: Enter password
-   - `ConfirmPasswordDialog`: Confirm password
-   - `ChangePasswordDialog`: Change password
+### Navigation Testing (`AbstractNavigationTest.kt`)
 
-### Test Cases (`cases/`)
-
-**Reusable test scenarios** following functional test case pattern:
-
-```kotlin
-class CrudTestCase(
-    composeTestRule: ComposeContentTestRule
-) : () -> Unit, BaseTestCase(composeTestRule) {
-    
-    override fun invoke() = runTest {
-        mainTestScreen {
-            composeTestRule.waitUntilDisplayed(blockSNI = ::fabSNI)
-            fabSNI.performClick()
-            
-            noteScreen {
-                textFieldSNI.performTextInput(actualNoteText)
-                saveNoteMenuButtonSNI.performClick()
-                backButtonSNI.performClick()
-            }
-            
-            noteItemTitleText = actualNoteText
-            composeTestRule.waitUntilDisplayed(blockSNI = ::noteListItemSNI)
-            noteListItemSNI.performClick()
-            
-            noteScreen {
-                deleteNoteMenuButtonSNI.performClick()
-                commonDialog {
-                    yesDialogButtonSNI.performClick()
-                }
-            }
-            
-            composeTestRule.waitUntilDisplayed(blockSNI = ::emptyResultLabelSNI)
-        }
-    }
-}
-```
-
-#### Available Test Cases
-
-1. **CrudTestCase**: Create, Read, Update, Delete note flow
-2. **EditTitleAfterCreateTestCase**: Edit note title immediately after creation
-3. **EditTitleAfterSaveTestCase**: Edit note title after saving
-4. **PrepopulateDbTestCase**: Pre-populate database with test data
-5. **FlowAfterCryptTestCase**: Test encryption/decryption flow
-6. **SettingPasswordTestCase**: Set database password
-7. **SignInTestCase**: Sign in with password
-
-### Fluent DSL Pattern
-
-Tests use **fluent DSL** for readability:
-
-```kotlin
-mainTestScreen {
-    fabSNI.performClick()
-    
-    noteScreen {
-        textFieldSNI.performTextInput("Note content")
-        saveNoteMenuButtonSNI.performClick()
-        
-        commonDialog {
-            yesDialogButtonSNI.performClick()
-        }
-    }
-}
-```
-
-This creates a hierarchical, readable test structure.
-
-### Base Test Case (`BaseTestCase.kt`)
-
-Base class for test cases providing screen access:
-
-```kotlin
-abstract class BaseTestCase(
-    protected val composeTestRule: ComposeContentTestRule
-) {
-    protected fun mainTestScreen(block: MainTestScreen.() -> Unit) =
-        MainTestScreen(composeTestRule).block()
-    
-    protected fun noteScreen(block: NoteScreen.() -> Unit) =
-        NoteScreen(composeTestRule).block()
-    
-    // ... other screen accessors
-}
-```
-
-### Test Utilities
-
-#### Wait Extensions (`ext.kt`)
-
-```kotlin
-fun ComposeContentTestRule.waitUntilDisplayed(
-    timeoutMillis: Long = 5000,
-    blockSNI: () -> SemanticsNodeInteraction
-) {
-    waitUntil(timeoutMillis) {
-        try {
-            blockSNI().assertIsDisplayed()
-            true
-        } catch (e: AssertionError) {
-            false
-        }
-    }
-}
-```
-
-#### Database Test Utilities (`DbTestEncryptor.kt`)
-
-Utilities for testing database encryption:
-
-```kotlin
-object DbTestEncryptor {
-    fun encryptDatabase(password: String)
-    fun decryptDatabase()
-    fun isDatabaseEncrypted(): Boolean
-}
-```
-
-#### UI Thread Utilities (`runOnUiThread.kt`)
-
-Execute actions on UI thread:
-
-```kotlin
-fun runOnUiThread(block: () -> Unit) {
-    // Platform-specific UI thread execution
-}
-```
+JVM-specific navigation testing utilities for verifying navigation behavior across platforms.
 
 ## Platform Support
 
-### Current Platforms
+This module provides JVM-specific utilities for:
 
 - ✅ **Android** - Via AndroidJUnitRunner + Compose Test
 - ✅ **Desktop JVM** - Via Compose Desktop Test
 
-### Future Expansion
-
-- ⚠️ **iOS** - Planned (requires Compose iOS testing support)
-- ⚠️ **Web** - Planned (requires Compose Web testing support)
+**Note**: The multiplatform test framework in `ui:test` supports all platforms (Android, iOS, JVM Desktop, Web). This module provides the JVM-specific bridge and utilities.
 
 ## Usage in Platform Tests
 
@@ -282,7 +146,7 @@ fun runOnUiThread(block: () -> Unit) {
 
 ```kotlin
 @RunWith(AndroidJUnit4::class)
-class AndroidUiTest : AbstractUiTests() {
+class AndroidUiTest : AbstractJvmUiTests() {
     
     @get:Rule
     override val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -297,12 +161,14 @@ class AndroidUiTest : AbstractUiTests() {
     
     @Before
     override fun setUp() {
-        // Setup
+        super.setUp()
+        // Additional setup
     }
     
     @After
     override fun tearDown() {
-        // Teardown
+        super.tearDown()
+        // Additional teardown
     }
     
     @Test
@@ -315,7 +181,7 @@ class AndroidUiTest : AbstractUiTests() {
 ### Desktop Tests (`app/desktop/src/jvmTest/`)
 
 ```kotlin
-class DesktopUiTest : AbstractUiTests() {
+class DesktopUiTest : AbstractJvmUiTests() {
     
     @get:Rule
     override val composeTestRule = createComposeRule()
@@ -330,6 +196,7 @@ class DesktopUiTest : AbstractUiTests() {
     
     @Before
     override fun setUp() {
+        super.setUp()
         composeTestRule.setContent {
             App()
         }
@@ -340,9 +207,12 @@ class DesktopUiTest : AbstractUiTests() {
 }
 ```
 
+**Note**: Tests now extend `AbstractJvmUiTests` which bridges to the multiplatform `AbstractUITests` from `ui:test`.
+
 ## Dependencies
 
 ### Core
+- `ui:test` - **Multiplatform test framework** (screen objects, test cases, base classes)
 - `core:domain` - Domain models
 - `core:data` - Data layer for test database
 - `core:presentation` - ViewModels
@@ -350,60 +220,23 @@ class DesktopUiTest : AbstractUiTests() {
 - `ui:shared` - UI under test
 
 ### Compose Testing
-- `compose.desktop.uiTestJUnit4` - Compose testing framework
+- `compose.desktop.uiTestJUnit4` - Compose testing framework for JVM
 - `compose.desktop.currentOs` - Desktop runtime
 
 ### Testing Frameworks
 - `androidx.lifecycle.common` - Lifecycle
 - `androidx.lifecycle.runtime` - Runtime
+- `androidx.lifecycle.runtime.compose` - Compose lifecycle
+- `androidx.lifecycle.runtime.testing` - Testing lifecycle utilities
 - `koin.core` - Dependency injection
 - `turbine` - Flow testing
-- `napier` - Logging
+- `kermit` - Logging
 
 ## Writing New Tests
 
-### Creating a New Test Case
+**Note**: New test cases and screen objects should be added to the `ui:test` module (in `commonMain`) to enable multiplatform testing. See [ui/test/README.md](../test/README.md) for details.
 
-```kotlin
-class NewFeatureTestCase(
-    composeTestRule: ComposeContentTestRule
-) : () -> Unit, BaseTestCase(composeTestRule) {
-    
-    override fun invoke() = runTest {
-        mainTestScreen {
-            // Navigate to feature
-            settingsButtonSNI.performClick()
-            
-            settingsScreen {
-                // Test feature
-                newFeatureSNI.performClick()
-                
-                // Assert result
-                composeTestRule.waitUntilDisplayed(blockSNI = ::resultSNI)
-                resultSNI.assertIsDisplayed()
-            }
-        }
-    }
-}
-```
-
-### Creating a New Screen Object
-
-```kotlin
-class NewScreen(private val composeTestRule: ComposeContentTestRule) {
-    val titleSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithText("Screen Title")
-    
-    val buttonSNI: SemanticsNodeInteraction
-        get() = composeTestRule.onNodeWithContentDescription("Action Button")
-    
-    fun screen(block: NewScreen.() -> Unit) = apply(block)
-}
-
-// Add to BaseTestCase
-protected fun newScreen(block: NewScreen.() -> Unit) =
-    NewScreen(composeTestRule).block()
-```
+This module (`ui:test-jvm`) is primarily for JVM-specific utilities and bridges. If you need to add JVM-specific test utilities, add them here.
 
 ## AI Agent Guidelines
 
@@ -537,7 +370,8 @@ Button(
 ## Related Modules
 
 - **Used by**: `app:android` (androidTest), `app:desktop` (jvmTest)
-- **Depends on**: `ui:shared`, `core:presentation`, `core:data`, `core:test`
+- **Depends on**: `ui:test` (multiplatform test framework), `ui:shared`, `core:presentation`, `core:data`, `core:test`
+- **Provides**: JVM-specific utilities and bridges for multiplatform tests
 
 ## Resources
 

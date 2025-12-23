@@ -25,7 +25,8 @@ Each module has its own detailed README.md:
 
 #### UI Modules
 - **[ui/shared/README.md](../ui/shared/README.md)** - Shared Compose UI
-- **[ui/test-jvm/README.md](../ui/test-jvm/README.md)** - UI testing framework (Kaspresso-inspired)
+- **[ui/test/README.md](../ui/test/README.md)** - Multiplatform Compose UI tests
+- **[ui/test-jvm/README.md](../ui/test-jvm/README.md)** - JVM-specific UI test utilities (Kaspresso-inspired)
 
 #### App Modules
 - **[app/android/README.md](../app/android/README.md)** - Android application
@@ -68,7 +69,8 @@ NoteDelight/
 │   └── test/           # Shared test utilities
 ├── ui/                 # User interface
 │   ├── shared/         # 100% shared Compose UI
-│   └── test-jvm/       # UI testing framework
+│   ├── test/           # Multiplatform Compose UI tests
+│   └── test-jvm/       # JVM-specific UI test utilities
 ├── app/                # Platform-specific applications
 │   ├── android/        # Android app
 │   ├── desktop/        # Desktop app

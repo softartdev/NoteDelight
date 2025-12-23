@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterAction
@@ -28,7 +29,6 @@ import notedelight.ui.shared.generated.resources.cancel
 import notedelight.ui.shared.generated.resources.enter_password
 import notedelight.ui.shared.generated.resources.enter_password_dialog_subtitle
 import notedelight.ui.shared.generated.resources.enter_password_dialog_title
-import notedelight.ui.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -47,6 +47,7 @@ fun ShowEnterPasswordDialog(
     result: EnterResult,
     onAction: (action: EnterAction) -> Unit = {}
 ) = AlertDialog(
+    modifier = Modifier.testTag(ENTER_PASSWORD_DIALOG_TAG),
     title = { Text(text = stringResource(Res.string.enter_password_dialog_title)) },
     text = {
         Column {
@@ -60,11 +61,14 @@ fun ShowEnterPasswordDialog(
                 isError = result.isError,
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Done,
-                keyboardActions = KeyboardActions { onAction(EnterAction.OnEnterClick) }
+                keyboardActions = KeyboardActions { onAction(EnterAction.OnEnterClick) },
+                labelTag = ENTER_PASSWORD_DIALOG_LABEL_TAG,
+                visibilityTag = ENTER_PASSWORD_DIALOG_VISIBILITY_TAG,
+                fieldTag = ENTER_PASSWORD_DIALOG_FIELD_TAG
             )
         }
     },
-    confirmButton = { Button(onClick = { onAction(EnterAction.OnEnterClick) }) { Text(stringResource(Res.string.yes)) } },
+    confirmButton = { PasswordSaveButton(tag = ENTER_PASSWORD_DIALOG_SAVE_BUTTON_TAG, onClick = { onAction(EnterAction.OnEnterClick) }) },
     dismissButton = { Button(onClick = { onAction(EnterAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = { onAction(EnterAction.Cancel) }
 )

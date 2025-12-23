@@ -7,6 +7,7 @@ import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class SplashViewModel(
     val stateFlow: StateFlow<Boolean> = mutableStateFlow
 
     fun checkEncryption() = viewModelScope.launch {
+        CountingIdlingRes.increment()
         try {
             logger.d { "Building database if need..." }
             safeRepo.buildDbIfNeed()
@@ -39,6 +41,7 @@ class SplashViewModel(
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
         } finally {
             mutableStateFlow.value = false
+            CountingIdlingRes.decrement()
         }
     }
 }

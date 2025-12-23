@@ -3,18 +3,22 @@ package com.softartdev.notedelight.ui
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.MainActivity
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
 @LargeTest
+@FlakyTest
 @RunWith(AndroidJUnit4::class)
-class AndroidUiTests : AbstractUiTests() {
+class AndroidUiTests : AbstractJvmUiTests() {
 
     override val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -22,6 +26,12 @@ class AndroidUiTests : AbstractUiTests() {
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
         .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
+
+    @Before
+    override fun setUp() = super.setUp()
+
+    @After
+    override fun tearDown() = super.tearDown()
 
     @Test
     override fun crudNoteTest() = super.crudNoteTest()

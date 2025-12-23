@@ -19,6 +19,7 @@ import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusDirection.Companion.Down
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeAction
@@ -33,7 +34,6 @@ import notedelight.ui.shared.generated.resources.changing_password_dialog_title
 import notedelight.ui.shared.generated.resources.enter_new_password
 import notedelight.ui.shared.generated.resources.enter_old_password
 import notedelight.ui.shared.generated.resources.repeat_new_password
-import notedelight.ui.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -52,6 +52,7 @@ fun ShowChangePasswordDialog(
     result: ChangeResult,
     onAction: (action: ChangeAction) -> Unit = {}
 ) = AlertDialog(
+    modifier = Modifier.testTag(CHANGE_PASSWORD_DIALOG_TAG),
     title = { Text(text = stringResource(Res.string.changing_password_dialog_title)) },
     text = {
         val focusManager = LocalFocusManager.current
@@ -67,6 +68,9 @@ fun ShowChangePasswordDialog(
                 imeAction = ImeAction.Next,
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(Down) }),
                 contentDescription = stringResource(Res.string.enter_old_password),
+                labelTag = CHANGE_PASSWORD_DIALOG_OLD_LABEL_TAG,
+                visibilityTag = CHANGE_PASSWORD_DIALOG_OLD_VISIBILITY_TAG,
+                fieldTag = CHANGE_PASSWORD_DIALOG_OLD_FIELD_TAG,
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
@@ -78,6 +82,9 @@ fun ShowChangePasswordDialog(
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(Down) }),
                 contentDescription = stringResource(Res.string.enter_new_password),
                 passwordContentType = ContentType.NewPassword,
+                labelTag = CHANGE_PASSWORD_DIALOG_NEW_LABEL_TAG,
+                visibilityTag = CHANGE_PASSWORD_DIALOG_NEW_VISIBILITY_TAG,
+                fieldTag = CHANGE_PASSWORD_DIALOG_NEW_FIELD_TAG,
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
@@ -88,11 +95,14 @@ fun ShowChangePasswordDialog(
                 imeAction = ImeAction.Done,
                 keyboardActions = KeyboardActions(onDone = { onAction(ChangeAction.OnChangeClick) }),
                 contentDescription = stringResource(Res.string.repeat_new_password),
-                passwordContentType = ContentType.NewPassword
+                passwordContentType = ContentType.NewPassword,
+                labelTag = CHANGE_PASSWORD_DIALOG_REPEAT_LABEL_TAG,
+                visibilityTag = CHANGE_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG,
+                fieldTag = CHANGE_PASSWORD_DIALOG_REPEAT_FIELD_TAG,
             )
         }
     },
-    confirmButton = { Button(onClick = { onAction(ChangeAction.OnChangeClick) }) { Text(stringResource(Res.string.yes)) } },
+    confirmButton = { PasswordSaveButton(tag = CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG, onClick = { onAction(ChangeAction.OnChangeClick) }) },
     dismissButton = { Button(onClick = { onAction(ChangeAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = { onAction(ChangeAction.Cancel) }
 )
