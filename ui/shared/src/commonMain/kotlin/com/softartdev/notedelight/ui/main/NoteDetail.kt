@@ -34,6 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
+import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
+import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
@@ -104,19 +107,28 @@ fun NoteDetailBody(
                 }
             },
             actions = {
-                IconButton(onClick = { onAction(NoteAction.Save(titleState.value, textState.value)) }) {
+                IconButton(
+                    modifier = Modifier.testTag(SAVE_NOTE_BUTTON_TAG),
+                    onClick = { onAction(NoteAction.Save(titleState.value, textState.value)) },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Save,
                         contentDescription = stringResource(Res.string.action_save_note)
                     )
                 }
-                IconButton(onClick = { onAction(NoteAction.Edit) }) {
+                IconButton(
+                    modifier = Modifier.testTag(EDIT_TITLE_BUTTON_TAG),
+                    onClick = { onAction(NoteAction.Edit) },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Title,
                         contentDescription = stringResource(Res.string.action_edit_title)
                     )
                 }
-                IconButton(onClick = { onAction(NoteAction.Delete) }) {
+                IconButton(
+                    modifier = Modifier.testTag(DELETE_NOTE_BUTTON_TAG),
+                    onClick = { onAction(NoteAction.Delete) },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(Res.string.action_delete_note)

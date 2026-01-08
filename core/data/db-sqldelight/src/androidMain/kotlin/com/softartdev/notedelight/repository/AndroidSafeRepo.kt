@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.repository
 
 import android.content.Context
+import android.database.sqlite.SQLiteException
 import android.text.SpannableStringBuilder
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -11,6 +12,7 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.db.SqlDelightDbHolder
 import com.softartdev.notedelight.db.SqlDelightNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.shared.db.NoteQueries
 import com.softartdev.notedelight.util.CoroutineDispatchers
 
 class AndroidSafeRepo(
@@ -29,10 +31,13 @@ class AndroidSafeRepo(
         }
 
     override val noteDAO: NoteDAO
-        get() = SqlDelightNoteDAO({ databaseHolder!!.noteQueries }, coroutineDispatchers)
+        get() = SqlDelightNoteDAO(::noteQueries, coroutineDispatchers)
 
     override val dbPath: String
         get() = context.getDatabasePath(DB_NAME).absolutePath
+
+    private val noteQueries : NoteQueries
+        get() = databaseHolder?.noteQueries ?: throw SQLiteException("dnHolder is null")
 
     override suspend fun buildDbIfNeed(passphrase: CharSequence): SqlDelightDbHolder {
         var instance = databaseHolder

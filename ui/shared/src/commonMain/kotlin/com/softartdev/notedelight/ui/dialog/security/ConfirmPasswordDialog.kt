@@ -26,7 +26,16 @@ import com.softartdev.notedelight.presentation.settings.security.confirm.Confirm
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmResult
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.ui.PasswordField
+import com.softartdev.notedelight.ui.PasswordSaveButton
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_FIELD_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_LABEL_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_FIELD_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_LABEL_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_VISIBILITY_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.cancel
 import notedelight.ui.shared.generated.resources.confirm_password

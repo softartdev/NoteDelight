@@ -26,18 +26,19 @@ import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
 import org.koin.mp.KoinPlatformTools
-import kotlin.test.Ignore
-import kotlin.test.Test
 
-@Ignore
-class CommonUiTests : AbstractUITests() {
+/**
+ * Common UI tests for iOS and Web platforms.
+ */
+abstract class CommonUiTests : AbstractUITests() {
 
     private var _composeUiTest: ComposeUiTest? = null
 
     override val composeUiTest: ComposeUiTest
         get() = requireNotNull(_composeUiTest)
 
-    private suspend fun beforeTest() {
+    override fun setUp() {
+        super.setUp()
         Logger.setLogWriters(platformLogWriter())
         when (KoinPlatformTools.defaultContext().getOrNull()) {
             null -> startKoin {
@@ -46,12 +47,15 @@ class CommonUiTests : AbstractUITests() {
             }
             else -> loadKoinModules(sharedModules + uiTestModules)
         }
+    }
+
+    private suspend fun beforeTest() {
         val safeRepo: SafeRepo = KoinPlatformTools.defaultContext().get().get(SafeRepo::class)
         safeRepo.closeDatabase()
+        safeRepo.deleteDatabase()
         safeRepo.buildDbIfNeed()
         val noteDAO: NoteDAO = KoinPlatformTools.defaultContext().get().get(NoteDAO::class)
         noteDAO.deleteAll()
-        super.setUp()
         val lifecycleOwner = TestLifecycleOwner(initialState = Lifecycle.State.RESUMED)
         composeUiTest.setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
@@ -61,66 +65,52 @@ class CommonUiTests : AbstractUITests() {
         composeUiTest.waitForIdle()
     }
 
-    private fun afterTest() {
+    override fun tearDown() {
         super.tearDown()
         unloadKoinModules(sharedModules + uiTestModules)
         Logger.setLogWriters()
     }
 
-    @Test
     override fun crudNoteTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.crudNoteTest()
-        afterTest()
     }
 
-    @Test
     override fun editTitleAfterCreateTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.editTitleAfterCreateTest()
-        afterTest()
     }
 
-    @Test
     override fun editTitleAfterSaveTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.editTitleAfterSaveTest()
-        afterTest()
     }
 
-    @Test
     override fun prepopulateDatabase(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.prepopulateDatabase()
-        afterTest()
     }
 
-    @Test
     override fun flowAfterCryptTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.flowAfterCryptTest()
-        afterTest()
     }
 
-    @Test
     override fun settingPasswordTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.settingPasswordTest()
-        afterTest()
     }
 
-    @Test
     override fun localeTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
         super.localeTest()
-        afterTest()
     }
 
     override fun pressBack() {

@@ -97,6 +97,7 @@ kotlin {
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
+    compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 
 android {

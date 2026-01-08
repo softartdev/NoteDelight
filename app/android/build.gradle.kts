@@ -24,8 +24,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 849
-        versionName = "8.4.9"
+        versionCode = 850
+        versionName = "8.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -40,7 +40,10 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             configure<CrashlyticsExtension> { mappingFileUploadEnabled = true }
             signingConfig = signingConfigs.getByName("config")
         }
@@ -58,7 +61,7 @@ android {
         compose = true
     }
     packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-    testOptions{
+    testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         emulatorControl.enable = true
     }
@@ -112,6 +115,6 @@ dependencies {
     androidTestImplementation(libs.leakCanary.android.instrumentation)
     lintChecks(libs.android.security.lint)
 }
-tasks.withType<UploadMappingFileTask>{
+tasks.withType<UploadMappingFileTask> {
     dependsOn("processDebugGoogleServices")
 }

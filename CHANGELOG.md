@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.0] - 2026-01-08
+
+### Features
+- Improve wasmJs and iOS database handling and tests
+  - Refactor WebAssembly (wasmJs) database worker to support both SQLite3-WASM/OPFS and SQL.js as a fallback
+  - Add `deleteDatabase` functionality for iOS to properly clean up database files (WAL and SHM)
+  - Configure wasmJs browser tests to run with Karma and Chrome
+  - Improve test isolation across platforms
+
+### Bug Fixes
+- Fix build warnings related to Kotlin compiler options and wasmJs API changes
+  - Add `-Xexpect-actual-classes` compiler option to support new class hierarchy model
+  - Update `runBlockingAll` implementation for wasmJs target to use `startCoroutine`
+  - Fix webpack configuration for dynamic repo root detection and SQLite WASM asset availability
+
+### Refactoring
+- Improve database connection handling and error checking
+  - Refactor `checkDbConnection` into `hasDbConnection` suspend function in MainViewModel
+  - Introduce safer access patterns with proper exception handling
+  - Use more specific exception types (e.g., `java.sql.SQLException`)
+- Consolidate documentation into `/docs` directory
+  - Move module structure and version management documentation
+  - Update contributing guides to link to centralized documentation
+- Use test tags instead of string resources in UI tests
+  - Create centralized `TestTags.kt` for all test tag constants
+  - Update UI composables to use `modifier.testTag()` attribute
+  - Improve test stability by removing dynamic string lookups
+  - Create reusable `PasswordSaveButton` composable to eliminate duplication
+- Remove `runBlockingAll` from UI tests
+  - Simplify UI test code by using coroutine scopes directly
+  - Update `DbTestEncryptor` to be a suspend function
+  - Align test infrastructure with modern Kotlin coroutines patterns
+
+### Chores
+- Format `build.gradle.kts` for Android
+- Update dependencies and optimization settings
+- Improve code organization and consistency
+
 ## [8.4.9] - 2025-12-23
 
 ### Features

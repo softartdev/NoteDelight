@@ -27,8 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.platform.testTag
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -40,6 +39,8 @@ import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.ui.Empty
 import com.softartdev.notedelight.ui.Error
 import com.softartdev.notedelight.ui.Loader
+import com.softartdev.notedelight.util.CREATE_NOTE_FAB_TAG
+import com.softartdev.notedelight.util.MAIN_SETTINGS_BUTTON_TAG
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import notedelight.ui.shared.generated.resources.Res
@@ -72,7 +73,10 @@ fun MainScreen(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
-                IconButton(onClick = { onAction(MainAction.OnSettingsClick) }) {
+                IconButton(
+                    modifier = Modifier.testTag(MAIN_SETTINGS_BUTTON_TAG),
+                    onClick = { onAction(MainAction.OnSettingsClick) },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = stringResource(Res.string.settings)
@@ -109,10 +113,10 @@ fun MainScreen(
     }, floatingActionButton = {
         val text = stringResource(Res.string.create_note)
         ExtendedFloatingActionButton(
+            modifier = Modifier.testTag(CREATE_NOTE_FAB_TAG),
             text = { Text(text) },
             onClick = { onAction(MainAction.OnNoteClick(0)) },
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
-            modifier = Modifier.clearAndSetSemantics { contentDescription = text }
         )
     }
 )

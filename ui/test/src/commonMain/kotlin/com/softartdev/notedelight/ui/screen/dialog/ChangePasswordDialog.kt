@@ -2,17 +2,17 @@ package com.softartdev.notedelight.ui.screen.dialog
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithTag
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_NEW_FIELD_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_NEW_LABEL_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_NEW_VISIBILITY_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_OLD_FIELD_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_OLD_LABEL_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_OLD_VISIBILITY_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_REPEAT_FIELD_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_REPEAT_LABEL_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG
-import com.softartdev.notedelight.ui.dialog.security.CHANGE_PASSWORD_DIALOG_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_NEW_FIELD_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_NEW_LABEL_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_NEW_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_OLD_FIELD_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_OLD_LABEL_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_OLD_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_REPEAT_FIELD_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_REPEAT_LABEL_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG
+import com.softartdev.notedelight.util.CHANGE_PASSWORD_DIALOG_TAG
 import kotlin.jvm.JvmInline
 
 @JvmInline

@@ -18,6 +18,7 @@ import cocoapods.SQLCipher.sqlite3_prepare
 import cocoapods.SQLCipher.sqlite3_prepare_v2
 import cocoapods.SQLCipher.sqlite3_step
 import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.repository.SafeRepo
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
@@ -122,6 +123,9 @@ object IosCipherUtils {
         }
         val newDbPath = getDatabasePath("sqlcipherutils.tmp")
         logger.d { "new file path = $newDbPath" }
+        if (nsFileManager.fileExistsAtPath(newDbPath)) {
+            nsFileManager.removeItemAtPath(newDbPath, null)
+        }
         var newFileIsExist = nsFileManager.fileExistsAtPath(newDbPath)
         if (!newFileIsExist) {
             nsFileManager.createFileAtPath(newDbPath, null, null)
@@ -189,6 +193,9 @@ object IosCipherUtils {
         }
         val newDbPath = getDatabasePath("sqlcipherutils.tmp")
         logger.d { "new file path = $newDbPath" }
+        if (nsFileManager.fileExistsAtPath(newDbPath)) {
+            nsFileManager.removeItemAtPath(newDbPath, null)
+        }
         var newFileIsExist = nsFileManager.fileExistsAtPath(newDbPath)
         if (!newFileIsExist) {
             nsFileManager.createFileAtPath(newDbPath, null, null)
@@ -255,11 +262,38 @@ object IosCipherUtils {
         return NSString.create(string = dbDirPath).stringByAppendingPathComponent(dbName)
     }
 
+    fun databaseFileExists(dbName: String = SafeRepo.DB_NAME): Boolean {
+        return nsFileManager.fileExistsAtPath(getDatabasePath(dbName))
+    }
+
+    fun ensureDatabaseDir() {
+        val path = dbDirPath
+        if (!nsFileManager.fileExistsAtPath(path)) {
+            nsFileManager.createDirectoryAtPath(path, true, null, null)
+        }
+    }
+
     //Visible for tests
-    fun deleteDatabase(): Boolean {
+    fun deleteDatabase(dbName: String = SafeRepo.DB_NAME): Boolean {
         val path = dbDirPath
         logger.d { "db dir exists before = ${nsFileManager.fileExistsAtPath(path)}" }
-        return nsFileManager.removeItemAtPath(path, null)
+        if (!nsFileManager.fileExistsAtPath(path)) {
+            nsFileManager.createDirectoryAtPath(path, true, null, null)
+        }
+        val dbPath = getDatabasePath(dbName)
+        val paths = listOf(
+            dbPath,
+            "$dbPath-wal",
+            "$dbPath-shm",
+            "$dbPath-journal",
+        )
+        var deleted = true
+        for (path in paths) {
+            if (nsFileManager.fileExistsAtPath(path)) {
+                deleted = nsFileManager.removeItemAtPath(path, null) && deleted
+            }
+        }
+        return deleted
     }
 
     fun checkCipherVersion(dbName: String): String? {

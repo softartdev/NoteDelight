@@ -341,31 +341,7 @@ class FeatureViewModelTest {
 
 ## Module Structure
 
-### Core Modules
-
-- **core:domain** - Pure business logic, no dependencies
-- **core:presentation** - ViewModels, state management
-- **core:data:db-sqldelight** - SQLDelight data implementation (default)
-- **core:data:db-room** - Room data implementation (alternative)
-- **core:test** - Shared test utilities
-
-### UI Modules
-
-- **ui:shared** - Shared Compose UI (100% shared)
-- **ui:test-jvm** - UI testing framework (Kaspresso-inspired)
-
-### App Modules
-
-- **app:android** - Android application
-- **app:desktop** - Desktop JVM application
-- **app:web** - Web/Wasm application
-- **app:ios-kit** - iOS framework (CocoaPods)
-- **app:iosApp** - iOS application (Swift/SwiftUI)
-
-### Build Modules
-
-- **build-logic** - Gradle convention plugins
-- **thirdparty** - Vendored dependencies
+**See [docs/README.md](docs/README.md#module-documentation) for the list of modules and their documentation.**
 
 ### Module Guidelines
 

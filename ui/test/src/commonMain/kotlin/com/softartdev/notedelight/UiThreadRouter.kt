@@ -1,6 +1,8 @@
 package com.softartdev.notedelight
 
 import com.softartdev.notedelight.navigation.Router
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class UiThreadRouter(private val router: Router) : Router {
@@ -25,7 +27,8 @@ class UiThreadRouter(private val router: Router) : Router {
     override fun releaseAdaptiveNavigator() = router.releaseAdaptiveNavigator()
 
     override suspend fun adaptiveNavigateToDetail(contentKey: Long?) =
-        router.adaptiveNavigateToDetail(contentKey)
+        withContext(Dispatchers.Main) { router.adaptiveNavigateToDetail(contentKey) }
 
-    override suspend fun adaptiveNavigateBack(): Boolean = router.adaptiveNavigateBack()
+    override suspend fun adaptiveNavigateBack(): Boolean =
+        withContext(Dispatchers.Main) { router.adaptiveNavigateBack() }
 }

@@ -49,6 +49,7 @@ kotlin {
         wasmJsTest.dependencies {
         }
     }
+    compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 android {
     namespace = "com.softartdev.notedelight.core.domain"

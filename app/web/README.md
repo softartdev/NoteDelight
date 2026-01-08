@@ -399,9 +399,43 @@ self.addEventListener('install', (event) => {
 
 ## Testing
 
+### UI Tests
+
+The web app includes multiplatform Compose UI tests that extend `CommonUiTests` from the `ui/test` module:
+
+**Location**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt`
+
+**Test Coverage**:
+- CRUD operations
+- Title editing after create/save
+- Database prepopulation
+- Encryption flow
+- Password settings
+- Locale switching
+
+**Running Tests**:
+
+```bash
+# Requires CHROME_BIN environment variable
+export CHROME_BIN=/path/to/chrome
+./gradlew :app:web:wasmJsBrowserTest
+```
+
+**Test Configuration**:
+- Uses Karma with Chrome headless for test execution
+- Automatically disabled if `CHROME_BIN` is not set
+- Tests use SQL.js fallback when SQLite3 WASM is not available (common in headless browsers)
+- Database is automatically cleaned up before each test
+
+**Database Fallback for Tests**:
+The test worker (`sqlite.worker.js`) implements a fallback mechanism:
+1. First attempts to use official SQLite3 WASM with OPFS support
+2. Falls back to SQL.js (in-memory) if SQLite3 is unavailable
+3. This ensures tests can run in headless browser environments that may not support OPFS
+
 ### Unit Tests
 
-Web-specific tests:
+Web-specific unit tests:
 
 ```kotlin
 // In wasmJsTest/
@@ -411,10 +445,15 @@ fun testWebInitialization() {
 }
 ```
 
-### Running Tests
+### Running All Tests
 
 ```bash
+# Unit tests
 ./gradlew :app:web:wasmJsTest
+
+# UI tests (requires CHROME_BIN)
+export CHROME_BIN=/path/to/chrome
+./gradlew :app:web:wasmJsBrowserTest
 ```
 
 ### Browser Testing

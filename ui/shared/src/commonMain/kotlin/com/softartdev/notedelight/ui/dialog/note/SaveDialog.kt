@@ -12,7 +12,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.ui.dialog.AlertDialogContent
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
@@ -45,7 +47,10 @@ fun SaveDialog(
                 Spacer(Modifier.width(8.dp))
                 Button(onClick = doNotSaveAndNavBack) { Text(stringResource(Res.string.no)) }
                 Spacer(Modifier.width(8.dp))
-                Button(onClick = saveNoteAndNavBack) { Text(stringResource(Res.string.yes)) }
+                Button(
+                    modifier = Modifier.testTag(YES_BUTTON_TAG),
+                    onClick = saveNoteAndNavBack
+                ) { Text(stringResource(Res.string.yes)) }
             }
         },
         title = { Text(stringResource(Res.string.note_changes_not_saved_dialog_title)) },

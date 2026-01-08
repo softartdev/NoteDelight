@@ -8,12 +8,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import com.softartdev.notedelight.ui.main.NOTE_TEXT_FIELD_TAG
-import com.softartdev.notedelight.util.runBlockingAll
-import notedelight.ui.shared.generated.resources.Res
-import notedelight.ui.shared.generated.resources.action_delete_note
-import notedelight.ui.shared.generated.resources.action_edit_title
-import notedelight.ui.shared.generated.resources.action_save_note
-import org.jetbrains.compose.resources.getString
+import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
+import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
+import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
 import kotlin.jvm.JvmInline
 
 @JvmInline
@@ -26,17 +23,17 @@ value class NoteScreen(val nodeProvider: SemanticsNodeInteractionsProvider) {
 
     val saveNoteMenuButtonSNI: SemanticsNodeInteraction
         get() = nodeProvider
-            .onNodeWithContentDescription(label = runBlockingAll { getString(Res.string.action_save_note) })
+            .onNodeWithTag(SAVE_NOTE_BUTTON_TAG)
             .assertIsDisplayed()
 
     val editTitleMenuButtonSNI: SemanticsNodeInteraction
         get() = nodeProvider
-            .onNodeWithContentDescription(label = runBlockingAll { getString(Res.string.action_edit_title) })
+            .onNodeWithTag(EDIT_TITLE_BUTTON_TAG)
             .assertIsDisplayed()
 
     val deleteNoteMenuButtonSNI: SemanticsNodeInteraction
         get() = nodeProvider
-            .onNodeWithContentDescription(label = runBlockingAll { getString(Res.string.action_delete_note) })
+            .onNodeWithTag(DELETE_NOTE_BUTTON_TAG)
             .assertIsDisplayed()
 
     val textFieldSNI: SemanticsNodeInteraction

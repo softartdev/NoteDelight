@@ -4,17 +4,18 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.core.app.ActivityScenario
+import kotlinx.coroutines.runBlocking
 import org.junit.rules.ExternalResource
 
 inline fun <reified A : ComponentActivity> customAndroidComposeRule(
-    noinline beforeActivityLaunched: () -> Unit
+    noinline beforeActivityLaunched: suspend () -> Unit
 ): AndroidComposeTestRule<CustomActivityScenarioRule<A>, A> {
     return customAndroidComposeRule(A::class.java, beforeActivityLaunched)
 }
 
 fun <A : ComponentActivity> customAndroidComposeRule(
     activityClass: Class<A>,
-    beforeActivityLaunched: () -> Unit
+    beforeActivityLaunched: suspend () -> Unit
 ): AndroidComposeTestRule<CustomActivityScenarioRule<A>, A> = AndroidComposeTestRule(
     activityRule = CustomActivityScenarioRule(activityClass, beforeActivityLaunched),
     activityProvider = ::provideActivity
@@ -30,13 +31,13 @@ fun <A : Activity> provideActivity(customActivityScenarioRule: CustomActivitySce
 
 class CustomActivityScenarioRule<A : Activity>(
     private val activityClass: Class<A>,
-    private val beforeActivityLaunched: () -> Unit
+    private val beforeActivityLaunched: suspend () -> Unit
 ) : ExternalResource() {
 
     internal lateinit var scenario: ActivityScenario<A>
 
     override fun before() {
-        beforeActivityLaunched()
+        runBlocking { beforeActivityLaunched() }
         scenario = ActivityScenario.launch(activityClass)
     }
 

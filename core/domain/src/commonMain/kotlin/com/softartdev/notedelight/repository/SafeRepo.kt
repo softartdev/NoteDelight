@@ -26,6 +26,8 @@ abstract class SafeRepo {
 
     abstract suspend fun closeDatabase()
 
+    open suspend fun deleteDatabase(): Boolean = false
+
     companion object {
         const val DB_NAME = "notes.db"
     }

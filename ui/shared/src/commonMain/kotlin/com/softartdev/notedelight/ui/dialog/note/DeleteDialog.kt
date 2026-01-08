@@ -4,6 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import notedelight.ui.shared.generated.resources.Res
@@ -24,7 +27,12 @@ fun DeleteDialog(deleteViewModel: DeleteViewModel) = DeleteDialog(
 fun DeleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = AlertDialog(
     title = { Text(text = stringResource(Res.string.action_delete_note)) },
     text = { Text(stringResource(Res.string.note_delete_dialog_message)) },
-    confirmButton = { Button(onClick = onDeleteClick) { Text(stringResource(Res.string.yes)) } },
+    confirmButton = {
+        Button(
+            modifier = Modifier.testTag(YES_BUTTON_TAG),
+            onClick = onDeleteClick
+        ) { Text(stringResource(Res.string.yes)) }
+    },
     dismissButton = { Button(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = onDismiss,
 )

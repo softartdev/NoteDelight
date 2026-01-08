@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -20,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import com.softartdev.notedelight.util.EMPTY_RESULT_LABEL_TAG
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +30,7 @@ import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.detail_pane_placeholder
 import notedelight.ui.shared.generated.resources.label_empty_result
 import notedelight.ui.shared.generated.resources.press_add_note
+import notedelight.ui.shared.generated.resources.save
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -93,6 +97,7 @@ fun Empty() {
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
+            modifier = Modifier.testTag(EMPTY_RESULT_LABEL_TAG),
             text = stringResource(Res.string.label_empty_result),
             style = MaterialTheme.typography.headlineSmall,
         )
@@ -114,6 +119,16 @@ fun Error(err: String) {
         Text(text = err, style = TextStyle(color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold))
     }
 }
+
+@Composable
+fun PasswordSaveButton(
+    modifier: Modifier = Modifier,
+    tag: String,
+    onClick: () -> Unit,
+) = Button(
+    modifier = modifier.testTag(tag),
+    onClick = onClick
+) { Text(stringResource(Res.string.save)) }
 
 @Preview(showBackground = true)
 @Composable
@@ -138,3 +153,7 @@ fun PreviewEmpty() = Empty()
 @Preview(showBackground = true)
 @Composable
 fun PreviewError() = Error(err = "Mock error")
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPasswordSaveButton() = PasswordSaveButton(tag = "PASSWORD_SAVE_BUTTON_TAG") {}

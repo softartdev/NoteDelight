@@ -19,20 +19,9 @@ This guide is specifically written for AI agents working on the NoteDelight code
 ./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous  # Web app
 ```
 
-### Version Management Quick Reference
+### Version Management
 
-```bash
-# Update versions in all platform files, then:
-git add app/*/build.gradle.kts app/iosApp/iosApp.xcodeproj/project.pbxproj app/iosApp/iosApp/Info.plist
-git commit -m "chore: bump version to X.Y.Z"
-
-# Trigger CI/CD workflows:
-git tag android/vX.Y.Z && git push origin android/vX.Y.Z
-git tag desktop/vX.Y.Z && git push origin desktop/vX.Y.Z  
-git tag ios/vX.Y.Z && git push origin ios/vX.Y.Z
-```
-
-**See [VERSION_MANAGEMENT_GUIDE.md](VERSION_MANAGEMENT_GUIDE.md) for detailed instructions.**
+**See [VERSION_MANAGEMENT_GUIDE.md](VERSION_MANAGEMENT_GUIDE.md) for detailed instructions and commands.**
 
 ## Understanding the Codebase
 
@@ -285,83 +274,9 @@ sealed class FeatureResult {
 
 #### Screen Pattern with Action Interface
 
-**All ViewModels in this project use the Action interface pattern** to avoid callback hell and reduce `@Composable` function signatures:
+**All ViewModels in this project use the Action interface pattern** to avoid callback hell and reduce `@Composable` function signatures.
 
-```kotlin
-// 1. Define Action Interface (in Result.kt)
-sealed interface FeatureAction {
-    data class Save(val title: String, val text: String) : FeatureAction
-    data object Delete : FeatureAction
-    data object NavigateBack : FeatureAction
-}
-
-// 2. Define State (in Result.kt)
-data class FeatureResult(
-    val loading: Boolean = false,
-    val data: String? = null,
-) {
-    fun showLoading(): FeatureResult = copy(loading = true)
-    fun hideLoading(): FeatureResult = copy(loading = false)
-}
-
-// 3. ViewModel with onAction dispatcher
-class FeatureViewModel(...) : ViewModel() {
-    private val mutableStateFlow = MutableStateFlow(FeatureResult())
-    val stateFlow: StateFlow<FeatureResult> = mutableStateFlow
-    
-    fun onAction(action: FeatureAction) = when (action) {
-        is FeatureAction.Save -> saveData(action.title, action.text)
-        is FeatureAction.Delete -> deleteData()
-        is FeatureAction.NavigateBack -> router.popBackStack()
-    }
-    
-    private fun saveData(title: String, text: String) { /* ... */ }
-    private fun deleteData() { /* ... */ }
-}
-
-// 4. Composable Screen - Single onAction parameter
-@Composable
-fun FeatureScreen(viewModel: FeatureViewModel = koinViewModel()) {
-    val state by viewModel.stateFlow.collectAsState()
-    
-    FeatureContent(
-        state = state,
-        onAction = viewModel::onAction  // Single action handler
-    )
-}
-
-@Composable
-private fun FeatureContent(
-    state: FeatureResult,
-    onAction: (FeatureAction) -> Unit = {}  // Simplified signature
-) {
-    // Use actions in UI events
-    Button(onClick = { onAction(FeatureAction.Save("title", "text")) })
-    IconButton(onClick = { onAction(FeatureAction.Delete) })
-}
-```
-
-**Key Points**:
-- ✅ One `onAction()` method instead of multiple callbacks
-- ✅ Type-safe actions with sealed interfaces
-- ✅ Actions defined in same file as State (`*Result.kt`)
-- ✅ Private implementation methods in ViewModel
-- ✅ Simpler Composable function signatures
-- ✅ Easier to test - mock single `onAction()` method
-
-**When to Use Action Interfaces (Important!)**:
-- ✅ Use for screens with **3+ different actions** passed through Composables
-- ✅ Use when actions need to be passed down multiple layers
-- ❌ **Don't use** for simple 1-2 action cases (call ViewModel methods directly)
-- ❌ **Don't use** for methods called directly where ViewModel is obtained (e.g., `disposeOneTimeEvents()`)
-- ❌ **Don't use** for simple dialog ViewModels not passed down
-
-**Examples**:
-- ✅ `NoteViewModel.onAction(NoteAction.Save)` - Complex screen with 4+ actions
-- ❌ `SignInViewModel.signIn()` - Simple screen, call directly
-- ❌ `noteViewModel.disposeOneTimeEvents()` - Called in same LaunchedEffect
-
-**Rule of Thumb**: The goal is to write **less code**, not more. Only use Actions where they genuinely simplify Composable signatures.
+**Refer to [docs/ARCHITECTURE.md](ARCHITECTURE.md#presentation-layer) for the full pattern definition, code examples, and guidelines on when to use it.**
 
 ## Debugging Strategies
 

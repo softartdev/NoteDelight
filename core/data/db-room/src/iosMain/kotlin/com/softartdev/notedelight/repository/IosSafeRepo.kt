@@ -22,6 +22,7 @@ class IosSafeRepo : SafeRepo() {
     override fun buildDbIfNeed(passphrase: CharSequence): IosDatabaseHolder {
         var instance = dbHolder
         if (instance == null) {
+            IosCipherUtils.ensureDatabaseDir()
             val passCopy: String? = if (passphrase.isNotEmpty()) passphrase.toString() else null
             instance = IosDatabaseHolder(key = passCopy)
             dbHolder = instance
@@ -54,5 +55,10 @@ class IosSafeRepo : SafeRepo() {
     override fun closeDatabase() {
         dbHolder?.close()
         dbHolder = null
+    }
+
+    override suspend fun deleteDatabase(): Boolean {
+        closeDatabase()
+        return IosCipherUtils.deleteDatabase()
     }
 }

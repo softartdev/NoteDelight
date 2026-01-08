@@ -23,7 +23,13 @@ import com.softartdev.notedelight.presentation.settings.security.enter.EnterActi
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterResult
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterViewModel
 import com.softartdev.notedelight.ui.PasswordField
+import com.softartdev.notedelight.ui.PasswordSaveButton
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
+import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_FIELD_TAG
+import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_LABEL_TAG
+import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_SAVE_BUTTON_TAG
+import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_TAG
+import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_VISIBILITY_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.cancel
 import notedelight.ui.shared.generated.resources.enter_password

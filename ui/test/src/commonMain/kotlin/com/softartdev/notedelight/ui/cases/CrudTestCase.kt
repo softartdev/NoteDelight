@@ -25,6 +25,7 @@ class CrudTestCase(
             composeUiTest.waitUntilDisplayed("fab", blockSNI = ::fabSNI)
             fabSNI.performClick()
             noteScreen {
+                composeUiTest.waitUntilDisplayed("noteTextField", blockSNI = ::textFieldSNI)
                 textFieldSNI.performTextInput(actualNoteText)
                 saveNoteMenuButtonSNI.performClick()
                 backButtonSNI.performClick()

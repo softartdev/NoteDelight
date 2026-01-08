@@ -1,8 +1,12 @@
-@file:OptIn(ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class, ExperimentalComposeLibrary::class)
 
 import de.undercouch.gradle.tasks.download.Download
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
+import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.tasks.Copy
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -17,6 +21,12 @@ kotlin {
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
+            testTask {
+                useKarma {
+                    useChrome()
+                    useChromeHeadless()
+                }
+            }
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
@@ -34,6 +44,7 @@ kotlin {
     sourceSets {
         val wasmJsMain by getting {
             dependencies {
+                implementation(projects.core.domain)
                 implementation(projects.core.presentation)
                 implementation(projects.ui.shared)
                 implementation(compose.ui)
@@ -44,8 +55,25 @@ kotlin {
             }
             resources.srcDir(layout.buildDirectory.dir("sqlite"))
         }
-        val wasmJsTest by getting
+        val wasmJsTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(projects.ui.test)
+                implementation(compose.uiTest)
+                implementation(compose.materialIconsExtended)
+                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.androidx.lifecycle.runtime.testing)
+            }
+            resources.srcDir(layout.buildDirectory.dir("sqlite"))
+        }
     }
+}
+
+val chromeBinaryFromEnv = providers.environmentVariable("CHROME_BIN").orNull
+val hasChromeForTests = chromeBinaryFromEnv?.let { file(it).exists() } == true
+
+tasks.named<KotlinJsTest>("wasmJsBrowserTest").configure {
+    enabled = hasChromeForTests
 }
 
 val sqliteVersion = 3500400 // See https://sqlite.org/download.html for the latest wasm build version
@@ -69,4 +97,12 @@ val sqliteUnzip = tasks.register("sqliteUnzip", Copy::class.java) {
 // Hook the unzip task into the wasmJs resource processing
 tasks.named("wasmJsProcessResources").configure {
     dependsOn(sqliteUnzip)
+}
+tasks.named<Copy>("wasmJsTestProcessResources").configure {
+    dependsOn(sqliteUnzip)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<Sync>("wasmJsBrowserDistribution").configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

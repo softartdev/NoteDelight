@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(
     private val safeRepo: SafeRepo,
@@ -44,18 +45,20 @@ class MainViewModel(
         is MainAction.OnRefresh -> updateNotes()
     }
 
-    fun launchNotes() {
-        checkDbConnection()
-        if (job != null) return
+    fun launchNotes() = viewModelScope.launch {
+        if (!hasDbConnection()) return@launch
+        if (job != null) return@launch
         updateNotes()
     }
 
-    private fun checkDbConnection() = viewModelScope.launch(coroutineDispatchers.io) {
+    private suspend fun hasDbConnection(): Boolean {
         try {
-            val count: Long = safeRepo.noteDAO.count()
+            val count: Long = withContext(coroutineDispatchers.io) { safeRepo.noteDAO.count() }
             logger.d { "check DB connection, notes: $count" }
+            return true
         } catch (throwable: Throwable) {
             handleError("Error checking DB connection", throwable)
+            return false
         }
     }
 
@@ -81,7 +84,7 @@ class MainViewModel(
 
     private fun handleError(message: String, throwable: Throwable) {
         logger.e(message, throwable)
-        if (isDbError(throwable)) {
+        if (isDbError(throwable)) viewModelScope.launch(coroutineDispatchers.main) {
             router.navigateClearingBackStack(AppNavGraph.Splash)
         }
         mutableStateFlow.value = NoteListResult.Error(throwable.message)

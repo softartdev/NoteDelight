@@ -15,8 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.platform.testTag
+import com.softartdev.notedelight.util.ENTER_TITLE_DIALOG_TAG
+import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.softartdev.notedelight.presentation.title.EditTitleAction
@@ -44,7 +45,6 @@ fun EditTitleDialog(editTitleViewModel: EditTitleViewModel) {
 fun ShowEditTitleDialog(
     result: EditTitleResult,
     onAction: (action: EditTitleAction) -> Unit = {},
-    label: String = stringResource(Res.string.enter_title),
 ) = AlertDialog(
     title = { Text(text = stringResource(Res.string.dialog_title_change_title)) },
     text = {
@@ -52,7 +52,7 @@ fun ShowEditTitleDialog(
         Column {
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
-                modifier = Modifier.semantics { contentDescription = label },
+                modifier = Modifier.testTag(ENTER_TITLE_DIALOG_TAG),
                 value = TextFieldValue(text = result.title, selection = textRange),
                 onValueChange = {
                     textRange = it.selection
@@ -67,7 +67,7 @@ fun ShowEditTitleDialog(
             )
         }
     },
-    confirmButton = { Button(onClick = { onAction(EditTitleAction.OnEditClick) }) { Text(stringResource(Res.string.yes)) } },
+    confirmButton = { Button(modifier = Modifier.testTag(YES_BUTTON_TAG), onClick = { onAction(EditTitleAction.OnEditClick) }) { Text(stringResource(Res.string.yes)) } },
     dismissButton = { Button(onClick = { onAction(EditTitleAction.Cancel) }) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = { onAction(EditTitleAction.Cancel) },
 )

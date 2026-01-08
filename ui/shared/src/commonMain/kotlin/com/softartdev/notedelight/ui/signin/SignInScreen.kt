@@ -27,12 +27,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.signin.SignInAction
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
+import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
+import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
+import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
+import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_VISIBILITY_TAG
+import com.softartdev.notedelight.util.SIGN_IN_SETTINGS_BUTTON_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.app_name
 import notedelight.ui.shared.generated.resources.empty_password
@@ -43,10 +49,6 @@ import notedelight.ui.shared.generated.resources.sign_in
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-const val SIGN_IN_PASSWORD_LABEL_TAG = "SIGN_IN_PASSWORD_FIELD_LABEL_TAG"
-const val SIGN_IN_PASSWORD_VISIBILITY_TAG = "SIGN_IN_PASSWORD_FIELD_VISIBILITY_TAG"
-const val SIGN_IN_PASSWORD_FIELD_TAG = "SIGN_IN_PASSWORD_FIELD_TAG"
 
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel) {
@@ -82,7 +84,10 @@ fun SignInScreenBody(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
-                IconButton(onClick = { onAction(SignInAction.OnSettingsClick) }) {
+                IconButton(
+                    modifier = Modifier.testTag(SIGN_IN_SETTINGS_BUTTON_TAG),
+                    onClick = { onAction(SignInAction.OnSettingsClick) },
+                ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = stringResource(Res.string.settings)
@@ -111,6 +116,7 @@ fun SignInScreenBody(
             )
             Button(
                 modifier = Modifier
+                    .testTag(SIGN_IN_BUTTON_TAG)
                     .fillMaxWidth()
                     .padding(top = 24.dp),
                 onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },

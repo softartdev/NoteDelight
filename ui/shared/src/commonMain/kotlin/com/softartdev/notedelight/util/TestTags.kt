@@ -1,16 +1,16 @@
-package com.softartdev.notedelight.ui.dialog.security
-
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import notedelight.ui.shared.generated.resources.Res
-import notedelight.ui.shared.generated.resources.save
-import org.jetbrains.compose.resources.stringResource
+package com.softartdev.notedelight.util
 
 /**
- * Test tags for [EnterPasswordDialog]
+ * Test tags for [com.softartdev.notedelight.ui.signin.SignInScreen]
+ */
+const val SIGN_IN_PASSWORD_LABEL_TAG = "SIGN_IN_PASSWORD_FIELD_LABEL_TAG"
+const val SIGN_IN_PASSWORD_VISIBILITY_TAG = "SIGN_IN_PASSWORD_FIELD_VISIBILITY_TAG"
+const val SIGN_IN_PASSWORD_FIELD_TAG = "SIGN_IN_PASSWORD_FIELD_TAG"
+const val SIGN_IN_SETTINGS_BUTTON_TAG = "SIGN_IN_SETTINGS_BUTTON_TAG"
+const val SIGN_IN_BUTTON_TAG = "SIGN_IN_BUTTON_TAG"
+
+/**
+ * Test tags for [com.softartdev.notedelight.ui.dialog.security.EnterPasswordDialog]
  */
 const val ENTER_PASSWORD_DIALOG_TAG = "ENTER_PASSWORD_DIALOG_TAG"
 
@@ -21,7 +21,7 @@ const val ENTER_PASSWORD_DIALOG_FIELD_TAG = "ENTER_PASSWORD_DIALOG_FIELD_TAG"
 const val ENTER_PASSWORD_DIALOG_SAVE_BUTTON_TAG = "ENTER_PASSWORD_DIALOG_SAVE_BUTTON_TAG"
 
 /**
- * Test tags for [ConfirmPasswordDialog]
+ * Test tags for [com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog]
  */
 const val CONFIRM_PASSWORD_DIALOG_TAG = "CONFIRM_PASSWORD_DIALOG_TAG"
 
@@ -36,7 +36,7 @@ const val CONFIRM_PASSWORD_DIALOG_REPEAT_FIELD_TAG = "CONFIRM_PASSWORD_DIALOG_RE
 const val CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG = "CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG"
 
 /**
- * Test tags for [ChangePasswordDialog]
+ * Test tags for [com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog]
  */
 const val CHANGE_PASSWORD_DIALOG_TAG = "CHANGE_PASSWORD_DIALOG_TAG"
 
@@ -55,14 +55,38 @@ const val CHANGE_PASSWORD_DIALOG_REPEAT_FIELD_TAG = "CHANGE_PASSWORD_DIALOG_REPE
 const val CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG = "CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG"
 
 /**
- * A common save button for password dialogs.
+ * Test tags for [com.softartdev.notedelight.ui.main.MainScreen]
  */
-@Composable
-fun PasswordSaveButton(
-    modifier: Modifier = Modifier,
-    tag: String,
-    onClick: () -> Unit,
-) = Button(
-    modifier = modifier.testTag(tag),
-    onClick = onClick
-) { Text(stringResource(Res.string.save)) }
+const val MAIN_SETTINGS_BUTTON_TAG = "MAIN_SETTINGS_BUTTON_TAG"
+const val CREATE_NOTE_FAB_TAG = "CREATE_NOTE_FAB_TAG"
+const val EMPTY_RESULT_LABEL_TAG = "EMPTY_RESULT_LABEL_TAG"
+
+/**
+ * Test tags for [com.softartdev.notedelight.ui.main.NoteDetail]
+ */
+const val SAVE_NOTE_BUTTON_TAG = "SAVE_NOTE_BUTTON_TAG"
+const val EDIT_TITLE_BUTTON_TAG = "EDIT_TITLE_BUTTON_TAG"
+const val DELETE_NOTE_BUTTON_TAG = "DELETE_NOTE_BUTTON_TAG"
+
+/**
+ * Test tags for [com.softartdev.notedelight.ui.settings.SettingsScreen]
+ */
+const val ENABLE_ENCRYPTION_SWITCH_TAG = "ENABLE_ENCRYPTION_SWITCH_TAG"
+const val SET_PASSWORD_BUTTON_TAG = "SET_PASSWORD_BUTTON_TAG"
+const val LANGUAGE_BUTTON_TAG = "LANGUAGE_BUTTON_TAG"
+
+/**
+ * Test tags for [com.softartdev.notedelight.ui.dialog.LanguageDialog]
+ */
+const val CHOOSE_LANGUAGE_DIALOG_TITLE_TAG = "CHOOSE_LANGUAGE_DIALOG_TITLE_TAG"
+const val OK_BUTTON_TAG = "OK_BUTTON_TAG"
+
+/**
+ * Test tags for [com.softartdev.notedelight.ui.dialog.EditTitleDialog]
+ */
+const val ENTER_TITLE_DIALOG_TAG = "ENTER_TITLE_DIALOG_TAG"
+
+/**
+ * Test tags for dialog buttons
+ */
+const val YES_BUTTON_TAG = "YES_BUTTON_TAG"

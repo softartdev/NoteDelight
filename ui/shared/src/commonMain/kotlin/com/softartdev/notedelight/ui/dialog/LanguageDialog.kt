@@ -22,6 +22,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.model.LanguageEnum
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
+import com.softartdev.notedelight.util.CHOOSE_LANGUAGE_DIALOG_TITLE_TAG
+import com.softartdev.notedelight.util.OK_BUTTON_TAG
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.notedelight.util.testTag
 import io.github.softartdev.theme_prefs.generated.resources.ok
@@ -47,7 +49,12 @@ fun LanguageDialogBody(
     onLanguageSelected: (LanguageEnum) -> Unit,
     onDismiss: () -> Unit
 ) = AlertDialog(
-    title = { Text(text = stringResource(Res.string.choose_language)) },
+    title = {
+        Text(
+            modifier = Modifier.testTag(CHOOSE_LANGUAGE_DIALOG_TITLE_TAG),
+            text = stringResource(Res.string.choose_language)
+        )
+    },
     text = {
         Column(Modifier.selectableGroup()) {
             LanguageEnum.entries.forEach { language: LanguageEnum ->
@@ -77,7 +84,12 @@ fun LanguageDialogBody(
             }
         }
     },
-    confirmButton = { Button(onClick = onDismiss) { Text(stringResource(ThemePrefsRes.string.ok)) } },
+    confirmButton = {
+        Button(
+            modifier = Modifier.testTag(OK_BUTTON_TAG),
+            onClick = onDismiss
+        ) { Text(stringResource(ThemePrefsRes.string.ok)) }
+    },
     onDismissRequest = onDismiss,
 )
 

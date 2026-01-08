@@ -13,7 +13,24 @@ config.resolve = {
 };
 
 // Add CopyWebpackPlugin to copy SQL.js WebAssembly binary, JavaScript file, and worker script
+const fs = require('fs');
+const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const findRepoRoot = (startDir) => {
+    let current = startDir;
+    while (current && current !== path.dirname(current)) {
+        if (fs.existsSync(path.join(current, 'gradlew')) || fs.existsSync(path.join(current, 'settings.gradle.kts'))) {
+            return current;
+        }
+        current = path.dirname(current);
+    }
+    return null;
+};
+
+const repoRoot = findRepoRoot(process.cwd()) || findRepoRoot(__dirname) || process.cwd();
+const sqliteBuildDir = path.resolve(repoRoot, 'app', 'web', 'build', 'sqlite');
+const composeResourcesDir = path.resolve(repoRoot, 'ui', 'shared', 'build', 'processedResources', 'wasmJs', 'main', 'composeResources');
 const normalizeSqlJsWasmPaths = (text) => {
     if (typeof text !== 'string') {
         return text;
@@ -35,19 +52,24 @@ config.plugins.push(
         patterns: [
             // Use official SQLite WASM files downloaded by Gradle
             {
-                from: '../../../build/sqlite/sqlite3.wasm',
+                from: path.resolve(sqliteBuildDir, 'sqlite3.wasm'),
                 to: 'sqlite3.wasm',
                 noErrorOnMissing: true
             },
             {
-                from: '../../../build/sqlite/sqlite3.js',
+                from: path.resolve(sqliteBuildDir, 'sqlite3.js'),
                 to: 'sqlite3.js',
                 noErrorOnMissing: true
             },
             // Copy OPFS async proxy for OPFS support
             {
-                from: '../../../build/sqlite/sqlite3-opfs-async-proxy.js',
+                from: path.resolve(sqliteBuildDir, 'sqlite3-opfs-async-proxy.js'),
                 to: 'sqlite3-opfs-async-proxy.js',
+                noErrorOnMissing: true
+            },
+            {
+                from: composeResourcesDir,
+                to: 'composeResources',
                 noErrorOnMissing: true
             },
             // Custom OPFS worker script is handled by Gradle resource processing
@@ -70,6 +92,34 @@ config.plugins.push(
         ]
     })
 );
+
+class SqliteWasmAssetsPlugin {
+    apply(compiler) {
+        compiler.hooks.emit.tapAsync('SqliteWasmAssetsPlugin', (compilation, callback) => {
+            const { RawSource } = compiler.webpack.sources;
+            const assets = [
+                { name: 'sqlite3.js', path: path.resolve(sqliteBuildDir, 'sqlite3.js') },
+                { name: 'sqlite3.wasm', path: path.resolve(sqliteBuildDir, 'sqlite3.wasm') },
+                { name: 'sqlite3-opfs-async-proxy.js', path: path.resolve(sqliteBuildDir, 'sqlite3-opfs-async-proxy.js') }
+            ];
+
+            assets.forEach((asset) => {
+                if (fs.existsSync(asset.path)) {
+                    const content = fs.readFileSync(asset.path);
+                    if (!compilation.getAsset(asset.name)) {
+                        compilation.emitAsset(asset.name, new RawSource(content));
+                    }
+                } else if (asset.name === 'sqlite3.js' && !compilation.getAsset(asset.name)) {
+                    compilation.emitAsset(asset.name, new RawSource('// sqlite3.js not found; SQL.js fallback will be used.'));
+                }
+            });
+
+            callback();
+        });
+    }
+}
+
+config.plugins.push(new SqliteWasmAssetsPlugin());
 
 // Add webpack plugin to modify SQL.js WASM loading at the source level
 class SQLJsWasmFixPlugin {

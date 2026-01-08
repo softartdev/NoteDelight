@@ -2,14 +2,14 @@ package com.softartdev.notedelight.ui.screen.dialog
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithTag
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_FIELD_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_LABEL_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_REPEAT_FIELD_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_REPEAT_LABEL_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_TAG
-import com.softartdev.notedelight.ui.dialog.security.CONFIRM_PASSWORD_DIALOG_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_FIELD_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_LABEL_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_FIELD_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_LABEL_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_REPEAT_VISIBILITY_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_SAVE_BUTTON_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_TAG
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_VISIBILITY_TAG
 import kotlin.jvm.JvmInline
 
 @JvmInline

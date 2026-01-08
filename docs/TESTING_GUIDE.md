@@ -142,7 +142,9 @@ class NoteSQLDelightDAOTest {
 **Location**:
 - `app/android/src/androidTest/` (Android)
 - `app/desktop/src/jvmTest/` (Desktop)
-- `ui/test/src/commonMain/kotlin/` (Multiplatform test framework)
+- `app/ios-kit/src/commonTest/` (iOS - multiplatform Compose UI tests)
+- `app/web/src/wasmJsTest/` (Web - multiplatform Compose UI tests)
+- `ui/test/src/commonMain/kotlin/` (Multiplatform test framework - base classes)
 - `ui/test-jvm/src/main/kotlin/` (JVM-specific test utilities)
 
 **Framework**:
@@ -191,7 +193,13 @@ class CrudTestCase(
 ```
 
 **Multiplatform Testing**:
-The `ui/test` module provides multiplatform UI tests that can run on all platforms (Android, iOS, JVM Desktop, Web) using the Compose Multiplatform testing API. Test cases are written once in `commonMain` and executed on each platform.
+The `ui/test` module provides multiplatform UI tests that can run on all platforms (Android, iOS, JVM Desktop, Web) using the Compose Multiplatform testing API. The base test class `CommonUiTests` is defined in `ui/test/src/commonMain/kotlin/` and extended by platform-specific test classes:
+
+- **iOS**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt` extends `CommonUiTests`
+- **Web**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt` extends `CommonUiTests`
+- **Android/Desktop**: Use `AbstractJvmUiTests` from `ui/test-jvm` which bridges to `ComposeContentTestRule`
+
+Test cases are written once in `ui/test/src/commonMain/kotlin/ui/cases/` and executed on each platform through the platform-specific test classes.
 
 **Platform-Specific Test Utilities**:
 The `ui/test-jvm` module provides JVM-specific utilities and abstractions for Android and Desktop tests, including platform-specific implementations of `runOnUiThread` and test setup.
@@ -458,18 +466,16 @@ class LocaleTestCase(
             settingsMenuButtonSNI.performClick()
         }
         
-        // Verify localized strings
-        val settingsText = runBlocking { getString(Res.string.settings) }
-        composeUiTest.onNodeWithText(settingsText).assertIsDisplayed()
-        
-        // Test language dialog
+        // Verify localized strings using test tags
         settingsTestScreen {
+            settingsMenuButtonSNI.assertIsDisplayed()
             languageSNI.performClick()
         }
         
-        // Verify language options
-        val chooseLanguageText = runBlocking { getString(Res.string.choose_language) }
-        composeUiTest.onNodeWithText(chooseLanguageText).assertIsDisplayed()
+        // Verify language dialog using test tags
+        languageDialog {
+            langDialogTitleSNI.assertIsDisplayed()
+        }
     }
 }
 ```
@@ -647,6 +653,31 @@ composeTestRule.onNodeWithTag("unique_tag")
 composeTestRule.onNode(hasClickAction())
 ```
 
+**Using Test Tags for String Resources**:
+When writing UI tests, always use test tags instead of suspending string resources. This avoids the need for `runBlockingAll` and makes tests more reliable and faster.
+
+**Best Practice**:
+- ✅ Use test tags: `onNodeWithTag(TEST_TAG)`
+- ❌ Avoid: `onNodeWithText(runBlocking { getString(Res.string.label) })`
+
+**Example**:
+```kotlin
+// In TestTags.kt
+const val SIGN_IN_BUTTON_TAG = "SIGN_IN_BUTTON_TAG"
+
+// In UI component
+Button(
+    modifier = Modifier.testTag(SIGN_IN_BUTTON_TAG),
+    onClick = { }
+) { Text(stringResource(Res.string.sign_in)) }
+
+// In test
+val signInButtonSNI: SemanticsNodeInteraction
+    get() = nodeProvider.onNodeWithTag(SIGN_IN_BUTTON_TAG)
+```
+
+All test tags are defined in [`ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt`](../ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt).
+
 Actions:
 ```kotlin
 node.performClick()
@@ -675,10 +706,12 @@ node.assertTextContains("partial")
 ./gradlew :core:domain:test       # Specific module
 ./gradlew :app:android:connectedCheck  # Android UI tests
 ./gradlew :app:desktop:jvmTest    # Desktop tests
-./gradlew :ui:test:jvmTest        # Multiplatform UI tests (JVM)
-./gradlew :ui:test:iosSimulatorArm64Test  # Multiplatform UI tests (iOS)
-./gradlew :ui:test:connectedAndroidTest  # Multiplatform UI tests (Android)
-./gradlew :ui:test:wasmJsTest     # Multiplatform UI tests (Web)
+./gradlew :app:ios-kit:iosSimulatorArm64Test  # iOS UI tests (requires simulator)
+./gradlew :app:web:wasmJsBrowserTest  # Web UI tests (requires CHROME_BIN env var)
+./gradlew :ui:test:jvmTest        # Multiplatform UI test framework (JVM)
+./gradlew :ui:test:iosSimulatorArm64Test  # Multiplatform UI test framework (iOS)
+./gradlew :ui:test:connectedAndroidTest  # Multiplatform UI test framework (Android)
+./gradlew :ui:test:wasmJsTest     # Multiplatform UI test framework (Web)
 ```
 
 ### IDE
@@ -811,6 +844,90 @@ fun testWithTimeout() = runTest {
 - Use semantic properties
 - Check for animations
 - Ensure proper test cleanup
+
+## Platform-Specific UI Testing
+
+### iOS UI Tests
+
+**Location**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt`
+
+**Structure**:
+- Extends `CommonUiTests` from `ui/test` module
+- Runs on iOS Simulator (arm64)
+- Uses Compose Multiplatform testing API
+- Tests are shared across platforms via base class
+
+**Running**:
+```bash
+# Requires iOS Simulator to be running
+./gradlew :app:ios-kit:iosSimulatorArm64Test
+```
+
+**Setup**:
+- Tests automatically set up database and clean up after each test
+- Uses `deleteDatabase()` to ensure clean state
+- Handles iOS-specific database file cleanup (WAL, journal files)
+
+**Example**:
+```kotlin
+class IosUiTests : CommonUiTests() {
+    @Test
+    override fun crudNoteTest(): TestResult = super.crudNoteTest()
+    
+    @Test
+    override fun editTitleAfterCreateTest(): TestResult = super.editTitleAfterCreateTest()
+}
+```
+
+### Web UI Tests
+
+**Location**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt`
+
+**Structure**:
+- Extends `CommonUiTests` from `ui/test` module
+- Runs in headless Chrome via Karma
+- Uses Compose Multiplatform testing API
+- Tests are shared across platforms via base class
+
+**Running**:
+```bash
+# Requires CHROME_BIN environment variable
+export CHROME_BIN=/path/to/chrome
+./gradlew :app:web:wasmJsBrowserTest
+```
+
+**Setup**:
+- Tests automatically set up database and clean up after each test
+- Uses SQL.js fallback when SQLite3 WASM is not available (e.g., in headless browsers)
+- Handles web-specific database worker setup
+
+**Database Fallback**:
+The web tests use a fallback mechanism:
+1. First tries to use official SQLite3 WASM with OPFS support
+2. Falls back to SQL.js (in-memory) if SQLite3 is not available
+3. This ensures tests can run in headless browser environments
+
+**Example**:
+```kotlin
+class WebUiTests : CommonUiTests() {
+    @Test
+    override fun crudNoteTest(): TestResult = super.crudNoteTest()
+    
+    @Test
+    override fun editTitleAfterCreateTest(): TestResult = super.editTitleAfterCreateTest()
+}
+```
+
+**Configuration**:
+The web test task is automatically disabled if `CHROME_BIN` is not set:
+```kotlin
+val chromeBinaryFromEnv = providers.environmentVariable("CHROME_BIN").orNull
+val hasChromeForTests = chromeBinaryFromEnv?.let { file(it).exists() } == true
+
+tasks.named<KotlinJsTest>("wasmJsBrowserTest").configure {
+    enabled = hasChromeForTests
+}
+```
 
 ## Resources
 

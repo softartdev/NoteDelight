@@ -358,6 +358,44 @@ dependencies {
 
 Kotlin code can be debugged from Xcode with proper symbol mapping.
 
+## Testing
+
+### UI Tests
+
+The iOS kit includes multiplatform Compose UI tests that extend `CommonUiTests` from the `ui/test` module:
+
+**Location**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt`
+
+**Test Coverage**:
+- CRUD operations
+- Title editing after create/save
+- Database prepopulation
+- Encryption flow
+- Password settings
+- Locale switching
+
+**Running Tests**:
+
+```bash
+# Requires iOS Simulator to be running
+./gradlew :app:ios-kit:iosSimulatorArm64Test
+```
+
+**Test Configuration**:
+- Tests run on iOS Simulator (arm64)
+- Uses Compose Multiplatform testing API
+- Database is automatically cleaned up before each test
+- Handles iOS-specific database file cleanup (WAL, journal files)
+
+**Database Management**:
+Tests use improved database deletion that properly handles:
+- Main database file (`notes.db`)
+- Write-Ahead Logging files (`notes.db-wal`)
+- Shared memory files (`notes.db-shm`)
+- Journal files (`notes.db-journal`)
+
+This ensures clean test state and prevents test interference.
+
 ## Updating Framework
 
 After changing Kotlin code:

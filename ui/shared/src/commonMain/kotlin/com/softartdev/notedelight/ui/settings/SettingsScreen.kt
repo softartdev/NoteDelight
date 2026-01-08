@@ -39,10 +39,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTag as semanticsTestTag
 import androidx.compose.ui.semantics.toggleableState
+import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
+import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
+import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -108,6 +112,7 @@ fun SettingsScreenBody(
             PreferenceCategory(stringResource(Res.string.theme), Icons.Default.Brightness4)
             ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
             Preference(
+                modifier = Modifier.testTag(LANGUAGE_BUTTON_TAG),
                 title = stringResource(Res.string.language),
                 vector = Icons.Default.Language,
                 onClick = { onAction(SettingsAction.ChangeLanguage) },
@@ -118,7 +123,7 @@ fun SettingsScreenBody(
                 modifier = Modifier.semantics {
                     contentDescription = enableEncryptionPrefTitle
                     toggleableState = ToggleableState(result.encryption)
-                    testTag = enableEncryptionPrefTitle
+                    semanticsTestTag = ENABLE_ENCRYPTION_SWITCH_TAG
                 },
                 title = enableEncryptionPrefTitle,
                 vector = Icons.Default.Lock,
@@ -127,6 +132,7 @@ fun SettingsScreenBody(
                 Switch(checked = result.encryption, onCheckedChange = { onAction(SettingsAction.ChangeEncryption(it)) })
             }
             Preference(
+                modifier = Modifier.testTag(SET_PASSWORD_BUTTON_TAG),
                 title = stringResource(Res.string.pref_title_set_password),
                 vector = Icons.Default.Password,
                 onClick = { onAction(SettingsAction.ChangePassword) }

@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.SQLException
 import java.sql.Statement
 
 object JvmCipherUtils {
@@ -28,7 +29,7 @@ object JvmCipherUtils {
             try {
                 DriverManager.registerDriver(driver)
                 logger.d { "SQLite JDBC driver (sqlite-jdbc-crypt) registered successfully" }
-            } catch (e: java.sql.SQLException) {
+            } catch (e: SQLException) {
                 if (e.message?.contains("already registered") == true) {
                     logger.d { "SQLite JDBC driver already registered" }
                 } else {
@@ -52,7 +53,7 @@ object JvmCipherUtils {
                 val driverClass = Class.forName(SQLITE_JDBC_DRIVER)
                 val driver = driverClass.getDeclaredConstructor().newInstance() as java.sql.Driver
                 val props = java.util.Properties()
-                driver.connect(url, props) ?: throw java.sql.SQLException("Failed to connect to encrypted database")
+                driver.connect(url, props) ?: throw SQLException("Failed to connect to encrypted database")
             } catch (e: Exception) {
                 logger.e(e) { "Failed to create encrypted connection, falling back to DriverManager" }
                 DriverManager.getConnection(url)

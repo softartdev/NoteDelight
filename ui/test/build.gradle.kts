@@ -44,6 +44,8 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.components.resources)
                 implementation(libs.material.theme.prefs)
+                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.androidx.lifecycle.runtime.testing)
                 implementation(libs.turbine)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
@@ -53,8 +55,6 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.androidx.lifecycle.runtime.testing)
             }
         }
         val jvmTest by getting {
@@ -68,6 +68,9 @@ kotlin {
             }
         }
         val androidInstrumentedTest by getting
+        all {
+            languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop")
+        }
     }
     cocoapods {
         summary = "UI test library for the NoteDelight app"
@@ -80,6 +83,7 @@ kotlin {
         }
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
+    compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 
 android {

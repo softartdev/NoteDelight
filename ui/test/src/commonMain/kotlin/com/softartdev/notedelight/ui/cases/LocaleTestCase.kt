@@ -11,7 +11,6 @@ import com.softartdev.notedelight.ASSERT_WAIT_TIMEOUT_MILLIS
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.model.LanguageEnum
 import com.softartdev.notedelight.ui.BaseTestCase
-import com.softartdev.notedelight.util.runBlockingAll
 import com.softartdev.notedelight.waitUntilDisplayed
 import com.softartdev.notedelight.waitUntilSelected
 import kotlinx.coroutines.test.TestResult
@@ -43,7 +42,7 @@ class LocaleTestCase(
                         confirmDialogButtonSNI.performClick()
                     }
                     composeUiTest.waitUntilDoesNotExist(
-                        matcher = hasText(runBlockingAll { getString(Res.string.choose_language) }),
+                        matcher = hasText(getString(Res.string.choose_language)),
                         timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS,
                     )
                     assertEquals(languageEnum, localeInteractor.languageEnum)

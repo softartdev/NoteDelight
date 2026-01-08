@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalComposeLibrary::class)
+
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -38,6 +41,14 @@ kotlin {
             implementation(compose.runtime)
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(projects.ui.test)
+            implementation(compose.uiTest)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.runtime.testing)
         }
     }
 }

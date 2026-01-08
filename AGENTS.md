@@ -21,7 +21,9 @@
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
 - Desktop UI tests: `./gradlew :app:desktop:jvmTest` (uses `uiTestJUnit4`).
 - iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
+- iOS UI tests: `./gradlew :app:ios-kit:iosSimulatorArm64Test` (requires iOS simulator; uses multiplatform Compose UI tests).
 - Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
+- Web UI tests: `./gradlew :app:web:wasmJsBrowserTest` (requires Chrome binary via `CHROME_BIN` environment variable; uses Karma/Chrome headless).
 - Build without iOS link tasks: `./gradle/build_quick.sh` (see [gradle/build_quick.sh](gradle/build_quick.sh))
 
 ## AI Agent Workflow for Verifying Changes
@@ -40,6 +42,8 @@ After making changes, AI agents must perform the following checks sequentially. 
 - Unit tests: Kotlin Multiplatform `kotlin("test")`/JUnit. Run all with `./gradlew test` or per module (e.g., `:ui:shared:jvmTest`).
 - Android UI tests: Espresso/Compose in `app/android/src/androidTest`. Run with `connectedCheck`.
 - Desktop UI tests: in `app/desktop/src/jvmTest` using `uiTestJUnit4`.
+- iOS UI tests: Multiplatform Compose UI tests in `app/ios-kit/src/commonTest`. Run with `:app:ios-kit:iosSimulatorArm64Test`.
+- Web UI tests: Multiplatform Compose UI tests in `app/web/src/wasmJsTest`. Run with `:app:web:wasmJsBrowserTest` (requires `CHROME_BIN` environment variable).
 - Name tests `FooBarTest.kt`; prefer Given_When_Then method names.
 
 ## Commit & Pull Request Guidelines
