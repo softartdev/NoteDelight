@@ -1,12 +1,13 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
@@ -14,7 +15,15 @@ plugins {
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
-    androidTarget()
+    android {
+        namespace = "com.softartdev.notedelight.core.presentation"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+        withHostTest { }
+    }
     iosArm64()
     iosSimulatorArm64()
     wasmJs {
@@ -38,10 +47,12 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
         }
-        androidUnitTest.dependencies {
-            implementation(kotlin("test-junit"))
-            implementation(libs.bundles.mockito)
-            implementation(libs.androidx.arch.core.testing)
+        val androidHostTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation(libs.bundles.mockito)
+                implementation(libs.androidx.arch.core.testing)
+            }
         }
         iosMain.dependencies {
         }
@@ -58,23 +69,7 @@ kotlin {
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
-android {
-    namespace = "com.softartdev.notedelight.core.presentation"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    lint.disable += setOf("CoroutineCreationDuringComposition", "StateFlowValueCalledInComposition") // FIXME remove after AGP update
-    dependencies {
-        coreLibraryDesugaring(libs.desugar)
-    }
-    testOptions.unitTests.isReturnDefaultValues = true
-}
 
-compose.experimental {
-    web.application {}
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }

@@ -234,7 +234,7 @@ class NoteRoomDAOTest {
 ./gradlew :core:data:db-room:test
 
 # Platform-specific
-./gradlew :core:data:db-room:testDebugUnitTest
+./gradlew :core:data:db-room:androidHostTest
 ./gradlew :core:data:db-room:iosSimulatorArm64Test
 ```
 
@@ -350,4 +350,3 @@ val db = Room.databaseBuilder(
 - [Room KMP](https://developer.android.com/kotlin/multiplatform/room)
 - [KSP](https://kotlinlang.org/docs/ksp-overview.html)
 - [SQLCipher](https://www.zetetic.net/sqlcipher/)
-

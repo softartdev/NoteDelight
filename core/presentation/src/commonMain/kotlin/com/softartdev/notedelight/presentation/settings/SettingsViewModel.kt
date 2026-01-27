@@ -41,7 +41,6 @@ class SettingsViewModel(
         is SettingsAction.NavBack -> navBack()
         is SettingsAction.ChangeTheme -> changeTheme()
         is SettingsAction.ChangeLanguage -> changeLanguage()
-        is SettingsAction.CheckEncryption -> checkEncryption() //TODO use directly
         is SettingsAction.ChangeEncryption -> changeEncryption(action.checked)
         is SettingsAction.ChangePassword -> changePassword()
         is SettingsAction.ShowCipherVersion -> showCipherVersion()
@@ -50,22 +49,14 @@ class SettingsViewModel(
         is SettingsAction.RevealFileList -> revealFileList()
     }
 
-    private fun navBack() {
-        if (!router.popBackStack()) router.navigate(route = AppNavGraph.Splash)
-    }
-
-    private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog)
-
-    private fun changeLanguage() = router.navigate(route = AppNavGraph.LanguageDialog)
-
-    private fun checkEncryption() = viewModelScope.launch {
+    fun updateSwitches() = viewModelScope.launch {
         CountingIdlingRes.increment()
         mutableStateFlow.update(SecurityResult::showLoading)
         try {
             mutableStateFlow.update { result ->
                 result.copy(
                     encryption = dbIsEncrypted,
-                    language = localeInteractor.languageEnum //TODO move to separate function
+                    language = localeInteractor.languageEnum
                 )
             }
         } catch (e: Throwable) {
@@ -75,6 +66,14 @@ class SettingsViewModel(
             CountingIdlingRes.decrement()
         }
     }
+
+    private fun navBack() {
+        if (!router.popBackStack()) router.navigate(route = AppNavGraph.Splash)
+    }
+
+    private fun changeTheme() = router.navigate(route = AppNavGraph.ThemeDialog)
+
+    private fun changeLanguage() = router.navigate(route = AppNavGraph.LanguageDialog)
 
     private fun changeEncryption(checked: Boolean) = viewModelScope.launch {
         CountingIdlingRes.increment()

@@ -217,7 +217,7 @@ See "Platform-Specific Implementations" section above for details.
 - Repository tests
 
 ### Integration Tests
-- Android instrumented tests (`androidInstrumentedTest/`)
+- Android instrumented tests (`androidDeviceTest/`)
 - Platform-specific tests for each target
 
 ### Running Tests
@@ -312,4 +312,3 @@ val notesFlow: Flow<List<Note>> = database.noteQueries
 - [SQLDelight Documentation](https://cashapp.github.io/sqldelight/)
 - [SQLCipher](https://www.zetetic.net/sqlcipher/)
 - [SafeRoom](https://github.com/commonsguy/cwac-saferoom)
-

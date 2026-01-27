@@ -68,7 +68,7 @@ Each screen has a dedicated ViewModel following **MVVM pattern**:
 
 ### Interactors (`interactor/`)
 
-- `AdaptiveInteractor`: Shared state holder that bridges adaptive navigation between `MainViewModel`, router, and UI panes.
+- `AdaptiveInteractor`: Shared state holder that bridges adaptive navigation between `MainViewModel`, router, and UI panes. It also exposes `checkSaveChangeChannel` so the list pane can request a save-change confirmation before switching or creating notes in adaptive layouts.
 - `SnackbarInteractor`: Multiplatform contract used by ViewModels to emit UI messages without depending on Compose APIs.
 
 ### Navigation (`navigation/`)
@@ -134,7 +134,7 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 
 ## Testing Strategy
 
-### Unit Tests (`androidUnitTest/`)
+### Unit Tests (`androidHostTest/`)
 
 - `MainViewModelTest`, `NoteViewModelTest`, and the security test suite validate action routing, paging integration, and error handling. Use `MainDispatcherRule` and fakes for repositories/interactors to keep tests deterministic.
 - Password flows (`EnterViewModelTest`, `ConfirmViewModelTest`, `ChangeViewModelTest`) ensure dialog ViewModels stay in sync with encryption use cases.
@@ -143,8 +143,8 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 ### Running Tests
 
 ```bash
-./gradlew :core:presentation:test             # Multiplatform tests
-./gradlew :core:presentation:testDebugUnitTest # Android unit tests
+./gradlew :core:presentation:test            # Multiplatform tests
+./gradlew :core:presentation:androidHostTest # Android host tests (sources in androidHostTest)
 ```
 
 ## ViewModel Lifecycle
@@ -202,4 +202,3 @@ The `Router` interface (see `navigation/Router.kt`) keeps ViewModels platform-ag
 - **Used by**: `ui:shared`, `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
 - **Depends on**: `core:domain`
 - **Test dependencies**: `core:test`
-

@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmAction
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmResult
@@ -43,7 +44,6 @@ import notedelight.ui.shared.generated.resources.confirm_password_dialog_subtitl
 import notedelight.ui.shared.generated.resources.confirm_password_dialog_title
 import notedelight.ui.shared.generated.resources.enter_password
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ConfirmPasswordDialog(confirmViewModel: ConfirmViewModel) {
@@ -69,6 +69,7 @@ fun ShowConfirmPasswordDialog(
             Spacer(modifier = Modifier.height(8.dp))
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.password,
                 onPasswordChange = { onAction(ConfirmAction.OnEditPassword(it)) },
                 label = result.passwordFieldLabel.resString,
@@ -83,6 +84,7 @@ fun ShowConfirmPasswordDialog(
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.repeatPassword,
                 onPasswordChange = { onAction(ConfirmAction.OnEditRepeatPassword(it)) },
                 label = result.repeatPasswordFieldLabel.resString,
@@ -105,5 +107,5 @@ fun ShowConfirmPasswordDialog(
 @Preview
 @Composable
 fun PreviewConfirmPasswordDialog() = PreviewDialog {
-    ShowConfirmPasswordDialog(ConfirmResult())
+    ShowConfirmPasswordDialog(ConfirmResult(loading = true))
 }

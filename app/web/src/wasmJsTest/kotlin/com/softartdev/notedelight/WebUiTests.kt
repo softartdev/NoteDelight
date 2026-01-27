@@ -19,6 +19,9 @@ class WebUiTests : CommonUiTests() {
     override fun crudNoteTest(): TestResult = super.crudNoteTest()
 
     @Test
+    override fun createNoteWhileSelectedTest(): TestResult = super.createNoteWhileSelectedTest()
+
+    @Test
     override fun editTitleAfterCreateTest(): TestResult = super.editTitleAfterCreateTest()
 
     @Test

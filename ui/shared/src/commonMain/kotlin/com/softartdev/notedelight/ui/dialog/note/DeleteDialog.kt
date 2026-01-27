@@ -6,16 +6,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.softartdev.notedelight.util.YES_BUTTON_TAG
+import androidx.compose.ui.tooling.preview.Preview
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
+import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.action_delete_note
 import notedelight.ui.shared.generated.resources.cancel
 import notedelight.ui.shared.generated.resources.note_delete_dialog_message
 import notedelight.ui.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DeleteDialog(deleteViewModel: DeleteViewModel) = DeleteDialog(

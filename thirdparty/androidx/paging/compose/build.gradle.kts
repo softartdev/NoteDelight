@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
   alias(libs.plugins.compose)
   alias(libs.plugins.compose.compiler)
 }
@@ -15,7 +15,14 @@ kotlin {
   jvm {
     compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
   }
-  androidTarget()
+  android {
+    namespace = "androidx.paging.compose"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    minSdk = libs.versions.minSdk.get().toInt()
+    compilerOptions {
+      jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+    }
+  }
   iosArm64()
   iosSimulatorArm64()
   applyDefaultHierarchyTemplate()
@@ -27,15 +34,5 @@ kotlin {
       api(libs.androidx.paging.common)
       api(compose.runtime)
     }
-  }
-}
-
-android {
-  namespace = "androidx.paging.compose"
-  compileSdk = libs.versions.compileSdk.get().toInt()
-  defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
-  compileOptions {
-    sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
   }
 }

@@ -12,8 +12,8 @@ import androidx.compose.ui.test.performTextReplacement
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.retryUntilDisplayed
 import com.softartdev.notedelight.ui.BaseTestCase
-import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_TAG
 import com.softartdev.notedelight.ui.screen.MainTestScreen
+import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_TAG
 import com.softartdev.notedelight.waitAssert
 import com.softartdev.notedelight.waitUntilDisplayed
 import com.softartdev.notedelight.waitUntilNotExist

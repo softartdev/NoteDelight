@@ -54,7 +54,9 @@ class DesktopUiTests : AbstractJvmUiTests() {
         }
         val safeRepo: SafeRepo = get(SafeRepo::class.java)
         safeRepo.closeDatabase()
-        File(safeRepo.dbPath).takeIf(File::exists)?.delete()
+        for (suffix: String in arrayOf("", "-wal", "-shm", "-journal")) {
+            File(safeRepo.dbPath + suffix).delete()
+        }
         safeRepo.buildDbIfNeed()
         val noteDAO: NoteDAO = get(NoteDAO::class.java)
         noteDAO.deleteAll()
@@ -79,6 +81,9 @@ class DesktopUiTests : AbstractJvmUiTests() {
 
     @Test
     override fun crudNoteTest() = super.crudNoteTest()
+
+    @Test
+    override fun createNoteWhileSelectedTest() = super.createNoteWhileSelectedTest()
 
     @Test
     override fun editTitleAfterCreateTest() = super.editTitleAfterCreateTest()

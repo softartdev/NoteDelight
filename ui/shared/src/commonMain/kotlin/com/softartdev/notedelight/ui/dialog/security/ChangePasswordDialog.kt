@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeAction
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeResult
@@ -47,7 +48,6 @@ import notedelight.ui.shared.generated.resources.enter_new_password
 import notedelight.ui.shared.generated.resources.enter_old_password
 import notedelight.ui.shared.generated.resources.repeat_new_password
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChangePasswordDialog(changeViewModel: ChangeViewModel) {
@@ -73,6 +73,7 @@ fun ShowChangePasswordDialog(
             Spacer(modifier = Modifier.height(8.dp))
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.oldPassword,
                 onPasswordChange = { onAction(ChangeAction.OnEditOldPassword(it)) },
                 label = result.oldPasswordFieldLabel.resString,
@@ -86,6 +87,7 @@ fun ShowChangePasswordDialog(
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.newPassword,
                 onPasswordChange = { onAction(ChangeAction.OnEditNewPassword(it)) },
                 label = result.newPasswordFieldLabel.resString,
@@ -100,6 +102,7 @@ fun ShowChangePasswordDialog(
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.repeatNewPassword,
                 onPasswordChange = { onAction(ChangeAction.OnEditRepeatPassword(it)) },
                 label = result.repeatPasswordFieldLabel.resString,
@@ -122,5 +125,5 @@ fun ShowChangePasswordDialog(
 @Preview
 @Composable
 fun PreviewChangePasswordDialog() = PreviewDialog {
-    ShowChangePasswordDialog(ChangeResult())
+    ShowChangePasswordDialog(ChangeResult(loading = true))
 }

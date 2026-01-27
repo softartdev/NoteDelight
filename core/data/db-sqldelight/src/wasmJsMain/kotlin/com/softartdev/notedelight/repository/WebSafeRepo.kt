@@ -43,7 +43,7 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     }
 
     override suspend fun execute(query: String): String? {
-        val queryResult = buildDbIfNeed().driver.executeQuery(
+        val queryResult: QueryResult<String?> = buildDbIfNeed().driver.executeQuery(
             identifier = null,
             sql = query,
             parameters = 0,

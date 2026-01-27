@@ -16,10 +16,10 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.ui.SettingsDetailPanePlaceholder
 import com.softartdev.theme.material3.PreferableMaterialTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

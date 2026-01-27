@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.gms)
@@ -24,8 +23,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 850
-        versionName = "8.5.0"
+        versionCode = 851
+        versionName = "8.5.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -60,7 +59,7 @@ android {
         buildConfig = true
         compose = true
     }
-    packagingOptions.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+    packaging.resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         emulatorControl.enable = true
@@ -73,7 +72,7 @@ dependencies {
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
     implementation(projects.core.presentation)
     implementation(projects.ui.shared)
-    implementation(kotlin("reflect"))
+    implementation(kotlin("reflect", libs.versions.kotlin.get()))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
@@ -94,7 +93,6 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.tracing)
     debugImplementation(libs.leakCanary.android)
-    debugImplementation(libs.leakCanary.android.process)
     implementation(libs.leakCanary.plumber.android)
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
@@ -117,4 +115,20 @@ dependencies {
 }
 tasks.withType<UploadMappingFileTask> {
     dependsOn("processDebugGoogleServices")
+}
+
+configurations.all {
+    resolutionStrategy {
+        sequenceOf(
+            "common", "common-java8", "runtime", "runtime-ktx", "runtime-compose", "viewmodel", "viewmodel-ktx", "viewmodel-compose", "viewmodel-savedstate", "livedata", "livedata-core", "livedata-core-ktx", "process"
+        ).forEach { depName: String ->
+            force("androidx.lifecycle:lifecycle-$depName:${libs.versions.androidxLifecycle.get()}")
+        }
+        force("androidx.savedstate:savedstate:1.4.0")
+        force("androidx.savedstate:savedstate-ktx:1.4.0")
+        force("androidx.savedstate:savedstate-compose:1.4.0")
+
+        force("androidx.concurrent:concurrent-futures:1.2.0")
+        force("com.google.errorprone:error_prone_annotations:2.30.0")
+    }
 }

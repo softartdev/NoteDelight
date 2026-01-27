@@ -23,6 +23,7 @@ import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
@@ -141,7 +142,7 @@ class AdaptiveInteractorTest {
             assertTrue(selectedResult is NoteListResult.Success)
             assertEquals(id, selectedResult.selectedId)
             
-            noteViewModel.onAction(NoteAction.CheckSaveChange(title, text))
+            noteViewModel.onAction(NoteAction.CheckSaveChange(text))
             
             val clearedResult = awaitItem()
             assertTrue(clearedResult is NoteListResult.Success)
@@ -150,5 +151,16 @@ class AdaptiveInteractorTest {
             cancelAndIgnoreRemainingEvents()
         }
         Mockito.verify(mockRouter).adaptiveNavigateBack()
+    }
+
+    @Test
+    fun `when create clicked with selected note then request save changes`() = runTest {
+        adaptiveInteractor.selectedNoteIdStateFlow.value = id
+        val deferred = async { adaptiveInteractor.checkSaveChangeChannel.receive() }
+        
+        mainViewModel.onAction(MainAction.OnNoteClick(0))
+        
+        deferred.await()
+        assertEquals(id, adaptiveInteractor.selectedNoteIdStateFlow.value)
     }
 }

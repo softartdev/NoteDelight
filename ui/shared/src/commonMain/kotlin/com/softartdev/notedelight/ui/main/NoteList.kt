@@ -7,6 +7,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -15,7 +16,6 @@ import com.softartdev.notedelight.db.TestSchema.secondNote
 import com.softartdev.notedelight.db.TestSchema.thirdNote
 import com.softartdev.notedelight.model.Note
 import kotlinx.coroutines.flow.flowOf
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun NoteList(

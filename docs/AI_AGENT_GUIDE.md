@@ -198,7 +198,7 @@ val sharedModule = module {
 
 ```kotlin
 // Test ViewModel
-// core/presentation/src/androidUnitTest/kotlin/YourViewModelTest.kt
+// core/presentation/src/androidHostTest/kotlin/YourViewModelTest.kt
 class YourViewModelTest {
     @Test
     fun `loading data should update state to Success`() = runTest {
@@ -424,7 +424,7 @@ Let Kotlin's type system guide you:
 
 ### Read Tests
 Tests often show how to use code correctly. Look at:
-- `core/presentation/src/androidUnitTest/` for ViewModel examples
+- `core/presentation/src/androidHostTest/` for ViewModel examples (wired to `androidHostTest` source set)
 - `ui/test/src/commonMain/kotlin/ui/cases/` for multiplatform UI test examples
 - `ui/test-jvm/src/main/kotlin/` for JVM-specific test utilities
 
@@ -500,4 +500,3 @@ Adding logic?
 - Ask: "Which layer is responsible for this?"
 
 Good luck! 🤖
-

@@ -44,9 +44,11 @@ jobs:
         with:
           name: output-build-artifacts
           path: |
-            shared/build/reports
+            ui/shared/build/reports
+            ui/test/build/reports
             app/android/build/reports
             app/desktop/build/reports
+            app/ios-kit/build/reports
 
   android_ui_test_job:
     name: Android UI-tests on emulator

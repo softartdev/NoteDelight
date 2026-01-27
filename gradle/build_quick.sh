@@ -13,6 +13,7 @@
   -x :app:ios-kit:linkPodIosSimulatorArm64 \
   -x :app:ios-kit:linkPodReleaseFrameworkIosArm64 \
   -x :app:ios-kit:linkPodReleaseFrameworkIosSimulatorArm64 \
+  -x :app:ios-kit:podInstallSyntheticIos \
   -x :core:data:db-sqldelight:linkDebugTestIosArm64 \
   -x :core:data:db-sqldelight:linkDebugTestIosSimulatorArm64 \
   -x :core:data:db-sqldelight:linkIosArm64 \
@@ -23,6 +24,7 @@
   -x :core:data:db-sqldelight:linkPodIosSimulatorArm64 \
   -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosArm64 \
   -x :core:data:db-sqldelight:linkPodReleaseFrameworkIosSimulatorArm64 \
+  -x :core:data:db-sqldelight:podInstallSyntheticIos \
   -x :core:data:file-explorer:linkDebugTestIosArm64 \
   -x :core:data:file-explorer:linkDebugTestIosSimulatorArm64 \
   -x :core:data:file-explorer:linkIosArm64 \
@@ -57,7 +59,15 @@
   -x :ui:shared:linkPodIosSimulatorArm64 \
   -x :ui:shared:linkPodReleaseFrameworkIosArm64 \
   -x :ui:shared:linkPodReleaseFrameworkIosSimulatorArm64 \
+  -x :ui:shared:podInstallSyntheticIos \
   -x :ui:test:linkDebugTestIosArm64 \
   -x :ui:test:linkDebugTestIosSimulatorArm64 \
   -x :ui:test:linkIosArm64 \
-  -x :ui:test:linkIosSimulatorArm64
+  -x :ui:test:linkIosSimulatorArm64 \
+  -x :ui:test:linkPodDebugFrameworkIosArm64 \
+  -x :ui:test:linkPodDebugFrameworkIosSimulatorArm64 \
+  -x :ui:test:linkPodIosArm64 \
+  -x :ui:test:linkPodIosSimulatorArm64 \
+  -x :ui:test:linkPodReleaseFrameworkIosArm64 \
+  -x :ui:test:linkPodReleaseFrameworkIosSimulatorArm64 \
+  -x :ui:test:podInstallSyntheticIos

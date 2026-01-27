@@ -11,12 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.softartdev.notedelight.db.TestSchema
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.util.BooleanPreviewProvider
 import com.softartdev.notedelight.util.DateTimeFormatter
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun NoteItem(

@@ -124,13 +124,15 @@ class NoteViewModelTest {
     @Test
     fun saveNoteEmpty() = runTest {
         viewModel.launchCollectingSelectedNoteId()
+        val emptyNote = note.copy(title = "", text = "")
+        Mockito.`when`(mockNoteDAO.load(id)).thenReturn(emptyNote)
         adaptiveInteractor.selectedNoteIdStateFlow.value = id
         viewModel.stateFlow.test {
-            var actualResult: NoteResult = awaitItem()
+            val actualResult: NoteResult = awaitItem()
             assertFalse(actualResult.loading)
-            assertEquals(note, actualResult.note)
+            assertEquals(emptyNote, actualResult.note)
 
-            viewModel.onAction(NoteAction.Save("", ""))
+            viewModel.onAction(NoteAction.Save(""))
             verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
 
             cancelAndIgnoreRemainingEvents()
@@ -146,7 +148,7 @@ class NoteViewModelTest {
             assertFalse(actualResult.loading)
             assertEquals(note, actualResult.note)
 
-            viewModel.onAction(NoteAction.Save(title, text))
+            viewModel.onAction(NoteAction.Save(text))
             verify(mockNoteDAO, times(2)).load(id)
 
             actualResult = awaitItem()
@@ -222,7 +224,7 @@ class NoteViewModelTest {
         viewModel.stateFlow.test {
             Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "new text"))
 
-            viewModel.onAction(NoteAction.CheckSaveChange(title, text))
+            viewModel.onAction(NoteAction.CheckSaveChange(text))
             verify(mockRouter).navigate(route = AppNavGraph.SaveChangesDialog)
 
             SaveNoteUseCase.dialogChannel.send(true)
@@ -238,7 +240,7 @@ class NoteViewModelTest {
         viewModel.launchCollectingSelectedNoteId()
         adaptiveInteractor.selectedNoteIdStateFlow.value = id
         viewModel.stateFlow.test {
-            viewModel.onAction(NoteAction.CheckSaveChange(title, text))
+            viewModel.onAction(NoteAction.CheckSaveChange(text))
             verify(mockRouter).adaptiveNavigateBack()
 
             cancelAndIgnoreRemainingEvents()
@@ -248,14 +250,15 @@ class NoteViewModelTest {
     @Test
     fun checkSaveChangeDeleted() = runTest {
         viewModel.launchCollectingSelectedNoteId()
+        val emptyNote = note.copy(text = "", title = "")
+        Mockito.`when`(mockNoteDAO.load(id)).thenReturn(emptyNote)
         adaptiveInteractor.selectedNoteIdStateFlow.value = id
         viewModel.stateFlow.test {
             val actualResult: NoteResult = awaitItem()
             assertFalse(actualResult.loading)
-            assertEquals(note, actualResult.note)
+            assertEquals(emptyNote, actualResult.note)
 
-            Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
-            viewModel.onAction(NoteAction.CheckSaveChange("", ""))
+            viewModel.onAction(NoteAction.CheckSaveChange(""))
             verify(mockDeleteNoteUseCase).invoke(id)
             verify(mockRouter).adaptiveNavigateBack()
 
@@ -272,14 +275,14 @@ class NoteViewModelTest {
             assertFalse(actualResult.loading)
             assertEquals(note, actualResult.note)
 
-            viewModel.onAction(NoteAction.Save(title, text))
+            viewModel.onAction(NoteAction.Save(text))
             actualResult = awaitItem()
             assertTrue(actualResult.loading)
 
             actualResult = awaitItem()
             assertFalse(actualResult.loading)
 
-            viewModel.onAction(NoteAction.CheckSaveChange(title, text))
+            viewModel.onAction(NoteAction.CheckSaveChange(text))
             verify(mockRouter).adaptiveNavigateBack()
 
             cancelAndIgnoreRemainingEvents()
@@ -291,7 +294,7 @@ class NoteViewModelTest {
         viewModel.launchCollectingSelectedNoteId()
         adaptiveInteractor.selectedNoteIdStateFlow.value = id
         viewModel.stateFlow.test {
-            viewModel.onAction(NoteAction.CheckSaveChange(title, text))
+            viewModel.onAction(NoteAction.CheckSaveChange(text))
             verify(mockRouter).adaptiveNavigateBack()
 
             cancelAndIgnoreRemainingEvents()
@@ -301,14 +304,15 @@ class NoteViewModelTest {
     @Test
     fun doNotSaveAndNavBackDeleted() = runTest {
         viewModel.launchCollectingSelectedNoteId()
+        val emptyNote = note.copy(text = "", title = "")
+        Mockito.`when`(mockNoteDAO.load(id)).thenReturn(emptyNote)
         adaptiveInteractor.selectedNoteIdStateFlow.value = id
         viewModel.stateFlow.test {
             val actualResult: NoteResult = awaitItem()
             assertFalse(actualResult.loading)
-            assertEquals(note, actualResult.note)
+            assertEquals(emptyNote, actualResult.note)
 
-            Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note.copy(text = "", title = ""))
-            viewModel.onAction(NoteAction.CheckSaveChange("", ""))
+            viewModel.onAction(NoteAction.CheckSaveChange(""))
             verify(mockDeleteNoteUseCase).invoke(id)
             verify(mockRouter).adaptiveNavigateBack()
 

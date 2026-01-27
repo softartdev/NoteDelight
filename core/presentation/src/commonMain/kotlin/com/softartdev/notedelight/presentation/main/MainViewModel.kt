@@ -38,6 +38,11 @@ class MainViewModel(
 
     fun onAction(action: MainAction) = when (action) {
         is MainAction.OnNoteClick -> viewModelScope.launch {
+            val selectedNoteId: Long? = adaptiveInteractor.selectedNoteIdStateFlow.value
+            if (action.id == 0L && selectedNoteId != null) {
+                adaptiveInteractor.checkSaveChangeChannel.send(Unit)
+                return@launch
+            }
             adaptiveInteractor.selectedNoteIdStateFlow.value = action.id
             router.adaptiveNavigateToDetail(contentKey = action.id)
         }

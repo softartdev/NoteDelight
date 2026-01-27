@@ -2,11 +2,12 @@
 
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlin.cocoapods)
 }
@@ -21,7 +22,16 @@ configurations.matching { !it.name.contains("test", ignoreCase = true) }.all {
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
-    androidTarget()
+    android {
+        namespace = "com.softartdev.notedelight.core.data"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+        withHostTest { }
+        withDeviceTest { }
+    }
     iosArm64()
     iosSimulatorArm64()
     wasmJs {
@@ -50,14 +60,18 @@ kotlin {
             implementation(libs.commonsware.saferoom)
             implementation(libs.android.sqlcipher)
         }
-        androidUnitTest.dependencies {
-            implementation(kotlin("test-junit"))
-            implementation(libs.bundles.mockito)
-            implementation(libs.sqlDelight.jvm)
+        val androidHostTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation(libs.bundles.mockito)
+                implementation(libs.sqlDelight.jvm)
+            }
         }
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.test.ext.junit)
-            implementation(libs.androidx.test.runner)
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.androidx.test.runner)
+            }
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native)
@@ -95,22 +109,8 @@ kotlin {
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 
-android {
-    namespace = "com.softartdev.notedelight.core.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    dependencies {
-        coreLibraryDesugaring(libs.desugar)
-    }
-    testOptions.unitTests.isReturnDefaultValues = true
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }
 
 sqldelight {

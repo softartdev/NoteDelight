@@ -87,6 +87,13 @@ const val OK_BUTTON_TAG = "OK_BUTTON_TAG"
 const val ENTER_TITLE_DIALOG_TAG = "ENTER_TITLE_DIALOG_TAG"
 
 /**
+ * Test tags for [com.softartdev.notedelight.ui.dialog.note.SaveDialog]
+ */
+const val SAVE_NOTE_DIALOG_TAG = "SAVE_NOTE_DIALOG_TAG"
+
+/**
  * Test tags for dialog buttons
  */
 const val YES_BUTTON_TAG = "YES_BUTTON_TAG"
+const val NO_BUTTON_TAG = "NO_BUTTON_TAG"
+const val CANCEL_BUTTON_TAG = "CANCEL_BUTTON_TAG"

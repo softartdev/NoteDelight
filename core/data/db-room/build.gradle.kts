@@ -1,10 +1,11 @@
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.room)
     alias(libs.plugins.kotlin.cocoapods)
 }
@@ -12,7 +13,15 @@ plugins {
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
-    androidTarget()
+    android {
+        namespace = "com.softartdev.notedelight.core.data"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+        withHostTest { }
+    }
     iosArm64()
     iosSimulatorArm64()
 
@@ -37,9 +46,11 @@ kotlin {
             implementation(libs.commonsware.saferoom)
             implementation(libs.android.sqlcipher)
         }
-        androidUnitTest.dependencies {
-            implementation(kotlin("test-junit"))
-            implementation(libs.bundles.mockito)
+        val androidHostTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation(libs.bundles.mockito)
+            }
         }
         iosMain.dependencies {
         }
@@ -66,24 +77,6 @@ kotlin {
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
 
-android {
-    namespace = "com.softartdev.notedelight.core.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    dependencies {
-        coreLibraryDesugaring(libs.desugar)
-    }
-    testOptions.unitTests.isReturnDefaultValues = true
-}
-
 room {
     schemaDirectory("$projectDir/schemas")
 }
@@ -95,4 +88,5 @@ dependencies {
     add("kspJvm", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
+    coreLibraryDesugaring(libs.desugar)
 }

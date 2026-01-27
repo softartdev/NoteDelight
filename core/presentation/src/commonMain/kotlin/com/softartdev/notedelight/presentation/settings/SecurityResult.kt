@@ -18,7 +18,6 @@ sealed interface SettingsAction {
     data object NavBack : SettingsAction
     data object ChangeTheme : SettingsAction
     data object ChangeLanguage : SettingsAction
-    data object CheckEncryption : SettingsAction
     data class ChangeEncryption(val checked: Boolean) : SettingsAction
     data object ChangePassword : SettingsAction
     data object ShowCipherVersion : SettingsAction

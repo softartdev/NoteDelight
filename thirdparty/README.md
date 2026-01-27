@@ -147,11 +147,15 @@ To add a new vendored library:
 // thirdparty/example/build.gradle.kts
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
     jvm()
-    androidTarget()
+    android {
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+    }
     iosArm64()
     iosSimulatorArm64()
     
@@ -289,4 +293,3 @@ Original version: X.Y.Z
 - [Gradle Multi-Project Builds](https://docs.gradle.org/current/userguide/multi_project_builds.html)
 - [Open Source Licensing](https://opensource.org/licenses)
 - [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
-

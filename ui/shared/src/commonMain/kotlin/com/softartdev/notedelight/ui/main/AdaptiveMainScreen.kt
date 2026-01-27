@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -19,6 +20,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.main.MainViewModel
@@ -26,13 +28,13 @@ import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.BackHandler
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AdaptiveMainScreen(
     router: Router = koinInject(),
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     mainViewModel: MainViewModel = koinViewModel(),
     noteViewModel: NoteViewModel = koinViewModel(),
 ) {
@@ -51,7 +53,7 @@ fun AdaptiveMainScreen(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
-        listPane = { MainScreen(mainViewModel) },
+        listPane = { MainScreen(mainViewModel, snackbarHostState) },
         detailPane = { NoteDetail(noteViewModel) },
         paneExpansionDragHandle = {
             VerticalDragHandle(

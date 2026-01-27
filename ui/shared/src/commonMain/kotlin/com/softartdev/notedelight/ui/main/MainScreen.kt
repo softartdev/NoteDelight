@@ -3,6 +3,7 @@
 package com.softartdev.notedelight.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -12,6 +13,8 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -23,11 +26,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -48,17 +55,17 @@ import notedelight.ui.shared.generated.resources.app_name
 import notedelight.ui.shared.generated.resources.create_note
 import notedelight.ui.shared.generated.resources.settings
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel) {
+fun MainScreen(mainViewModel: MainViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(mainViewModel) {
         mainViewModel.launchNotes()
     }
     val noteListState: State<NoteListResult> = mainViewModel.stateFlow.collectAsState()
     MainScreen(
         noteListState = noteListState,
-        onAction = mainViewModel::onAction
+        onAction = mainViewModel::onAction,
+        snackbarHostState = snackbarHostState
     )
 }
 
@@ -67,7 +74,8 @@ fun MainScreen(
     noteListState: State<NoteListResult>,
     onAction: (action: MainAction) -> Unit = {},
     pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
-    refreshState: State<Boolean> = remember { derivedStateOf { noteListState.value is NoteListResult.Loading } }
+    refreshState: State<Boolean> = remember { derivedStateOf { noteListState.value is NoteListResult.Loading } },
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -111,10 +119,18 @@ fun MainScreen(
             }
         }
     }, floatingActionButton = {
-        val text = stringResource(Res.string.create_note)
+        val bottomPadding: Dp by remember {
+            derivedStateOf {
+                val currentData: SnackbarData? = snackbarHostState.currentSnackbarData
+                return@derivedStateOf if (currentData == null) 0.dp else 64.dp
+            }
+        }
         ExtendedFloatingActionButton(
-            modifier = Modifier.testTag(CREATE_NOTE_FAB_TAG),
-            text = { Text(text) },
+            modifier = Modifier
+                .testTag(CREATE_NOTE_FAB_TAG)
+                .padding(bottom = bottomPadding)
+                .imePadding(),
+            text = { Text(stringResource(Res.string.create_note)) },
             onClick = { onAction(MainAction.OnNoteClick(0)) },
             icon = { Icon(Icons.Default.Add, contentDescription = Icons.Default.Add.name) },
         )
@@ -123,11 +139,11 @@ fun MainScreen(
 
 @Preview
 @Composable
-fun PreviewMainScreen() {
+fun PreviewMainScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
     val pagingData: PagingData<Note> = PagingData.from(data = TestSchema.notes)
     val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
         mutableStateOf(NoteListResult.Success(pagingFlow, null))
     }
-    MainScreen(noteListState)
+    MainScreen(noteListState, snackbarHostState = snackbarHostState)
 }

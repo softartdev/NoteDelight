@@ -1,17 +1,25 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
-    androidTarget()
+    android {
+        namespace = "com.softartdev.notedelight.core.domain"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+    }
     iosArm64()
     iosSimulatorArm64()
     wasmJs {
@@ -34,8 +42,6 @@ kotlin {
         }
         androidMain.dependencies {
         }
-        androidUnitTest.dependencies {
-        }
         iosMain.dependencies {
         }
         iosTest.dependencies {
@@ -51,18 +57,7 @@ kotlin {
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
-android {
-    namespace = "com.softartdev.notedelight.core.domain"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    dependencies {
-        coreLibraryDesugaring(libs.desugar)
-    }
-    testOptions.unitTests.isReturnDefaultValues = true
+
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }

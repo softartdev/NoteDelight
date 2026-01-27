@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,33 +24,34 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
-import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
-import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.BackHandler
 import com.softartdev.notedelight.ui.MainDetailPanePlaceholder
+import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
+import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
+import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
 import com.softartdev.theme.material3.PreferableMaterialTheme
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.action_delete_note
 import notedelight.ui.shared.generated.resources.action_edit_title
 import notedelight.ui.shared.generated.resources.action_save_note
 import notedelight.ui.shared.generated.resources.type_text
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 const val NOTE_TEXT_FIELD_TAG: String = "NOTE_TEXT_FIELD_TAG"
 
@@ -61,45 +63,54 @@ fun NoteDetail(noteViewModel: NoteViewModel) {
     val result: NoteResult by noteViewModel.stateFlow.collectAsState()
     when (result.note) {
         null -> MainDetailPanePlaceholder()
-        else -> NoteDetail(noteViewModel, result)
+        else -> NoteDetail(
+            result = result,
+            onAction = noteViewModel::onAction,
+            checkSaveChangeChannel = noteViewModel.checkSaveChangeChannel
+        )
     }
 }
 
 @Composable
 fun NoteDetail(
-    noteViewModel: NoteViewModel,
-    result: NoteResult
+    result: NoteResult,
+    onAction: (NoteAction) -> Unit,
+    checkSaveChangeChannel: Channel<Unit>
 ) {
-    val titleState: MutableState<String> = remember(key1 = noteViewModel, key2 = result) {
-        mutableStateOf(result.note?.title ?: "")
+    // Change selected note on adaptive (tablet) layout must change the text too.
+    // The `rememberTextFieldState` and `rememberSaveable` doesn't support `key` parameters.
+    // The note id is used as a key to recreate the `TextFieldState` when the selected note changes.
+    val textState: TextFieldState = remember(key1 = result.note?.id) {
+        TextFieldState(
+            initialText = result.note?.text ?: "",
+            initialSelection = TextRange(result.note?.text?.length ?: 0)
+        )
     }
-    val textState: MutableState<String> = remember(key1 = noteViewModel, key2 = result) {
-        mutableStateOf(result.note?.text ?: "")
+    LaunchedEffect(checkSaveChangeChannel) {
+        checkSaveChangeChannel.receiveAsFlow().collect {
+            onAction(NoteAction.ShowCheckSaveChangeDialog(textState.text))
+        }
     }
     NoteDetailBody(
         result = result,
-        titleState = titleState,
         textState = textState,
-        onAction = noteViewModel::onAction
+        onAction = onAction
     )
-    BackHandler { noteViewModel.onAction(NoteAction.CheckSaveChange(titleState.value, textState.value)) }
+    BackHandler { onAction(NoteAction.CheckSaveChange(textState.text)) }
 }
 
 @Composable
 fun NoteDetailBody(
     result: NoteResult = NoteResult(),
-    titleState: MutableState<String> = mutableStateOf("Title"),
-    textState: MutableState<String> = mutableStateOf("Text"),
+    textState: TextFieldState = TextFieldState("Text"),
     onAction: (action: NoteAction) -> Unit = {},
 ) = Scaffold(
     modifier = Modifier.imePadding(),
     topBar = {
         TopAppBar(
-            title = { Text(text = titleState.value, maxLines = 1) },
+            title = { Text(text = result.note?.title.orEmpty(), maxLines = 1) },
             navigationIcon = {
-                IconButton(onClick = {
-                    onAction(NoteAction.CheckSaveChange(titleState.value, textState.value))
-                }) {
+                IconButton(onClick = { onAction(NoteAction.CheckSaveChange(textState.text)) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
@@ -109,7 +120,7 @@ fun NoteDetailBody(
             actions = {
                 IconButton(
                     modifier = Modifier.testTag(SAVE_NOTE_BUTTON_TAG),
-                    onClick = { onAction(NoteAction.Save(titleState.value, textState.value)) },
+                    onClick = { onAction(NoteAction.Save(textState.text)) },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Save,
@@ -164,8 +175,7 @@ fun NoteDetailBody(
                     .fillMaxWidth()
                     .padding(8.dp)
                     .verticalScroll(state = scrollState),
-                value = textState.value,
-                onValueChange = textState::value::set,
+                state = textState,
                 label = { Text(stringResource(Res.string.type_text)) },
             )
         }

@@ -15,38 +15,42 @@ import com.softartdev.notedelight.ui.screen.dialog.ConfirmPasswordDialog
 import com.softartdev.notedelight.ui.screen.dialog.EditTitleDialog
 import com.softartdev.notedelight.ui.screen.dialog.EnterPasswordDialog
 import com.softartdev.notedelight.ui.screen.dialog.LanguageDialog
+import com.softartdev.notedelight.ui.screen.dialog.SaveDialog
 
 abstract class BaseTestCase(val composeUiTest: ComposeUiTest) {
 
-    private val commonDialog: CommonDialog = CommonDialogImpl(composeUiTest)
+    val commonDialog: CommonDialog = CommonDialogImpl(composeUiTest)
 
-    suspend fun signInScreen(block: suspend SignInScreen.() -> Unit) =
+    suspend inline fun signInScreen(block: suspend SignInScreen.() -> Unit) =
         SignInScreen(composeUiTest).block()
 
-    suspend fun mainTestScreen(block: suspend MainTestScreen.() -> Unit) =
+    suspend inline fun mainTestScreen(block: suspend MainTestScreen.() -> Unit) =
         MainTestScreen(composeUiTest).block()
 
-    suspend fun noteScreen(block: suspend NoteScreen.() -> Unit) =
+    suspend inline fun noteScreen(block: suspend NoteScreen.() -> Unit) =
         NoteScreen(composeUiTest).block()
 
-    suspend fun settingsTestScreen(block: suspend SettingsTestScreen.() -> Unit) =
+    suspend inline fun settingsTestScreen(block: suspend SettingsTestScreen.() -> Unit) =
         SettingsTestScreen(composeUiTest).block()
 
-    suspend fun commonDialog(block: suspend CommonDialog.() -> Unit) =
+    suspend inline fun commonDialog(block: suspend CommonDialog.() -> Unit) =
         commonDialog.block()
 
-    suspend fun editTitleDialog(block: suspend EditTitleDialog.() -> Unit) =
+    suspend inline fun editTitleDialog(block: suspend EditTitleDialog.() -> Unit) =
         EditTitleDialog(commonDialog).block()
 
-    suspend fun confirmPasswordDialog(block: suspend ConfirmPasswordDialog.() -> Unit) =
+    suspend inline fun saveDialog(block: suspend SaveDialog.() -> Unit) =
+        SaveDialog(commonDialog).block()
+
+    suspend inline fun confirmPasswordDialog(block: suspend ConfirmPasswordDialog.() -> Unit) =
         ConfirmPasswordDialog(commonDialog).block()
 
-    suspend fun enterPasswordDialog(block: suspend EnterPasswordDialog.() -> Unit) =
+    suspend inline fun enterPasswordDialog(block: suspend EnterPasswordDialog.() -> Unit) =
         EnterPasswordDialog(commonDialog).block()
 
-    suspend fun changePasswordDialog(block: suspend ChangePasswordDialog.() -> Unit) =
+    suspend inline fun changePasswordDialog(block: suspend ChangePasswordDialog.() -> Unit) =
         ChangePasswordDialog(commonDialog).block()
 
-    suspend fun languageDialog(block: suspend LanguageDialog.() -> Unit) =
+    suspend inline fun languageDialog(block: suspend LanguageDialog.() -> Unit) =
         LanguageDialog(commonDialog).block()
 }

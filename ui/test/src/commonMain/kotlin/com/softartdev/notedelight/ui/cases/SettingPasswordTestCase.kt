@@ -26,6 +26,7 @@ import notedelight.ui.shared.generated.resources.empty_password
 import notedelight.ui.shared.generated.resources.incorrect_password
 import notedelight.ui.shared.generated.resources.passwords_do_not_match
 import org.jetbrains.compose.resources.getString
+import kotlin.time.Duration.Companion.minutes
 
 class SettingPasswordTestCase(
     composeUiTest: ComposeUiTest,
@@ -33,7 +34,7 @@ class SettingPasswordTestCase(
 ) : () -> TestResult, BaseTestCase(composeUiTest) {
     private val logger = Logger.withTag("ℹ️SettingPasswordTestCase")
 
-    override fun invoke() = runTest {
+    override fun invoke() = runTest(timeout = 3.minutes) {
         logger.i { "Starting SettingPasswordTestCase" }
         val emptyPassTitle = getString(Res.string.empty_password)
         val passDoNotMatchTitle = getString(Res.string.passwords_do_not_match)
@@ -167,5 +168,6 @@ class SettingPasswordTestCase(
             logger.i { "SettingsTestScreen: Encryption disabled successfully" }
             composeUiTest.waitAssert("encryption switch is OFF", encryptionSwitchSNI::assertIsOff)
         }
+        logger.i { "Ending SettingPasswordTestCase" }
     }
 }

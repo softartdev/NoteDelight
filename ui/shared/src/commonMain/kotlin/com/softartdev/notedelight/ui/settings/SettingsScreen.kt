@@ -15,9 +15,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
@@ -42,12 +42,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag as semanticsTestTag
 import androidx.compose.ui.semantics.toggleableState
-import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
-import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
-import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.presentation.settings.SecurityResult
@@ -55,6 +52,9 @@ import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.ui.BackHandler
 import com.softartdev.notedelight.ui.icon.FileLock
+import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
+import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
+import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
 import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -73,13 +73,13 @@ import notedelight.ui.shared.generated.resources.security
 import notedelight.ui.shared.generated.resources.settings
 import notedelight.ui.shared.generated.resources.theme
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.semantics.testTag as semanticsTestTag
 
 @Composable
 fun SettingsScreen(settingsViewModel: SettingsViewModel) {
     val result: SecurityResult by settingsViewModel.stateFlow.collectAsState()
     LifecycleResumeEffect(key1 = settingsViewModel) {
-        settingsViewModel.onAction(SettingsAction.CheckEncryption)
+        settingsViewModel.updateSwitches()
         onPauseOrDispose {}
     }
     SettingsScreenBody(result, settingsViewModel::onAction)

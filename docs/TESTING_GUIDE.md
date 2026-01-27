@@ -35,8 +35,8 @@ We follow the **Testing Pyramid** approach:
 
 **Location**:
 - `core/domain/src/commonTest/`
-- `core/presentation/src/androidUnitTest/`
-- `core/data/db-sqldelight/src/androidUnitTest`
+- `core/presentation/src/androidHostTest/` (androidHostTest source set)
+- `core/data/db-sqldelight/src/androidHostTest` (androidHostTest source set)
 - `core/data/db-sqldelight/src/commonTest`
 - `core/data/db-sqldelight/src/wasmJsTest`
 
@@ -88,7 +88,7 @@ class CreateNoteUseCaseTest {
 **Location**:
 - `core/domain/src/commonTest`
 - `core/data/db-sqldelight/src/iosTest/kotlin`
-- `core/presentation/src/androidUnitTest`
+- `core/presentation/src/androidHostTest`
 
 **Framework**:
 - In-memory SQLite
@@ -941,4 +941,3 @@ tasks.named<KotlinJsTest>("wasmJsBrowserTest").configure {
 ---
 
 Remember: **Good tests are your safety net for refactoring and a form of documentation.**
-

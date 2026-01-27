@@ -17,6 +17,7 @@ import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -37,11 +38,14 @@ class NoteViewModel(
     private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(NoteResult())
     val stateFlow: StateFlow<NoteResult> = mutableStateFlow
 
+    val checkSaveChangeChannel: Channel<Unit>
+        get() = adaptiveInteractor.checkSaveChangeChannel
+
     private var noteId: Long
         set(value) { adaptiveInteractor.selectedNoteIdStateFlow.value = value }
         get() = requireNotNull(adaptiveInteractor.selectedNoteIdStateFlow.value)
 
-    var job: Job? = null
+    private var job: Job? = null
 
     fun launchCollectingSelectedNoteId() {
         if (job != null) return
@@ -57,10 +61,11 @@ class NoteViewModel(
     }
 
     fun onAction(action: NoteAction) = when (action) {
-        is NoteAction.Save -> saveNote(title = action.title, text = action.text)
+        is NoteAction.Save -> saveNote(text = action.text.toString())
         is NoteAction.Edit -> editTitle()
         is NoteAction.Delete -> subscribeToDeleteNote()
-        is NoteAction.CheckSaveChange -> checkSaveChange(title = action.title, text = action.text)
+        is NoteAction.CheckSaveChange -> checkSaveChange(text = action.text.toString())
+        is NoteAction.ShowCheckSaveChangeDialog -> showSaveChangesDialog(text = action.text.toString())
     }
 
     private fun createOrLoadNote() = when (noteId) {
@@ -98,27 +103,24 @@ class NoteViewModel(
         }
     }
 
-    private fun saveNote(title: String?, text: String) = viewModelScope.launch {
+    private fun saveNote(text: String) = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
+            var title: String? = mutableStateFlow.value.note?.title
             if (title.isNullOrEmpty() && text.isEmpty()) {
                 snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
             } else {
-                val noteTitle: String = withContext(coroutineDispatchers.default) {
-                    createTitleIfNeed(title, text)
-                }
+                title = createTitleIfNeed(text)
                 withContext(coroutineDispatchers.io) {
-                    saveNoteUseCase(noteId, noteTitle, text)
+                    saveNoteUseCase(noteId, title, text)
                 }
                 logger.d { "Saved note with id=$noteId" }
                 mutableStateFlow.update { result: NoteResult ->
-                    result.copy(
-                        note = result.note?.copy(title = noteTitle, text = text)
-                    )
+                    result.copy(note = result.note?.copy(title = title, text = text))
                 }
                 snackbarInteractor.showMessage(SnackbarMessage.Resource(
                     res = SnackbarTextResource.SAVED,
-                    suffix = noteTitle
+                    suffix = title
                 ))
             }
         } catch (e: Throwable) {
@@ -140,20 +142,17 @@ class NoteViewModel(
         }
     }
 
-    private fun checkSaveChange(title: String?, text: String) = viewModelScope.launch {
+    private fun checkSaveChange(text: String) = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
-            val noteTitle: String = createTitleIfNeed(title, text)
+            val title: String = createTitleIfNeed(text)
             mutableStateFlow.update { result: NoteResult ->
-                result.copy(note = result.note?.copy(title = noteTitle, text = text))
+                result.copy(note = result.note?.copy(title = title, text = text))
             }
-            val changed: Boolean = isChanged(noteId, noteTitle, text)
+            val changed: Boolean = isChanged(noteId, title, text)
             val empty: Boolean = isEmpty(noteId)
             when {
-                changed -> {
-                    router.navigate(route = AppNavGraph.SaveChangesDialog)
-                    subscribeToSaveNote(title, text)
-                }
+                changed -> showSaveChangesDialog(text)
                 empty -> deleteNoteForResult()
                 else -> adaptiveNavigateBack()
             }
@@ -164,16 +163,17 @@ class NoteViewModel(
         }
     }
 
-    private fun subscribeToSaveNote(title: String?, text: String) = viewModelScope.launch {
+    private fun showSaveChangesDialog(text: String) = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
+            router.navigate(route = AppNavGraph.SaveChangesDialog)
             logger.d { "Subscribe to save note dialog channel" }
             val doSave: Boolean? = withContext(coroutineDispatchers.io) {
                 SaveNoteUseCase.dialogChannel.receive()
             }
             when (doSave) {
                 null -> logger.d { "Cancel" }
-                true -> saveNoteAndNavBack(title, text)
+                true -> saveNoteAndNavBack(text)
                 false -> doNotSaveAndNavBack()
             }
         } catch (e: Throwable) {
@@ -183,11 +183,11 @@ class NoteViewModel(
         }
     }
 
-    private fun saveNoteAndNavBack(title: String?, text: String) = viewModelScope.launch {
+    private fun saveNoteAndNavBack(text: String) = viewModelScope.launch {
         mutableStateFlow.update(NoteResult::showLoading)
         try {
-            val noteTitle: String = createTitleIfNeed(title, text)
-            saveNoteUseCase(noteId, noteTitle, text)
+            val title: String = createTitleIfNeed(text)
+            saveNoteUseCase(noteId, title, text)
             logger.d { "Saved and nav back" }
             adaptiveNavigateBack()
         } catch (e: Throwable) {
@@ -267,8 +267,9 @@ class NoteViewModel(
         }
     }
 
-    private fun createTitleIfNeed(title: String?, text: String): String =
-        if (title.isNullOrEmpty()) createTitle(text) else title
+    private fun createTitleIfNeed(text: String): String = mutableStateFlow.value.note?.title
+        ?.takeIf(String::isNotEmpty)
+        ?: createTitle(text)
 
     private fun createTitle(text: String): String {
         var title = text.take(30.coerceAtMost(text.length))

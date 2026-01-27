@@ -1,19 +1,16 @@
 @file:OptIn(
     ExperimentalWasmDsl::class,
-    ExperimentalKotlinGradlePluginApi::class,
     ExperimentalComposeLibrary::class
 )
 
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.cocoapods)
@@ -24,8 +21,16 @@ kotlin {
     jvm {
         compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
-    androidTarget {
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+    android {
+        namespace = "com.softartdev.notedelight.ui.test"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
     }
     iosArm64()
     iosSimulatorArm64()
@@ -67,7 +72,7 @@ kotlin {
                 implementation(libs.androidx.test.ext.junit)
             }
         }
-        val androidInstrumentedTest by getting
+        val androidDeviceTest by getting
         all {
             languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop")
         }
@@ -84,28 +89,4 @@ kotlin {
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
-}
-
-android {
-    namespace = "com.softartdev.notedelight.ui.test"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
-    dependencies {
-        androidTestImplementation(libs.androidx.compose.test.junit4)
-        debugImplementation(libs.androidx.compose.test.manifest)
-    }
-}
-
-// Disable Android unit tests - this module only contains instrumented tests
-afterEvaluate {
-    tasks.named("testDebugUnitTest") { enabled = false }
-    tasks.named("testReleaseUnitTest") { enabled = false }
 }

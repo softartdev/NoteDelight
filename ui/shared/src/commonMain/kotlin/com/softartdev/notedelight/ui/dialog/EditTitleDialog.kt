@@ -16,13 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.softartdev.notedelight.util.ENTER_TITLE_DIALOG_TAG
-import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import com.softartdev.notedelight.presentation.title.EditTitleAction
 import com.softartdev.notedelight.presentation.title.EditTitleResult
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
+import com.softartdev.notedelight.util.ENTER_TITLE_DIALOG_TAG
+import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.cancel
 import notedelight.ui.shared.generated.resources.dialog_title_change_title
@@ -30,7 +31,6 @@ import notedelight.ui.shared.generated.resources.empty_title
 import notedelight.ui.shared.generated.resources.enter_title
 import notedelight.ui.shared.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun EditTitleDialog(editTitleViewModel: EditTitleViewModel) {
@@ -52,7 +52,7 @@ fun ShowEditTitleDialog(
         Column {
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             TextField(
-                modifier = Modifier.testTag(ENTER_TITLE_DIALOG_TAG),
+                modifier = Modifier.testTag(ENTER_TITLE_DIALOG_TAG).fillMaxWidth(),
                 value = TextFieldValue(text = result.title, selection = textRange),
                 onValueChange = {
                     textRange = it.selection
@@ -74,4 +74,4 @@ fun ShowEditTitleDialog(
 
 @Preview
 @Composable
-fun PreviewEditTitleDialog() = PreviewDialog { ShowEditTitleDialog(EditTitleResult()) }
+fun PreviewEditTitleDialog() = PreviewDialog { ShowEditTitleDialog(EditTitleResult(loading = true)) }

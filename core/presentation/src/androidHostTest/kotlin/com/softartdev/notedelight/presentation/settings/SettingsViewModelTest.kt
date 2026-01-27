@@ -64,7 +64,7 @@ class SettingsViewModelTest {
         Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
-            settingsViewModel.onAction(SettingsAction.CheckEncryption)
+            settingsViewModel.updateSwitches()
             if (encryption) awaitItem().let { result: SecurityResult ->
                 assertFalse(result.loading)
                 assertTrue(result.encryption)

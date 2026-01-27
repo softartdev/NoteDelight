@@ -62,7 +62,11 @@ abstract class AbstractNavigationTest {
         }
         val safeRepo: SafeRepo = KoinJavaComponent.get(SafeRepo::class.java)
         safeRepo.closeDatabase()
-        File(safeRepo.dbPath).takeIf(File::exists)?.delete()
+        sequenceOf("", "-wal", "-shm", "-journal")
+            .map(safeRepo.dbPath::plus)
+            .map(::File)
+            .filter(File::exists)
+            .forEach(File::delete)
         safeRepo.buildDbIfNeed()
         val noteDAO: NoteDAO = KoinJavaComponent.get(NoteDAO::class.java)
         noteDAO.deleteAll()

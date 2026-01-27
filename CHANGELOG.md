@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.1] - 2026-01-27
+
+### Features
+- Add save-change confirmation when creating a new note while another note is selected in adaptive layouts
+- Improve snackbar visibility by lifting the global host and FAB around IME/system bars
+- Improve dialog input layouts by making text and password fields fill the available width
+
+### Refactoring
+- Simplify note title handling by removing title from NoteAction/NoteDetail state and streamlining title generation
+- Clean up MainScreen/note edit flow (IME padding for the FAB and save-change dialog actions)
+- Standardize Compose preview imports/dependencies, tidy UI imports, and add explicit typing in WebSafeRepo
+
+### Tests
+- Add SaveDialog test tags and a Page Object; introduce and refine CreateNoteWhileSelectedTestCase
+- Improve JVM UI test database cleanup; tune SettingPasswordTestCase logging/timeouts
+- Disable unstable tests (ExampleTest, ProcessCheckerTest) and iOS UI tests on CI
+
+### Chores
+- Migrate to AGP 9.0/KMP Android test source sets; update Gradle and dependencies (Compose, Firebase BOM, AndroidX, LeakCanary)
+- Update CI artifact paths and increase Kotlin/Native JVM args for builds
+
 ## [8.5.0] - 2026-01-08
 
 ### Features
@@ -692,4 +713,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using TextInputEditText instead of EditText
 - Annotated application context
 - Added Realm browser for debugging
-

@@ -11,7 +11,6 @@ import co.touchlab.kermit.platformLogWriter
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
 import com.softartdev.notedelight.util.DEFAULT_APP_LOG_TAG
-import com.softartdev.notedelight.util.isInLeakCanaryAnalyzerProcess
 import com.softartdev.notedelight.util.kermitLogger
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -20,7 +19,6 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (isInLeakCanaryAnalyzerProcess) return
         Logger.setTag(DEFAULT_APP_LOG_TAG)
         Logger.setLogWriters(if (BuildConfig.DEBUG) platformLogWriter() else CrashlyticsLogWriter(minSeverity = Severity.Debug))
         startKoin {

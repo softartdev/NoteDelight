@@ -177,10 +177,10 @@ data class NoteResult(
 
 // Action Interface
 sealed interface NoteAction {
-    data class Save(val title: String?, val text: String) : NoteAction
+    data class Save(val text: String) : NoteAction
     data object Edit : NoteAction
     data object Delete : NoteAction
-    data class CheckSaveChange(val title: String, val text: String) : NoteAction
+    data class CheckSaveChange(val text: String) : NoteAction
 }
 
 // ViewModel
@@ -189,13 +189,13 @@ class NoteViewModel(...) : ViewModel() {
     val stateFlow: StateFlow<NoteResult> = mutableStateFlow
     
     fun onAction(action: NoteAction) = when (action) {
-        is NoteAction.Save -> saveNote(action.title, action.text)
+        is NoteAction.Save -> saveNote(action.text)
         is NoteAction.Edit -> editTitle()
         is NoteAction.Delete -> subscribeToDeleteNote()
-        is NoteAction.CheckSaveChange -> checkSaveChange(action.title, action.text)
+        is NoteAction.CheckSaveChange -> checkSaveChange(action.text)
     }
     
-    private fun saveNote(title: String?, text: String) { /* ... */ }
+    private fun saveNote(text: String) { /* ... */ }
     private fun editTitle() { /* ... */ }
     // ...
 }
@@ -218,7 +218,7 @@ fun NoteDetailBody(
     onAction: (action: NoteAction) -> Unit = {},  // Simplified signature
 ) {
     // Usage in UI components
-    IconButton(onClick = { onAction(NoteAction.Save(title, text)) })
+    IconButton(onClick = { onAction(NoteAction.Save(text)) })
     IconButton(onClick = { onAction(NoteAction.Edit) })
     IconButton(onClick = { onAction(NoteAction.Delete) })
 }
@@ -624,4 +624,3 @@ val pagingDataFlow: Flow<PagingData<Note>> = Pager(
 - [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
 - [Compose Multiplatform](https://github.com/JetBrains/compose-jb)
 - [MVVM Pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
-

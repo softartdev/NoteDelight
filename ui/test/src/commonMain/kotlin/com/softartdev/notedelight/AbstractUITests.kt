@@ -5,6 +5,7 @@ package com.softartdev.notedelight
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import com.softartdev.notedelight.ui.cases.CrudTestCase
+import com.softartdev.notedelight.ui.cases.CreateNoteWhileSelectedTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterCreateTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterSaveTestCase
 import com.softartdev.notedelight.ui.cases.FlowAfterCryptTestCase
@@ -20,6 +21,8 @@ abstract class AbstractUITests {
     open fun tearDown() = Unit
 
     open fun crudNoteTest() = CrudTestCase(composeUiTest).invoke()
+
+    open fun createNoteWhileSelectedTest() = CreateNoteWhileSelectedTestCase(composeUiTest).invoke()
 
     open fun editTitleAfterCreateTest() = EditTitleAfterCreateTestCase(composeUiTest).invoke()
 

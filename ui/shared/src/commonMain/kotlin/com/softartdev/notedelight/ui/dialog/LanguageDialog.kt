@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.model.LanguageEnum
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
@@ -30,7 +31,6 @@ import io.github.softartdev.theme_prefs.generated.resources.ok
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.choose_language
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import io.github.softartdev.theme_prefs.generated.resources.Res as ThemePrefsRes
 
 @Composable

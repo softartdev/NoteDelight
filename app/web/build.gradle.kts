@@ -3,10 +3,8 @@
 import de.undercouch.gradle.tasks.download.Download
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
-import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.tasks.Copy
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)

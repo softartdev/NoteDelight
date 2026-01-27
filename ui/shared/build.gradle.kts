@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.cocoapods)
@@ -20,7 +20,18 @@ kotlin {
     jvm {
         compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
-    androidTarget()
+    android {
+        namespace = "com.softartdev.notedelight.shared.compose"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+        androidResources {
+            enable = true
+        }
+        withHostTest { }
+    }
     iosArm64()
     iosSimulatorArm64()
     wasmJs {
@@ -39,7 +50,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(compose.preview)
             implementation(libs.compose.adaptive)
             implementation(libs.compose.adaptive.layout)
             implementation(libs.compose.adaptive.navigation)
@@ -61,7 +72,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.androidx.compose)
-            implementation(compose.preview)
+            implementation(compose.uiTooling)
             implementation(libs.androidx.ui.tooling)
             implementation(libs.accompanist.permissions)
         }
@@ -98,15 +109,4 @@ kotlin {
         if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
-}
-
-android {
-    namespace = "com.softartdev.notedelight.shared.compose"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-    }
 }

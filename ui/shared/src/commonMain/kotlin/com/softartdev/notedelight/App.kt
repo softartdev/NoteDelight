@@ -2,10 +2,13 @@ package com.softartdev.notedelight
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,7 +36,6 @@ import com.softartdev.notedelight.ui.settings.AdaptiveSettingsScreen
 import com.softartdev.notedelight.ui.signin.SignInScreen
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import com.softartdev.theme.material3.ThemeDialogContent
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -42,6 +44,7 @@ import org.koin.core.parameter.parametersOf
 fun App(
     router: Router = koinInject(),
     navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = PreferableMaterialTheme {
     EnableEdgeToEdge()
     DisposableEffect(key1 = router, key2 = navController) {
@@ -60,7 +63,7 @@ fun App(
                 SignInScreen(signInViewModel = koinViewModel())
             }
             composable<AppNavGraph.Main> {
-                AdaptiveMainScreen(router)
+                AdaptiveMainScreen(router, snackbarHostState)
             }
             composable<AppNavGraph.Settings> {
                 AdaptiveSettingsScreen()
@@ -107,6 +110,7 @@ fun App(
         GlobalSnackbarHost(
             modifier = Modifier.align(Alignment.BottomCenter),
             snackbarInteractor = koinInject(),
+            snackbarHostState = snackbarHostState
         )
     }
 }

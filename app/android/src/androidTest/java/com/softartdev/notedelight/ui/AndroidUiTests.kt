@@ -37,6 +37,9 @@ class AndroidUiTests : AbstractJvmUiTests() {
     override fun crudNoteTest() = super.crudNoteTest()
 
     @Test
+    override fun createNoteWhileSelectedTest() = super.createNoteWhileSelectedTest()
+
+    @Test
     override fun editTitleAfterCreateTest() = super.editTitleAfterCreateTest()
 
     @Test

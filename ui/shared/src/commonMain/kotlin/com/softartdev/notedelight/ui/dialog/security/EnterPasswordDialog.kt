@@ -18,6 +18,7 @@ import androidx.compose.ui.autofill.AutofillManager
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterAction
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterResult
@@ -36,7 +37,6 @@ import notedelight.ui.shared.generated.resources.enter_password
 import notedelight.ui.shared.generated.resources.enter_password_dialog_subtitle
 import notedelight.ui.shared.generated.resources.enter_password_dialog_title
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun EnterPasswordDialog(enterViewModel: EnterViewModel) {
@@ -61,6 +61,7 @@ fun ShowEnterPasswordDialog(
             Spacer(modifier = Modifier.height(8.dp))
             if (result.loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             PasswordField(
+                modifier = Modifier.fillMaxWidth(),
                 password = result.password,
                 onPasswordChange = { onAction(EnterAction.OnEditPassword(it)) },
                 label = result.fieldLabel.resString,
@@ -81,4 +82,4 @@ fun ShowEnterPasswordDialog(
 
 @Preview
 @Composable
-fun PreviewEnterPasswordDialog() = PreviewDialog { ShowEnterPasswordDialog(EnterResult()) }
+fun PreviewEnterPasswordDialog() = PreviewDialog { ShowEnterPasswordDialog(EnterResult(loading = true)) }

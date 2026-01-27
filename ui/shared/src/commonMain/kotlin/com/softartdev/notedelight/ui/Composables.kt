@@ -22,17 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.softartdev.notedelight.util.EMPTY_RESULT_LABEL_TAG
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.util.EMPTY_RESULT_LABEL_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.detail_pane_placeholder
 import notedelight.ui.shared.generated.resources.label_empty_result
 import notedelight.ui.shared.generated.resources.press_add_note
 import notedelight.ui.shared.generated.resources.save
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 expect fun EnableEdgeToEdge()

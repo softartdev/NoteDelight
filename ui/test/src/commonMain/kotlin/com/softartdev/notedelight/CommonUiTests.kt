@@ -77,6 +77,12 @@ abstract class CommonUiTests : AbstractUITests() {
         super.crudNoteTest()
     }
 
+    override fun createNoteWhileSelectedTest(): TestResult = runComposeUiTest {
+        _composeUiTest = this
+        beforeTest()
+        super.createNoteWhileSelectedTest()
+    }
+
     override fun editTitleAfterCreateTest(): TestResult = runComposeUiTest {
         _composeUiTest = this
         beforeTest()
