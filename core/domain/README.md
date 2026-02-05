@@ -51,6 +51,10 @@ Single-responsibility business operations following the **Command Pattern**:
 - `ChangePasswordUseCase`: Changes database encryption password
 - `CheckSqlCipherVersionUseCase`: Verifies SQLCipher availability
 
+#### Backup Operations
+Database import/export lives in the `feature:backup:domain` module, which owns the backup use cases and
+the platform-specific file transfer implementation.
+
 ### Repository Interfaces (`db/`)
 
 Contracts for data access (implemented by data layer):
@@ -147,4 +151,3 @@ Unit tests are located in `commonTest/` and can run on all platforms:
 
 - **Used by**: `core:presentation`, `core:data`, `ui:shared`
 - **Depends on**: None (pure Kotlin)
-

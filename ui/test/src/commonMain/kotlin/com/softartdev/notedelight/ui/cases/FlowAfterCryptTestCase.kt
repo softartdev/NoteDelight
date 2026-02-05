@@ -36,6 +36,8 @@ class FlowAfterCryptTestCase(
             composeUiTest.waitUntilDisplayed("settingsMenuButton", blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
             settingsTestScreen {
+                securityCategorySNI.performClick()
+                composeUiTest.waitUntilDisplayed("encryptionSwitch", blockSNI = ::encryptionSwitchSNI)
                 encryptionSwitchSNI.assertIsOff()
                     .performClick()
                 confirmPasswordDialog {
@@ -54,6 +56,8 @@ class FlowAfterCryptTestCase(
                 }
                 composeUiTest.waitAssert("encrypt switch is ON", encryptionSwitchSNI::assertIsOn)
                 pressBack()
+                composeUiTest.awaitIdle()
+                pressBack()
             }
             fabSNI.performClick()
             noteScreen {
@@ -69,6 +73,8 @@ class FlowAfterCryptTestCase(
             composeUiTest.waitUntilDisplayed("noteListItem#1", blockSNI = ::noteListItemSNI)
             settingsMenuButtonSNI.performClick()
             settingsTestScreen {
+                securityCategorySNI.performClick()
+                composeUiTest.waitUntilDisplayed("encryptionSwitch", blockSNI = ::encryptionSwitchSNI)
                 encryptionSwitchSNI.assertIsOn()
                     .performClick()
                 enterPasswordDialog {
@@ -77,6 +83,8 @@ class FlowAfterCryptTestCase(
                     confirmDialogButtonSNI.performClick()
                 }
                 composeUiTest.waitAssert("encrypt switch is OFF", encryptionSwitchSNI::assertIsOff)
+                pressBack()
+                composeUiTest.awaitIdle()
                 pressBack()
             }
             composeUiTest.waitUntilDisplayed("noteListItem#2", blockSNI = ::noteListItemSNI)

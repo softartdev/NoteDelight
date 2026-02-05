@@ -1,7 +1,6 @@
-@file:OptIn(ExperimentalWasmDsl::class, ExperimentalComposeLibrary::class)
+@file:OptIn(ExperimentalWasmDsl::class)
 
 import de.undercouch.gradle.tasks.download.Download
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -28,12 +27,9 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    open = false  // Disable automatic browser opening
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
+                    // Serve sources to debug inside browser
+                    static(rootDirPath)
+                    static(projectDirPath)
                 }
             }
         }
@@ -45,7 +41,7 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.presentation)
                 implementation(projects.ui.shared)
-                implementation(compose.ui)
+                implementation(libs.compose.ui)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
@@ -57,8 +53,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(projects.ui.test)
-                implementation(compose.uiTest)
-                implementation(compose.materialIconsExtended)
+                implementation(libs.compose.ui.test)
+                implementation(libs.compose.material.icons.extended)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.lifecycle.runtime.testing)
             }

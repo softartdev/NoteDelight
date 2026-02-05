@@ -1,16 +1,14 @@
-@file:OptIn(
-    ExperimentalWasmDsl::class,
-    ExperimentalComposeLibrary::class
-)
+@file:OptIn(ExperimentalWasmDsl::class)
 
+import com.softartdev.notedelight.disableIosReleaseTasks
 import org.gradle.internal.os.OperatingSystem
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.cocoapods)
@@ -44,10 +42,11 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.presentation)
                 implementation(projects.ui.shared)
-                implementation(compose.uiTest)
-                implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.components.resources)
+                implementation(projects.feature.backup.ui)
+                implementation(libs.compose.ui.test)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.material.icons.extended)
+                implementation(libs.compose.components.resources)
                 implementation(libs.material.theme.prefs)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.lifecycle.runtime.testing)
@@ -90,3 +89,5 @@ kotlin {
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
+
+project.disableIosReleaseTasks()

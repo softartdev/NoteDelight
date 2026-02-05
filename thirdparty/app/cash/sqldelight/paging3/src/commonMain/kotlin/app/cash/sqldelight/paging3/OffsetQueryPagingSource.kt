@@ -103,6 +103,21 @@ internal class OffsetQueryPagingSource<RowType : Any>(
             }
         }
 
-    override fun getRefreshKey(state: PagingState<Int, RowType>) =
-        state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
+    override fun getRefreshKey(state: PagingState<Int, RowType>): Int? {
+        val anchorPosition = state.anchorPosition ?: return null
+        val closestItem = state.closestItemAroundPosition(anchorPosition) { true } ?: return null
+
+        val pageWithIndex = state.pages.firstNotNullOfOrNull { page ->
+            val indexByRef = page.data.indexOfFirst { it === closestItem }
+            val indexInPage = if (indexByRef >= 0) indexByRef else page.data.indexOf(closestItem)
+            if (indexInPage >= 0) page to indexInPage else null
+        } ?: return null
+
+        val (page, indexInPage) = pageWithIndex
+        val anchorIndex = when {
+            page.itemsBefore >= 0 -> page.itemsBefore + indexInPage
+            else -> anchorPosition
+        }
+        return maxOf(0, anchorIndex - (state.config.initialLoadSize / 2))
+    }
 }

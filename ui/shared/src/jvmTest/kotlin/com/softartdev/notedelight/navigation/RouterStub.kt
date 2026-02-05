@@ -27,7 +27,7 @@ class RouterStub : Router {
     override fun setAdaptiveNavigator(adaptiveNavigator: Any) =
         logger.d { "setAdaptiveNavigator: $adaptiveNavigator" }
 
-    override fun releaseAdaptiveNavigator() = 
+    override fun releaseAdaptiveNavigator(adaptiveNavigator: Any?) =
         logger.d { "releaseAdaptiveNavigator" }
 
     override suspend fun adaptiveNavigateToDetail(contentKey: Long?) = 

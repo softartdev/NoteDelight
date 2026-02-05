@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.2] - 2026-02-06
+
+### Features
+- Implement adaptive master-detail Settings layout with category-based navigation and dedicated master/detail screens
+- Add cross-platform database backup import/export support with platform-specific file pickers (Android, iOS, JVM, wasmJs)
+
+### Refactoring
+- Reorganize modules by introducing `feature/backup` and moving file-explorer data into `feature/file-explorer/data`
+- Restructure Settings presentation flow with new settings categories state/view models and updated router contracts
+
+### Tests
+- Add backup feature UI test coverage and cross-platform temporary backup-path test utilities
+- Expand adaptive/settings test coverage across Android host tests and desktop UI tests
+
+### Chores
+- Upgrade Kotlin to `2.3.10` and refresh related dependency/build configuration
+- Update iOS/build tooling and quick-build script settings (including increased Kotlin/Native memory options)
+
 ## [8.5.1] - 2026-01-27
 
 ### Features

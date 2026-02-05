@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
@@ -25,9 +26,9 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.turbine)
-    implementation(compose.materialIconsExtended)
-    implementation(compose.components.resources)
-    implementation(compose.desktop.uiTestJUnit4)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.compose.components.resources)
+    implementation(libs.compose.ui.test.junit4)
     implementation(compose.desktop.currentOs)
     implementation(libs.material.theme.prefs)
     implementation(libs.androidx.navigation.compose)

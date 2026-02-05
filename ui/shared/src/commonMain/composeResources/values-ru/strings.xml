@@ -22,6 +22,8 @@
     <string name="pref_title_source_code">Исходный код</string>
     <string name="pref_subtitle_open_github">Открыть на GitHub</string>
     <string name="pref_title_show_db_path">Показать путь к базе данных</string>
+    <string name="pref_title_export_db">Экспортировать базу данных</string>
+    <string name="pref_title_import_db">Импортировать базу данных</string>
     <string name="pref_title_file_list">Список файлов</string>
     <string name="enter_password">Введите пароль</string>
     <string name="confirm_password">Повторите пароль</string>
@@ -62,9 +64,17 @@
     <string name="changing_password_dialog_subtitle">Введите старый пароль, затем придумайте новый.</string>
     <string name="enter_password_dialog_title">Ввод пароля</string>
     <string name="enter_password_dialog_subtitle">Введите текущий пароль для отключения защиты.</string>
+    <string name="export_database">Экспорт базы данных</string>
+    <string name="import_database">Импорт базы данных</string>
+    <string name="export_database_path">Экспорт в путь</string>
+    <string name="import_database_path">Импорт из пути</string>
+    <string name="export_label">Экспорт</string>
+    <string name="import_label">Импорт</string>
+    <string name="empty_path">Путь не должен быть пустым</string>
     <string name="dialog_title_change_title">Редактирование заголовка</string>
     <string name="copy">Копировать</string>
     <string name="detail_pane_placeholder">Выберите или создайте заметку</string>
     <string name="info">Информация</string>
+    <string name="backup">Резервная копия</string>
     <string name="save">Сохранить</string>
 </resources>

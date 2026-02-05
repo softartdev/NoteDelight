@@ -12,13 +12,13 @@ The `thirdparty` directory contains **vendored** and **forked third-party librar
 - Ensure specific versions and behavior
 - Maintain compatibility with project requirements
 
+> Note: Paging Compose now uses the official `androidx.paging:paging-compose` artifact since 3.4.0
+> added KMP targets, so no vendored Paging Compose module is required.
+
 ## Structure
 
 ```
 thirdparty/ (Vendored Third-Party Libraries)
-    ├── androidx/
-    │   └── paging/
-    │       └── compose/           # Paging Compose for KMP
     └── app/
         └── cash/
             └── sqldelight/
@@ -26,44 +26,6 @@ thirdparty/ (Vendored Third-Party Libraries)
 ```
 
 ## Modules
-
-### androidx/paging/compose
-
-**Purpose**: Multiplatform Paging library for Compose
-
-**Why vendored**: Official AndroidX Paging doesn't fully support Kotlin Multiplatform Compose yet. This module provides Compose Multiplatform support for pagination.
-
-**Original source**: AndroidX Paging library (Google)
-
-**Modifications**:
-- Adapted for Kotlin Multiplatform
-- Removed Android-specific dependencies
-- Added support for iOS, Desktop, Web
-
-**Platforms**:
-- ✅ Android
-- ✅ iOS
-- ✅ Desktop JVM
-- ✅ Web (Wasm)
-
-**Dependencies**:
-- `androidx.paging.common` - Core paging
-- `compose.runtime` - Compose runtime
-- `compose.foundation` - Foundation components
-
-**Usage**:
-```kotlin
-dependencies {
-    implementation(project(":thirdparty:androidx:paging:compose"))
-}
-```
-
-**Key Components**:
-- `LazyPagingItems.kt` - Paging state holder for Compose
-- `collectAsLazyPagingItems()` - Extension to collect paging data
-- Platform-specific implementations for each target
-
----
 
 ### app/cash/sqldelight/paging3
 

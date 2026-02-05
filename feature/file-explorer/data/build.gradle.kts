@@ -13,7 +13,7 @@ kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
     jvm()
     android {
-        namespace = "com.softartdev.notedelight.core.data.fileexplorer"
+        namespace = "com.softartdev.notedelight.feature.fileexplorer.data"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
         compilerOptions {

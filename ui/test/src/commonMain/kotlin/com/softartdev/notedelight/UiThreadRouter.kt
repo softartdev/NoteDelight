@@ -24,7 +24,8 @@ class UiThreadRouter(private val router: Router) : Router {
     override fun setAdaptiveNavigator(adaptiveNavigator: Any) =
         router.setAdaptiveNavigator(adaptiveNavigator)
 
-    override fun releaseAdaptiveNavigator() = router.releaseAdaptiveNavigator()
+    override fun releaseAdaptiveNavigator(adaptiveNavigator: Any?) =
+        router.releaseAdaptiveNavigator(adaptiveNavigator)
 
     override suspend fun adaptiveNavigateToDetail(contentKey: Long?) =
         withContext(Dispatchers.Main) { router.adaptiveNavigateToDetail(contentKey) }

@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.MainActivity
+import com.softartdev.notedelight.di.backupTestModule
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
 import org.junit.After
@@ -14,6 +15,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 
 @LargeTest
 @FlakyTest
@@ -56,6 +59,13 @@ class AndroidUiTests : AbstractJvmUiTests() {
 
     @Test
     override fun localeTest() = super.localeTest()
+
+    @Test
+    override fun backupFeatureTest() {
+        loadKoinModules(backupTestModule)
+        super.backupFeatureTest()
+        unloadKoinModules(backupTestModule)
+    }
 
     override fun pressBack() = Espresso.pressBack()
 

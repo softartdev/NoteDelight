@@ -46,6 +46,8 @@ class SettingPasswordTestCase(
         }
         settingsTestScreen {
             logger.i { "SettingsTestScreen: Toggling encryption switch ON" }
+            securityCategorySNI.performClick()
+            composeUiTest.waitUntilDisplayed("encryptionSwitch", blockSNI = ::encryptionSwitchSNI)
             encryptionSwitchSNI
                 .assertIsOff()
                 .performClick()

@@ -34,6 +34,9 @@ class SignInToSettingsTest {
     private val composeUiTest: ComposeUiTest = reflect(composeTestRule)
 
     @Test
-    fun signInToSettingsTest() = SignInToSettingsTestCase(composeUiTest, Espresso::closeSoftKeyboard).invoke()
+    fun signInToSettingsTest() = SignInToSettingsTestCase(
+        composeUiTest,
+        Espresso::closeSoftKeyboard,
+        Espresso::pressBack,
+    ).invoke()
 }
-

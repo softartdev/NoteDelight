@@ -225,6 +225,7 @@ private fun ScreenContent(
 4. **Preview functions**: Add `@Preview` for visual components
 5. **Remember wisely**: Use `remember` for expensive calculations
 6. **Keys in lists**: Provide stable keys for LazyColumn/LazyRow
+7. **Adaptive drag handle**: Prefer method references for pane expansion, e.g. `paneExpansionDragHandle = ThreePaneScaffoldScope::VerticalPaneExpansionDragHandle` (use a lambda in Kotlin/Wasm actuals to avoid the current composable function reference compiler issue).
 
 ### ViewModel Style
 

@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3AdaptiveApi::class)
+
 package com.softartdev.notedelight.ui
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +19,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDragHandle
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.PaneExpansionState
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -129,6 +139,27 @@ fun PasswordSaveButton(
     modifier = modifier.testTag(tag),
     onClick = onClick
 ) { Text(stringResource(Res.string.save)) }
+
+@Composable
+fun ThreePaneScaffoldScope.VerticalPaneExpansionDragHandle(
+    paneExpansionState: PaneExpansionState,
+) {
+    val mutableInteractionSource = remember { MutableInteractionSource() }
+    VerticalDragHandle(
+        modifier = Modifier.paneExpansionDraggable(
+            state = paneExpansionState,
+            minTouchTargetSize = LocalMinimumInteractiveComponentSize.current,
+            interactionSource = mutableInteractionSource,
+        ),
+        interactionSource = mutableInteractionSource,
+    )
+}
+
+@Composable
+fun selectedListItemColor(selected: Boolean): Color = when {
+    selected -> MaterialTheme.colorScheme.surfaceVariant
+    else -> Color.Unspecified
+}
 
 @Preview(showBackground = true)
 @Composable

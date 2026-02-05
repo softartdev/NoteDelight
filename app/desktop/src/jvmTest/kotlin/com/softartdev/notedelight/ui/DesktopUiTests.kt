@@ -9,7 +9,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -103,10 +103,16 @@ class DesktopUiTests : AbstractJvmUiTests() {
     @Test
     override fun localeTest() = super.localeTest()
 
+    @Test
+    override fun backupFeatureTest() = super.backupFeatureTest()
+
     override fun pressBack() {
-        composeTestRule.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
-            .assertIsDisplayed()
-            .performClick()
+        val backButtons = composeTestRule.onAllNodesWithContentDescription(
+            label = Icons.AutoMirrored.Filled.ArrowBack.name
+        )
+        val nodes = backButtons.fetchSemanticsNodes()
+        val rightMostIndex = nodes.indices.maxBy { index -> nodes[index].boundsInRoot.left }
+        backButtons[rightMostIndex].assertIsDisplayed().performClick()
     }
 
     override fun closeSoftKeyboard() = Unit // Desktop doesn't have soft keyboard

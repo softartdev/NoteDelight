@@ -16,7 +16,7 @@ interface Router {
 
     fun setAdaptiveNavigator(adaptiveNavigator: Any)
 
-    fun releaseAdaptiveNavigator()
+    fun releaseAdaptiveNavigator(adaptiveNavigator: Any? = null)
 
     suspend fun adaptiveNavigateToDetail(contentKey: Long? = null)
 

@@ -32,6 +32,7 @@ class LocaleTestCase(
             composeUiTest.waitUntilDisplayed("settingsMenuButton", blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
             settingsTestScreen {
+                themeCategorySNI.performClick()
                 composeUiTest.waitUntilDisplayed("language", blockSNI = ::languageSNI)
                 LanguageEnum.entries.forEach { languageEnum ->
                     languageSNI.performClick()
@@ -47,6 +48,8 @@ class LocaleTestCase(
                     )
                     assertEquals(languageEnum, localeInteractor.languageEnum)
                 }
+                pressBack()
+                composeUiTest.awaitIdle()
                 pressBack()
             }
         }

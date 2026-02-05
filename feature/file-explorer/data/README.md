@@ -1,4 +1,4 @@
-# core:data:file-explorer
+# feature:file-explorer:data
 
 Multiplatform data module that backs the in-app file explorer. It exposes the `FileRepo`
 interface used by `FilesViewModel` and implements it with the help of Okio's `FileSystem`
@@ -24,7 +24,7 @@ on every supported platform (Android, JVM, iOS, and WASM).
 - Common unit tests live under `src/commonTest` and validate navigation and flow contracts.
 - JVM/Android specific cases are covered by instrumentation tests in `core/presentation` that mock
   `FileRepo`.
-- Run the full suite with `./gradlew :core:data:file-explorer:allTests` or rely on
+- Run the full suite with `./gradlew :feature:file-explorer:data:allTests` or rely on
   `./gradlew build`, which aggregates these tasks.
 
 ## Usage tips

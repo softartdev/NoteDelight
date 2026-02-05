@@ -22,6 +22,8 @@
     <string name="pref_title_source_code">Source code</string>
     <string name="pref_subtitle_open_github">Open on GitHub</string>
     <string name="pref_title_show_db_path">Show database path</string>
+    <string name="pref_title_export_db">Export database</string>
+    <string name="pref_title_import_db">Import database</string>
     <string name="pref_title_file_list">File list</string>
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
@@ -62,9 +64,17 @@
     <string name="changing_password_dialog_subtitle">Enter your old password, then create a new one.</string>
     <string name="enter_password_dialog_title">Enter password</string>
     <string name="enter_password_dialog_subtitle">Enter your current password to disable password protection.</string>
+    <string name="export_database">Export database</string>
+    <string name="import_database">Import database</string>
+    <string name="export_database_path">Export to path</string>
+    <string name="import_database_path">Import from path</string>
+    <string name="export_label">Export</string>
+    <string name="import_label">Import</string>
+    <string name="empty_path">Path must not be empty</string>
     <string name="dialog_title_change_title">Editing title</string>
     <string name="copy">Copy</string>
     <string name="detail_pane_placeholder">Select or create a note</string>
     <string name="info">Info</string>
+    <string name="backup">Backup</string>
     <string name="save">Save</string>
 </resources>

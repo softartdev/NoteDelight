@@ -2,6 +2,8 @@ package com.softartdev.notedelight.presentation.settings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
+import com.softartdev.notedelight.CoroutineDispatchersStub
+import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -14,6 +16,8 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
+import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -21,6 +25,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import java.io.File
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -38,7 +43,20 @@ class SettingsViewModelTest {
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
-    private val settingsViewModel = SettingsViewModel(mockSafeRepo, checkSqlCipherVersionUseCase, mockSnackbarInteractor, mockRouter, RevealFileListUseCase(), mockLocaleInteractor)
+    private val adaptiveInteractor = AdaptiveInteractor()
+    private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
+    private val settingsViewModel = SettingsViewModel(
+        safeRepo = mockSafeRepo,
+        checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
+        exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
+        importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
+        snackbarInteractor = mockSnackbarInteractor,
+        router = mockRouter,
+        revealFileListUseCase = RevealFileListUseCase(),
+        localeInteractor = mockLocaleInteractor,
+        adaptiveInteractor = adaptiveInteractor,
+        coroutineDispatchers = coroutineDispatchers,
+    )
 
     @After
     fun tearDown() = runTest {
@@ -57,6 +75,23 @@ class SettingsViewModelTest {
 
     @Test
     fun checkEncryptionFalse() = assertEncryption(false)
+
+    @Test
+    fun refreshUpdatesSwitches() = runTest {
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
+        Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        settingsViewModel.stateFlow.test {
+            assertFalse(awaitItem().loading)
+            settingsViewModel.onAction(SettingsAction.Refresh)
+            var result: SecurityResult = awaitItem()
+            while (result.loading) {
+                result = awaitItem()
+            }
+            assertTrue(result.encryption)
+            cancelAndIgnoreRemainingEvents()
+        }
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
 
     private fun assertEncryption(encryption: Boolean) = runTest {
         val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
@@ -150,6 +185,37 @@ class SettingsViewModelTest {
         settingsViewModel.onAction(SettingsAction.ShowDatabasePath)
         Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(dbPath))
         Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun exportDatabaseShowsSnackbar() = runTest {
+        val sourceFile = File.createTempFile("export-source", ".db")
+        sourceFile.writeText("backup")
+        val sourcePath = sourceFile.absolutePath
+        val destinationPath = File.createTempFile("export-destination", ".db").absolutePath
+        Mockito.`when`(mockSafeRepo.dbPath).thenReturn(sourcePath)
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(UNENCRYPTED)
+
+        settingsViewModel.onAction(SettingsAction.ExportDatabase(destinationPath))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(destinationPath))
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun importDatabaseNavigatesToSplash() = runTest {
+        val sourceFile = File.createTempFile("import-source", ".db")
+        sourceFile.writeText("backup")
+        val sourcePath = sourceFile.absolutePath
+        val destinationPath = File.createTempFile("import-destination", ".db").absolutePath
+        Mockito.`when`(mockSafeRepo.dbPath).thenReturn(destinationPath)
+
+        settingsViewModel.onAction(SettingsAction.ImportDatabase(sourcePath))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Copyable(sourcePath))
+        Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Splash)
     }
 
     @Test

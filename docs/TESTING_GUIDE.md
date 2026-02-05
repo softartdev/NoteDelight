@@ -713,6 +713,7 @@ node.assertTextContains("partial")
 ./gradlew :ui:test:connectedAndroidTest  # Multiplatform UI test framework (Android)
 ./gradlew :ui:test:wasmJsTest     # Multiplatform UI test framework (Web)
 ```
+Note: the `ui:test` CocoaPods **release** framework for the iOS simulator is disabled; tests only build debug binaries.
 
 ### IDE
 Right-click test class → Run, or click green arrow next to test method.

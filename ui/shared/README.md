@@ -95,16 +95,15 @@ Each screen is a composable function connected to a ViewModel:
 - `SignInScreen.kt`: Password entry for encrypted database
 
 #### Settings (`ui/settings/`)
-- `SettingsScreen.kt`: App settings
-- `SecuritySettings.kt`: Password management
-- **Password Management** (`ui/settings/security/`):
-  - `EnterPasswordScreen.kt`: Set new password
-  - `ConfirmPasswordScreen.kt`: Confirm password
-  - `ChangePasswordScreen.kt`: Change existing password
+- `settings/master/SettingsMasterScreen.kt`: Category list (Theme, Security, Info)
+- `settings/detail/SettingsDetailScreen.kt`: Category detail preferences
+- `AdaptiveSettingsScreen.kt`: Adaptive list/detail scaffold for settings
+- Pull-to-refresh is supported on both the master and detail panes to re-sync settings state
+- Security password flows live in `ui/dialog/security/` (enter/confirm/change password dialogs)
 
-#### Adaptive UI (`ui/adaptive/`)
-- `AdaptiveScreen.kt`: Main adaptive layout with ListDetailPaneScaffold
-- `PreviewAdaptiveScreen.kt`: Preview composable for adaptive layouts
+#### Adaptive UI (`ui/main/`, `ui/settings/`)
+- `AdaptiveMainScreen.kt`: Main adaptive layout with ListDetailPaneScaffold
+- `AdaptiveSettingsScreen.kt`: Settings adaptive list/detail layout
 - **Features**:
   - Responsive phone/tablet layouts
   - Material 3 Adaptive components
@@ -258,7 +257,7 @@ Platform-specific code is minimal (window configuration, system bars, etc.).
 - `material.theme.prefs` - Theme preference persistence
 
 ### Pagination
-- `thirdparty:androidx:paging:compose` - Paging for Compose
+- `androidx.paging:paging-compose` - Paging for Compose
 
 ### Utilities
 - `kotlinx-datetime` - Date/time display
@@ -394,7 +393,7 @@ fun AdaptiveScreen() {
 ## Related Modules
 
 - **Used by**: `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
-- **Depends on**: `core:domain`, `core:presentation`, `core:data`, `thirdparty:androidx:paging:compose`
+- **Depends on**: `core:domain`, `core:presentation`, `core:data`, `androidx.paging:paging-compose`
 - **Tested by**: `ui:test-jvm`
 
 ## Building & Running
@@ -403,4 +402,3 @@ fun AdaptiveScreen() {
 ./gradlew :ui:shared:build    # Build module
 ./gradlew :ui:shared:test     # Run tests
 ```
-

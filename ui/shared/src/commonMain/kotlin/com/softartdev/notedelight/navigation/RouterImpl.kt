@@ -61,9 +61,13 @@ class RouterImpl : Router, NavController.OnDestinationChangedListener {
         this.adaptiveNavigator = adaptiveNavigator as ThreePaneScaffoldNavigator<Long>
     }
 
-    override fun releaseAdaptiveNavigator() {
-        logger.d { "Releasing AdaptiveNavigator" }
-        adaptiveNavigator = null
+    override fun releaseAdaptiveNavigator(adaptiveNavigator: Any?) = when (this.adaptiveNavigator) {
+        null -> logger.d { "Releasing AdaptiveNavigator: navigator already released" }
+        adaptiveNavigator -> {
+            logger.d { "Releasing AdaptiveNavigator" }
+            this.adaptiveNavigator = null
+        }
+        else -> logger.d { "Skip releasing AdaptiveNavigator: another navigator is active" }
     }
 
     override suspend fun adaptiveNavigateToDetail(contentKey: Long?) =

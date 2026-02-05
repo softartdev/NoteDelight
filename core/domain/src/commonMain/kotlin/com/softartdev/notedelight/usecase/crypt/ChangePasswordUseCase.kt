@@ -1,6 +1,5 @@
 package com.softartdev.notedelight.usecase.crypt
 
-import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
 
 
@@ -9,8 +8,7 @@ class ChangePasswordUseCase(
 ): suspend (CharSequence?, CharSequence?) -> Unit {
 
     override suspend fun invoke(oldPass: CharSequence?, newPass: CharSequence?) {
-        if (safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED) {
-            requireNotNull(oldPass)
+        if (!oldPass.isNullOrEmpty()) {
             if (newPass.isNullOrEmpty()) {
                 safeRepo.decrypt(oldPass)
             } else {

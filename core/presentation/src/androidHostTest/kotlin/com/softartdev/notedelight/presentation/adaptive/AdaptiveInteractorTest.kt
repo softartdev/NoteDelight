@@ -8,7 +8,9 @@ import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -16,11 +18,21 @@ import com.softartdev.notedelight.presentation.main.MainAction
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.presentation.note.NoteAction
+import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
+import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsAction
+import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
+import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
+import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
+import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
+import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
+import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -52,11 +64,16 @@ class AdaptiveInteractorTest {
     private val mockCreateNoteUseCase = Mockito.mock(CreateNoteUseCase::class.java)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
+    private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
+    private val revealFileListUseCase = RevealFileListUseCase()
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher)
-    
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var noteViewModel: NoteViewModel
+    private lateinit var settingsCategoriesViewModel: SettingsCategoriesViewModel
+    private lateinit var settingsViewModel: SettingsViewModel
 
     private val id = 1L
     private val title: String = "title"
@@ -84,6 +101,22 @@ class AdaptiveInteractorTest {
             router = mockRouter,
             coroutineDispatchers = coroutineDispatchers
         )
+        settingsCategoriesViewModel = SettingsCategoriesViewModel(
+            router = mockRouter,
+            adaptiveInteractor = adaptiveInteractor,
+        )
+        settingsViewModel = SettingsViewModel(
+            safeRepo = mockSafeRepo,
+            checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
+            exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
+            importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
+            snackbarInteractor = mockSnackbarInteractor,
+            router = mockRouter,
+            revealFileListUseCase = revealFileListUseCase,
+            localeInteractor = mockLocaleInteractor,
+            adaptiveInteractor = adaptiveInteractor,
+            coroutineDispatchers = coroutineDispatchers,
+        )
         Mockito.`when`(mockNoteDAO.pagingDataFlow).thenReturn(flowOf(PagingData.empty()))
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
         Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
@@ -93,7 +126,7 @@ class AdaptiveInteractorTest {
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor)
+        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor)
         Logger.setLogWriters()
     }
 
@@ -103,20 +136,20 @@ class AdaptiveInteractorTest {
         noteViewModel.launchCollectingSelectedNoteId()
         
         mainViewModel.stateFlow.test {
-            val initialResult = awaitItem()
+            val initialResult: NoteListResult = awaitItem()
             assertTrue(initialResult is NoteListResult.Success)
             assertNull(initialResult.selectedId)
             
             mainViewModel.onAction(MainAction.OnNoteClick(id))
             
-            val updatedResult = awaitItem()
+            val updatedResult: NoteListResult = awaitItem()
             assertTrue(updatedResult is NoteListResult.Success)
             assertEquals(id, updatedResult.selectedId)
             
             cancelAndIgnoreRemainingEvents()
         }
         noteViewModel.stateFlow.test {
-            var noteResult = awaitItem()
+            var noteResult: NoteResult = awaitItem()
             while (noteResult.note == null && !noteResult.loading) {
                 noteResult = awaitItem()
             }
@@ -138,13 +171,13 @@ class AdaptiveInteractorTest {
         mainViewModel.onAction(MainAction.OnNoteClick(id))
         
         mainViewModel.stateFlow.test {
-            val selectedResult = awaitItem()
+            val selectedResult: NoteListResult = awaitItem()
             assertTrue(selectedResult is NoteListResult.Success)
             assertEquals(id, selectedResult.selectedId)
             
             noteViewModel.onAction(NoteAction.CheckSaveChange(text))
             
-            val clearedResult = awaitItem()
+            val clearedResult: NoteListResult = awaitItem()
             assertTrue(clearedResult is NoteListResult.Success)
             assertNull(clearedResult.selectedId)
             
@@ -162,5 +195,44 @@ class AdaptiveInteractorTest {
         
         deferred.await()
         assertEquals(id, adaptiveInteractor.selectedNoteIdStateFlow.value)
+    }
+
+    @Test
+    fun `when SettingsCategoriesViewModel selects category then SettingsViewModel reflects selection`() = runTest {
+        settingsCategoriesViewModel.launchCategories()
+        settingsViewModel.launchCollectingSelectedCategoryId()
+
+        settingsViewModel.stateFlow.test {
+            assertNull(awaitItem().selectedCategory)
+
+            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Security))
+
+            val updated: SecurityResult = awaitItem()
+            assertEquals(SettingsCategory.Security, updated.selectedCategory)
+            cancelAndIgnoreRemainingEvents()
+        }
+        Mockito.verify(mockRouter).adaptiveNavigateToDetail(contentKey = SettingsCategory.Security.ordinal.toLong())
+    }
+
+    @Test
+    fun `when SettingsViewModel navigates back then selection cleared`() = runTest {
+        settingsCategoriesViewModel.launchCategories()
+        settingsViewModel.launchCollectingSelectedCategoryId()
+
+        settingsViewModel.stateFlow.test {
+            assertNull(awaitItem().selectedCategory)
+
+            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Theme))
+
+            val selected: SecurityResult = awaitItem()
+            assertEquals(SettingsCategory.Theme, selected.selectedCategory)
+
+            settingsViewModel.onAction(SettingsAction.NavBack)
+
+            val cleared: SecurityResult = awaitItem()
+            assertNull(cleared.selectedCategory)
+            cancelAndIgnoreRemainingEvents()
+        }
+        Mockito.verify(mockRouter).adaptiveNavigateBack()
     }
 }

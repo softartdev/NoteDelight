@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
@@ -24,9 +25,9 @@ kotlin {
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(compose.materialIconsExtended)
+            implementation(libs.compose.material.icons.extended)
             implementation(compose.desktop.currentOs)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.resources)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.kermit)
@@ -34,8 +35,9 @@ kotlin {
         jvmTest.dependencies {
             implementation(projects.ui.test)
             implementation(projects.ui.testJvm)
+            implementation(projects.feature.backup.ui)
             implementation(kotlin("test"))
-            implementation(compose.desktop.uiTestJUnit4)
+            implementation(libs.compose.ui.test.junit4)
             implementation(compose.desktop.currentOs)
             implementation(libs.koin.compose)
             implementation(libs.kotlinx.datetime)
@@ -53,7 +55,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Note Delight"
-            packageVersion = "8.5.1"
+            packageVersion = "8.5.2"
             description = "Note app with encryption"
             copyright = "© 2023 SoftArtDev"
             macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))

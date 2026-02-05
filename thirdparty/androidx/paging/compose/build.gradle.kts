@@ -32,7 +32,7 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       api(libs.androidx.paging.common)
-      api(compose.runtime)
+      api(libs.compose.runtime)
     }
   }
 }

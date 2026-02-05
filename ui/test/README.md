@@ -22,6 +22,7 @@ The `ui/test` module provides the base test framework. Platform-specific test im
 # Run test framework tests
 ./gradlew :ui:test:iosSimulatorArm64Test
 ```
+Note: the `ui:test` CocoaPods **release** framework for the iOS simulator is disabled because tests only need debug binaries.
 
 ### Android (Requires emulator/device)
 ```bash
@@ -90,16 +91,16 @@ ui/test/
 ## Dependencies
 
 ### Core
-- `compose.uiTest` - Compose Multiplatform testing API
-- `compose.material3` - Material 3 components for test UI
-- `compose.materialIconsExtended` - Material icons
-- `compose.components.resources` - Compose resources
+- `libs.compose.ui.test` - Compose Multiplatform testing API
+- `libs.compose.material3` - Material 3 components for test UI
+- `libs.compose.material.icons.extended` - Material icons
+- `libs.compose.components.resources` - Compose resources
 - `core:domain` - Domain models
 - `core:presentation` - ViewModels
 - `ui:shared` - UI under test
 
 ### Platform-Specific
-- `compose.desktop.currentOs` - Desktop platform support for JVM tests
+- `libs.compose.desktop.jvm.<os>.<arch>` - Desktop platform support for JVM tests (selected via `composeDesktopCurrentOs` from build-logic)
 - `androidx.compose.ui:ui-test-junit4-android` - Android instrumented test support
 
 ### Testing & Utilities

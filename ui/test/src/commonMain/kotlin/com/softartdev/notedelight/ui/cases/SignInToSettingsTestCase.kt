@@ -2,14 +2,11 @@
 
 package com.softartdev.notedelight.ui.cases
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import com.softartdev.notedelight.DbTestEncryptor
@@ -22,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 class SignInToSettingsTestCase(
     composeUiTest: ComposeUiTest,
     private val closeSoftKeyboard: () -> Unit,
+    private val pressBack: () -> Unit,
 ) : () -> TestResult, BaseTestCase(composeUiTest) {
 
     override fun invoke() = runTest {
@@ -30,6 +28,7 @@ class SignInToSettingsTestCase(
             settingsButtonSNI.performClick()
         }
         settingsTestScreen {
+            securityCategorySNI.performClick()
             composeUiTest.waitUntilDisplayed("encryptionSwitch", blockSNI = ::encryptionSwitchSNI)
             encryptionSwitchSNI.assertIsDisplayed()
                 .assertIsOn()
@@ -42,9 +41,9 @@ class SignInToSettingsTestCase(
                 confirmDialogButtonSNI.performClick()
             }
             composeUiTest.waitAssert("encryption switch is OFF", encryptionSwitchSNI::assertIsOff)
-
-            composeUiTest.onNodeWithContentDescription(Icons.AutoMirrored.Filled.ArrowBack.name)
-                .performClick()
+            pressBack()
+            composeUiTest.awaitIdle()
+            pressBack()
         }
         mainTestScreen {
             composeUiTest.waitUntilDisplayed("emptyResultLabel", blockSNI = ::emptyResultLabelSNI)

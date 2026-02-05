@@ -3,7 +3,7 @@ compileSdk = "36"
 targetSdk = "36"
 minSdk = "23"
 jdk = "17"
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 ksp = "2.3.2"
 agp = "9.0.0"
 gms = "4.4.4"
@@ -14,26 +14,28 @@ sqlDelight = "2.2.1"
 room = "2.8.4"
 androidxSqlite = "2.6.2"
 saferoom = "1.4.0"
-androidSqlCipher = "4.12.0"
+androidSqlCipher = "4.13.0"
 iosSqlCipher = "4.9.0"
 jdbcSQLite = "3.51.2.0"
 koin-bom = "4.1.1"
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0"
 kotlinx-datetime = "0.7.1"
 kotlinx-browser = "0.5.0"
 kermit = "2.0.8"
 materialThemePrefs = "0.9.8"
-adaptive = "1.2.0"
+composeMaterial3 = "1.9.0"
+composeMaterialIconsExtended = "1.7.3"
+composeMaterialAdaptive = "1.2.0"
 androidxAppcompat = "1.7.1"
 androidxViewModel = "2.9.6"
 androidxNavigation = "2.9.1"
-androidxActivityCompose = "1.12.2"
-androidxComposeTest = "1.10.1"
+androidxActivityCompose = "1.12.3"
+androidxComposeTest = "1.10.2"
 androidxCoreSplashscreen = "1.2.0"
 androidxTracing = "1.3.0"
 androidxLifecycle = "2.10.0"
 androidxArch = "2.2.0"
-androidxPaging = "3.4.0-rc01"
+androidxPaging = "3.4.0"
 androidxTestExt = "1.3.0"
 androidxTest = "1.7.0"
 androidxTestOrchestrator = "1.6.1"
@@ -46,7 +48,7 @@ espresso = "3.7.0"
 desugar = "2.1.5"
 androidSecurityLint = "1.0.4"
 appdirs = "1.5.0"
-uiTooling = "1.10.1"
+uiTooling = "1.10.2"
 download = "5.6.0"
 okio = "3.16.4"
 accompanist-permissions = "0.37.3"
@@ -101,9 +103,20 @@ kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
 
 material-theme-prefs = { module = "io.github.softartdev:theme-material3", version.ref = "materialThemePrefs" }
 
-compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
-compose-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
-compose-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMaterial3" }
+compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "composeMaterialIconsExtended" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
+compose-ui-test-junit4 = { module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "compose" }
+
+compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "composeMaterialAdaptive" }
+compose-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "composeMaterialAdaptive" }
+compose-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "composeMaterialAdaptive" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }

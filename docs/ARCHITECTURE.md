@@ -237,7 +237,7 @@ fun NoteDetailBody(
 Use Action interfaces when you have **3+ different user actions** that need to be passed down through multiple Composable layers. Examples:
 - ✅ `NoteAction` (Save, Edit, Delete, CheckSaveChange) - 4 actions
 - ✅ `MainAction` (OnNoteClick, OnSettingsClick, OnRefresh) - 3 actions  
-- ✅ `SettingsAction` (NavBack, ChangeTheme, CheckEncryption, etc.) - 7 actions
+- ✅ `SettingsAction` (NavBack, Refresh, ChangeTheme, ChangeLanguage, ChangeEncryption, ChangePassword, ShowCipherVersion, ShowDatabasePath, ShowFileList, RevealFileList) - 10 actions
 - ✅ `ChangeAction` (OnEditOldPassword, OnEditNewPassword, OnEditRepeatPassword, etc.) - 5 actions
 
 **When NOT to Use Action Interfaces**:

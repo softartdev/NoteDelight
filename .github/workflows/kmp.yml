@@ -36,7 +36,9 @@ jobs:
         with:
           path: ~/.konan
           key: kotlin-${{ steps.kotlin-version.outputs.version }}
-      - name: Build
+      - name: Quick build
+        run: ./gradle/build_quick.sh
+      - name: Full build
         run: ./gradlew build
       - name: Archive build-output artifacts
         if: always()

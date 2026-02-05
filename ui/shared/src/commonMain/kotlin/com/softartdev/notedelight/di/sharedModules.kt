@@ -7,6 +7,7 @@ import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
+import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
@@ -23,6 +24,8 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
+import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
+import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -50,6 +53,8 @@ val useCaseModule: Module = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::UpdateTitleUseCase)
     factoryOf(::RevealFileListUseCase)
+    factoryOf(::ExportDatabaseUseCase)
+    factoryOf(::ImportDatabaseUseCase)
 }
 
 val viewModelModule: Module = module {
@@ -60,6 +65,7 @@ val viewModelModule: Module = module {
     viewModelOf(::SaveViewModel)
     viewModelOf(::DeleteViewModel)
     viewModelOf(::EditTitleViewModel)
+    viewModelOf(::SettingsCategoriesViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::EnterViewModel)
     viewModelOf(::ConfirmViewModel)

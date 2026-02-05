@@ -66,7 +66,7 @@ fun App(
                 AdaptiveMainScreen(router, snackbarHostState)
             }
             composable<AppNavGraph.Settings> {
-                AdaptiveSettingsScreen()
+                AdaptiveSettingsScreen(router)
             }
             composable<AppNavGraph.FileList> {
                 FileListScreen(

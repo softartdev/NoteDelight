@@ -23,8 +23,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 851
-        versionName = "8.5.1"
+        versionCode = 852
+        versionName = "8.5.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -72,14 +72,16 @@ dependencies {
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
     implementation(projects.core.presentation)
     implementation(projects.ui.shared)
+    implementation(projects.feature.backup.domain)
+    implementation(projects.feature.backup.ui)
     implementation(kotlin("reflect", libs.versions.kotlin.get()))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
-    implementation(compose.ui)
-    implementation(compose.material3)
-    implementation(compose.preview)
-    debugImplementation(compose.uiTooling)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material.theme.prefs)
@@ -108,7 +110,7 @@ dependencies {
     androidTestUtil(libs.androidx.test.orchestrator)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.espresso.device)
-    androidTestImplementation(compose.desktop.uiTestJUnit4)
+    androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.leakCanary.android.instrumentation)
     lintChecks(libs.android.security.lint)
