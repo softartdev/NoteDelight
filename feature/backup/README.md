@@ -14,4 +14,5 @@ Backup feature modules that handle database import/export and user-facing file s
 
 ## Notes
 
-- Non-WASM targets use Okio-based transfer; WASM throws `UnsupportedOperationException`.
+- Non-WASM targets use Okio-based transfer.
+- WASM uses browser file pickers and OPFS copy logic for import/export.

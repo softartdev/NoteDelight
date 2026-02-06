@@ -2,5 +2,5 @@ package com.softartdev.notedelight.repository
 
 expect object DatabaseFileTransfer {
 
-    fun copyDatabase(sourcePath: String, destinationPath: String)
+    suspend fun copyDatabase(sourcePath: String, destinationPath: String)
 }

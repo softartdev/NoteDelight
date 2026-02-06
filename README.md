@@ -40,7 +40,7 @@ Supported platforms:
 |:------------------:|:-------:|:---:|:------------:|:---:|
 |      database      |    ✅    | ✅	  |      ✅	      |  ✅  |
 |     encryption     |    ✅    | ✅ 	 |      ✅	      |     |
-|       backup       |    ✅    | ✅	  |      ✅	      |     |
+|       backup       |    ✅    | ✅	  |      ✅	      |  ✅  |
 
 Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing features.
 
