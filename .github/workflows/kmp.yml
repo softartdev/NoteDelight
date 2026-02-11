@@ -42,7 +42,7 @@ jobs:
         run: ./gradlew build
       - name: Archive build-output artifacts
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: output-build-artifacts
           path: |
@@ -112,7 +112,7 @@ jobs:
           script: ./gradlew :app:android:connectedCheck
       - name: Archive ui-tests-output artifacts
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: output-ui-tests-artifacts-${{ matrix.api-level }}-${{ matrix.target }}
           path: |
