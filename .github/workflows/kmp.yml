@@ -32,7 +32,7 @@ jobs:
         id: kotlin-version
         run: echo "version=$(.github/scripts/extract-kotlin-version.sh)" >> "$GITHUB_OUTPUT"
       - name: Cache Kotlin/Native
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.konan
           key: kotlin-${{ steps.kotlin-version.outputs.version }}
@@ -80,7 +80,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: AVD cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: avd-cache
         with:
           path: |
