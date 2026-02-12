@@ -95,7 +95,7 @@ Each screen is a composable function connected to a ViewModel:
 - `SignInScreen.kt`: Password entry for encrypted database
 
 #### Settings (`ui/settings/`)
-- `settings/master/SettingsMasterScreen.kt`: Category list (Theme, Security, Info)
+- `settings/master/SettingsMasterScreen.kt`: Category list (Appearance, Security, Backup, Info)
 - `settings/detail/SettingsDetailScreen.kt`: Category detail preferences
 - `AdaptiveSettingsScreen.kt`: Adaptive list/detail scaffold for settings
 - Pull-to-refresh is supported on both the master and detail panes to re-sync settings state

@@ -149,7 +149,7 @@ fun SettingsDetailScreenBody(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
                 when (category) {
-                    SettingsCategory.Theme -> ThemePreferences(result = result, onAction = onAction)
+                    SettingsCategory.Appearance -> AppearancePreferences(result = result, onAction = onAction)
                     SettingsCategory.Security -> SecurityPreferences(result = result, onAction = onAction)
                     SettingsCategory.Backup -> BackupPreferences(onAction = onAction)
                     SettingsCategory.Info -> InfoPreferences(result = result, onAction = onAction)
@@ -160,7 +160,7 @@ fun SettingsDetailScreenBody(
 )
 
 @Composable
-private fun ThemePreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
+private fun AppearancePreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
     ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
     Preference(
         modifier = Modifier.testTag(LANGUAGE_BUTTON_TAG),

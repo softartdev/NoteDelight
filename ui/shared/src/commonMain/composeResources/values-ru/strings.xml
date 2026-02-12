@@ -42,7 +42,7 @@
     <string name="retry">Повторить</string>
     <string name="open_source_licenses">Лицензии открытого ПО</string>
     <string name="settings">Настройки</string>
-    <string name="theme">Тема</string>
+    <string name="appearance">Оформление</string>
     <string name="choose_theme">Выбор темы</string>
     <string name="light">Светлая</string>
     <string name="dark">Тёмная</string>

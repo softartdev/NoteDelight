@@ -222,10 +222,10 @@ class AdaptiveInteractorTest {
         settingsViewModel.stateFlow.test {
             assertNull(awaitItem().selectedCategory)
 
-            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Theme))
+            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Appearance))
 
             val selected: SecurityResult = awaitItem()
-            assertEquals(SettingsCategory.Theme, selected.selectedCategory)
+            assertEquals(SettingsCategory.Appearance, selected.selectedCategory)
 
             settingsViewModel.onAction(SettingsAction.NavBack)
 
