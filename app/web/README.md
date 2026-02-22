@@ -84,10 +84,10 @@ HTML entry point:
 
 ### Database
 
-- **Official SQLite WASM**: Native SQLite compiled to WebAssembly
+- **SQLite3MultipleCiphers WASM**: SQLite with encryption support compiled to WebAssembly
 - **OPFS Storage**: Origin-Private FileSystem for persistent database storage
 - **Web Worker**: Database operations run off the main thread
-- **No encryption**: SQLCipher not available in browsers
+- **Encryption ready**: [SQLite3MultipleCiphers](https://github.com/utelle/SQLite3MultipleCiphers) provides cipher support in the browser
 
 ### Webpack
 
@@ -124,7 +124,7 @@ build/dist/wasmJs/productionExecutable/
 ├── composeApp.wasm              # Application WebAssembly binary
 ├── skiko.wasm                   # Skia graphics engine
 ├── sqlite3.js                   # SQLite JavaScript
-├── sqlite3.wasm                 # Official SQLite WASM
+├── sqlite3.wasm                 # SQLite3MultipleCiphers WASM (with encryption)
 ├── sqlite.worker.js             # Custom OPFS worker
 ├── coi-serviceworker.js         # Service worker for headers
 └── sql-wasm.wasm               # Legacy SQL.js (fallback)
@@ -280,7 +280,7 @@ fun isWasmSupported(): Boolean = js("""
 
 ### Current Limitations
 
-1. ❌ **No encryption**: SQLCipher not available in browsers
+1. ✅ **Encryption**: [SQLite3MultipleCiphers](https://github.com/utelle/SQLite3MultipleCiphers) WASM provides encrypt/decrypt/rekey via `PRAGMA key`/`PRAGMA rekey`
 2. ✅ **Storage**: OPFS provides persistent database storage
 3. ⚠️ **File access**: Restricted browser file API
 4. ⚠️ **Performance**: Slower than native (improving)
@@ -309,7 +309,7 @@ The web app now uses OPFS (Origin-Private FileSystem) for persistent database st
 - ✅ **Persistent storage**: Survives browser sessions
 - ✅ **Better performance**: Direct file system access  
 - ✅ **Larger capacity**: Not limited by IndexedDB quotas
-- ✅ **Real SQLite**: Uses official SQLite WASM build
+- ✅ **Real SQLite with encryption**: Uses SQLite3MultipleCiphers WASM build
 
 ### Browser Support
 
@@ -506,7 +506,7 @@ When working with this module:
 3. **Size matters**: Minimize bundle size
 4. **Progressive enhancement**: Detect and use modern APIs gracefully
 5. **Testing**: Test in multiple browsers
-6. **Security**: No sensitive data without encryption
+6. **Security**: Encryption available via SQLite3MultipleCiphers
 7. **Performance**: Profile and optimize load time
 8. **Responsive**: Support mobile and desktop browsers
 9. **Accessibility**: Follow WCAG guidelines

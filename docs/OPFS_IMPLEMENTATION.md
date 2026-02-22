@@ -2,7 +2,7 @@
 
 ## Overview
 
-NoteDelight's web application uses **OPFS (Origin-Private FileSystem)** to provide persistent database storage that survives browser sessions. This implementation replaces the previous IndexedDB-based approach with a more performant and reliable solution using the official SQLite WebAssembly build.
+NoteDelight's web application uses **OPFS (Origin-Private FileSystem)** to provide persistent database storage that survives browser sessions. This implementation replaces the previous IndexedDB-based approach with a more performant and reliable solution using the [SQLite3MultipleCiphers](https://github.com/utelle/SQLite3MultipleCiphers) WebAssembly build, which adds encryption support to SQLite in the browser.
 
 ## Architecture Integration
 
@@ -24,7 +24,7 @@ NoteDelight's web application uses **OPFS (Origin-Private FileSystem)** to provi
 ├─────────────────────────────────────────────────────────────────┤
 │  Browser Storage Layer                                         │
 │  ├── OPFS (Origin-Private FileSystem)                          │
-│  ├── Official SQLite WASM (sqlite3.wasm)                       │
+│  ├── SQLite3MultipleCiphers WASM (sqlite3.wasm)                │
 │  └── Web Worker Thread                                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -83,7 +83,7 @@ async function createDatabase() {
 ```
 
 **Key Features:**
-- Uses official SQLite WASM build (`sqlite3.js`)
+- Uses SQLite3MultipleCiphers WASM build (`sqlite3.js`) with encryption support
 - Configures database with `vfs=opfs` for OPFS storage
 - Handles SQLDelight worker protocol (exec, transactions)
 - Runs database operations off main thread
@@ -91,9 +91,13 @@ async function createDatabase() {
 ### 3. Build System Integration (`build.gradle.kts`)
 
 ```kotlin
-// Download official SQLite WASM build
+// Download SQLite3MultipleCiphers WASM build with encryption support
+val sqlite3mcVersion = "2.2.7"
+val sqliteVersion = "3.51.2"
+val sqliteWasmVersion = "3510200"
+val sqlite3mcZip = "sqlite3mc-$sqlite3mcVersion-sqlite-$sqliteVersion-wasm.zip"
 val sqliteDownload = tasks.register("sqliteDownload", Download::class.java) {
-    src("https://sqlite.org/2024/sqlite-wasm-3460100.zip")
+    src("https://github.com/utelle/SQLite3MultipleCiphers/releases/download/v$sqlite3mcVersion/$sqlite3mcZip")
     dest(layout.buildDirectory.dir("tmp"))
     onlyIfModified(true)
 }
@@ -101,8 +105,8 @@ val sqliteDownload = tasks.register("sqliteDownload", Download::class.java) {
 // Extract SQLite files to resources
 val sqliteUnzip = tasks.register("sqliteUnzip", Copy::class.java) {
     dependsOn(sqliteDownload)
-    from(zipTree("sqlite-wasm-3460100.zip")) {
-        include("sqlite-wasm-3460100/jswasm/**")
+    from(zipTree(layout.buildDirectory.dir("tmp/$sqlite3mcZip"))) {
+        include("sqlite3mc-wasm-$sqliteWasmVersion/jswasm/**")
         exclude("**/*worker1*") // Use our custom worker
     }
     into(layout.buildDirectory.dir("sqlite"))
@@ -115,7 +119,7 @@ tasks.named("wasmJsProcessResources").configure {
 ```
 
 **Automation:**
-- Downloads latest SQLite WASM build from sqlite.org
+- Downloads SQLite3MultipleCiphers WASM build from GitHub releases (with encryption support)
 - Extracts necessary files (`sqlite3.js`, `sqlite3.wasm`, etc.)
 - Integrates with Gradle resource processing
 - Excludes default worker (we use custom one)
@@ -167,7 +171,7 @@ config.plugins.push(
 ### Performance Improvements
 - ✅ **Direct file system access**: Faster than IndexedDB
 - ✅ **Web worker isolation**: Database operations don't block UI
-- ✅ **Native SQLite**: Full SQLite feature set and performance
+- ✅ **Native SQLite with encryption**: Full SQLite feature set, performance, and cipher support
 
 ### Storage Advantages
 - ✅ **Persistent storage**: Data survives browser sessions and crashes
@@ -228,8 +232,8 @@ config.plugins.push(
 - **Access mode**: Read/write with creation
 
 ### File Sizes (Production Build)
-- `sqlite3.wasm`: ~600KB (Official SQLite)
-- `sqlite3.js`: ~45KB (SQLite JavaScript interface)
+- `sqlite3.wasm`: ~1020KB (SQLite3MultipleCiphers with encryption)
+- `sqlite3.js`: ~390KB (SQLite JavaScript interface)
 - `sqlite.worker.js`: ~1.4KB (Custom OPFS worker)
 - `coi-serviceworker.js`: ~6KB (Cross-origin headers)
 
@@ -246,7 +250,7 @@ config.plugins.push(
 | **Persistence** | Session-based | Permanent |
 | **Storage Size** | Limited by quotas | Much larger capacity |
 | **Reliability** | IndexedDB issues | File system reliability |
-| **SQLite Version** | Older sql.js build | Latest official SQLite |
+| **SQLite Version** | Older sql.js build | SQLite3MultipleCiphers (with encryption) |
 | **Browser Support** | Wider | Modern browsers (86+) |
 
 ## Future Enhancements

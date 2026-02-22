@@ -16,27 +16,22 @@ kotlin {
     wasmJs {
         outputModuleName.set("composeApp")
         browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            testTask {
-                useKarma {
-                    useChrome()
-                    useChromeHeadless()
-                }
-            }
+            val rootDirPath: String = project.rootDir.path
+            val projectDirPath: String = project.projectDir.path
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    // Serve sources to debug inside browser
+                    // Serve sources to debug inside the browser
                     static(rootDirPath)
                     static(projectDirPath)
                 }
             }
+            testTask { useKarma { useChromeHeadless() } }
         }
         binaries.executable()
     }
     sourceSets {
-        val wasmJsMain by getting {
+        wasmJsMain {
             dependencies {
                 implementation(projects.core.domain)
                 implementation(projects.core.presentation)
@@ -49,37 +44,61 @@ kotlin {
             }
             resources.srcDir(layout.buildDirectory.dir("sqlite"))
         }
-        val wasmJsTest by getting {
+        wasmJsTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(projects.ui.test)
                 implementation(libs.compose.ui.test)
+                implementation(libs.compose.material3)
                 implementation(libs.compose.material.icons.extended)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.lifecycle.runtime.testing)
+                implementation(libs.androidx.paging.common)
             }
             resources.srcDir(layout.buildDirectory.dir("sqlite"))
         }
     }
 }
 
-val chromeBinaryFromEnv = providers.environmentVariable("CHROME_BIN").orNull
-val hasChromeForTests = chromeBinaryFromEnv?.let { file(it).exists() } == true
+// Chrome binary for Karma tests.
+// Auto-detects Chrome on macOS/Linux/Windows when CHROME_BIN is not set.
+// NOTE: WasmGC module compilation in Chrome is very slow for large modules (~30 MB test WASM).
+// The main() function is guarded with isKarmaTestRunner() check to prevent the production app
+// from launching during tests (see main.kt).
+val defaultChromePaths: List<String> = listOf(
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",          // macOS
+    "/usr/bin/google-chrome-stable",                                         // Linux (stable)
+    "/usr/bin/google-chrome",                                                // Linux
+    "/usr/bin/chromium-browser",                                             // Linux (Chromium)
+    "/usr/bin/chromium",                                                     // Linux (Chromium alt)
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",                 // Windows
+    "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",           // Windows x86
+)
+val chromeBinary: String? = providers.environmentVariable("CHROME_BIN").orNull
+    ?: defaultChromePaths.firstOrNull { file(it).exists() }
 
 tasks.named<KotlinJsTest>("wasmJsBrowserTest").configure {
-    enabled = hasChromeForTests
+    enabled = chromeBinary != null
+    if (chromeBinary != null) {
+        environment("CHROME_BIN", chromeBinary)
+    }
 }
 
-val sqliteVersion = 3500400 // See https://sqlite.org/download.html for the latest wasm build version
-val sqliteDownload = tasks.register("sqliteDownload", Download::class.java) {
-    src("https://sqlite.org/2025/sqlite-wasm-$sqliteVersion.zip")
+// SQLite3MultipleCiphers WASM build with encryption support
+// See https://github.com/utelle/SQLite3MultipleCiphers/releases for the latest version
+val sqlite3mcVersion = "2.2.7"
+val sqliteVersion = "3.51.2"
+val sqliteWasmVersion = "3510200"
+val sqlite3mcZip = "sqlite3mc-$sqlite3mcVersion-sqlite-$sqliteVersion-wasm.zip"
+val sqliteDownload: Provider<Download> = tasks.register("sqliteDownload", Download::class.java) {
+    src("https://github.com/utelle/SQLite3MultipleCiphers/releases/download/v$sqlite3mcVersion/$sqlite3mcZip")
     dest(layout.buildDirectory.dir("tmp"))
     onlyIfModified(true)
 }
-val sqliteUnzip = tasks.register("sqliteUnzip", Copy::class.java) {
+val sqliteUnzip: TaskProvider<Copy> = tasks.register("sqliteUnzip", Copy::class.java) {
     dependsOn(sqliteDownload)
-    from(zipTree(layout.buildDirectory.dir("tmp/sqlite-wasm-$sqliteVersion.zip"))) {
-        include("sqlite-wasm-$sqliteVersion/jswasm/**")
+    from(zipTree(layout.buildDirectory.dir("tmp/$sqlite3mcZip"))) {
+        include("sqlite3mc-wasm-$sqliteWasmVersion/jswasm/**")
         exclude("**/*worker1*") // We use our own worker
         eachFile {
             relativePath = RelativePath(true, *relativePath.segments.drop(2).toTypedArray())
