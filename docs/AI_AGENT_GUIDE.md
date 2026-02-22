@@ -229,6 +229,7 @@ class YourViewModelTest {
 3. **Refactor incrementally**: Small, safe changes
 4. **Run tests frequently**: After each change
 5. **Verify all platforms**: Test on Android, Desktop, etc.
+6. **Keep Gradle scripts thin**: Move repeated/non-trivial `build.gradle.kts` logic into `build-logic/convention/src/main/kotlin/com/softartdev/notedelight/ProjectExtensions.kt` and call it from modules
 
 ## Pattern Recognition
 

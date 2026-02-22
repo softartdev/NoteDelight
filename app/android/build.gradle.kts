@@ -1,11 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.softartdev.notedelight.forceAndroidXDependencyVersions
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import com.google.firebase.crashlytics.buildtools.gradle.tasks.UploadMappingFileTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
+    alias(libs.plugins.gradle.convention)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
@@ -119,18 +121,4 @@ tasks.withType<UploadMappingFileTask> {
     dependsOn("processDebugGoogleServices")
 }
 
-configurations.all {
-    resolutionStrategy {
-        sequenceOf(
-            "common", "common-java8", "runtime", "runtime-ktx", "runtime-compose", "viewmodel", "viewmodel-ktx", "viewmodel-compose", "viewmodel-savedstate", "livedata", "livedata-core", "livedata-core-ktx", "process"
-        ).forEach { depName: String ->
-            force("androidx.lifecycle:lifecycle-$depName:${libs.versions.androidxLifecycle.get()}")
-        }
-        force("androidx.savedstate:savedstate:1.4.0")
-        force("androidx.savedstate:savedstate-ktx:1.4.0")
-        force("androidx.savedstate:savedstate-compose:1.4.0")
-
-        force("androidx.concurrent:concurrent-futures:1.2.0")
-        force("com.google.errorprone:error_prone_annotations:2.30.0")
-    }
-}
+project.forceAndroidXDependencyVersions()
