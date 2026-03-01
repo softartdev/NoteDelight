@@ -13,7 +13,7 @@ import com.softartdev.theme.pref.ThemeEnum
 @Composable
 actual fun EnableEdgeToEdge() {
     val activity = LocalActivity.current as? ComponentActivity ?: return
-    val inDark: Boolean = when (themePrefs.darkThemeState.value) {
+    val inDark: Boolean = when (themePrefs.themeState.value) {
         ThemeEnum.Light -> false
         ThemeEnum.Dark -> true
         ThemeEnum.SystemDefault -> isSystemInDarkTheme()
