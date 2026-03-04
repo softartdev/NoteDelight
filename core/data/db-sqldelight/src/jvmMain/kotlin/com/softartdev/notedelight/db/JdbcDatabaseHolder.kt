@@ -62,19 +62,20 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder 
         }
 
         /**
-         * Creates a JDBC driver with optional SQLCipher encryption.
-         * 
+         * Builds a JDBC URL for the SQLite database, optionally with SQLCipher encryption.
+         *
          * Uses Willena's sqlite-jdbc-crypt library which provides SQLCipher support
-         * through SQLite3 Multiple Ciphers.
-         * 
-         * The encryption is configured via the JDBC URL with parameters:
-         * - `cipher=sqlcipher` - Use SQLCipher encryption
-         * - `legacy=4` - Use SQLCipher version 4 format
-         * - `key=password` - The encryption passphrase
-         * 
-         * @param url The database file path (absolute path)
-         * @param password Optional encryption password. If provided, the database will be encrypted.
-         * @return A SqlDriver instance
+         * through SQLite3 Multiple Ciphers (sqlite3mc).
+         *
+         * For encrypted databases the URL includes query parameters:
+         * - `cipher=sqlcipher` – selects the SQLCipher cipher scheme
+         * - `legacy=4` – SQLCipher version 4 compatibility mode
+         * - `key=<password>` – the encryption passphrase (URL-encoded)
+         *
+         * @param dbPath absolute path to the database file
+         * @param props  JDBC properties; if a `password` entry is present and non-empty
+         *               the returned URL will contain encryption parameters
+         * @return a JDBC URL string ready for [java.sql.DriverManager.getConnection]
          */
         fun buildJdbcUrl(dbPath: String, props: Properties): String {
             val logger = Logger.withTag("JdbcDatabaseHolder")

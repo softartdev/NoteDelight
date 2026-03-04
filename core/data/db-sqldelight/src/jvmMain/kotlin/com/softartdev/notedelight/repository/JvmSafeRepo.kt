@@ -68,7 +68,7 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
             stmt.close()
             if (result != null) return result
             val mcStmt = connection.createStatement()
-            val mcHasResult = mcStmt.execute(SQLITE3MC_VERSION_QUERY)
+            val mcHasResult = mcStmt.execute("SELECT sqlite3mc_version();")
             val mcResult = if (mcHasResult) {
                 val rs = mcStmt.resultSet
                 if (rs.next()) rs.getString(1) else null
@@ -83,10 +83,6 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         } finally {
             connection?.close()
         }
-    }
-
-    companion object {
-        private const val SQLITE3MC_VERSION_QUERY = "SELECT sqlite3mc_version();"
     }
 
     override suspend fun encrypt(newPass: CharSequence) {
