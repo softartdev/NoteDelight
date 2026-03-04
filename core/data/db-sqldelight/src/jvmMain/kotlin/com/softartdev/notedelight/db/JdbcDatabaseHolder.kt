@@ -13,8 +13,9 @@ import java.util.Properties
 class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder {
     private val logger = Logger.withTag(this@JdbcDatabaseHolder::class.simpleName.toString())
     private val dbPath = FilePathResolver().invoke()
-    
-    override val driver: SqlDriver = createDriver(dbPath, props)
+
+    val jdbcUrl: String = buildJdbcUrl(dbPath, props)
+    override val driver: SqlDriver = createDriver(jdbcUrl, props)
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries = noteDb.noteQueries
 
@@ -75,23 +76,29 @@ class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder 
          * @param password Optional encryption password. If provided, the database will be encrypted.
          * @return A SqlDriver instance
          */
-        private fun createDriver(url: String, props: Properties): SqlDriver {
+        fun buildJdbcUrl(dbPath: String, props: Properties): String {
             val logger = Logger.withTag("JdbcDatabaseHolder")
             val password: String? = props.getProperty("password")
-            val jdbcUrl = if (password.isNullOrEmpty()) {
-                // Unencrypted database - use standard SQLDelight format
-                val unencryptedUrl = JdbcSqliteDriver.IN_MEMORY + url
+            return if (password.isNullOrEmpty()) {
+                val unencryptedUrl = JdbcSqliteDriver.IN_MEMORY + dbPath
                 logger.d { "Creating unencrypted driver with URL: $unencryptedUrl" }
                 unencryptedUrl
             } else {
-                // Build encrypted JDBC URL with SQLCipher parameters
-                // sqlite-jdbc-crypt uses "jdbc:sqlite:file:" prefix for encrypted databases
                 val encodedPassword = URLEncoder.encode(password, StandardCharsets.UTF_8)
-                val encryptedUrl = "$JDBC_PREFIX_ENCRYPTED$url?cipher=$SQLCIPHER_CIPHER&legacy=$SQLCIPHER_LEGACY&key=$encodedPassword"
+                val encryptedUrl = "$JDBC_PREFIX_ENCRYPTED$dbPath?cipher=$SQLCIPHER_CIPHER&legacy=$SQLCIPHER_LEGACY&key=$encodedPassword"
                 logger.d { "Creating encrypted driver with URL: $encryptedUrl (password length: ${password.length})" }
                 encryptedUrl
             }
-            return JdbcSqliteDriver(jdbcUrl, props)
+        }
+
+        private fun createDriver(jdbcUrl: String, props: Properties): SqlDriver {
+            val driverProps = Properties()
+            for (key in props.stringPropertyNames()) {
+                if (key != "password") {
+                    driverProps.setProperty(key, props.getProperty(key))
+                }
+            }
+            return JdbcSqliteDriver(jdbcUrl, driverProps)
         }
     }
 }
