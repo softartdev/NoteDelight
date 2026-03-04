@@ -54,7 +54,7 @@ jobs:
 
   android_ui_test_job:
     name: Android UI-tests on emulator
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       fail-fast: false
