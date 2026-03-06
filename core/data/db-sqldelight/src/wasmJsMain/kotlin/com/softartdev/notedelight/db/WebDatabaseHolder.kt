@@ -15,14 +15,18 @@ class WebDatabaseHolder(private val key: String? = null) : SqlDelightDbHolder {
     override val noteQueries: NoteQueries = noteDb.noteQueries
 
     /**
-     * Sets the encryption key on the database connection.
+     * Configures SQLCipher v4 compatibility and sets the encryption key.
      * Must be called BEFORE any other SQL operations (including createSchema).
-     * This sends PRAGMA key as the first statement to the worker.
+     *
+     * Uses `cipher=sqlcipher` with `legacy=4` to match the Desktop JVM and Android
+     * encryption format, enabling cross-platform encrypted backup portability.
      */
     suspend fun applyKey() {
         if (!key.isNullOrEmpty()) {
             val escapedKey = key.replace("'", "''")
-            logger.d { "Setting encryption key on database" }
+            logger.d { "Configuring SQLCipher v4 and setting encryption key" }
+            driver.execute(null, "PRAGMA cipher = 'sqlcipher'", 0, null).await()
+            driver.execute(null, "PRAGMA legacy = 4", 0, null).await()
             driver.execute(null, "PRAGMA key = '$escapedKey'", 0, null).await()
         }
     }
