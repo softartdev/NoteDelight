@@ -76,7 +76,8 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         logger.d { "Encrypting database" }
         val holder = dbHolder ?: buildDbIfNeed()
         val escapedKey = newPass.toString().replace("'", "''")
-        // On an unencrypted database, PRAGMA rekey encrypts it in-place
+        holder.driver.execute(null, "PRAGMA cipher = 'sqlcipher'", 0, null).await()
+        holder.driver.execute(null, "PRAGMA legacy = 4", 0, null).await()
         holder.driver.execute(null, "PRAGMA rekey = '$escapedKey'", 0, null).await()
         logger.d { "PRAGMA rekey executed, closing and reopening with key" }
         closeDatabase()
