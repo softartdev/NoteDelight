@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.presentation.settings.SecurityResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
@@ -281,8 +282,10 @@ private fun Preference(
 @Composable
 fun PreviewSettingsDetailScreenBody(
     @PreviewParameter(SettingsCategoryPreviewProvider::class) category: SettingsCategory
-) = PreferableMaterialTheme {
-    SettingsDetailScreenBody(
-        result = SecurityResult(fileListVisible = true, selectedCategory = category),
-    )
+) = PreviewKoin {
+    PreferableMaterialTheme {
+        SettingsDetailScreenBody(
+            result = SecurityResult(fileListVisible = true, selectedCategory = category),
+        )
+    }
 }
