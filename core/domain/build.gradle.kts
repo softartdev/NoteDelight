@@ -51,6 +51,7 @@ kotlin {
         jvmTest.dependencies {
         }
         wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
         wasmJsTest.dependencies {
         }

@@ -22,10 +22,13 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -66,6 +69,7 @@ import com.softartdev.notedelight.util.EXPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.IMPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
 import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
+import com.softartdev.notedelight.util.appVersion
 import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.notedelight.util.titleRes
@@ -82,6 +86,7 @@ import notedelight.ui.shared.generated.resources.pref_title_import_db
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
 import notedelight.ui.shared.generated.resources.pref_title_source_code
+import notedelight.ui.shared.generated.resources.pref_title_version
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 
@@ -227,6 +232,17 @@ private fun InfoPreferences(
             onClick = { onAction(SettingsAction.ShowFileList) }
         )
     }
+    ListItem(
+        modifier = Modifier.clickable { },
+        leadingContent = { Icon(imageVector = Icons.Default.Tag, contentDescription = null) },
+        headlineContent = { Text(stringResource(Res.string.pref_title_version)) },
+        supportingContent = { Text(appVersion()) },
+        colors = ListItemDefaults.colors(
+            headlineColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            supportingColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            leadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    )
     Spacer(Modifier.height(32.dp))
     ListItem(
         modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },

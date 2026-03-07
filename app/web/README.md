@@ -106,6 +106,8 @@ HTML entry point:
 
 This starts a webpack dev server at `http://localhost:8080`
 
+**WebGL/GPU workaround**: If Chrome has WebGL or GPU limitations (e.g., in headless/VM environments), try opening the dev server URL in **Firefox** instead. Firefox 120+ supports Wasm GC and can be used for manual GUI testing when Chrome fails.
+
 ### Production Build
 
 ```bash
