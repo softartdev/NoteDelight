@@ -6,9 +6,7 @@ package com.softartdev.notedelight.ui.settings.detail
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -55,7 +53,6 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.model.SettingsCategory
@@ -71,7 +68,6 @@ import com.softartdev.notedelight.util.EXPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.IMPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
 import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
-import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.notedelight.util.titleRes
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -233,31 +229,7 @@ private fun InfoPreferences(
             onClick = { onAction(SettingsAction.ShowFileList) }
         )
     }
-    result.appVersion?.let {
-        val defaultColors: ListItemColors = ListItemDefaults.colors()
-        val disabledColors: ListItemColors by remember(defaultColors) {
-            mutableStateOf(
-                defaultColors.copy(
-                    headlineColor = defaultColors.disabledHeadlineColor,
-                    leadingIconColor = defaultColors.disabledLeadingIconColor,
-                    supportingTextColor = defaultColors.disabledHeadlineColor
-                )
-            )
-        }
-        ListItem(
-            modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
-            leadingContent = { Icon(imageVector = Icons.Default.Commit, contentDescription = null) },
-            headlineContent = { Text(stringResource(Res.string.pref_title_version)) },
-            supportingContent = { Text(it) },
-            colors = disabledColors
-        )
-    }
-    Spacer(Modifier.height(32.dp))
-    ListItem(
-        modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
-        headlineContent = {},
-        supportingContent = { Text(createMultiplatformMessage()) }
-    )
+    AppVersionItem(result.appVersion, onAction)
 }
 
 @Composable
@@ -302,6 +274,31 @@ private fun Preference(
     supportingContent = secondaryText,
     trailingContent = trailing
 )
+
+@Composable
+private fun AppVersionItem(appVersion: String?, onAction: (SettingsAction) -> Unit) {
+    if (appVersion != null) {
+        val defaultColors: ListItemColors = ListItemDefaults.colors()
+        val disabledColors: ListItemColors by remember(defaultColors) {
+            mutableStateOf(
+                defaultColors.copy(
+                    headlineColor = defaultColors.disabledHeadlineColor,
+                    leadingIconColor = defaultColors.disabledLeadingIconColor,
+                    supportingTextColor = defaultColors.disabledHeadlineColor
+                )
+            )
+        }
+        ListItem(
+            modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
+            leadingContent = {
+                Icon(imageVector = Icons.Default.Commit, contentDescription = null)
+            },
+            headlineContent = { Text(stringResource(Res.string.pref_title_version)) },
+            supportingContent = { Text(appVersion) },
+            colors = disabledColors
+        )
+    }
+}
 
 @Preview
 @Composable
