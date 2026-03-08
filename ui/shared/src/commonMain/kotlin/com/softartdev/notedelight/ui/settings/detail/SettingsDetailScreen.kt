@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Commit
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
@@ -27,6 +28,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -39,6 +42,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -54,8 +59,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.model.SettingsCategory
-import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
+import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.ui.BackHandler
@@ -82,6 +87,7 @@ import notedelight.ui.shared.generated.resources.pref_title_import_db
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
 import notedelight.ui.shared.generated.resources.pref_title_source_code
+import notedelight.ui.shared.generated.resources.pref_title_version
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 
@@ -227,6 +233,25 @@ private fun InfoPreferences(
             onClick = { onAction(SettingsAction.ShowFileList) }
         )
     }
+    result.appVersion?.let {
+        val defaultColors: ListItemColors = ListItemDefaults.colors()
+        val disabledColors: ListItemColors by remember(defaultColors) {
+            mutableStateOf(
+                defaultColors.copy(
+                    headlineColor = defaultColors.disabledHeadlineColor,
+                    leadingIconColor = defaultColors.disabledLeadingIconColor,
+                    supportingTextColor = defaultColors.disabledHeadlineColor
+                )
+            )
+        }
+        ListItem(
+            modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
+            leadingContent = { Icon(imageVector = Icons.Default.Commit, contentDescription = null) },
+            headlineContent = { Text(stringResource(Res.string.pref_title_version)) },
+            supportingContent = { Text(it) },
+            colors = disabledColors
+        )
+    }
     Spacer(Modifier.height(32.dp))
     ListItem(
         modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
@@ -285,7 +310,7 @@ fun PreviewSettingsDetailScreenBody(
 ) = PreviewKoin {
     PreferableMaterialTheme {
         SettingsDetailScreenBody(
-            result = SettingsResult(fileListVisible = true, selectedCategory = category),
+            result = SettingsResult(fileListVisible = true, appVersion = "1.0.0", selectedCategory = category),
         )
     }
 }

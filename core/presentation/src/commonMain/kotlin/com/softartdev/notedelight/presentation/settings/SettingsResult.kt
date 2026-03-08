@@ -8,6 +8,7 @@ data class SettingsResult(
     val encryption: Boolean = false,
     val fileListVisible: Boolean = false,
     val language: LanguageEnum = LanguageEnum.ENGLISH,
+    val appVersion: String? = null,
     val selectedCategory: SettingsCategory? = null,
 ) {
     fun showLoading(): SettingsResult = copy(loading = true)

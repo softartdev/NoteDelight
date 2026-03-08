@@ -20,6 +20,7 @@
     <string name="pref_title_set_password">Установить пароль</string>
     <string name="pref_title_check_cipher_version">Проверить версию SQLCipher</string>
     <string name="pref_title_source_code">Исходный код</string>
+    <string name="pref_title_version">Версия</string>
     <string name="pref_subtitle_open_github">Открыть на GitHub</string>
     <string name="pref_title_show_db_path">Показать путь к базе данных</string>
     <string name="pref_title_export_db">Экспортировать базу данных</string>

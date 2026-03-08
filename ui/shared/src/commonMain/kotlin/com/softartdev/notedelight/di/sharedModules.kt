@@ -24,9 +24,11 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
+import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
+import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
@@ -55,6 +57,7 @@ val useCaseModule: Module = module {
     factoryOf(::RevealFileListUseCase)
     factoryOf(::ExportDatabaseUseCase)
     factoryOf(::ImportDatabaseUseCase)
+    factoryOfAppVersionUseCase()
 }
 
 val viewModelModule: Module = module {
@@ -73,3 +76,5 @@ val viewModelModule: Module = module {
     viewModelOf(::LanguageViewModel)
     viewModelOf(::FilesViewModel)
 }
+
+expect fun Module.factoryOfAppVersionUseCase(): KoinDefinition<AppVersionUseCase>

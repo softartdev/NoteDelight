@@ -13,6 +13,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
@@ -30,6 +31,7 @@ class SettingsViewModel(
     private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase,
     private val exportDatabaseUseCase: ExportDatabaseUseCase,
     private val importDatabaseUseCase: ImportDatabaseUseCase,
+    private val appVersionUseCase: AppVersionUseCase,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val revealFileListUseCase: RevealFileListUseCase,
@@ -76,7 +78,8 @@ class SettingsViewModel(
             mutableStateFlow.update { result ->
                 result.copy(
                     encryption = dbIsEncrypted,
-                    language = localeInteractor.languageEnum
+                    language = localeInteractor.languageEnum,
+                    appVersion = appVersionUseCase.invoke()
                 )
             }
         } catch (e: Throwable) {
