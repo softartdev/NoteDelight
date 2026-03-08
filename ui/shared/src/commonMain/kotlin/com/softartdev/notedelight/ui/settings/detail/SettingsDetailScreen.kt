@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.model.SettingsCategory
-import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
@@ -90,8 +90,8 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
     LaunchedEffect(settingsViewModel) {
         settingsViewModel.launchCollectingSelectedCategoryId()
     }
-    val resultState: State<SecurityResult> = settingsViewModel.stateFlow.collectAsState()
-    val result: SecurityResult = resultState.value
+    val resultState: State<SettingsResult> = settingsViewModel.stateFlow.collectAsState()
+    val result: SettingsResult = resultState.value
     val refreshState: State<Boolean> = remember {
         derivedStateOf { resultState.value.loading }
     }
@@ -116,7 +116,7 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
 
 @Composable
 fun SettingsDetailScreenBody(
-    result: SecurityResult = SecurityResult(),
+    result: SettingsResult = SettingsResult(),
     category: SettingsCategory = result.selectedCategory!!,
     onBackClick: () -> Unit = {},
     onAction: (action: SettingsAction) -> Unit = {},
@@ -161,7 +161,7 @@ fun SettingsDetailScreenBody(
 )
 
 @Composable
-private fun AppearancePreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
+private fun AppearancePreferences(result: SettingsResult, onAction: (SettingsAction) -> Unit) {
     ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
     Preference(
         modifier = Modifier.testTag(LANGUAGE_BUTTON_TAG),
@@ -173,7 +173,7 @@ private fun AppearancePreferences(result: SecurityResult, onAction: (SettingsAct
 }
 
 @Composable
-private fun SecurityPreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
+private fun SecurityPreferences(result: SettingsResult, onAction: (SettingsAction) -> Unit) {
     val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
     Preference(
         modifier = Modifier.semantics {
@@ -205,7 +205,7 @@ private fun SecurityPreferences(result: SecurityResult, onAction: (SettingsActio
 
 @Composable
 private fun InfoPreferences(
-    result: SecurityResult,
+    result: SettingsResult,
     onAction: (SettingsAction) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -285,7 +285,7 @@ fun PreviewSettingsDetailScreenBody(
 ) = PreviewKoin {
     PreferableMaterialTheme {
         SettingsDetailScreenBody(
-            result = SecurityResult(fileListVisible = true, selectedCategory = category),
+            result = SettingsResult(fileListVisible = true, selectedCategory = category),
         )
     }
 }

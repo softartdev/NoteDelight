@@ -3,17 +3,17 @@ package com.softartdev.notedelight.presentation.settings
 import com.softartdev.notedelight.model.LanguageEnum
 import com.softartdev.notedelight.model.SettingsCategory
 
-data class SecurityResult(
+data class SettingsResult(
     val loading: Boolean = false,
     val encryption: Boolean = false,
     val fileListVisible: Boolean = false,
     val language: LanguageEnum = LanguageEnum.ENGLISH,
     val selectedCategory: SettingsCategory? = null,
 ) {
-    fun showLoading(): SecurityResult = copy(loading = true)
-    fun hideLoading(): SecurityResult = copy(loading = false)
-    fun hideEncryption(): SecurityResult = copy(encryption = false)
-    fun showFileList(): SecurityResult = copy(fileListVisible = true)
+    fun showLoading(): SettingsResult = copy(loading = true)
+    fun hideLoading(): SettingsResult = copy(loading = false)
+    fun hideEncryption(): SettingsResult = copy(encryption = false)
+    fun showFileList(): SettingsResult = copy(fileListVisible = true)
 }
 
 sealed interface SettingsAction {

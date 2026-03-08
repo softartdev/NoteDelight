@@ -20,7 +20,7 @@ import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
-import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
@@ -207,7 +207,7 @@ class AdaptiveInteractorTest {
 
             settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Security))
 
-            val updated: SecurityResult = awaitItem()
+            val updated: SettingsResult = awaitItem()
             assertEquals(SettingsCategory.Security, updated.selectedCategory)
             cancelAndIgnoreRemainingEvents()
         }
@@ -224,12 +224,12 @@ class AdaptiveInteractorTest {
 
             settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Appearance))
 
-            val selected: SecurityResult = awaitItem()
+            val selected: SettingsResult = awaitItem()
             assertEquals(SettingsCategory.Appearance, selected.selectedCategory)
 
             settingsViewModel.onAction(SettingsAction.NavBack)
 
-            val cleared: SecurityResult = awaitItem()
+            val cleared: SettingsResult = awaitItem()
             assertNull(cleared.selectedCategory)
             cancelAndIgnoreRemainingEvents()
         }

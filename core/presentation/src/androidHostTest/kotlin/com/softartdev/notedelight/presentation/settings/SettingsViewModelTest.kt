@@ -83,7 +83,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.onAction(SettingsAction.Refresh)
-            var result: SecurityResult = awaitItem()
+            var result: SettingsResult = awaitItem()
             while (result.loading) {
                 result = awaitItem()
             }
@@ -100,7 +100,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.updateSwitches()
-            if (encryption) awaitItem().let { result: SecurityResult ->
+            if (encryption) awaitItem().let { result: SettingsResult ->
                 assertFalse(result.loading)
                 assertTrue(result.encryption)
             }

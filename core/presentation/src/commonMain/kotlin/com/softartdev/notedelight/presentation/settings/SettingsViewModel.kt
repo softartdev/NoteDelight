@@ -38,10 +38,10 @@ class SettingsViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SettingsViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<SecurityResult> = MutableStateFlow(
-        value = SecurityResult()
+    private val mutableStateFlow: MutableStateFlow<SettingsResult> = MutableStateFlow(
+        value = SettingsResult()
     )
-    val stateFlow: StateFlow<SecurityResult> = mutableStateFlow
+    val stateFlow: StateFlow<SettingsResult> = mutableStateFlow
 
     private val dbIsEncrypted: Boolean
         get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
@@ -71,7 +71,7 @@ class SettingsViewModel(
 
     fun updateSwitches() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             mutableStateFlow.update { result ->
                 result.copy(
@@ -82,7 +82,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error checking encryption" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -114,26 +114,26 @@ class SettingsViewModel(
 
     private fun changeEncryption(checked: Boolean) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             when {
                 checked -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog)
                 else -> when {
                     dbIsEncrypted -> router.navigate(route = AppNavGraph.EnterPasswordDialog)
-                    else -> mutableStateFlow.update(SecurityResult::hideEncryption)
+                    else -> mutableStateFlow.update(SettingsResult::hideEncryption)
                 }
             }
         } catch (e: Throwable) {
             handleError(e) { "error changing encryption" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun changePassword() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             when {
                 dbIsEncrypted -> router.navigate(route = AppNavGraph.ChangePasswordDialog)
@@ -142,35 +142,35 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error changing password" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun showCipherVersion() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
             cipherVersion?.let { snackbarInteractor.showMessage(SnackbarMessage.Copyable(it)) }
         } catch (e: Throwable) {
             handleError(e) { "error checking sqlcipher version" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun showDatabasePath() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             val dbPath: String = safeRepo.dbPath
             snackbarInteractor.showMessage(SnackbarMessage.Copyable(dbPath))
         } catch (e: Throwable) {
             handleError(e) { "error getting database path" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -181,7 +181,7 @@ class SettingsViewModel(
             return@launch
         }
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             withContext(coroutineDispatchers.io) {
                 exportDatabaseUseCase(destinationPath)
@@ -190,7 +190,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error exporting database" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -201,7 +201,7 @@ class SettingsViewModel(
             return@launch
         }
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SecurityResult::showLoading)
+        mutableStateFlow.update(SettingsResult::showLoading)
         try {
             withContext(coroutineDispatchers.io) {
                 importDatabaseUseCase(sourcePath)
@@ -211,7 +211,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error importing database" }
         } finally {
-            mutableStateFlow.update(SecurityResult::hideLoading)
+            mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -221,7 +221,7 @@ class SettingsViewModel(
     private fun revealFileList() {
         if (mutableStateFlow.value.fileListVisible) return
         revealFileListUseCase.onTap(viewModelScope) {
-            mutableStateFlow.update(SecurityResult::showFileList)
+            mutableStateFlow.update(SettingsResult::showFileList)
         }
     }
 
