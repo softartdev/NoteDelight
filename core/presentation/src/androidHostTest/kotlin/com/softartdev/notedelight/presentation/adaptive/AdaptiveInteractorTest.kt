@@ -30,6 +30,7 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
@@ -65,6 +66,7 @@ class AdaptiveInteractorTest {
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val revealFileListUseCase = RevealFileListUseCase()
     private val adaptiveInteractor = AdaptiveInteractor()
@@ -110,6 +112,7 @@ class AdaptiveInteractorTest {
             checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
             exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
             importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
+            appVersionUseCase = mockAppVersionUseCase,
             snackbarInteractor = mockSnackbarInteractor,
             router = mockRouter,
             revealFileListUseCase = revealFileListUseCase,
@@ -126,7 +129,7 @@ class AdaptiveInteractorTest {
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor)
+        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor, mockAppVersionUseCase)
         Logger.setLogWriters()
     }
 

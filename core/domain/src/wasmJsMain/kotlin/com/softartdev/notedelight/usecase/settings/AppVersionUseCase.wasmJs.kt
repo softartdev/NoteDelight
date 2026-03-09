@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.usecase.settings
 
-actual class AppVersionUseCase : () -> String? {
+actual class AppVersionUseCase {
 
-    override fun invoke(): String? = null
+    actual operator fun invoke(): String? = null
 }

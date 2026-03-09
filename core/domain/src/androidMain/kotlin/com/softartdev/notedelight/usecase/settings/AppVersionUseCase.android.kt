@@ -2,9 +2,9 @@ package com.softartdev.notedelight.usecase.settings
 
 import android.content.Context
 
-actual class AppVersionUseCase(private val context: Context) : () -> String? {
+actual class AppVersionUseCase(private val context: Context) {
 
-    override fun invoke(): String? {
+    actual operator fun invoke(): String? {
         return context.packageManager?.getPackageInfo(context.packageName, 0)?.versionName
     }
 }
