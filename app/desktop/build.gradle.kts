@@ -10,6 +10,19 @@ plugins {
 apply(from = "$rootDir/gradle/common-desktop-mac-sign-conf.gradle")
 group = "com.softartdev"
 
+val desktopVersion = "8.5.2"
+
+val generateVersionProperties = tasks.register("generateVersionProperties") {
+    val outputDir = layout.buildDirectory.dir("generated/desktop-version")
+    val version = desktopVersion
+    outputs.dir(outputDir)
+    doLast {
+        val outputFile = outputDir.get().file("version.properties").asFile
+        outputFile.parentFile.mkdirs()
+        outputFile.writeText("version=$version")
+    }
+}
+
 kotlin {
     jvm {
         compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
@@ -46,6 +59,17 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
+        getByName("jvmMain").resources.srcDir(layout.buildDirectory.dir("generated/desktop-version"))
+    }
+}
+
+tasks.named("jvmProcessResources") {
+    dependsOn(generateVersionProperties)
+}
+
+tasks.named<org.gradle.api.tasks.bundling.Jar>("jvmJar") {
+    manifest {
+        attributes("Implementation-Version" to desktopVersion)
     }
 }
 
@@ -55,7 +79,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Note Delight"
-            packageVersion = "8.5.2"
+            packageVersion = desktopVersion
             description = "Note app with encryption"
             copyright = "© 2023 SoftArtDev"
             macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))
