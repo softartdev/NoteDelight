@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.3] - 2026-03-10
+
+### Features
+- Enable web database encryption support with SQLite3MultipleCiphers WASM, including browser-side encrypt/decrypt/rekey flows backed by OPFS storage
+- Improve Settings by renaming the Theme category to Appearance and showing the application version in the Info section on Android, iOS, and Desktop
+
+### Bug Fixes
+- Fix encrypted database compatibility across JVM and WasmJs by aligning SQLCipher v4 settings and validating database readability when opening protected databases
+- Fix Desktop SQLCipher query/version checks by using the generated JDBC URL directly for inspection queries
+
+### Refactoring
+- Extract shared Gradle convention helpers for Karma Chrome detection, SQLite3MultipleCiphers resource setup, Android dependency forcing, and Desktop version metadata generation
+- Remove the vendored `androidx.paging.compose` fork and simplify Settings state handling with the new `SettingsResult` model
+
+### Tests
+- Add WasmJs smoke tests and expand web UI coverage for Settings/navigation flows
+- Update shared UI test infrastructure and settings test helpers for the renamed Appearance category and version row
+
+### Documentation
+- Add a guide for opening exported databases and refresh the web/OPFS/build-logic docs to reflect encrypted SQLite3MultipleCiphers usage
+
+### Chores
+- Update build tooling and dependencies, including Gradle `9.4.0`, AGP `9.1.0`, Compose `1.10.2`, Firebase BOM `34.10.0`, and CI runner settings
+
 ## [8.5.2] - 2026-02-06
 
 ### Features

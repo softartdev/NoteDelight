@@ -16,6 +16,7 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
@@ -43,6 +44,7 @@ class SettingsViewModelTest {
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
     private val settingsViewModel = SettingsViewModel(
@@ -50,6 +52,7 @@ class SettingsViewModelTest {
         checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
         exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
         importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
+        appVersionUseCase = mockAppVersionUseCase,
         snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         revealFileListUseCase = RevealFileListUseCase(),
@@ -60,7 +63,7 @@ class SettingsViewModelTest {
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter)
+        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase)
     }
 
     @Test
@@ -83,7 +86,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.onAction(SettingsAction.Refresh)
-            var result: SecurityResult = awaitItem()
+            var result: SettingsResult = awaitItem()
             while (result.loading) {
                 result = awaitItem()
             }
@@ -100,7 +103,7 @@ class SettingsViewModelTest {
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.updateSwitches()
-            if (encryption) awaitItem().let { result: SecurityResult ->
+            if (encryption) awaitItem().let { result: SettingsResult ->
                 assertFalse(result.loading)
                 assertTrue(result.encryption)
             }

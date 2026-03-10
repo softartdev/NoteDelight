@@ -6,15 +6,14 @@ package com.softartdev.notedelight.ui.settings.detail
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Commit
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
@@ -27,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -39,6 +40,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -50,11 +53,11 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.model.SettingsCategory
-import com.softartdev.notedelight.presentation.settings.SecurityResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
+import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.ui.BackHandler
@@ -65,7 +68,6 @@ import com.softartdev.notedelight.util.EXPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.IMPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
 import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
-import com.softartdev.notedelight.util.createMultiplatformMessage
 import com.softartdev.notedelight.util.stringResource
 import com.softartdev.notedelight.util.titleRes
 import com.softartdev.theme.material3.PreferableMaterialTheme
@@ -81,6 +83,7 @@ import notedelight.ui.shared.generated.resources.pref_title_import_db
 import notedelight.ui.shared.generated.resources.pref_title_set_password
 import notedelight.ui.shared.generated.resources.pref_title_show_db_path
 import notedelight.ui.shared.generated.resources.pref_title_source_code
+import notedelight.ui.shared.generated.resources.pref_title_version
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 
@@ -89,8 +92,8 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
     LaunchedEffect(settingsViewModel) {
         settingsViewModel.launchCollectingSelectedCategoryId()
     }
-    val resultState: State<SecurityResult> = settingsViewModel.stateFlow.collectAsState()
-    val result: SecurityResult = resultState.value
+    val resultState: State<SettingsResult> = settingsViewModel.stateFlow.collectAsState()
+    val result: SettingsResult = resultState.value
     val refreshState: State<Boolean> = remember {
         derivedStateOf { resultState.value.loading }
     }
@@ -115,7 +118,7 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
 
 @Composable
 fun SettingsDetailScreenBody(
-    result: SecurityResult = SecurityResult(),
+    result: SettingsResult = SettingsResult(),
     category: SettingsCategory = result.selectedCategory!!,
     onBackClick: () -> Unit = {},
     onAction: (action: SettingsAction) -> Unit = {},
@@ -149,7 +152,7 @@ fun SettingsDetailScreenBody(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 if (result.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
                 when (category) {
-                    SettingsCategory.Theme -> ThemePreferences(result = result, onAction = onAction)
+                    SettingsCategory.Appearance -> AppearancePreferences(result = result, onAction = onAction)
                     SettingsCategory.Security -> SecurityPreferences(result = result, onAction = onAction)
                     SettingsCategory.Backup -> BackupPreferences(onAction = onAction)
                     SettingsCategory.Info -> InfoPreferences(result = result, onAction = onAction)
@@ -160,7 +163,7 @@ fun SettingsDetailScreenBody(
 )
 
 @Composable
-private fun ThemePreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
+private fun AppearancePreferences(result: SettingsResult, onAction: (SettingsAction) -> Unit) {
     ThemePreferenceItem(onClick = { onAction(SettingsAction.ChangeTheme) })
     Preference(
         modifier = Modifier.testTag(LANGUAGE_BUTTON_TAG),
@@ -172,7 +175,7 @@ private fun ThemePreferences(result: SecurityResult, onAction: (SettingsAction) 
 }
 
 @Composable
-private fun SecurityPreferences(result: SecurityResult, onAction: (SettingsAction) -> Unit) {
+private fun SecurityPreferences(result: SettingsResult, onAction: (SettingsAction) -> Unit) {
     val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
     Preference(
         modifier = Modifier.semantics {
@@ -204,7 +207,7 @@ private fun SecurityPreferences(result: SecurityResult, onAction: (SettingsActio
 
 @Composable
 private fun InfoPreferences(
-    result: SecurityResult,
+    result: SettingsResult,
     onAction: (SettingsAction) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -226,12 +229,7 @@ private fun InfoPreferences(
             onClick = { onAction(SettingsAction.ShowFileList) }
         )
     }
-    Spacer(Modifier.height(32.dp))
-    ListItem(
-        modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
-        headlineContent = {},
-        supportingContent = { Text(createMultiplatformMessage()) }
-    )
+    AppVersionItem(result.appVersion, onAction)
 }
 
 @Composable
@@ -277,12 +275,39 @@ private fun Preference(
     trailingContent = trailing
 )
 
+@Composable
+private fun AppVersionItem(appVersion: String?, onAction: (SettingsAction) -> Unit) {
+    if (appVersion != null) {
+        val defaultColors: ListItemColors = ListItemDefaults.colors()
+        val disabledColors: ListItemColors by remember(defaultColors) {
+            mutableStateOf(
+                defaultColors.copy(
+                    headlineColor = defaultColors.disabledHeadlineColor,
+                    leadingIconColor = defaultColors.disabledLeadingIconColor,
+                    supportingTextColor = defaultColors.disabledHeadlineColor
+                )
+            )
+        }
+        ListItem(
+            modifier = Modifier.clickable { onAction(SettingsAction.RevealFileList) },
+            leadingContent = {
+                Icon(imageVector = Icons.Default.Commit, contentDescription = null)
+            },
+            headlineContent = { Text(stringResource(Res.string.pref_title_version)) },
+            supportingContent = { Text(appVersion) },
+            colors = disabledColors
+        )
+    }
+}
+
 @Preview
 @Composable
 fun PreviewSettingsDetailScreenBody(
     @PreviewParameter(SettingsCategoryPreviewProvider::class) category: SettingsCategory
-) = PreferableMaterialTheme {
-    SettingsDetailScreenBody(
-        result = SecurityResult(fileListVisible = true, selectedCategory = category),
-    )
+) = PreviewKoin {
+    PreferableMaterialTheme {
+        SettingsDetailScreenBody(
+            result = SettingsResult(fileListVisible = true, appVersion = "1.0.0", selectedCategory = category),
+        )
+    }
 }

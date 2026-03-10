@@ -13,9 +13,22 @@ let db = null;
 async function createDatabase() {
   if (sqlite3Available) {
     const sqlite3 = await sqlite3InitModule();
+    const capi = sqlite3.capi;
 
-    // This is the key part for OPFS support
-    // It instructs SQLite to use the OPFS VFS.
+    // Try opfs VFS with encryption wrapper (sqlite3mc).
+    // The regular "opfs" VFS stores files in the OPFS root directory,
+    // which is required for export/import to work via navigator.storage.getDirectory().
+    try {
+      const rc = capi.sqlite3mc_vfs_create("opfs", 0);
+      if (rc === 0) {
+        db = new sqlite3.oo1.DB("file:database.db?vfs=multipleciphers-opfs", "c");
+        return;
+      }
+    } catch (error) {
+      // multipleciphers-opfs not available
+    }
+
+    // Fallback: try opfs without encryption
     try {
       db = new sqlite3.oo1.DB("file:database.db?vfs=opfs", "c");
       return;

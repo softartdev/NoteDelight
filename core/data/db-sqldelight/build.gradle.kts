@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import com.softartdev.notedelight.excludeSqliteJdbcFromNonTestConfigurations
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -12,12 +13,7 @@ plugins {
     alias(libs.plugins.kotlin.cocoapods)
 }
 
-// Replace standard sqlite-jdbc with sqlite-jdbc-crypt for encryption support
-// Using Willena's fork (io.github.willena:sqlite-jdbc) which provides SQLCipher support
-// via SQLite3 Multiple Ciphers
-configurations.matching { !it.name.contains("test", ignoreCase = true) }.all {
-    exclude(group = "org.xerial", module = "sqlite-jdbc")
-}
+project.excludeSqliteJdbcFromNonTestConfigurations()
 
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())

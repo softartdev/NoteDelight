@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.model
 
 enum class SettingsCategory {
-    Theme,
+    Appearance,
     Security,
     Backup,
     Info;

@@ -32,7 +32,7 @@ class LocaleTestCase(
             composeUiTest.waitUntilDisplayed("settingsMenuButton", blockSNI = ::settingsMenuButtonSNI)
             settingsMenuButtonSNI.performClick()
             settingsTestScreen {
-                themeCategorySNI.performClick()
+                appearanceCategorySNI.performClick()
                 composeUiTest.waitUntilDisplayed("language", blockSNI = ::languageSNI)
                 LanguageEnum.entries.forEach { languageEnum ->
                     languageSNI.performClick()

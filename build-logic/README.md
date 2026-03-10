@@ -21,7 +21,7 @@ build-logic (Gradle Convention Plugins)
     │   │   └── main/
     │   │       └── kotlin/
     │   │           ├── GradleConventionPlugin.kt
-    │   │           └── # Other convention plugins
+    │   │           └── com/softartdev/notedelight/ProjectExtensions.kt
     │   ├── build.gradle.kts
     │   └── settings.gradle.kts (not present, uses root settings)
     ├── gradle.properties
@@ -68,6 +68,29 @@ gradlePlugin {
         }
     }
 }
+```
+
+### Shared Build Script Helpers
+
+`convention/src/main/kotlin/com/softartdev/notedelight/ProjectExtensions.kt` contains reusable extension functions used by module `build.gradle.kts` files to keep scripts small and focused.
+
+Current extracted helpers include:
+- `disableIosReleaseTasks()` for iOS pod release link task disabling
+- `excludeSqliteJdbcFromNonTestConfigurations()` for SQLDelight/JVM driver substitution
+- `configureWasmJsChromeForKarmaTests()` for web Karma Chrome auto-detection (`CHROME_BIN`)
+- `configureWebSqlite3mcWasmResources()` for SQLite3MultipleCiphers WASM download/unzip task wiring
+- `forceAndroidXDependencyVersions()` for Android dependency resolution forcing
+
+Typical module usage:
+
+```kotlin
+import com.softartdev.notedelight.forceAndroidXDependencyVersions
+
+plugins {
+    alias(libs.plugins.gradle.convention)
+}
+
+project.forceAndroidXDependencyVersions()
 ```
 
 ## Usage in Modules
@@ -411,4 +434,3 @@ Potential convention plugins to add:
 - [Gradle Best Practices](https://docs.gradle.org/current/userguide/authoring_maintainable_build_scripts.html)
 - [Kotlin DSL](https://docs.gradle.org/current/userguide/kotlin_dsl.html)
 - [Convention Plugins](https://docs.gradle.org/current/samples/sample_convention_plugins.html)
-

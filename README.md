@@ -34,15 +34,15 @@ Supported platforms:
 
 ![Architecture blueprint for this project](docs/diagrams/architecture.png)
 
-## WORK IN PROGRESS 🛠
+## FEATURES ✨
 
 | feature \ platform | Android | iOS | Desktop Java | Web |
 |:------------------:|:-------:|:---:|:------------:|:---:|
 |      database      |    ✅    | ✅	  |      ✅	      |  ✅  |
-|     encryption     |    ✅    | ✅ 	 |      ✅	      |     |
+|     encryption     |    ✅    | ✅ 	 |      ✅	      |  ✅  |
 |       backup       |    ✅    | ✅	  |      ✅	      |  ✅  |
 
-Check out [CONTRIBUTING.md](/CONTRIBUTING.md) if you want to develop missing features.
+Interested in contributing new features or fixes? Check out [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 ## CONTINUOUS INTEGRATION / DELIVERY ♻️
 

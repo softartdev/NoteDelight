@@ -119,6 +119,12 @@ abstract class CommonUiTests : AbstractUITests() {
         super.localeTest()
     }
 
+    override fun backupFeatureTest(): TestResult = runComposeUiTest {
+        _composeUiTest = this
+        beforeTest()
+        super.backupFeatureTest()
+    }
+
     override fun pressBack() {
         composeUiTest.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
             .assertIsDisplayed()

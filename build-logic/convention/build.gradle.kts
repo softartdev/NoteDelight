@@ -17,6 +17,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
 dependencies {
     compileOnly(kotlin("gradle-plugin", version = libs.versions.kotlin.get()))
+    compileOnly("de.undercouch:gradle-download-task:${libs.versions.download.get()}")
 }
 
 tasks {

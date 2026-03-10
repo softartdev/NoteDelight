@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalWasmJsInterop::class)
 
 package com.softartdev.notedelight
 
@@ -13,6 +13,7 @@ import kotlinx.browser.document
 import org.koin.core.context.startKoin
 
 fun main() {
+    if (isKarmaTestRunner()) return
     Logger.setTag(DEFAULT_APP_LOG_TAG)
     startKoin {
         kermitLogger()
@@ -22,3 +23,6 @@ fun main() {
         App()
     }
 }
+
+@JsFun("() => typeof window !== 'undefined' && window.__karma__ != null")
+private external fun isKarmaTestRunner(): Boolean

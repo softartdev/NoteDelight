@@ -20,7 +20,7 @@ import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
-import com.softartdev.notedelight.presentation.settings.SecurityResult
+import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
@@ -30,6 +30,7 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
@@ -65,6 +66,7 @@ class AdaptiveInteractorTest {
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val revealFileListUseCase = RevealFileListUseCase()
     private val adaptiveInteractor = AdaptiveInteractor()
@@ -110,6 +112,7 @@ class AdaptiveInteractorTest {
             checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
             exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
             importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
+            appVersionUseCase = mockAppVersionUseCase,
             snackbarInteractor = mockSnackbarInteractor,
             router = mockRouter,
             revealFileListUseCase = revealFileListUseCase,
@@ -126,7 +129,7 @@ class AdaptiveInteractorTest {
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor)
+        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor, mockAppVersionUseCase)
         Logger.setLogWriters()
     }
 
@@ -207,7 +210,7 @@ class AdaptiveInteractorTest {
 
             settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Security))
 
-            val updated: SecurityResult = awaitItem()
+            val updated: SettingsResult = awaitItem()
             assertEquals(SettingsCategory.Security, updated.selectedCategory)
             cancelAndIgnoreRemainingEvents()
         }
@@ -222,14 +225,14 @@ class AdaptiveInteractorTest {
         settingsViewModel.stateFlow.test {
             assertNull(awaitItem().selectedCategory)
 
-            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Theme))
+            settingsCategoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(SettingsCategory.Appearance))
 
-            val selected: SecurityResult = awaitItem()
-            assertEquals(SettingsCategory.Theme, selected.selectedCategory)
+            val selected: SettingsResult = awaitItem()
+            assertEquals(SettingsCategory.Appearance, selected.selectedCategory)
 
             settingsViewModel.onAction(SettingsAction.NavBack)
 
-            val cleared: SecurityResult = awaitItem()
+            val cleared: SettingsResult = awaitItem()
             assertNull(cleared.selectedCategory)
             cancelAndIgnoreRemainingEvents()
         }
