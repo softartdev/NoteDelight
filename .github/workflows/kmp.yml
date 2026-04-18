@@ -1,5 +1,8 @@
 name: Kotlin Multiplatform CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
