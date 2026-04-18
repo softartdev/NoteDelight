@@ -5,6 +5,10 @@ on:
     tags:
       - desktop/*
 
+permissions:
+  contents: write
+  packages: read
+
 jobs:
   build_job:
     name: Package
