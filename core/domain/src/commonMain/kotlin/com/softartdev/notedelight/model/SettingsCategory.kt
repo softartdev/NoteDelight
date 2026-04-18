@@ -4,6 +4,7 @@ enum class SettingsCategory {
     Appearance,
     Security,
     Backup,
+    Console,
     Info;
 
     val id: Long = ordinal.toLong()

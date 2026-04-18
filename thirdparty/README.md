@@ -31,13 +31,13 @@ thirdparty/ (Vendored Third-Party Libraries)
 
 **Purpose**: SQLDelight integration with Paging3 library
 
-**Why vendored**: Official SQLDelight Paging3 extension was discontinued. This fork maintains the functionality for the project.
+**Why vendored**: Official SQLDelight Paging3 is still published and now uses `androidx.paging`, but this project enables SQLDelight `generateAsync = true`. The vendored fork preserves the upstream API while adding async-driver support.
 
 **Original source**: [Cash App SQLDelight Paging3 Extension](https://github.com/cashapp/sqldelight/tree/master/extensions/androidx-paging3)
 
 **Modifications**:
 - Updated for latest SQLDelight version
-- Fixed multiplatform compatibility issues
+- Added async-driver support for `generateAsync = true`
 - Maintained Paging3 integration
 
 **Platforms**:

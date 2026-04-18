@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.4] - 2026-04-18
+
+### Features
+- Add SQL console feature for running ad-hoc queries against the app database
+- Support SQLite3MC version checks on Desktop and Web platforms
+
+### Refactoring
+- Rework `AdaptiveFrame` to use `WindowSizeClass` breakpoints for adaptive layouts
+- Replace custom `BackHandler` with `NavigationBackHandler`
+- Replace `platformName()` function with a typed `Platform` enum
+- Refactor `SqlDelightDbHolder` logging
+
+### Documentation
+- Update SQLDelight Paging3 fork documentation and metadata
+
+### Chores
+- Add Android APK release workflow and installation guide
+- Update Gradle Wrapper, KSP, androidSqlCipher, kotlinx-serialization, and other dependencies in `libs.versions.toml`
+- Bump GitHub Actions (`upload-artifact` 5→7, `configure-pages` 5→6, `deploy-pages` 4→5, `gradle/actions` 5→6, `softprops/action-gh-release` 2→3) and iOS `addressable` 2.8.4→2.9.0
+- Update `.gitignore` to exclude AI-related directories
+
 ## [8.5.3] - 2026-03-10
 
 ### Features

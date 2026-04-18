@@ -26,7 +26,3 @@ actual fun EnableEdgeToEdge() {
     }
     activity.enableEdgeToEdge(statusBarStyle = sbStyle, navigationBarStyle = sbStyle)
 }
-
-@Composable
-actual fun BackHandler(enabled: Boolean, onBack: () -> Unit) =
-    androidx.activity.compose.BackHandler(enabled, onBack)

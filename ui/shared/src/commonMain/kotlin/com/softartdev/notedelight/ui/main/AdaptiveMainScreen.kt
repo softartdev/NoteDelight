@@ -21,7 +21,7 @@ import com.softartdev.notedelight.di.PreviewKoin
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.note.NoteViewModel
-import com.softartdev.notedelight.ui.BackHandler
+import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.VerticalPaneExpansionDragHandle
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ fun AdaptiveMainScreen(
         },
         paneExpansionState = paneExpansionState
     )
-    BackHandler(navigator.canNavigateBack()) { coroutineScope.launch { navigator.navigateBack() } }
+    NavBackHandler(navigator.canNavigateBack()) { coroutineScope.launch { navigator.navigateBack() } }
 }
 
 @Preview

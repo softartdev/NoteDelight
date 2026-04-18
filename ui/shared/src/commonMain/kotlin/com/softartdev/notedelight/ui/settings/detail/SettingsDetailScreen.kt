@@ -60,7 +60,7 @@ import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.ui.BackHandler
+import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.SettingsDetailPanePlaceholder
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
@@ -103,6 +103,10 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
     }
     when (result.selectedCategory) {
         null -> SettingsDetailPanePlaceholder()
+        SettingsCategory.Console -> {
+            ConsoleScreen(onBackClick = { settingsViewModel.onAction(SettingsAction.NavBack) })
+            NavBackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
+        }
         else -> {
             SettingsDetailScreenBody(
                 result = result,
@@ -111,7 +115,7 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
                 onRefresh = { settingsViewModel.onAction(SettingsAction.Refresh) },
                 refreshState = refreshState,
             )
-            BackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
+            NavBackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
         }
     }
 }
@@ -156,6 +160,7 @@ fun SettingsDetailScreenBody(
                     SettingsCategory.Security -> SecurityPreferences(result = result, onAction = onAction)
                     SettingsCategory.Backup -> BackupPreferences(onAction = onAction)
                     SettingsCategory.Info -> InfoPreferences(result = result, onAction = onAction)
+                    SettingsCategory.Console -> Unit // handled by ConsoleScreen
                 }
             }
         }

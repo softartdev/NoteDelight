@@ -6,6 +6,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
+import co.touchlab.kermit.Logger
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.shared.db.NoteQueries
@@ -16,6 +17,7 @@ class IosDatabaseHolder(
     name: String = SafeRepo.DB_NAME,
     schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema.synchronous()
 ) : SqlDelightDbHolder {
+    override val logger = Logger.withTag("IosDatabaseHolder")
     private val configuration = createDatabaseConfiguration(name, schema, key, rekey)
     override val driver: SqlDriver = NativeSqliteDriver(configuration)
     override val noteDb: NoteDb = createQueryWrapper(driver)

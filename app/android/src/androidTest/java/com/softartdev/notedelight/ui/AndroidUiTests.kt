@@ -67,6 +67,9 @@ class AndroidUiTests : AbstractJvmUiTests() {
         unloadKoinModules(backupTestModule)
     }
 
+    @Test
+    override fun consoleFeatureTest() = super.consoleFeatureTest()
+
     override fun pressBack() = Espresso.pressBack()
 
     override fun closeSoftKeyboard() = Espresso.closeSoftKeyboard()

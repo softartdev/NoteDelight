@@ -57,6 +57,20 @@ Or find "Note Delight" in your application menu.
 2. Follow the installation wizard
 3. Launch from Start menu
 
+### Android (APK)
+
+**Download:** `android-release.apk` from the release assets
+
+**Install on device:**
+1. Transfer the APK to your Android device
+2. Enable "Install unknown apps" for your file manager or browser in device settings
+3. Open the APK file and follow the installation prompts
+
+**Install via ADB:**
+```bash
+adb install -r android-release.apk
+```
+
 ## Building from Source
 
 ### Desktop

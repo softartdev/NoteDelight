@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 
 @Composable
 fun AdaptiveFrame(
@@ -22,28 +22,25 @@ fun AdaptiveFrame(
     content: @Composable (PaddingValues) -> Unit
 ) {
     val info: WindowAdaptiveInfo = currentWindowAdaptiveInfo()
-    val widthClass: WindowWidthSizeClass = info.windowSizeClass.windowWidthSizeClass
+    val sizeClass: WindowSizeClass = info.windowSizeClass
+    val isAtLeastMedium: Boolean = sizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
+    val isAtLeastExpanded: Boolean = sizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
 
-    val maxWidth: Dp = when (widthClass) {
-        WindowWidthSizeClass.COMPACT -> Dp.Unspecified
-        WindowWidthSizeClass.MEDIUM -> mediumMaxWidth
-        else -> expandedMaxWidth
+    val maxWidth: Dp = when {
+        isAtLeastExpanded -> expandedMaxWidth
+        isAtLeastMedium -> mediumMaxWidth
+        else -> Dp.Unspecified
     }
-    val verticalPadding: Dp = when (widthClass) {
-        WindowWidthSizeClass.COMPACT -> 16.dp
-        else -> 32.dp
-    }
+    val verticalPadding: Dp = if (isAtLeastMedium) 32.dp else 16.dp
     BoxWithConstraints(
         modifier = modifier.fillMaxSize().imePadding(),
         contentAlignment = Alignment.TopCenter
     ) {
         val availableWidth = Dp(constraints.maxWidth / LocalDensity.current.density)
-        val horizontalPadding: Dp = when (widthClass) {
-            WindowWidthSizeClass.COMPACT -> 24.dp
-            else -> when {
-                maxWidth != Dp.Unspecified && availableWidth > maxWidth -> (availableWidth - maxWidth) / 2f
-                else -> 16.dp
-            }
+        val horizontalPadding: Dp = when {
+            !isAtLeastMedium -> 24.dp
+            maxWidth != Dp.Unspecified && availableWidth > maxWidth -> (availableWidth - maxWidth) / 2f
+            else -> 16.dp
         }
         content(PaddingValues(horizontal = horizontalPadding, vertical = verticalPadding))
     }

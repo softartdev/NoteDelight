@@ -19,6 +19,7 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
         }
+        withHostTest { }
     }
     iosArm64()
     iosSimulatorArm64()
@@ -39,6 +40,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(projects.core.test)
         }
         androidMain.dependencies {
         }

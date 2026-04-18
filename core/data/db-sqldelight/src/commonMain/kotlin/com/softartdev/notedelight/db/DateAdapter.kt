@@ -10,7 +10,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class DateAdapter : ColumnAdapter<LocalDateTime, Long> {
+internal object DateAdapter : ColumnAdapter<LocalDateTime, Long> {
 
     override fun encode(value: LocalDateTime): Long = value
         .toInstant(TimeZone.currentSystemDefault())

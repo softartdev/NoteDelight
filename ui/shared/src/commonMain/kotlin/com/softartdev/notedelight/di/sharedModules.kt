@@ -8,6 +8,7 @@ import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
+import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
@@ -17,6 +18,7 @@ import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.console.ConsoleUseCase
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
@@ -58,6 +60,7 @@ val useCaseModule: Module = module {
     factoryOf(::ExportDatabaseUseCase)
     factoryOf(::ImportDatabaseUseCase)
     factoryOfAppVersionUseCase()
+    factoryOf(::ConsoleUseCase)
 }
 
 val viewModelModule: Module = module {
@@ -75,6 +78,7 @@ val viewModelModule: Module = module {
     viewModelOf(::ChangeViewModel)
     viewModelOf(::LanguageViewModel)
     viewModelOf(::FilesViewModel)
+    viewModelOf(::ConsoleViewModel)
 }
 
 expect fun Module.factoryOfAppVersionUseCase(): KoinDefinition<AppVersionUseCase>

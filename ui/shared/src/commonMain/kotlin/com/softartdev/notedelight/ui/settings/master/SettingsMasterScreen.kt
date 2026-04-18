@@ -34,7 +34,7 @@ import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesResult
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.model.SettingsCategory
-import com.softartdev.notedelight.ui.BackHandler
+import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.selectedListItemColor
 import com.softartdev.notedelight.util.icon
 import com.softartdev.notedelight.util.tag
@@ -63,7 +63,7 @@ fun SettingsMasterScreen(categoriesViewModel: SettingsCategoriesViewModel) {
         refreshState = refreshState,
         onNavigateBack = { categoriesViewModel.onAction(SettingsCategoriesAction.NavBack) }
     )
-    BackHandler(enabled = result.selectedCategoryId == null) {
+    NavBackHandler(enabled = result.selectedCategoryId == null) {
         categoriesViewModel.onAction(SettingsCategoriesAction.NavBack)
     }
 }

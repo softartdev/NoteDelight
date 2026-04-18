@@ -19,6 +19,7 @@ import co.touchlab.kermit.platformLogWriter
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiTestModules
 import com.softartdev.notedelight.ui.cases.BackupFeatureTestCase
+import com.softartdev.notedelight.ui.cases.ConsoleFeatureTestCase
 import com.softartdev.notedelight.ui.cases.CreateNoteWhileSelectedTestCase
 import com.softartdev.notedelight.ui.cases.CrudTestCase
 import com.softartdev.notedelight.ui.cases.EditTitleAfterCreateTestCase
@@ -139,6 +140,15 @@ class WebUiTests {
         ).invoke()
     }
 
+    @Test
+    fun consoleFeatureTest() = awaitComposeUiTest {
+        launchApp(composeUiTest = this@awaitComposeUiTest)
+        ConsoleFeatureTestCase(
+            composeUiTest = this@awaitComposeUiTest,
+            pressBack = { clickBack(this@awaitComposeUiTest) },
+        ).invoke()
+    }
+
     private fun launchApp(composeUiTest: ComposeUiTest) {
         val lifecycleOwner = TestLifecycleOwner(initialState = Lifecycle.State.RESUMED)
         composeUiTest.setContent {
@@ -173,4 +183,5 @@ class WebUiTests {
     @Test override fun settingPasswordTest(): TestResult = super.settingPasswordTest()
     @Test override fun localeTest(): TestResult = super.localeTest()
     @Test override fun backupFeatureTest(): TestResult = super.backupFeatureTest()
+    @Test override fun consoleFeatureTest(): TestResult = super.consoleFeatureTest()
 }*/

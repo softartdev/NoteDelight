@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.repository
 
-import co.touchlab.kermit.Logger
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
 import com.softartdev.notedelight.db.FilePathResolver
 import com.softartdev.notedelight.db.JdbcDatabaseHolder
 import com.softartdev.notedelight.db.JvmCipherUtils
@@ -8,7 +9,6 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.db.SqlDelightNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.util.CoroutineDispatchers
-import java.sql.DriverManager
 import java.util.Properties
 
 class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : SafeRepo() {
@@ -51,39 +51,19 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     }
 
     override suspend fun execute(query: String): String? {
-        val holder = buildDbIfNeed()
-        val url = holder.jdbcUrl
-        val props = Properties()
-        var connection: java.sql.Connection? = null
-        try {
-            connection = DriverManager.getConnection(url, props)
-            val stmt = connection.createStatement()
-            val hasResultSet = stmt.execute(query)
-            val result = if (hasResultSet) {
-                val rs = stmt.resultSet
-                if (rs.next()) rs.getString(1) else null
-            } else {
-                null
-            }
-            stmt.close()
-            if (result != null) return result
-            val mcStmt = connection.createStatement()
-            val mcHasResult = mcStmt.execute("SELECT sqlite3mc_version();")
-            val mcResult = if (mcHasResult) {
-                val rs = mcStmt.resultSet
-                if (rs.next()) rs.getString(1) else null
-            } else {
-                null
-            }
-            mcStmt.close()
-            return mcResult
-        } catch (e: Exception) {
-            Logger.withTag("JvmSafeRepo").e(e) { "Error executing query: $query" }
-            throw e
-        } finally {
-            connection?.close()
-        }
+        val queryResult: QueryResult<String?> = buildDbIfNeed().driver.executeQuery(
+            identifier = null,
+            sql = query,
+            parameters = 0,
+            binders = null,
+            mapper = this::map
+        )
+        return queryResult.await()
     }
+
+    private fun map(sqlCursor: SqlCursor): QueryResult<String?> = QueryResult.Value(
+        value = if (sqlCursor.next().value) sqlCursor.getString(0) else null
+    )
 
     override suspend fun encrypt(newPass: CharSequence) {
         closeDatabase()

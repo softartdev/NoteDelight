@@ -6,11 +6,10 @@ import com.softartdev.notedelight.shared.db.NoteQueries
 import kotlinx.datetime.LocalDateTime
 import com.softartdev.notedelight.model.Note as NoteModel
 
-fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb {
-    val dateColumnAdapter = DateAdapter()
-    val noteColumnAdapter = Note.Adapter(dateColumnAdapter, dateColumnAdapter)
-    return NoteDb(driver = sqlDriver, noteAdapter = noteColumnAdapter)
-}
+fun createQueryWrapper(sqlDriver: SqlDriver): NoteDb = NoteDb(
+    driver = sqlDriver,
+    noteAdapter = Note.Adapter(dateCreatedAdapter = DateAdapter, dateModifiedAdapter = DateAdapter)
+)
 
 object TestSchema {
 

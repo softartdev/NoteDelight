@@ -4,6 +4,7 @@ package com.softartdev.notedelight
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
+import com.softartdev.notedelight.ui.cases.ConsoleFeatureTestCase
 import com.softartdev.notedelight.ui.cases.CrudTestCase
 import com.softartdev.notedelight.ui.cases.CreateNoteWhileSelectedTestCase
 import com.softartdev.notedelight.ui.cases.BackupFeatureTestCase
@@ -56,6 +57,11 @@ abstract class AbstractUITests {
         composeUiTest = composeUiTest,
         pressBack = ::pressBack,
         closeSoftKeyboard = ::closeSoftKeyboard
+    ).invoke()
+
+    open fun consoleFeatureTest() = ConsoleFeatureTestCase(
+        composeUiTest = composeUiTest,
+        pressBack = ::pressBack,
     ).invoke()
 
     abstract fun pressBack()

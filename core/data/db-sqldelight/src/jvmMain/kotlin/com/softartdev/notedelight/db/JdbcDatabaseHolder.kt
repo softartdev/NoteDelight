@@ -11,7 +11,7 @@ import java.sql.SQLException
 import java.util.Properties
 
 class JdbcDatabaseHolder(props: Properties = Properties()) : SqlDelightDbHolder {
-    private val logger = Logger.withTag(this@JdbcDatabaseHolder::class.simpleName.toString())
+    override val logger = Logger.withTag(this@JdbcDatabaseHolder::class.simpleName.toString())
     private val dbPath = FilePathResolver().invoke()
 
     val jdbcUrl: String = buildJdbcUrl(dbPath, props)

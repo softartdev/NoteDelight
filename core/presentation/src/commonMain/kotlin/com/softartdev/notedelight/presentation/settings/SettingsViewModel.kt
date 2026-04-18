@@ -155,7 +155,7 @@ class SettingsViewModel(
         mutableStateFlow.update(SettingsResult::showLoading)
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
-            cipherVersion?.let { snackbarInteractor.showMessage(SnackbarMessage.Copyable(it)) }
+            snackbarInteractor.showMessage(SnackbarMessage.Copyable(cipherVersion.toString()))
         } catch (e: Throwable) {
             handleError(e) { "error checking sqlcipher version" }
         } finally {

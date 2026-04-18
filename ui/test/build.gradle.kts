@@ -26,6 +26,9 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
         }
+        androidResources {
+            enable = true
+        }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
@@ -43,6 +46,8 @@ kotlin {
                 implementation(projects.core.presentation)
                 implementation(projects.ui.shared)
                 implementation(projects.feature.backup.ui)
+                implementation(projects.feature.console.presentation)
+                implementation(projects.feature.console.ui)
                 implementation(libs.compose.ui.test)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material.icons.extended)

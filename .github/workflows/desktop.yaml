@@ -5,6 +5,10 @@ on:
     tags:
       - desktop/*
 
+permissions:
+  contents: write
+  packages: read
+
 jobs:
   build_job:
     name: Package
@@ -22,7 +26,7 @@ jobs:
           distribution: 'oracle'
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: false
           cache-overwrite-existing: true
@@ -44,7 +48,7 @@ jobs:
         if: matrix.os != 'macos-latest'
         run: ./gradlew packageReleaseDistributionForCurrentOS
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             app/desktop/build/compose/binaries/main-release/deb/*.deb

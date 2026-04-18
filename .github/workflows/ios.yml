@@ -1,5 +1,8 @@
 name: iOS CD
 
+permissions:
+  contents: read
+
 on:
   push:
     tags:
@@ -19,7 +22,7 @@ jobs:
           distribution: 'oracle'
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: false
           cache-overwrite-existing: true
@@ -46,7 +49,7 @@ jobs:
         run: fastlane appstore_publish_deliver_lane
       - name: Archive build artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: test-artifacts
           path: |

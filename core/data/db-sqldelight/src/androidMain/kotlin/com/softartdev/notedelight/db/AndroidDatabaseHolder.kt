@@ -8,6 +8,7 @@ import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import co.touchlab.kermit.Logger
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.repository.SafeRepo
 
@@ -17,6 +18,7 @@ class AndroidDatabaseHolder(
     schema: SqlSchema<QueryResult.Value<Unit>> = NoteDb.Schema.synchronous(),
     name: String? = SafeRepo.DB_NAME
 ) : SqlDelightDbHolder {
+    override val logger = Logger.withTag("AndroidDatabaseHolder")
 
     private val openHelper: SupportSQLiteOpenHelper = SafeHelperFactory
         .fromUser(SpannableStringBuilder.valueOf(passphrase))

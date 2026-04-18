@@ -9,7 +9,7 @@ import com.softartdev.notedelight.shared.db.NoteQueries
 import org.w3c.dom.Worker
 
 class WebDatabaseHolder(private val key: String? = null) : SqlDelightDbHolder {
-    private val logger = Logger.withTag("WebDatabaseHolder")
+    override val logger = Logger.withTag("WebDatabaseHolder")
     override val driver: SqlDriver = WebWorkerDriver(worker = jsWorker())
     override val noteDb: NoteDb = createQueryWrapper(driver)
     override val noteQueries: NoteQueries = noteDb.noteQueries

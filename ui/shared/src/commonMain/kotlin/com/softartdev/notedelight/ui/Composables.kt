@@ -36,6 +36,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.softartdev.notedelight.util.EMPTY_RESULT_LABEL_TAG
 import notedelight.ui.shared.generated.resources.Res
 import notedelight.ui.shared.generated.resources.detail_pane_placeholder
@@ -48,7 +51,11 @@ import org.jetbrains.compose.resources.stringResource
 expect fun EnableEdgeToEdge()
 
 @Composable
-expect fun BackHandler(enabled: Boolean = true, onBack: () -> Unit)
+fun NavBackHandler(enabled: Boolean = true, onBack: () -> Unit) = NavigationBackHandler(
+    state = rememberNavigationEventState(NavigationEventInfo.None),
+    isBackEnabled = enabled,
+    onBackCompleted = onBack,
+)
 
 @Composable
 fun MainDetailPanePlaceholder() = Card(shape = RoundedCornerShape(size = 0.dp)) {

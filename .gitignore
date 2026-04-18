@@ -84,3 +84,7 @@ kotlin-js-store/
 ### desktop
 # Code signing files (macOS)
 /app/desktop/macOS_development.p12
+
+# AI
+.claude/
+.codex/

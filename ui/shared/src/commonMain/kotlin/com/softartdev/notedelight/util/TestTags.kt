@@ -82,6 +82,19 @@ const val EXPORT_DATABASE_BUTTON_TAG = "EXPORT_DATABASE_BUTTON_TAG"
 const val IMPORT_DATABASE_BUTTON_TAG = "IMPORT_DATABASE_BUTTON_TAG"
 
 /**
+ * Test tags for Console feature.
+ *
+ * Surface-scoped tags (`CONSOLE_INPUT_FIELD_TAG`, `CONSOLE_RUN_BUTTON_TAG`,
+ * `CONSOLE_TRANSCRIPT_TAG`) live with the composables that expose them in
+ * `:feature:console:ui` (see `com.softartdev.notedelight.feature.console.ui.ConsoleTestTags`).
+ * Tips-menu tags stay here because the tips dropdown is owned by `:ui:shared`.
+ */
+const val SETTINGS_CATEGORY_CONSOLE_TAG = "SETTINGS_CATEGORY_CONSOLE_TAG"
+const val CONSOLE_TIPS_BUTTON_TAG = "CONSOLE_TIPS_BUTTON_TAG"
+const val CONSOLE_TIP_COPY_PREFIX = "CONSOLE_TIP_COPY_"
+const val CONSOLE_TIP_AUTOFILL_PREFIX = "CONSOLE_TIP_AUTOFILL_"
+
+/**
  * Test tags for [com.softartdev.notedelight.ui.dialog.LanguageDialog]
  */
 const val CHOOSE_LANGUAGE_DIALOG_TITLE_TAG = "CHOOSE_LANGUAGE_DIALOG_TITLE_TAG"

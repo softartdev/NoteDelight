@@ -106,6 +106,9 @@ class DesktopUiTests : AbstractJvmUiTests() {
     @Test
     override fun backupFeatureTest() = super.backupFeatureTest()
 
+    @Test
+    override fun consoleFeatureTest() = super.consoleFeatureTest()
+
     override fun pressBack() {
         val backButtons = composeTestRule.onAllNodesWithContentDescription(
             label = Icons.AutoMirrored.Filled.ArrowBack.name

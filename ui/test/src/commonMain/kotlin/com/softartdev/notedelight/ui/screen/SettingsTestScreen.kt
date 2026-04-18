@@ -12,6 +12,7 @@ import com.softartdev.notedelight.util.LANGUAGE_BUTTON_TAG
 import com.softartdev.notedelight.util.SET_PASSWORD_BUTTON_TAG
 import com.softartdev.notedelight.util.SETTINGS_CATEGORY_APPEARANCE_TAG
 import com.softartdev.notedelight.util.SETTINGS_CATEGORY_BACKUP_TAG
+import com.softartdev.notedelight.util.SETTINGS_CATEGORY_CONSOLE_TAG
 import com.softartdev.notedelight.util.SETTINGS_CATEGORY_INFO_TAG
 import com.softartdev.notedelight.util.SETTINGS_CATEGORY_SECURITY_TAG
 import kotlin.jvm.JvmInline
@@ -37,6 +38,11 @@ value class SettingsTestScreen(val nodeProvider: SemanticsNodeInteractionsProvid
     val infoCategorySNI: SemanticsNodeInteraction
         get() = nodeProvider
             .onNodeWithTag(SETTINGS_CATEGORY_INFO_TAG)
+            .assertIsDisplayed()
+
+    val consoleCategorySNI: SemanticsNodeInteraction
+        get() = nodeProvider
+            .onNodeWithTag(SETTINGS_CATEGORY_CONSOLE_TAG)
             .assertIsDisplayed()
 
     val encryptionSwitchSNI: SemanticsNodeInteraction

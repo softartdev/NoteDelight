@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
-import com.softartdev.notedelight.ui.BackHandler
+import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.MainDetailPanePlaceholder
 import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
@@ -96,7 +96,7 @@ fun NoteDetail(
         textState = textState,
         onAction = onAction
     )
-    BackHandler { onAction(NoteAction.CheckSaveChange(textState.text)) }
+    NavBackHandler { onAction(NoteAction.CheckSaveChange(textState.text)) }
 }
 
 @Composable

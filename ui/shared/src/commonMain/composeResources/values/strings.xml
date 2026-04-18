@@ -78,4 +78,11 @@
     <string name="info">Info</string>
     <string name="backup">Backup</string>
     <string name="save">Save</string>
+    <string name="console">SQLite Shell</string>
+    <string name="console_tips">Console tips</string>
+    <string name="console_helper_text">Only the first column is shown for query results.</string>
+    <string name="console_empty_transcript">Run a SQL command to see transcript output.</string>
+    <string name="console_input_placeholder">Enter a SQL statement</string>
+    <string name="console_run">Run</string>
+    <string name="autofill">Autofill</string>
 </resources>

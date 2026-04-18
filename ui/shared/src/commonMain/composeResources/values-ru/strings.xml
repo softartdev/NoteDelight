@@ -78,4 +78,11 @@
     <string name="info">Информация</string>
     <string name="backup">Резервная копия</string>
     <string name="save">Сохранить</string>
+    <string name="console">SQLite-консоль</string>
+    <string name="console_tips">Подсказки консоли</string>
+    <string name="console_helper_text">Показывается только первый столбец результатов запроса.</string>
+    <string name="console_empty_transcript">Выполните SQL-команду, чтобы увидеть результат.</string>
+    <string name="console_input_placeholder">Введите SQL-запрос</string>
+    <string name="console_run">Выполнить</string>
+    <string name="autofill">Подставить</string>
 </resources>
