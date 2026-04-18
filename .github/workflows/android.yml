@@ -5,6 +5,9 @@ on:
     tags:
       - android/*
 
+permissions:
+  contents: read
+
 jobs:
   build_unit_test_publish_job:
     name: Build -> Unit-test -> Publish
