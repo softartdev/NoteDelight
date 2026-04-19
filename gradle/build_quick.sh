@@ -34,9 +34,9 @@ MODULE_PREFIXES=(
   ":feature:console:ui:"
   ":core:presentation:"
   ":core:test:"
-  ":ui:shared:"
-  ":ui:test-jvm:"
-  ":ui:test:"
+  ":core:ui:"
+  ":core:test-jvm:"
+  ":core:test-ui:"
   ":thirdparty:app:cash:sqldelight:paging3:"
   ":app:ios-kit:"
 )
@@ -47,7 +47,7 @@ TARGET_SUFFIXES=(
 )
 
 # "Task middle" part. Add new items here when new iOS tasks appear.
-# Example result task path: :ui:shared:${taskMiddle}${targetSuffix}
+# Example result task path: :core:ui:${taskMiddle}${targetSuffix}
 TASK_MIDDLES=(
   "cinteropSQLCipher"
   "compileTestKotlin"
@@ -66,6 +66,8 @@ TASKS_NO_TARGET=(
   "podBuildSQLCipherIos"
   "podBuildSQLCipherIosSimulator"
   "podSetupBuildSQLCipherIos"
+  "iosArm64Test"
+  "iosSimulatorArm64Test"
 )
 
 # -------------------- IMPLEMENTATION --------------------

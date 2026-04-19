@@ -340,7 +340,7 @@ val db = Room.databaseBuilder(
 
 ## Related Modules
 
-- **Used by**: `ui:shared`, `app:android` (when selected)
+- **Used by**: `core:ui`, `app:android` (when selected)
 - **Depends on**: `core:domain`
 - **Alternative**: `core:data:db-sqldelight` (default)
 

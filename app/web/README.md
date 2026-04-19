@@ -383,7 +383,7 @@ self.addEventListener('install', (event) => {
 - `core:domain` - Domain layer
 - `core:data:db-sqldelight` - Data layer (with sql.js)
 - `core:presentation` - ViewModels
-- `ui:shared` - Shared UI
+- `core:ui` - Shared UI
 
 ### Compose Web
 - `compose.web.application` - Compose for Web
@@ -401,7 +401,7 @@ self.addEventListener('install', (event) => {
 
 ### UI Tests
 
-The web app includes multiplatform Compose UI tests that extend `CommonUiTests` from the `ui/test` module:
+The web app includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test-ui` module:
 
 **Location**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt`
 
@@ -568,7 +568,7 @@ try {
 
 ## Related Modules
 
-- **Depends on**: `ui:shared`, `core:presentation`, `core:data:db-sqldelight`, `core:domain`
+- **Depends on**: `core:ui`, `core:presentation`, `core:data:db-sqldelight`, `core:domain`
 - **Alternative apps**: `app:android`, `app:desktop`, `app:iosApp`
 
 ## Resources

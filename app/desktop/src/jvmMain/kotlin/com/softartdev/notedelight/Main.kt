@@ -12,8 +12,8 @@ import com.softartdev.notedelight.di.uiModules
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.DEFAULT_APP_LOG_TAG
 import com.softartdev.notedelight.util.kermitLogger
-import notedelight.ui.shared.generated.resources.Res
-import notedelight.ui.shared.generated.resources.app_name
+import notedelight.core.ui.generated.resources.Res
+import notedelight.core.ui.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.startKoin
 

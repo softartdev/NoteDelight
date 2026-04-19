@@ -13,8 +13,8 @@ import com.softartdev.notedelight.MainActivity
 import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
-import notedelight.ui.shared.generated.resources.Res
-import notedelight.ui.shared.generated.resources.create_note
+import notedelight.core.ui.generated.resources.Res
+import notedelight.core.ui.generated.resources.create_note
 import org.jetbrains.compose.resources.getString
 import org.junit.Ignore
 import org.junit.Rule

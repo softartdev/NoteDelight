@@ -5,7 +5,7 @@ A custom Compose-Multiplatform terminal surface for the SQL console. Targets `jv
 
 The module hosts only **pure rendering primitives** — no string resources, no Koin, no
 navigation. The screen frame (`Scaffold`, `TopAppBar`, tips dropdown, view-model wiring) lives
-in `:ui:shared`, which resolves strings via `stringResource(...)` and passes them as plain
+in `:core:ui`, which resolves strings via `stringResource(...)` and passes them as plain
 parameters into [`ConsoleSurface`](src/commonMain/kotlin/com/softartdev/notedelight/feature/console/ui/ConsoleSurface.kt).
 This split keeps the new module resource-free and minimizes refactor churn.
 
@@ -85,7 +85,7 @@ const val CONSOLE_TRANSCRIPT_TAG  = "CONSOLE_TRANSCRIPT_TAG"
 
 Tips-menu tags (`CONSOLE_TIPS_BUTTON_TAG`, `CONSOLE_TIP_COPY_PREFIX`,
 `CONSOLE_TIP_AUTOFILL_PREFIX`) stay in `com.softartdev.notedelight.util.TestTags` because the
-tips dropdown lives in `:ui:shared`.
+tips dropdown lives in `:core:ui`.
 
 ## Known limitations
 

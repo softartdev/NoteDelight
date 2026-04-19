@@ -229,7 +229,7 @@ android {
 }
 
 dependencies {
-    androidTestImplementation(project(":ui:test-jvm"))
+    androidTestImplementation(project(":core:test-jvm"))
     androidTestUtil(libs.androidx.test.orchestrator)
 }
 ```
@@ -317,7 +317,7 @@ fastlane production  # Deploy to production
 - `core:domain` - Domain layer
 - `core:data` - Data layer (SQLDelight or Room)
 - `core:presentation` - ViewModels
-- `ui:shared` - Shared UI
+- `core:ui` - Shared UI
 
 ### Android
 - `androidx.activity.compose` - Activity with Compose
@@ -334,7 +334,7 @@ fastlane production  # Deploy to production
 - `leakcanary.android` - Memory leak detection
 
 ### Testing
-- `ui:test-jvm` - UI test framework
+- `core:test-jvm` - UI test framework
 - `androidx.test.ext.junit` - AndroidX Test
 - `androidx.test.runner` - Test runner
 - `androidx.test.orchestrator` - Test orchestrator
@@ -466,8 +466,8 @@ val permissionLauncher = rememberLauncherForActivityResult(
 
 ## Related Modules
 
-- **Depends on**: `ui:shared`, `core:presentation`, `core:data`, `core:domain`
-- **Test dependencies**: `ui:test-jvm`, `core:test`
+- **Depends on**: `core:ui`, `core:presentation`, `core:data`, `core:domain`
+- **Test dependencies**: `core:test-jvm`, `core:test`
 - **Alternative apps**: `app:desktop`, `app:web`, `app:iosApp`
 
 ## Resources

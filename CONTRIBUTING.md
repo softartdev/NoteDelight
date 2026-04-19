@@ -455,7 +455,7 @@ Closes #123
 ```
 
 ```
-ui/shared: Fix dark theme colors in note editor
+core/ui: Fix dark theme colors in note editor
 
 - Update Material 3 color scheme
 - Fix text visibility issues

@@ -321,7 +321,7 @@ class TestCoroutineSetup {
 
 ## Related Modules
 
-- **Used by**: All modules with test code (`core:presentation`, `core:data`, `ui:shared`, etc.)
+- **Used by**: All modules with test code (`core:presentation`, `core:data`, `core:ui`, etc.)
 - **Depends on**: `core:domain`
 - **Scope**: Test-only (not included in production builds)
 

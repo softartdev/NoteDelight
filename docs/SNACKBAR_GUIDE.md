@@ -5,9 +5,9 @@ This guide explains the shared snackbar flow that powers every platform.
 ## Core Components
 
 - `core/presentation/src/commonMain/kotlin/com/softartdev/notedelight/interactor/SnackbarInteractor.kt` – multiplatform contract with `setDependencies`, `releaseDependencies`, and `showMessage` returning a `Job?`.
-- `ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/interactor/SnackbarInteractorImpl.kt` – Compose-aware implementation that wires a `SnackbarHostState`, clipboard access, and coroutine scope.
-- `ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/ui/GlobalSnackbarHost.kt` – composable that installs a global `SnackbarHost` and feeds the implementation via `DisposableEffect`.
-- `ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/App.kt` – registers the host at the root and injects `SnackbarInteractor` through Koin.
+- `core/ui/src/commonMain/kotlin/com/softartdev/notedelight/interactor/SnackbarInteractorImpl.kt` – Compose-aware implementation that wires a `SnackbarHostState`, clipboard access, and coroutine scope.
+- `core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/GlobalSnackbarHost.kt` – composable that installs a global `SnackbarHost` and feeds the implementation via `DisposableEffect`.
+- `core/ui/src/commonMain/kotlin/com/softartdev/notedelight/App.kt` – registers the host at the root and injects `SnackbarInteractor` through Koin.
 
 Keep the interface free from Compose types so it can be used in tests and on non-Compose platforms.
 
@@ -31,7 +31,7 @@ Do **not** re-create or inject `SnackbarHostState` elsewhere—always rely on th
 
 ## Calling from ViewModels
 
-- Inject `SnackbarInteractor` in the ViewModel constructor (see Koin registrations in `ui/shared/di/uiModules.kt`).
+- Inject `SnackbarInteractor` in the ViewModel constructor (see Koin registrations in `core/ui/di/uiModules.kt`).
 - Call `snackbarInteractor.showMessage(...)` directly; the coroutine is launched inside the interactor so `viewModelScope.launch` is unnecessary unless you need structured cancellation.
 - Optionally keep the returned `Job` if you need to cancel an in-flight snackbar before triggering another one.
 
@@ -49,7 +49,7 @@ snackbarInteractor.showMessage(
 ## Integration Checklist for AI Agents
 
 - ✅ Add new snackbar entry points through the interactor, never by manipulating `SnackbarHostState` yourself.
-- ✅ Use `SnackbarMessage.Resource` for translated strings—resources live in `ui/shared/src/commonMain/composeResources/values`.
+- ✅ Use `SnackbarMessage.Resource` for translated strings—resources live in `core/ui/src/commonMain/composeResources/values`.
 - ✅ Keep UI wiring in `GlobalSnackbarHost`; screens should only consume the interactor.
 - ⚠️ Remember to update tests: use a fake implementation of `SnackbarInteractor` rather than asserting on Compose state.
 - ⚠️ Clean up any manual clipboard usage; `Copyable` already performs the write.

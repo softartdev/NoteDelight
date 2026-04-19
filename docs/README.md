@@ -24,9 +24,9 @@ Each module has its own detailed README.md:
 - **[core/test/README.md](../core/test/README.md)** - Shared test utilities
 
 #### UI Modules
-- **[ui/shared/README.md](../ui/shared/README.md)** - Shared Compose UI
-- **[ui/test/README.md](../ui/test/README.md)** - Multiplatform Compose UI tests
-- **[ui/test-jvm/README.md](../ui/test-jvm/README.md)** - JVM-specific UI test utilities (Kaspresso-inspired)
+- **[core/ui/README.md](../core/ui/README.md)** - Shared Compose UI
+- **[core/test-ui/README.md](../core/test-ui/README.md)** - Multiplatform Compose UI tests
+- **[core/test-jvm/README.md](../core/test-jvm/README.md)** - JVM-specific UI test utilities (Kaspresso-inspired)
 
 #### App Modules
 - **[app/android/README.md](../app/android/README.md)** - Android application

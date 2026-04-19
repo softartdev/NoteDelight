@@ -21,7 +21,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(projects.core.domain)
             implementation(projects.core.presentation)
-            implementation(projects.ui.shared)
+            implementation(projects.core.ui)
             implementation(libs.androidx.navigation.compose)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.swing)
@@ -34,8 +34,8 @@ kotlin {
             implementation(libs.kermit)
         }
         jvmTest.dependencies {
-            implementation(projects.ui.test)
-            implementation(projects.ui.testJvm)
+            implementation(projects.core.testUi)
+            implementation(projects.core.testJvm)
             implementation(projects.feature.backup.ui)
             implementation(kotlin("test"))
             implementation(libs.compose.ui.test.junit4)
