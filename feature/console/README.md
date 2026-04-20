@@ -63,7 +63,7 @@ The `ConsoleScreen` composable lives in `core:ui` alongside other settings detai
 ./gradlew :feature:console:ui:jvmTest
 
 # Compose UI tests (ConsoleScreen)
-./gradlew :core:test-jvm:jvmTest
+./gradlew :core:test:jvm:jvmTest
 
 # Full build
 ./gradle/build_quick.sh

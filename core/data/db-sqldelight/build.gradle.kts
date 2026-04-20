@@ -46,7 +46,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(projects.core.test)
+            implementation(projects.core.test.common)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(libs.kermit)

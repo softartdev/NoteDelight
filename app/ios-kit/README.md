@@ -362,7 +362,7 @@ Kotlin code can be debugged from Xcode with proper symbol mapping.
 
 ### UI Tests
 
-The iOS kit includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test-ui` module:
+The iOS kit includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test/ui` module:
 
 **Location**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt`
 

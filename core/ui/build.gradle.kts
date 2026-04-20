@@ -87,7 +87,7 @@ kotlin {
             implementation(libs.koin.core)
         }
         jvmTest.dependencies {
-            implementation(projects.core.test)
+            implementation(projects.core.test.common)
             implementation(kotlin("test"))
             implementation(libs.compose.ui.test.junit4)
             implementation(project.dependencies.platform(libs.koin.bom))

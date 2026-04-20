@@ -34,8 +34,8 @@ kotlin {
             implementation(libs.kermit)
         }
         jvmTest.dependencies {
-            implementation(projects.core.testUi)
-            implementation(projects.core.testJvm)
+            implementation(projects.core.test.ui)
+            implementation(projects.core.test.jvm)
             implementation(projects.feature.backup.ui)
             implementation(kotlin("test"))
             implementation(libs.compose.ui.test.junit4)

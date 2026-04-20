@@ -48,7 +48,7 @@ kotlin {
         wasmJsTest {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(projects.core.testUi)
+                implementation(projects.core.test.ui)
                 implementation(libs.compose.ui.test)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material.icons.extended)

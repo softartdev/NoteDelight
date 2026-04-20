@@ -140,7 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Refactoring
 - Improve UI test stability and maintainability
-- Create multiplatform `core:test-ui` module and move UI tests
+- Create multiplatform `core:test:ui` module and move UI tests
 - Simplify navigation methods and improve null handling in RouterImpl
 - Improve UI test retry logic and stability
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `core:test` module provides **shared testing utilities and helpers** for writing tests across all platforms. It contains common test fixtures, mock implementations, and utility functions used by other modules' test suites.
+The `core:test:common` module provides **shared testing utilities and helpers** for writing tests across all platforms. It contains common test fixtures, mock implementations, and utility functions used by other modules' test suites.
 
 ## Purpose
 
@@ -15,7 +15,7 @@ The `core:test` module provides **shared testing utilities and helpers** for wri
 ## Architecture
 
 ```
-core:test (Shared Testing Utilities)
+core:test:common (Shared Testing Utilities)
     ├── src/
     │   ├── commonMain/
     │   │   └── kotlin/
@@ -125,7 +125,7 @@ Add as test dependency:
 // In build.gradle.kts
 sourceSets {
     commonTest.dependencies {
-        implementation(project(":core:test"))
+        implementation(project(":core:test:common"))
     }
 }
 ```
@@ -331,7 +331,7 @@ This module itself has minimal tests, but enables testing in other modules:
 
 ```bash
 # Test the test utilities (meta-testing)
-./gradlew :core:test:test
+./gradlew :core:test:common:test
 ```
 
 ## Contributing Test Utilities

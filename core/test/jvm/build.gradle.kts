@@ -13,11 +13,11 @@ java {
 }
 
 dependencies {
-    implementation(projects.core.testUi)
+    implementation(projects.core.test.ui)
     implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
     implementation(projects.core.presentation)
-    implementation(projects.core.test)
+    implementation(projects.core.test.common)
     implementation(projects.core.ui)
     implementation(libs.androidx.lifecycle.common)
     implementation(libs.androidx.lifecycle.runtime)

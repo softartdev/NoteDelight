@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `core:test-jvm` module provides **JVM-specific UI testing utilities** for Compose Multiplatform applications, specifically designed for **JVM-based platforms** (Android and Desktop). This module depends on `core:test-ui` which contains the multiplatform test framework with screen objects, test cases, and fluent DSL inspired by the Kaspresso library.
+The `core:test:jvm` module provides **JVM-specific UI testing utilities** for Compose Multiplatform applications, specifically designed for **JVM-based platforms** (Android and Desktop). This module depends on `core:test:ui` which contains the multiplatform test framework with screen objects, test cases, and fluent DSL inspired by the Kaspresso library.
 
 ## Purpose
 
@@ -10,12 +10,12 @@ The `core:test-jvm` module provides **JVM-specific UI testing utilities** for Co
 - Bridge between JVM-specific Compose Test APIs (`ComposeContentTestRule`) and multiplatform APIs (`ComposeUiTest`)
 - Implement platform-specific `runOnUiThread` for JVM platforms
 - Provide JVM-specific test setup and lifecycle management
-- Enable Android and Desktop tests to use the multiplatform test framework from `core:test-ui`
+- Enable Android and Desktop tests to use the multiplatform test framework from `core:test:ui`
 
 ## Architecture
 
 ```
-core:test-jvm (JVM-Specific UI Test Utilities)
+core:test:jvm (JVM-Specific UI Test Utilities)
     ├── src/
     │   └── main/
     │       └── kotlin/
@@ -24,10 +24,10 @@ core:test-jvm (JVM-Specific UI Test Utilities)
     │               │   ├── AbstractJvmUiTests.kt      # JVM bridge to AbstractUITests
     │               │   └── AbstractNavigationTest.kt   # Navigation testing utilities
     │               ├── ComposeTestNodeProvider.kt     # JVM-specific test node provider
-    │               └── (depends on core:test-ui for test cases, screen objects, etc.)
+    │               └── (depends on core:test:ui for test cases, screen objects, etc.)
     └── build.gradle.kts
 
-core:test-ui (Multiplatform UI Test Framework - Kaspresso-inspired)
+core:test:ui (Multiplatform UI Test Framework - Kaspresso-inspired)
     ├── src/
     │   ├── commonMain/
     │   │   └── kotlin/
@@ -54,9 +54,9 @@ core:test-ui (Multiplatform UI Test Framework - Kaspresso-inspired)
     └── build.gradle.kts
 ```
 
-## Relationship to core:test-ui Module
+## Relationship to core:test:ui Module
 
-This module **depends on** `core:test-ui`, which contains the multiplatform test framework. The `core:test-ui` module provides:
+This module **depends on** `core:test:ui`, which contains the multiplatform test framework. The `core:test:ui` module provides:
 
 - **Screen Objects**: Page Object Model for screens (in `commonMain`)
 - **Test Cases**: Reusable test scenarios (in `commonMain`)
@@ -64,7 +64,7 @@ This module **depends on** `core:test-ui`, which contains the multiplatform test
 - **Abstract Base**: `AbstractUITests` - multiplatform test base class
 - **Platform Support**: Works on Android, iOS, JVM Desktop, and Web
 
-This `core:test-jvm` module provides:
+This `core:test:jvm` module provides:
 - **JVM Bridge**: `AbstractJvmUiTests` - bridges JVM-specific `ComposeContentTestRule` to multiplatform `ComposeUiTest`
 - **JVM Utilities**: Platform-specific test utilities for Android and Desktop
 - **Compose Test Node Provider**: JVM-specific implementation for test node access
@@ -82,11 +82,11 @@ abstract class AbstractJvmUiTests : AbstractUITests() {
 }
 ```
 
-This class bridges the JVM-specific `ComposeContentTestRule` (from Compose Desktop/Android) to the multiplatform `ComposeUiTest` API used by `core:test-ui` module.
+This class bridges the JVM-specific `ComposeContentTestRule` (from Compose Desktop/Android) to the multiplatform `ComposeUiTest` API used by `core:test:ui` module.
 
-### Multiplatform Test Base (`AbstractUITests.kt` in `core:test-ui`)
+### Multiplatform Test Base (`AbstractUITests.kt` in `core:test:ui`)
 
-The actual base class is in `core:test-ui` module:
+The actual base class is in `core:test:ui` module:
 
 ```kotlin
 abstract class AbstractUITests {
@@ -109,9 +109,9 @@ abstract class AbstractUITests {
 
 ### Screen Objects and Test Cases
 
-Screen objects and test cases are now in the `core:test-ui` module (see [core/test-ui/README.md](../test/README.md)). They use the multiplatform `ComposeUiTest` API and can run on all platforms.
+Screen objects and test cases are now in the `core:test:ui` module (see [core/test/ui/README.md](../ui/README.md)). They use the multiplatform `ComposeUiTest` API and can run on all platforms.
 
-**Note**: Screen objects and test cases have been moved to `core/test-ui/src/commonMain/kotlin/` to enable multiplatform testing. This module (`core:test-jvm`) provides JVM-specific utilities and bridges.
+**Note**: Screen objects and test cases have been moved to `core/test/ui/src/commonMain/kotlin/` to enable multiplatform testing. This module (`core:test:jvm`) provides JVM-specific utilities and bridges.
 
 ### Compose Test Node Provider (`ComposeTestNodeProvider.kt`)
 
@@ -138,7 +138,7 @@ This module provides JVM-specific utilities for:
 - ✅ **Android** - Via AndroidJUnitRunner + Compose Test
 - ✅ **Desktop JVM** - Via Compose Desktop Test
 
-**Note**: The multiplatform test framework in `core:test-ui` supports all platforms (Android, iOS, JVM Desktop, Web). This module provides the JVM-specific bridge and utilities.
+**Note**: The multiplatform test framework in `core:test:ui` supports all platforms (Android, iOS, JVM Desktop, Web). This module provides the JVM-specific bridge and utilities.
 
 ## Usage in Platform Tests
 
@@ -207,16 +207,16 @@ class DesktopUiTest : AbstractJvmUiTests() {
 }
 ```
 
-**Note**: Tests now extend `AbstractJvmUiTests` which bridges to the multiplatform `AbstractUITests` from `core:test-ui`.
+**Note**: Tests now extend `AbstractJvmUiTests` which bridges to the multiplatform `AbstractUITests` from `core:test:ui`.
 
 ## Dependencies
 
 ### Core
-- `core:test-ui` - **Multiplatform test framework** (screen objects, test cases, base classes)
+- `core:test:ui` - **Multiplatform test framework** (screen objects, test cases, base classes)
 - `core:domain` - Domain models
 - `core:data` - Data layer for test database
 - `core:presentation` - ViewModels
-- `core:test` - Test utilities
+- `core:test:common` - Test utilities
 - `core:ui` - UI under test
 
 ### Compose Testing
@@ -234,9 +234,9 @@ class DesktopUiTest : AbstractJvmUiTests() {
 
 ## Writing New Tests
 
-**Note**: New test cases and screen objects should be added to the `core:test-ui` module (in `commonMain`) to enable multiplatform testing. See [core/test-ui/README.md](../test/README.md) for details.
+**Note**: New test cases and screen objects should be added to the `core:test:ui` module (in `commonMain`) to enable multiplatform testing. See [core/test/ui/README.md](../ui/README.md) for details.
 
-This module (`core:test-jvm`) is primarily for JVM-specific utilities and bridges. If you need to add JVM-specific test utilities, add them here.
+This module (`core:test:jvm`) is primarily for JVM-specific utilities and bridges. If you need to add JVM-specific test utilities, add them here.
 
 ## AI Agent Guidelines
 
@@ -370,7 +370,7 @@ Button(
 ## Related Modules
 
 - **Used by**: `app:android` (androidTest), `app:desktop` (jvmTest)
-- **Depends on**: `core:test-ui` (multiplatform test framework), `core:ui`, `core:presentation`, `core:data`, `core:test`
+- **Depends on**: `core:test:ui` (multiplatform test framework), `core:ui`, `core:presentation`, `core:data`, `core:test:common`
 - **Provides**: JVM-specific utilities and bridges for multiplatform tests
 
 ## Resources

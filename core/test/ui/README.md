@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `core:test-ui` module provides **common Compose Multiplatform UI tests** that can run on all supported platforms. This module follows the [official Compose Multiplatform testing documentation](https://kotlinlang.org/docs/multiplatform/compose-test.html).
+The `core:test:ui` module provides **common Compose Multiplatform UI tests** that can run on all supported platforms. This module follows the [official Compose Multiplatform testing documentation](https://kotlinlang.org/docs/multiplatform/compose-test.html).
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The `core:test-ui` module provides **common Compose Multiplatform UI tests** tha
 
 ## Running Tests
 
-The `core/test-ui` module provides the base test framework. Platform-specific test implementations extend `CommonUiTests`:
+The `core/test/ui` module provides the base test framework. Platform-specific test implementations extend `CommonUiTests`:
 
 ### iOS (Simulator)
 ```bash
@@ -20,9 +20,9 @@ The `core/test-ui` module provides the base test framework. Platform-specific te
 ./gradlew :app:ios-kit:iosSimulatorArm64Test
 
 # Run test framework tests
-./gradlew :core:test-ui:iosSimulatorArm64Test
+./gradlew :core:test:ui:iosSimulatorArm64Test
 ```
-Note: the `core:test-ui` CocoaPods **release** framework for the iOS simulator is disabled because tests only need debug binaries.
+Note: the `core:test:ui` CocoaPods **release** framework for the iOS simulator is disabled because tests only need debug binaries.
 
 ### Android (Requires emulator/device)
 ```bash
@@ -30,7 +30,7 @@ Note: the `core:test-ui` CocoaPods **release** framework for the iOS simulator i
 ./gradlew :app:android:connectedCheck
 
 # Run test framework tests
-./gradlew :core:test-ui:connectedAndroidTest
+./gradlew :core:test:ui:connectedAndroidTest
 ```
 
 ### JVM (Desktop)
@@ -39,7 +39,7 @@ Note: the `core:test-ui` CocoaPods **release** framework for the iOS simulator i
 ./gradlew :app:desktop:jvmTest
 
 # Run test framework tests
-./gradlew :core:test-ui:jvmTest
+./gradlew :core:test:ui:jvmTest
 ```
 
 ### Web (wasmJs)
@@ -49,13 +49,13 @@ export CHROME_BIN=/path/to/chrome
 ./gradlew :app:web:wasmJsBrowserTest
 
 # Run test framework tests
-./gradlew :core:test-ui:wasmJsTest
+./gradlew :core:test:ui:wasmJsTest
 ```
 
 ## Module Structure
 
 ```
-core/test-ui/
+core/test/ui/
 ├── src/
 │   ├── commonMain/              # Multiplatform test framework
 │   │   └── kotlin/
@@ -136,13 +136,13 @@ Platform-specific test classes extend `CommonUiTests`:
   - Uses SQL.js fallback for database operations
   - Requires `CHROME_BIN` environment variable
 
-- **Android/Desktop**: Use `AbstractJvmUiTests` from `core/test-jvm`
+- **Android/Desktop**: Use `AbstractJvmUiTests` from `core/test/jvm`
   - Bridges `ComposeContentTestRule` to `ComposeUiTest`
   - Platform-specific implementations in `app/android` and `app/desktop`
 
 ### Test Cases
 
-Reusable test cases are defined in `core/test-ui/src/commonMain/kotlin/ui/cases/`:
+Reusable test cases are defined in `core/test/ui/src/commonMain/kotlin/ui/cases/`:
 - `CrudTestCase` - Create, read, update, delete operations
 - `EditTitleAfterCreateTestCase` - Title editing after note creation
 - `EditTitleAfterSaveTestCase` - Title editing after note save

@@ -401,7 +401,7 @@ self.addEventListener('install', (event) => {
 
 ### UI Tests
 
-The web app includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test-ui` module:
+The web app includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test/ui` module:
 
 **Location**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt`
 

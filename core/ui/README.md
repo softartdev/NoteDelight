@@ -270,7 +270,7 @@ Platform-specific code is minimal (window configuration, system bars, etc.).
 
 ## UI Testing
 
-UI testing is handled by the `core:test-jvm` module (see below).
+UI testing is handled by the `core:test:jvm` module (see below).
 
 JVM tests can test Compose UI:
 
@@ -394,11 +394,11 @@ fun AdaptiveScreen() {
 
 - **Used by**: `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
 - **Depends on**: `core:domain`, `core:presentation`, `core:data`, `androidx.paging:paging-compose`
-- **Tested by**: `core:test-jvm`
+- **Tested by**: `core:test:jvm`
 
 ## Building & Running
 
 ```bash
 ./gradlew :core:ui:build    # Build module
-./gradlew :core:core:test-ui     # Run tests
+./gradlew :core:ui:test     # Run tests
 ```

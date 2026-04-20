@@ -33,10 +33,10 @@ MODULE_PREFIXES=(
   ":feature:console:presentation:"
   ":feature:console:ui:"
   ":core:presentation:"
-  ":core:test:"
+  ":core:test:common:"
   ":core:ui:"
-  ":core:test-jvm:"
-  ":core:test-ui:"
+  ":core:test:jvm:"
+  ":core:test:ui:"
   ":thirdparty:app:cash:sqldelight:paging3:"
   ":app:ios-kit:"
 )

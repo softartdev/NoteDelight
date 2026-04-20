@@ -36,7 +36,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(projects.core.test)
+            implementation(projects.core.test.common)
             implementation(libs.room.testing)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)

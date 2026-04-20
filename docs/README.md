@@ -21,12 +21,12 @@ Each module has its own detailed README.md:
 - **[core/presentation/README.md](../core/presentation/README.md)** - Presentation layer (ViewModels)
 - **[core/data/db-sqldelight/README.md](../core/data/db-sqldelight/README.md)** - SQLDelight data implementation
 - **[core/data/db-room/README.md](../core/data/db-room/README.md)** - Room data implementation
-- **[core/test/README.md](../core/test/README.md)** - Shared test utilities
+- **[core/test/common/README.md](../core/test/common/README.md)** - Shared test utilities
 
 #### UI Modules
 - **[core/ui/README.md](../core/ui/README.md)** - Shared Compose UI
-- **[core/test-ui/README.md](../core/test-ui/README.md)** - Multiplatform Compose UI tests
-- **[core/test-jvm/README.md](../core/test-jvm/README.md)** - JVM-specific UI test utilities (Kaspresso-inspired)
+- **[core/test/ui/README.md](../core/test/ui/README.md)** - Multiplatform Compose UI tests
+- **[core/test/jvm/README.md](../core/test/jvm/README.md)** - JVM-specific UI test utilities (Kaspresso-inspired)
 
 #### App Modules
 - **[app/android/README.md](../app/android/README.md)** - Android application
