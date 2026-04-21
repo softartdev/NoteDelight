@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHostState
@@ -46,6 +45,7 @@ import com.softartdev.notedelight.presentation.main.NoteListResult
 import com.softartdev.notedelight.ui.Empty
 import com.softartdev.notedelight.ui.Error
 import com.softartdev.notedelight.ui.Loader
+import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.CREATE_NOTE_FAB_TAG
 import com.softartdev.notedelight.util.MAIN_SETTINGS_BUTTON_TAG
 import kotlinx.coroutines.flow.Flow
@@ -81,15 +81,12 @@ fun MainScreen(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
-                IconButton(
-                    modifier = Modifier.testTag(MAIN_SETTINGS_BUTTON_TAG),
+                TooltipIconButton(
+                    imageVector = Icons.Default.Settings,
                     onClick = { onAction(MainAction.OnSettingsClick) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(Res.string.settings)
-                    )
-                }
+                    testTag = MAIN_SETTINGS_BUTTON_TAG,
+                    label = stringResource(Res.string.settings),
+                )
             }
         )
     }, content = { paddingValues: PaddingValues ->

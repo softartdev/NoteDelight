@@ -11,8 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +33,7 @@ import com.softartdev.notedelight.presentation.signin.SignInAction
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
+import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
@@ -84,15 +83,12 @@ fun SignInScreenBody(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
-                IconButton(
-                    modifier = Modifier.testTag(SIGN_IN_SETTINGS_BUTTON_TAG),
+                TooltipIconButton(
+                    imageVector = Icons.Default.Settings,
                     onClick = { onAction(SignInAction.OnSettingsClick) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(Res.string.settings)
-                    )
-                }
+                    testTag = SIGN_IN_SETTINGS_BUTTON_TAG,
+                    label = stringResource(Res.string.settings),
+                )
             }
         )
     },

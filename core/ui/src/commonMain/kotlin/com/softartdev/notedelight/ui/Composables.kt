@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@file:OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 
 package com.softartdev.notedelight.ui
 
@@ -18,19 +18,27 @@ import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.PaneExpansionState
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -146,6 +154,27 @@ fun PasswordSaveButton(
     modifier = modifier.testTag(tag),
     onClick = onClick
 ) { Text(stringResource(Res.string.save)) }
+
+@Composable
+fun TooltipIconButton(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    onClick: () -> Unit,
+    testTag: String? = null,
+    label: String,
+) = TooltipBox(
+    modifier = modifier,
+    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+    tooltip = { PlainTooltip { Text(label) } },
+    state = rememberTooltipState(),
+    content = {
+        IconButton(
+            modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
+            content = { Icon(imageVector = imageVector, contentDescription = label) },
+            onClick = onClick,
+        )
+    },
+)
 
 @Composable
 fun ThreePaneScaffoldScope.VerticalPaneExpansionDragHandle(

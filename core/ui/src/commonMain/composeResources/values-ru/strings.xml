@@ -11,6 +11,7 @@
     <string name="note_delete_dialog_message">Вы уверены, что хотите удалить заметку?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="delete">Удалить</string>
     <string name="note_changes_not_saved_dialog_title">Изменения не сохранены</string>
     <string name="note_save_change_dialog_message">Сохранить изменения?</string>
     <string name="note_empty">Заметка пуста. Введите данные.</string>
@@ -34,7 +35,7 @@
     <string name="incorrect_password">Неверный пароль</string>
     <string name="empty_password">Пароль не должен быть пустым</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
-    <string name="label_empty_result">Список пуст</string>
+    <string name="label_empty_result">Пока нет заметок</string>
     <string name="loading">Загрузка</string>
     <string name="please_wait">Пожалуйста, подождите…</string>
     <string name="error_title">Ошибка</string>

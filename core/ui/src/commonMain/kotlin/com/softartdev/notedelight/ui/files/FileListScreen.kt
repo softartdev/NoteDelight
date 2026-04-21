@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.files.FilesResult
 import com.softartdev.notedelight.presentation.files.FilesViewModel
+import com.softartdev.notedelight.ui.TooltipIconButton
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.pref_title_file_list
 import org.jetbrains.compose.resources.stringResource
@@ -86,9 +87,11 @@ fun FileListScreenContent(
                 }
             },
             actions = {
-                IconButton(onClick = onPermClicked) {
-                    Icon(Icons.Filled.Folder, contentDescription = "Permissions")
-                }
+                TooltipIconButton(
+                    imageVector = Icons.Filled.Folder,
+                    onClick = onPermClicked,
+                    label = "Permissions",
+                )
             }
         )
     },

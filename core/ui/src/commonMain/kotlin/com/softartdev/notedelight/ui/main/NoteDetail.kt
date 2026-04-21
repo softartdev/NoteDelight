@@ -40,6 +40,7 @@ import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.MainDetailPanePlaceholder
+import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
 import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
@@ -118,33 +119,24 @@ fun NoteDetailBody(
                 }
             },
             actions = {
-                IconButton(
-                    modifier = Modifier.testTag(SAVE_NOTE_BUTTON_TAG),
+                TooltipIconButton(
+                    imageVector = Icons.Default.Save,
                     onClick = { onAction(NoteAction.Save(textState.text)) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Save,
-                        contentDescription = stringResource(Res.string.action_save_note)
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.testTag(EDIT_TITLE_BUTTON_TAG),
+                    testTag = SAVE_NOTE_BUTTON_TAG,
+                    label = stringResource(Res.string.action_save_note),
+                )
+                TooltipIconButton(
+                    imageVector = Icons.Default.Title,
                     onClick = { onAction(NoteAction.Edit) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Title,
-                        contentDescription = stringResource(Res.string.action_edit_title)
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.testTag(DELETE_NOTE_BUTTON_TAG),
+                    testTag = EDIT_TITLE_BUTTON_TAG,
+                    label = stringResource(Res.string.action_edit_title),
+                )
+                TooltipIconButton(
+                    imageVector = Icons.Default.Delete,
                     onClick = { onAction(NoteAction.Delete) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(Res.string.action_delete_note)
-                    )
-                }
+                    testTag = DELETE_NOTE_BUTTON_TAG,
+                    label = stringResource(Res.string.action_delete_note),
+                )
             }
         )
     },

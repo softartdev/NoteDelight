@@ -11,6 +11,7 @@
     <string name="note_delete_dialog_message">Are you sure want to delete the note?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="delete">Delete</string>
     <string name="note_changes_not_saved_dialog_title">Changes not saved</string>
     <string name="note_save_change_dialog_message">Do you want to save the changes?</string>
     <string name="note_empty">The note is empty. Enter the data.</string>
@@ -34,7 +35,7 @@
     <string name="incorrect_password">Incorrect password</string>
     <string name="empty_password">Password must not be empty</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
-    <string name="label_empty_result">The list is empty</string>
+    <string name="label_empty_result">No notes yet</string>
     <string name="loading">Loading</string>
     <string name="please_wait">Please wait…</string>
     <string name="error_title">Error</string>

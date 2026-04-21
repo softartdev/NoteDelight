@@ -2,7 +2,10 @@ package com.softartdev.notedelight.ui.dialog.note
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -13,8 +16,8 @@ import com.softartdev.notedelight.util.YES_BUTTON_TAG
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.action_delete_note
 import notedelight.core.ui.generated.resources.cancel
+import notedelight.core.ui.generated.resources.delete
 import notedelight.core.ui.generated.resources.note_delete_dialog_message
-import notedelight.core.ui.generated.resources.yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -30,10 +33,14 @@ fun DeleteDialog(onDeleteClick: () -> Unit, onDismiss: () -> Unit) = AlertDialog
     confirmButton = {
         Button(
             modifier = Modifier.testTag(YES_BUTTON_TAG),
-            onClick = onDeleteClick
-        ) { Text(stringResource(Res.string.yes)) }
+            onClick = onDeleteClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onError,
+            ),
+        ) { Text(stringResource(Res.string.delete)) }
     },
-    dismissButton = { Button(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) } },
+    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) } },
     onDismissRequest = onDismiss,
 )
 

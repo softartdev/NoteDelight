@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.feature.console.ui.ConsoleSurface
 import com.softartdev.notedelight.feature.console.ui.buffer.ConsoleBuffer
@@ -44,9 +45,13 @@ import com.softartdev.notedelight.feature.console.ui.buffer.ConsoleBufferBuilder
 import com.softartdev.notedelight.presentation.console.ConsoleAction
 import com.softartdev.notedelight.presentation.console.ConsoleResult
 import com.softartdev.notedelight.presentation.console.ConsoleViewModel
+import com.softartdev.notedelight.ui.TooltipIconButton
+import com.softartdev.notedelight.usecase.console.ConsoleTranscriptEntry
+import com.softartdev.notedelight.usecase.console.ConsoleTranscriptEntryKind
 import com.softartdev.notedelight.util.CONSOLE_TIPS_BUTTON_TAG
 import com.softartdev.notedelight.util.CONSOLE_TIP_AUTOFILL_PREFIX
 import com.softartdev.notedelight.util.CONSOLE_TIP_COPY_PREFIX
+import com.softartdev.theme.material3.PreferableMaterialTheme
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.autofill
 import notedelight.core.ui.generated.resources.console
@@ -93,15 +98,12 @@ fun ConsoleScreenBody(
                 },
                 actions = {
                     Box {
-                        IconButton(
+                        TooltipIconButton(
+                            imageVector = Icons.Default.MoreVert,
                             onClick = { tipsExpanded = true },
-                            modifier = Modifier.testTag(CONSOLE_TIPS_BUTTON_TAG),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = stringResource(Res.string.console_tips),
-                            )
-                        }
+                            testTag = CONSOLE_TIPS_BUTTON_TAG,
+                            label = stringResource(Res.string.console_tips),
+                        )
                         DropdownMenu(
                             expanded = tipsExpanded,
                             onDismissRequest = { tipsExpanded = false },
@@ -206,4 +208,40 @@ fun ConsolePreferences(
             modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 8.dp),
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewConsoleScreenBody() = PreferableMaterialTheme {
+    ConsoleScreenBody(
+        result = ConsoleResult(
+            transcript = listOf(
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.COMMAND,
+                    text = "PRAGMA cipher_version;",
+                ),
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.OUTPUT,
+                    text = "4.6.1 community",
+                ),
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.COMMAND,
+                    text = "SELECT sqlite3mc_version();",
+                ),
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.ERROR,
+                    text = "no such function: sqlite3mc_version",
+                ),
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.COMMAND,
+                    text = "SELECT name FROM sqlite_master WHERE type = 'table';",
+                ),
+                ConsoleTranscriptEntry(
+                    kind = ConsoleTranscriptEntryKind.OUTPUT,
+                    text = "note",
+                ),
+            ),
+            input = "SELECT COUNT(*) FROM note;",
+        ),
+    )
 }
