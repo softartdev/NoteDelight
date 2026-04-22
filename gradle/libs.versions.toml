@@ -1,6 +1,6 @@
 [versions]
 jdk = "17"
-agp = "9.1.1"
+agp = "9.2.0"
 kotlin = "2.3.20"
 compileSdk = "37"
 targetSdk = "37"
