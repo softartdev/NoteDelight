@@ -8,6 +8,8 @@ import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricCapability
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.model.SettingsCategory
@@ -30,6 +32,7 @@ import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
@@ -67,6 +70,7 @@ class AdaptiveInteractorTest {
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
     private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val revealFileListUseCase = RevealFileListUseCase()
     private val adaptiveInteractor = AdaptiveInteractor()
@@ -110,6 +114,7 @@ class AdaptiveInteractorTest {
         settingsViewModel = SettingsViewModel(
             safeRepo = mockSafeRepo,
             checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
+            checkPasswordUseCase = CheckPasswordUseCase(mockSafeRepo),
             exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
             importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
             appVersionUseCase = mockAppVersionUseCase,
@@ -117,6 +122,7 @@ class AdaptiveInteractorTest {
             router = mockRouter,
             revealFileListUseCase = revealFileListUseCase,
             localeInteractor = mockLocaleInteractor,
+            biometricInteractor = mockBiometricInteractor,
             adaptiveInteractor = adaptiveInteractor,
             coroutineDispatchers = coroutineDispatchers,
         )
@@ -125,11 +131,12 @@ class AdaptiveInteractorTest {
         Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
         Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
+        Mockito.`when`(mockBiometricInteractor.capability()).thenReturn(BiometricCapability(false, false))
     }
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor, mockAppVersionUseCase)
+        Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockLocaleInteractor, mockAppVersionUseCase, mockBiometricInteractor)
         Logger.setLogWriters()
     }
 

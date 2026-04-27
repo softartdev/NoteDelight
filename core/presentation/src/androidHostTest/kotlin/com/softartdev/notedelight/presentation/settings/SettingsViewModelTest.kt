@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
+import com.softartdev.notedelight.interactor.BiometricCapability
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -16,6 +18,7 @@ import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
@@ -45,11 +48,13 @@ class SettingsViewModelTest {
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
     private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
     private val settingsViewModel = SettingsViewModel(
         safeRepo = mockSafeRepo,
         checkSqlCipherVersionUseCase = checkSqlCipherVersionUseCase,
+        checkPasswordUseCase = CheckPasswordUseCase(mockSafeRepo),
         exportDatabaseUseCase = ExportDatabaseUseCase(mockSafeRepo),
         importDatabaseUseCase = ImportDatabaseUseCase(mockSafeRepo),
         appVersionUseCase = mockAppVersionUseCase,
@@ -57,13 +62,14 @@ class SettingsViewModelTest {
         router = mockRouter,
         revealFileListUseCase = RevealFileListUseCase(),
         localeInteractor = mockLocaleInteractor,
+        biometricInteractor = mockBiometricInteractor,
         adaptiveInteractor = adaptiveInteractor,
         coroutineDispatchers = coroutineDispatchers,
     )
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase)
+        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase, mockBiometricInteractor)
     }
 
     @Test
@@ -83,6 +89,7 @@ class SettingsViewModelTest {
     fun refreshUpdatesSwitches() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
         Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        Mockito.`when`(mockBiometricInteractor.capability()).thenReturn(BiometricCapability(false, false))
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.onAction(SettingsAction.Refresh)
@@ -100,6 +107,7 @@ class SettingsViewModelTest {
         val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(platformSQLiteState)
         Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        Mockito.`when`(mockBiometricInteractor.capability()).thenReturn(BiometricCapability(false, false))
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.updateSwitches()

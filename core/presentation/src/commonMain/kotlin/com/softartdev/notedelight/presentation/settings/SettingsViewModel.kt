@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -13,6 +14,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
+import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
@@ -29,6 +31,7 @@ import kotlinx.coroutines.withContext
 class SettingsViewModel(
     private val safeRepo: SafeRepo,
     private val checkSqlCipherVersionUseCase: CheckSqlCipherVersionUseCase,
+    private val checkPasswordUseCase: CheckPasswordUseCase,
     private val exportDatabaseUseCase: ExportDatabaseUseCase,
     private val importDatabaseUseCase: ImportDatabaseUseCase,
     private val appVersionUseCase: AppVersionUseCase,
@@ -36,6 +39,7 @@ class SettingsViewModel(
     private val router: Router,
     private val revealFileListUseCase: RevealFileListUseCase,
     private val localeInteractor: LocaleInteractor,
+    private val biometricInteractor: BiometricInteractor,
     private val adaptiveInteractor: AdaptiveInteractor,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
@@ -62,6 +66,7 @@ class SettingsViewModel(
         is SettingsAction.ChangeTheme -> changeTheme()
         is SettingsAction.ChangeLanguage -> changeLanguage()
         is SettingsAction.ChangeEncryption -> changeEncryption(action.checked)
+        is SettingsAction.ChangeBiometric -> changeBiometric(action.checked, action.password)
         is SettingsAction.ChangePassword -> changePassword()
         is SettingsAction.ShowCipherVersion -> showCipherVersion()
         is SettingsAction.ShowDatabasePath -> showDatabasePath()
@@ -76,8 +81,20 @@ class SettingsViewModel(
         mutableStateFlow.update(SettingsResult::showLoading)
         try {
             mutableStateFlow.update { result ->
+                val biometricCapability = biometricInteractor.capability()
+                val biometricEnabled = biometricInteractor.biometricEnabled
+                if (biometricEnabled && (!biometricCapability.available || !biometricCapability.enrolled)) {
+                    biometricInteractor.biometricEnabled = false
+                    snackbarInteractor.showMessage(
+                        SnackbarMessage.Simple("Biometrics were disabled because device capability changed.")
+                    )
+                }
                 result.copy(
                     encryption = dbIsEncrypted,
+                    biometricEnabled = biometricInteractor.biometricEnabled,
+                    biometricAvailable = biometricCapability.available,
+                    biometricEnrolled = biometricCapability.enrolled,
+                    biometricNeedsPasswordConfirmation = !biometricInteractor.biometricConfirmed,
                     language = localeInteractor.languageEnum,
                     appVersion = appVersionUseCase.invoke()
                 )
@@ -144,6 +161,45 @@ class SettingsViewModel(
             }
         } catch (e: Throwable) {
             handleError(e) { "error changing password" }
+        } finally {
+            mutableStateFlow.update(SettingsResult::hideLoading)
+            CountingIdlingRes.decrement()
+        }
+    }
+
+    private fun changeBiometric(checked: Boolean, password: String?) = viewModelScope.launch {
+        CountingIdlingRes.increment()
+        mutableStateFlow.update(SettingsResult::showLoading)
+        try {
+            val capability = biometricInteractor.capability()
+            when {
+                !checked -> biometricInteractor.biometricEnabled = false
+                !capability.available || !capability.enrolled -> {
+                    biometricInteractor.biometricEnabled = false
+                    snackbarInteractor.showMessage(SnackbarMessage.Simple("Biometrics are not available on this device."))
+                }
+                !dbIsEncrypted -> {
+                    biometricInteractor.biometricEnabled = false
+                    snackbarInteractor.showMessage(
+                        SnackbarMessage.Simple("Enable password protection before turning on biometrics.")
+                    )
+                }
+                !biometricInteractor.biometricConfirmed -> {
+                    if (password.isNullOrEmpty()) {
+                        snackbarInteractor.showMessage(SnackbarMessage.Simple("Confirm your password to enable biometrics."))
+                    } else if (checkPasswordUseCase(password)) {
+                        biometricInteractor.biometricConfirmed = true
+                        biometricInteractor.biometricEnabled = true
+                    } else {
+                        biometricInteractor.biometricEnabled = false
+                        snackbarInteractor.showMessage(SnackbarMessage.Simple("Incorrect password. Biometrics remain off."))
+                    }
+                }
+                else -> biometricInteractor.biometricEnabled = true
+            }
+            updateSwitches()
+        } catch (e: Throwable) {
+            handleError(e) { "error changing biometrics" }
         } finally {
             mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()

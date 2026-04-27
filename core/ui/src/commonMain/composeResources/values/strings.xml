@@ -19,6 +19,9 @@
     <string name="security">Security</string>
     <string name="pref_title_enable_encryption">Enable encryption</string>
     <string name="pref_title_set_password">Set password</string>
+    <string name="pref_title_enable_biometrics">Enable biometrics</string>
+    <string name="pref_subtitle_biometrics_unavailable">Biometrics are unavailable on this device</string>
+    <string name="pref_subtitle_biometrics_not_enrolled">Enroll a biometric to use this option</string>
     <string name="pref_title_check_cipher_version">Check SQLCipher version</string>
     <string name="pref_title_source_code">Source code</string>
     <string name="pref_title_version">Version</string>
@@ -41,6 +44,7 @@
     <string name="error_title">Error</string>
     <string name="error_message">There was a problem loading the note, please try again!</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
     <string name="retry">Retry</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="settings">Settings</string>

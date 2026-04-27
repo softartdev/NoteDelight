@@ -6,6 +6,10 @@ import com.softartdev.notedelight.model.SettingsCategory
 data class SettingsResult(
     val loading: Boolean = false,
     val encryption: Boolean = false,
+    val biometricEnabled: Boolean = false,
+    val biometricAvailable: Boolean = false,
+    val biometricEnrolled: Boolean = false,
+    val biometricNeedsPasswordConfirmation: Boolean = true,
     val fileListVisible: Boolean = false,
     val language: LanguageEnum = LanguageEnum.ENGLISH,
     val appVersion: String? = null,
@@ -23,6 +27,7 @@ sealed interface SettingsAction {
     data object ChangeTheme : SettingsAction
     data object ChangeLanguage : SettingsAction
     data class ChangeEncryption(val checked: Boolean) : SettingsAction
+    data class ChangeBiometric(val checked: Boolean, val password: String? = null) : SettingsAction
     data object ChangePassword : SettingsAction
     data object ShowCipherVersion : SettingsAction
     data object ShowDatabasePath : SettingsAction

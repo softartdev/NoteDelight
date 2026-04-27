@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -31,6 +32,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
@@ -61,6 +63,7 @@ import com.softartdev.notedelight.presentation.settings.SettingsResult
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.ui.NavBackHandler
+import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.SettingsDetailPanePlaceholder
 import com.softartdev.notedelight.ui.icon.FileLock
 import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
@@ -75,7 +78,10 @@ import com.softartdev.theme.material3.ThemePreferenceItem
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.language
 import notedelight.core.ui.generated.resources.pref_subtitle_open_github
+import notedelight.core.ui.generated.resources.pref_subtitle_biometrics_not_enrolled
+import notedelight.core.ui.generated.resources.pref_subtitle_biometrics_unavailable
 import notedelight.core.ui.generated.resources.pref_title_check_cipher_version
+import notedelight.core.ui.generated.resources.pref_title_enable_biometrics
 import notedelight.core.ui.generated.resources.pref_title_enable_encryption
 import notedelight.core.ui.generated.resources.pref_title_export_db
 import notedelight.core.ui.generated.resources.pref_title_file_list
@@ -84,6 +90,10 @@ import notedelight.core.ui.generated.resources.pref_title_set_password
 import notedelight.core.ui.generated.resources.pref_title_show_db_path
 import notedelight.core.ui.generated.resources.pref_title_source_code
 import notedelight.core.ui.generated.resources.pref_title_version
+import notedelight.core.ui.generated.resources.cancel
+import notedelight.core.ui.generated.resources.confirm_password_dialog_title
+import notedelight.core.ui.generated.resources.enter_password
+import notedelight.core.ui.generated.resources.ok
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 
@@ -181,6 +191,8 @@ private fun AppearancePreferences(result: SettingsResult, onAction: (SettingsAct
 
 @Composable
 private fun SecurityPreferences(result: SettingsResult, onAction: (SettingsAction) -> Unit) {
+    val showBiometricPasswordDialog = remember { mutableStateOf(false) }
+    val biometricPassword = remember { mutableStateOf("") }
     val enableEncryptionPrefTitle = stringResource(Res.string.pref_title_enable_encryption)
     Preference(
         modifier = Modifier.semantics {
@@ -204,10 +216,68 @@ private fun SecurityPreferences(result: SettingsResult, onAction: (SettingsActio
         onClick = { onAction(SettingsAction.ChangePassword) }
     )
     Preference(
+        title = stringResource(Res.string.pref_title_enable_biometrics),
+        vector = Icons.Default.Password,
+        onClick = {
+            when {
+                result.biometricEnabled -> onAction(SettingsAction.ChangeBiometric(checked = false))
+                result.biometricNeedsPasswordConfirmation -> showBiometricPasswordDialog.value = true
+                else -> onAction(SettingsAction.ChangeBiometric(checked = true))
+            }
+        },
+        secondaryText = when {
+            !result.biometricAvailable -> ({ Text(stringResource(Res.string.pref_subtitle_biometrics_unavailable)) })
+            !result.biometricEnrolled -> ({ Text(stringResource(Res.string.pref_subtitle_biometrics_not_enrolled)) })
+            else -> null
+        }
+    ) {
+        Switch(
+            checked = result.biometricEnabled,
+            enabled = result.biometricAvailable && result.biometricEnrolled,
+            onCheckedChange = { checked ->
+                if (checked && result.biometricNeedsPasswordConfirmation) {
+                    showBiometricPasswordDialog.value = true
+                } else {
+                    onAction(SettingsAction.ChangeBiometric(checked = checked))
+                }
+            }
+        )
+    }
+    Preference(
         title = stringResource(Res.string.pref_title_check_cipher_version),
         vector = Icons.Filled.FileLock,
         onClick = { onAction(SettingsAction.ShowCipherVersion) }
     )
+    if (showBiometricPasswordDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showBiometricPasswordDialog.value = false },
+            title = { Text(stringResource(Res.string.confirm_password_dialog_title)) },
+            text = {
+                PasswordField(
+                    passwordState = biometricPassword,
+                    label = stringResource(Res.string.enter_password),
+                    contentDescription = stringResource(Res.string.enter_password),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onAction(SettingsAction.ChangeBiometric(checked = true, password = biometricPassword.value))
+                    showBiometricPasswordDialog.value = false
+                    biometricPassword.value = ""
+                }) {
+                    Text(stringResource(Res.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showBiometricPasswordDialog.value = false
+                    biometricPassword.value = ""
+                }) {
+                    Text(stringResource(Res.string.cancel))
+                }
+            }
+        )
+    }
 }
 
 @Composable
