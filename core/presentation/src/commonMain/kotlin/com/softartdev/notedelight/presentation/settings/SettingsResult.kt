@@ -7,6 +7,8 @@ data class SettingsResult(
     val loading: Boolean = false,
     val encryption: Boolean = false,
     val fileListVisible: Boolean = false,
+    val biometricSupported: Boolean = false,
+    val biometricEnabled: Boolean = false,
     val language: LanguageEnum = LanguageEnum.ENGLISH,
     val appVersion: String? = null,
     val selectedCategory: SettingsCategory? = null,
@@ -28,6 +30,7 @@ sealed interface SettingsAction {
     data object ShowDatabasePath : SettingsAction
     data class ExportDatabase(val destinationPath: String?) : SettingsAction
     data class ImportDatabase(val sourcePath: String?) : SettingsAction
+    data class ToggleBiometric(val enabled: Boolean) : SettingsAction
     data object ShowFileList : SettingsAction
     data object RevealFileList : SettingsAction
 }

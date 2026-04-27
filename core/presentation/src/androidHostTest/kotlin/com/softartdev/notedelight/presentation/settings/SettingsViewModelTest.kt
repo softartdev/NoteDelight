@@ -45,6 +45,7 @@ class SettingsViewModelTest {
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
     private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
+    private val mockBiometricSettingsGateway = Mockito.mock(BiometricSettingsGateway::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
     private val settingsViewModel = SettingsViewModel(
@@ -59,6 +60,7 @@ class SettingsViewModelTest {
         localeInteractor = mockLocaleInteractor,
         adaptiveInteractor = adaptiveInteractor,
         coroutineDispatchers = coroutineDispatchers,
+        biometricSettingsGateway = mockBiometricSettingsGateway,
     )
 
     @After
@@ -83,6 +85,8 @@ class SettingsViewModelTest {
     fun refreshUpdatesSwitches() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
         Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        Mockito.`when`(mockBiometricSettingsGateway.isSupported()).thenReturn(true)
+        Mockito.`when`(mockBiometricSettingsGateway.isEnabled()).thenReturn(true)
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.onAction(SettingsAction.Refresh)
@@ -91,6 +95,8 @@ class SettingsViewModelTest {
                 result = awaitItem()
             }
             assertTrue(result.encryption)
+            assertTrue(result.biometricSupported)
+            assertTrue(result.biometricEnabled)
             cancelAndIgnoreRemainingEvents()
         }
         Mockito.verifyNoMoreInteractions(mockRouter)
@@ -100,6 +106,7 @@ class SettingsViewModelTest {
         val platformSQLiteState = if (encryption) ENCRYPTED else UNENCRYPTED
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(platformSQLiteState)
         Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        Mockito.`when`(mockBiometricSettingsGateway.isSupported()).thenReturn(false)
         settingsViewModel.stateFlow.test {
             assertFalse(awaitItem().loading)
             settingsViewModel.updateSwitches()
@@ -249,5 +256,36 @@ class SettingsViewModelTest {
             settingsViewModel.onAction(SettingsAction.RevealFileList)
         }
         assertFalse(settingsViewModel.stateFlow.value.fileListVisible)
+    }
+
+    @Test
+    fun biometricEnableDisableLifecycle() = runTest {
+        Mockito.`when`(mockBiometricSettingsGateway.isSupported()).thenReturn(true)
+        Mockito.`when`(mockBiometricSettingsGateway.isEnabled()).thenReturn(false)
+        settingsViewModel.updateSwitches()
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+        assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ToggleBiometric(true))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+        Mockito.verify(mockBiometricSettingsGateway).setEnabled(true)
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ToggleBiometric(false))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+        Mockito.verify(mockBiometricSettingsGateway).setEnabled(false)
+        assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)
+    }
+
+    @Test
+    fun biometricUnsupportedDeviceBehavior() = runTest {
+        Mockito.`when`(mockBiometricSettingsGateway.isSupported()).thenReturn(false)
+
+        settingsViewModel.onAction(SettingsAction.ToggleBiometric(true))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(settingsViewModel.stateFlow.value.biometricSupported)
+        assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)
+        Mockito.verify(mockBiometricSettingsGateway, Mockito.never()).setEnabled(true)
     }
 }

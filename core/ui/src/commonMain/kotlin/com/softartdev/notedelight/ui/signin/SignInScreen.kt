@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -35,6 +36,7 @@ import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
+import com.softartdev.notedelight.util.SIGN_IN_BIOMETRIC_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_VISIBILITY_TAG
@@ -66,7 +68,8 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
             else -> Res.string.enter_password
         },
         isError = signInResultState.value.isError,
-        onAction = signInViewModel::onAction
+        onAction = signInViewModel::onAction,
+        showBiometricButton = signInViewModel.isBiometricAvailable,
     )
 }
 
@@ -77,6 +80,7 @@ fun SignInScreenBody(
     passwordState: MutableState<String> = mutableStateOf("password"),
     labelResource: StringResource = Res.string.enter_password,
     isError: Boolean = false,
+    showBiometricButton: Boolean = false,
     onAction: (SignInAction) -> Unit = {},
 ) = Scaffold(
     topBar = {
@@ -117,6 +121,17 @@ fun SignInScreenBody(
                     .padding(top = 24.dp),
                 onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             ) { Text(text = stringResource(Res.string.sign_in)) }
+            if (showBiometricButton) {
+                OutlinedButton(
+                    modifier = Modifier
+                        .testTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    onClick = { onAction(SignInAction.OnBiometricSignInClick) },
+                ) {
+                    Text(text = "Use biometric")
+                }
+            }
         }
     }
 }

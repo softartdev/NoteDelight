@@ -29,12 +29,18 @@ class SignInViewModelTest {
     private val mockCheckPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockAutofillManager = Mockito.mock(AutofillManager::class.java)
+    private val mockBiometricAuthenticator = Mockito.mock(BiometricAuthenticator::class.java)
     
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
     fun setUp() {
-        signInViewModel = SignInViewModel(mockCheckPasswordUseCase, mockRouter)
+        Mockito.`when`(mockBiometricAuthenticator.isAvailable()).thenReturn(false)
+        signInViewModel = SignInViewModel(
+            checkPasswordUseCase = mockCheckPasswordUseCase,
+            router = mockRouter,
+            biometricAuthenticator = mockBiometricAuthenticator,
+        )
         signInViewModel.autofillManager = mockAutofillManager
     }
 
@@ -113,5 +119,54 @@ class SignInViewModelTest {
             )
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun biometricAvailableSuccess() = runTest {
+        Mockito.`when`(mockBiometricAuthenticator.isAvailable()).thenReturn(true)
+        Mockito.`when`(mockBiometricAuthenticator.authenticate()).thenReturn(BiometricAuthResult.Success)
+
+        signInViewModel.onAction(SignInAction.OnBiometricSignInClick)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verify(mockAutofillManager).commit()
+        Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
+    }
+
+    @Test
+    fun biometricAvailableUserCancel() = runTest {
+        Mockito.`when`(mockBiometricAuthenticator.isAvailable()).thenReturn(true)
+        Mockito.`when`(mockBiometricAuthenticator.authenticate()).thenReturn(BiometricAuthResult.Cancelled)
+
+        signInViewModel.onAction(SignInAction.OnBiometricSignInClick)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verifyNoInteractions(mockRouter)
+    }
+
+    @Test
+    fun biometricHardFailure() = runTest {
+        val throwable = IllegalStateException("auth failed")
+        Mockito.`when`(mockBiometricAuthenticator.isAvailable()).thenReturn(true)
+        Mockito.`when`(mockBiometricAuthenticator.authenticate()).thenReturn(BiometricAuthResult.Error(throwable))
+
+        signInViewModel.onAction(SignInAction.OnBiometricSignInClick)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verify(mockAutofillManager).cancel()
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.ErrorDialog(message = throwable.message))
+    }
+
+    @Test
+    fun biometricUnavailableFallbackToPassword() = runTest {
+        Mockito.`when`(mockBiometricAuthenticator.isAvailable()).thenReturn(false)
+        signInViewModel.onAction(SignInAction.OnBiometricSignInClick)
+
+        val pass = StubEditable("pass")
+        Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
+        signInViewModel.onAction(SignInAction.OnSignInClick(pass))
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
     }
 }

@@ -7,12 +7,16 @@ import com.softartdev.notedelight.presentation.note.DeleteViewModel
 import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
+import com.softartdev.notedelight.presentation.settings.BiometricSettingsGateway
+import com.softartdev.notedelight.presentation.settings.NoOpBiometricSettingsGateway
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
 import com.softartdev.notedelight.presentation.settings.security.enter.EnterViewModel
+import com.softartdev.notedelight.presentation.signin.BiometricAuthenticator
+import com.softartdev.notedelight.presentation.signin.NoOpBiometricAuthenticator
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
@@ -49,6 +53,8 @@ val daoModule: Module = module {
 }
 
 val useCaseModule: Module = module {
+    factory<BiometricAuthenticator> { NoOpBiometricAuthenticator }
+    factory<BiometricSettingsGateway> { NoOpBiometricSettingsGateway }
     factoryOf(::ChangePasswordUseCase)
     factoryOf(::CheckPasswordUseCase)
     factoryOf(::CheckSqlCipherVersionUseCase)

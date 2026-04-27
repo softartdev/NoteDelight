@@ -38,6 +38,7 @@ class SettingsViewModel(
     private val localeInteractor: LocaleInteractor,
     private val adaptiveInteractor: AdaptiveInteractor,
     private val coroutineDispatchers: CoroutineDispatchers,
+    private val biometricSettingsGateway: BiometricSettingsGateway = NoOpBiometricSettingsGateway,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SettingsViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<SettingsResult> = MutableStateFlow(
@@ -67,6 +68,7 @@ class SettingsViewModel(
         is SettingsAction.ShowDatabasePath -> showDatabasePath()
         is SettingsAction.ExportDatabase -> exportDatabase(action.destinationPath)
         is SettingsAction.ImportDatabase -> importDatabase(action.sourcePath)
+        is SettingsAction.ToggleBiometric -> toggleBiometric(action.enabled)
         is SettingsAction.ShowFileList -> showFileList()
         is SettingsAction.RevealFileList -> revealFileList()
     }
@@ -78,6 +80,9 @@ class SettingsViewModel(
             mutableStateFlow.update { result ->
                 result.copy(
                     encryption = dbIsEncrypted,
+                    biometricSupported = biometricSettingsGateway.isSupported(),
+                    biometricEnabled = biometricSettingsGateway.isSupported() &&
+                        biometricSettingsGateway.isEnabled(),
                     language = localeInteractor.languageEnum,
                     appVersion = appVersionUseCase.invoke()
                 )
@@ -220,6 +225,15 @@ class SettingsViewModel(
     }
 
     private fun showFileList() = router.navigate(route = AppNavGraph.FileList)
+
+    private fun toggleBiometric(enabled: Boolean) = viewModelScope.launch {
+        if (!biometricSettingsGateway.isSupported()) {
+            mutableStateFlow.update { it.copy(biometricSupported = false, biometricEnabled = false) }
+            return@launch
+        }
+        biometricSettingsGateway.setEnabled(enabled)
+        mutableStateFlow.update { it.copy(biometricSupported = true, biometricEnabled = enabled) }
+    }
 
     private fun revealFileList() {
         if (mutableStateFlow.value.fileListVisible) return

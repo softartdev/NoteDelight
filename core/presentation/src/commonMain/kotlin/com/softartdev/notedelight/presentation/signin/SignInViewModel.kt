@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
-    private val router: Router
+    private val router: Router,
+    private val biometricAuthenticator: BiometricAuthenticator = NoOpBiometricAuthenticator,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SignInViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(
@@ -22,10 +23,13 @@ class SignInViewModel(
     )
     val stateFlow: StateFlow<SignInResult> = mutableStateFlow
     var autofillManager: AutofillManager? = null
+    val isBiometricAvailable: Boolean
+        get() = biometricAuthenticator.isAvailable()
 
     fun onAction(action: SignInAction) = when (action) {
         is SignInAction.OnSettingsClick -> router.navigateClearingBackStack(AppNavGraph.Settings)
         is SignInAction.OnSignInClick -> signIn(action.pass)
+        is SignInAction.OnBiometricSignInClick -> signInWithBiometric()
     }
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
@@ -47,6 +51,29 @@ class SignInViewModel(
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
             mutableStateFlow.value = SignInResult.ShowSignInForm
         } finally {
+            CountingIdlingRes.decrement()
+        }
+    }
+
+    private fun signInWithBiometric() = viewModelScope.launch {
+        if (!biometricAuthenticator.isAvailable()) return@launch
+        CountingIdlingRes.increment()
+        mutableStateFlow.value = SignInResult.ShowProgress
+        try {
+            when (val result = biometricAuthenticator.authenticate()) {
+                BiometricAuthResult.Success -> {
+                    autofillManager?.commit()
+                    router.navigateClearingBackStack(AppNavGraph.Main)
+                }
+                BiometricAuthResult.Cancelled -> Unit
+                is BiometricAuthResult.Error -> {
+                    logger.e(result.throwable) { "Error during biometric sign in" }
+                    autofillManager?.cancel()
+                    router.navigate(route = AppNavGraph.ErrorDialog(message = result.throwable.message))
+                }
+            }
+        } finally {
+            mutableStateFlow.value = SignInResult.ShowSignInForm
             CountingIdlingRes.decrement()
         }
     }
