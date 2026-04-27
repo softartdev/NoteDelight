@@ -4,5 +4,6 @@ enum class SignInResult(val isError: Boolean = false) {
     ShowSignInForm,
     ShowProgress,
     ShowEmptyPassError(isError = true),
-    ShowIncorrectPassError(isError = true)
+    ShowIncorrectPassError(isError = true),
+    ShowBiometricError(isError = true),
 }

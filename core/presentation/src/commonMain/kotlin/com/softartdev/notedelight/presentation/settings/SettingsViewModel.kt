@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -37,6 +38,7 @@ class SettingsViewModel(
     private val revealFileListUseCase: RevealFileListUseCase,
     private val localeInteractor: LocaleInteractor,
     private val adaptiveInteractor: AdaptiveInteractor,
+    private val biometricInteractor: BiometricInteractor,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SettingsViewModel::class.simpleName.toString())
@@ -62,6 +64,7 @@ class SettingsViewModel(
         is SettingsAction.ChangeTheme -> changeTheme()
         is SettingsAction.ChangeLanguage -> changeLanguage()
         is SettingsAction.ChangeEncryption -> changeEncryption(action.checked)
+        is SettingsAction.ChangeBiometric -> changeBiometric(action.checked)
         is SettingsAction.ChangePassword -> changePassword()
         is SettingsAction.ShowCipherVersion -> showCipherVersion()
         is SettingsAction.ShowDatabasePath -> showDatabasePath()
@@ -78,6 +81,8 @@ class SettingsViewModel(
             mutableStateFlow.update { result ->
                 result.copy(
                     encryption = dbIsEncrypted,
+                    biometricEnabled = biometricInteractor.hasStoredPassword(),
+                    biometricAvailable = biometricInteractor.canAuthenticate(),
                     language = localeInteractor.languageEnum,
                     appVersion = appVersionUseCase.invoke()
                 )
@@ -131,6 +136,19 @@ class SettingsViewModel(
         } finally {
             mutableStateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
+        }
+    }
+
+    private fun changeBiometric(checked: Boolean) = viewModelScope.launch {
+        try {
+            if (checked) {
+                router.navigate(route = AppNavGraph.BiometricEnrollDialog)
+            } else {
+                biometricInteractor.clearStoredPassword()
+                mutableStateFlow.update { it.copy(biometricEnabled = false) }
+            }
+        } catch (e: Throwable) {
+            handleError(e) { "error toggling biometric" }
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -44,6 +45,7 @@ class SettingsViewModelTest {
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
@@ -58,12 +60,13 @@ class SettingsViewModelTest {
         revealFileListUseCase = RevealFileListUseCase(),
         localeInteractor = mockLocaleInteractor,
         adaptiveInteractor = adaptiveInteractor,
+        biometricInteractor = mockBiometricInteractor,
         coroutineDispatchers = coroutineDispatchers,
     )
 
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase)
+        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase, mockBiometricInteractor)
     }
 
     @Test

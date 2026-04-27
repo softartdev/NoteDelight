@@ -44,5 +44,8 @@ sealed interface AppNavGraph {
     data object ChangePasswordDialog : AppNavGraph
 
     @Serializable
+    data object BiometricEnrollDialog : AppNavGraph
+
+    @Serializable
     data class ErrorDialog(val message: String?) : AppNavGraph
 }

@@ -86,4 +86,14 @@
     <string name="console_input_placeholder">Введите SQL-запрос</string>
     <string name="console_run">Выполнить</string>
     <string name="autofill">Подставить</string>
+    <string name="pref_title_enable_biometric">Вход по биометрии</string>
+    <string name="biometric_prompt_title">Разблокировка заметок</string>
+    <string name="biometric_prompt_subtitle">Подтвердите биометрию для расшифровки пароля</string>
+    <string name="biometric_prompt_negative_button">Отмена</string>
+    <string name="biometric_signin_button">По биометрии</string>
+    <string name="biometric_enroll_dialog_title">Включить вход по биометрии</string>
+    <string name="biometric_enroll_dialog_subtitle">Подтвердите пароль, чтобы разрешить вход по биометрии.</string>
+    <string name="biometric_disabled_due_to_password_change">Вход по биометрии отключён — снова включите его в настройках.</string>
+    <string name="biometric_error">Не удалось пройти биометрию</string>
+    <string name="biometric_unavailable">Биометрия недоступна</string>
 </resources>
