@@ -16,6 +16,7 @@
     <string name="note_save_change_dialog_message">Do you want to save the changes?</string>
     <string name="note_empty">The note is empty. Enter the data.</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_in_with_biometrics">Sign in with biometrics</string>
     <string name="security">Security</string>
     <string name="pref_title_enable_encryption">Enable encryption</string>
     <string name="pref_title_set_password">Set password</string>
@@ -33,6 +34,7 @@
     <string name="enter_new_password">Enter new password</string>
     <string name="repeat_new_password">Repeat new password</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="biometric_auth_failed">Biometric auth failed. Use password.</string>
     <string name="empty_password">Password must not be empty</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="label_empty_result">No notes yet</string>

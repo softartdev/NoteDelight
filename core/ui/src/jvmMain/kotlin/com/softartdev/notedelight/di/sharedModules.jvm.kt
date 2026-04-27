@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.di
 
+import com.softartdev.notedelight.interactor.BiometricAuthService
+import com.softartdev.notedelight.interactor.JvmBiometricAuthService
 import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.JvmFileRepo
 import com.softartdev.notedelight.repository.JvmSafeRepo
@@ -19,4 +21,8 @@ actual val repoModule: Module = module {
 
 actual fun Module.factoryOfAppVersionUseCase(): KoinDefinition<AppVersionUseCase> = factoryOf(
     constructor = ::AppVersionUseCase
+)
+
+actual fun Module.singleOfBiometricAuthService(): KoinDefinition<BiometricAuthService> = factoryOf(
+    constructor = ::JvmBiometricAuthService
 )

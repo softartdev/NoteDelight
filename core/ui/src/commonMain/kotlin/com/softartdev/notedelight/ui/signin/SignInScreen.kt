@@ -34,6 +34,7 @@ import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.TooltipIconButton
+import com.softartdev.notedelight.util.SIGN_IN_BIOMETRIC_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
@@ -41,11 +42,13 @@ import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_VISIBILITY_TAG
 import com.softartdev.notedelight.util.SIGN_IN_SETTINGS_BUTTON_TAG
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.app_name
+import notedelight.core.ui.generated.resources.biometric_auth_failed
 import notedelight.core.ui.generated.resources.empty_password
 import notedelight.core.ui.generated.resources.enter_password
 import notedelight.core.ui.generated.resources.incorrect_password
 import notedelight.core.ui.generated.resources.settings
 import notedelight.core.ui.generated.resources.sign_in
+import notedelight.core.ui.generated.resources.sign_in_with_biometrics
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -58,11 +61,20 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         signInViewModel.autofillManager = autofillManager
     }
     SignInScreenBody(
-        showLoading = signInResultState.value == SignInResult.ShowProgress,
+        showLoading = signInResultState.value == SignInResult.ShowProgress ||
+            signInResultState.value == SignInResult.ShowBiometricInProgress,
+        showBiometricButton = signInResultState.value in setOf(
+            SignInResult.ShowBiometricAvailable,
+            SignInResult.ShowBiometricInProgress,
+            SignInResult.ShowBiometricSuccess,
+            SignInResult.ShowBiometricFailed,
+            SignInResult.ShowBiometricFallbackToPassword
+        ),
         passwordState = passwordState,
         labelResource = when (signInResultState.value) {
             SignInResult.ShowEmptyPassError -> Res.string.empty_password
             SignInResult.ShowIncorrectPassError -> Res.string.incorrect_password
+            SignInResult.ShowBiometricFailed -> Res.string.biometric_auth_failed
             else -> Res.string.enter_password
         },
         isError = signInResultState.value.isError,
@@ -74,6 +86,7 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
 @Composable
 fun SignInScreenBody(
     showLoading: Boolean = true,
+    showBiometricButton: Boolean = false,
     passwordState: MutableState<String> = mutableStateOf("password"),
     labelResource: StringResource = Res.string.enter_password,
     isError: Boolean = false,
@@ -117,6 +130,15 @@ fun SignInScreenBody(
                     .padding(top = 24.dp),
                 onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             ) { Text(text = stringResource(Res.string.sign_in)) }
+            if (showBiometricButton) {
+                Button(
+                    modifier = Modifier
+                        .testTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    onClick = { onAction(SignInAction.OnBiometricClick) },
+                ) { Text(text = stringResource(Res.string.sign_in_with_biometrics)) }
+            }
         }
     }
 }

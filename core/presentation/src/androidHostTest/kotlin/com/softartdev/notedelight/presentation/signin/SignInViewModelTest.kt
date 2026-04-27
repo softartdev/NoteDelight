@@ -5,6 +5,7 @@ import androidx.compose.ui.autofill.AutofillManager
 import app.cash.turbine.test
 import com.softartdev.notedelight.StubEditable
 import com.softartdev.notedelight.anyObject
+import com.softartdev.notedelight.interactor.BiometricAuthService
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -29,12 +30,14 @@ class SignInViewModelTest {
     private val mockCheckPasswordUseCase = Mockito.mock(CheckPasswordUseCase::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockAutofillManager = Mockito.mock(AutofillManager::class.java)
+    private val mockBiometricAuthService = Mockito.mock(BiometricAuthService::class.java)
     
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
     fun setUp() {
-        signInViewModel = SignInViewModel(mockCheckPasswordUseCase, mockRouter)
+        Mockito.`when`(mockBiometricAuthService.isBiometricAvailable()).thenReturn(false)
+        signInViewModel = SignInViewModel(mockCheckPasswordUseCase, mockRouter, mockBiometricAuthService)
         signInViewModel.autofillManager = mockAutofillManager
     }
 

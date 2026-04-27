@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.di
 
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.interactor.BiometricAuthService
 import com.softartdev.notedelight.presentation.files.FilesViewModel
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
@@ -49,6 +50,7 @@ val daoModule: Module = module {
 }
 
 val useCaseModule: Module = module {
+    singleOfBiometricAuthService()
     factoryOf(::ChangePasswordUseCase)
     factoryOf(::CheckPasswordUseCase)
     factoryOf(::CheckSqlCipherVersionUseCase)
@@ -82,3 +84,4 @@ val viewModelModule: Module = module {
 }
 
 expect fun Module.factoryOfAppVersionUseCase(): KoinDefinition<AppVersionUseCase>
+expect fun Module.singleOfBiometricAuthService(): KoinDefinition<BiometricAuthService>

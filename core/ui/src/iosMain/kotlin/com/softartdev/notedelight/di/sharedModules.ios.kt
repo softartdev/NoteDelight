@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.di
 
+import com.softartdev.notedelight.interactor.BiometricAuthService
+import com.softartdev.notedelight.interactor.IosBiometricAuthService
 import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.IosFileRepo
 import com.softartdev.notedelight.repository.IosSafeRepo
@@ -20,3 +22,6 @@ actual val repoModule: Module = module {
 actual fun Module.factoryOfAppVersionUseCase(): KoinDefinition<AppVersionUseCase> = factoryOf(
     constructor = ::AppVersionUseCase
 )
+
+actual fun Module.singleOfBiometricAuthService(): KoinDefinition<BiometricAuthService> =
+    factoryOf(constructor = ::IosBiometricAuthService)
