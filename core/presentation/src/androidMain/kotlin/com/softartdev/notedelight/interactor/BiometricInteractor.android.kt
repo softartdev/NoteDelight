@@ -1,11 +1,9 @@
 package com.softartdev.notedelight.interactor
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
-import android.os.Bundle
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
@@ -134,6 +132,9 @@ actual class BiometricInteractor(context: Context) {
         }
     }
 
+    /** Test/lifecycle hook: stops listening for Activity events. Not called automatically. */
+    fun dispose() = activityProvider.dispose()
+
     private fun existingKey(): SecretKey? {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         return keyStore.getKey(KEY_ALIAS, null) as? SecretKey
@@ -208,32 +209,6 @@ actual class BiometricInteractor(context: Context) {
     private sealed interface PromptOutcome {
         data class Authenticated(val cipher: Cipher) : PromptOutcome
         data class Failure(val result: BiometricResult) : PromptOutcome
-    }
-
-    private class CurrentActivityProvider(application: Application) : Application.ActivityLifecycleCallbacks {
-        var current: FragmentActivity? = null
-            private set
-
-        init {
-            application.registerActivityLifecycleCallbacks(this)
-        }
-
-        override fun onActivityResumed(activity: Activity) {
-            current = activity as? FragmentActivity
-        }
-
-        override fun onActivityPaused(activity: Activity) {
-            if (activity === current) current = null
-        }
-
-        override fun onActivityDestroyed(activity: Activity) {
-            if (activity === current) current = null
-        }
-
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
-        override fun onActivityStarted(activity: Activity) = Unit
-        override fun onActivityStopped(activity: Activity) = Unit
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
     }
 
     companion object {

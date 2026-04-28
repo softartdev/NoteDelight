@@ -23,7 +23,7 @@ class SignInViewModel(
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SignInViewModel::class.simpleName.toString())
 
-    private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(SignInResult())
+    private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(SignInResult.Form())
     val stateFlow: StateFlow<SignInResult> = mutableStateFlow
 
     var autofillManager: AutofillManager? = null
@@ -41,36 +41,28 @@ class SignInViewModel(
 
     private fun refreshBiometric() = viewModelScope.launch {
         val visible: Boolean = biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
-        mutableStateFlow.update { it.copy(biometricVisible = visible) }
+        mutableStateFlow.value = SignInResult.Form(biometricVisible = visible)
     }
 
     private fun signInWithBiometric(title: String, subtitle: String, negativeButton: String) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update { it.copy(state = SignInResult.State.ShowProgress) }
+        setState { SignInResult.Progress(it) }
         try {
             when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(title, subtitle, negativeButton)) {
-                is DecryptedPasswordResult.Success -> mutableStateFlow.update {
-                    it.copy(state = signInInternal(res.password))
-                }
+                is DecryptedPasswordResult.Success -> setState { signInInternal(res.password, it) }
                 is DecryptedPasswordResult.Failure -> when (res.result) {
-                    BiometricResult.Cancelled -> mutableStateFlow.update {
-                        it.copy(state = SignInResult.State.ShowSignInForm)
-                    }
+                    BiometricResult.Cancelled -> setState { SignInResult.Form(it) }
                     BiometricResult.Unavailable -> {
                         biometricInteractor.clearStoredPassword()
-                        mutableStateFlow.update {
-                            it.copy(state = SignInResult.State.ShowSignInForm, biometricVisible = false)
-                        }
+                        mutableStateFlow.value = SignInResult.Form(biometricVisible = false)
                     }
-                    else -> mutableStateFlow.update {
-                        it.copy(state = SignInResult.State.ShowBiometricError)
-                    }
+                    else -> setState { SignInResult.Error.Biometric(it) }
                 }
             }
         } catch (error: Throwable) {
             logger.e(error) { "Error during biometric sign in" }
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.update { it.copy(state = SignInResult.State.ShowSignInForm) }
+            setState { SignInResult.Form(it) }
         } finally {
             CountingIdlingRes.decrement()
         }
@@ -78,27 +70,31 @@ class SignInViewModel(
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update { it.copy(state = SignInResult.State.ShowProgress) }
+        setState { SignInResult.Progress(it) }
         try {
-            val nextState: SignInResult.State = signInInternal(pass)
-            mutableStateFlow.update { it.copy(state = nextState) }
+            setState { signInInternal(pass, it) }
         } catch (error: Throwable) {
             logger.e(error) { "Error during sign in" }
             autofillManager?.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.update { it.copy(state = SignInResult.State.ShowSignInForm) }
+            setState { SignInResult.Form(it) }
         } finally {
             CountingIdlingRes.decrement()
         }
     }
 
-    private suspend fun signInInternal(pass: CharSequence): SignInResult.State = when {
-        pass.isEmpty() -> SignInResult.State.ShowEmptyPassError
+    private suspend fun signInInternal(pass: CharSequence, biometricVisible: Boolean): SignInResult = when {
+        pass.isEmpty() -> SignInResult.Error.EmptyPass(biometricVisible)
         checkPasswordUseCase(pass) -> {
             autofillManager?.commit()
             router.navigateClearingBackStack(AppNavGraph.Main)
-            SignInResult.State.ShowSignInForm
+            SignInResult.Form(biometricVisible)
         }
-        else -> SignInResult.State.ShowIncorrectPassError
+        else -> SignInResult.Error.IncorrectPass(biometricVisible)
+    }
+
+    // Atomically rewrites the SignInResult while preserving the current biometricVisible flag.
+    private inline fun setState(transform: (biometricVisible: Boolean) -> SignInResult) {
+        mutableStateFlow.update { transform(it.biometricVisible) }
     }
 }

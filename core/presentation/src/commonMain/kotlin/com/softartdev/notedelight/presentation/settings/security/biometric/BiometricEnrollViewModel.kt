@@ -79,9 +79,14 @@ class BiometricEnrollViewModel(
                         is BiometricResult.Success -> withContext(coroutineDispatchers.main) {
                             router.popBackStack()
                         }
-                        else -> snackbarInteractor.showMessage(
-                            message = SnackbarMessage.Simple(result.toString())
-                        )
+                        else -> {
+                            val resultMessage: String = when (result) {
+                                is BiometricResult.Error -> result.message
+                                else -> result.toString()
+                            }
+                            logger.e { resultMessage }
+                            snackbarInteractor.showMessage(SnackbarMessage.Simple(resultMessage))
+                        }
                     }
                 }
                 else -> {

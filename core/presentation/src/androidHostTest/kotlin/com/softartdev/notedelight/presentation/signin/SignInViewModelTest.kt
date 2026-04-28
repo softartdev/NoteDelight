@@ -49,7 +49,7 @@ class SignInViewModelTest {
     @Test
     fun showSignInForm() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -57,7 +57,7 @@ class SignInViewModelTest {
     @Test
     fun onSettingsClick() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSettingsClick)
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Settings)
@@ -69,7 +69,7 @@ class SignInViewModelTest {
     @Test
     fun navMain() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
@@ -84,10 +84,10 @@ class SignInViewModelTest {
     @Test
     fun showEmptyPassError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSignInClick(pass = StubEditable("")))
-            assertEquals(SignInResult.State.ShowEmptyPassError, awaitItem().state)
+            assertTrue(awaitItem() is SignInResult.Error.EmptyPass)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -96,12 +96,12 @@ class SignInViewModelTest {
     @Test
     fun showIncorrectPassError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
             signInViewModel.onAction(SignInAction.OnSignInClick(pass))
-            assertEquals(SignInResult.State.ShowIncorrectPassError, awaitItem().state)
+            assertTrue(awaitItem() is SignInResult.Error.IncorrectPass)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -110,7 +110,7 @@ class SignInViewModelTest {
     @Test
     fun showError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
 
             val throwable = Throwable()
             Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
@@ -142,7 +142,7 @@ class SignInViewModelTest {
             .thenReturn(DecryptedPasswordResult.Success(pass))
         Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult(), awaitItem())
+            assertEquals(SignInResult.Form(), awaitItem())
             signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
             cancelAndIgnoreRemainingEvents()

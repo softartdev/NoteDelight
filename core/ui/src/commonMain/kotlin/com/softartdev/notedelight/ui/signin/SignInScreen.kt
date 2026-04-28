@@ -69,18 +69,17 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     LaunchedEffect(signInViewModel) {
         signInViewModel.onAction(SignInAction.RefreshBiometric)
     }
-    val result: SignInResult = signInResultState.value
     SignInScreenBody(
-        showLoading = result.state == SignInResult.State.ShowProgress,
+        showLoading = signInResultState.value is SignInResult.Progress,
         passwordState = passwordState,
-        labelResource = when (result.state) {
-            SignInResult.State.ShowEmptyPassError -> Res.string.empty_password
-            SignInResult.State.ShowIncorrectPassError -> Res.string.incorrect_password
-            SignInResult.State.ShowBiometricError -> Res.string.biometric_error
+        labelResource = when (signInResultState.value) {
+            is SignInResult.Error.EmptyPass -> Res.string.empty_password
+            is SignInResult.Error.IncorrectPass -> Res.string.incorrect_password
+            is SignInResult.Error.Biometric -> Res.string.biometric_error
             else -> Res.string.enter_password
         },
-        isError = result.isError,
-        biometricVisible = result.biometricVisible,
+        isError = signInResultState.value is SignInResult.Error,
+        biometricVisible = signInResultState.value.biometricVisible,
         onAction = signInViewModel::onAction,
     )
 }
