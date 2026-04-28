@@ -1,38 +1,42 @@
 package com.softartdev.notedelight.interactor
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.Bundle
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.coroutines.resume
-import androidx.core.content.edit
 
-actual class BiometricInteractor(
-    private val context: Context,
-    private val activityHolder: BiometricActivityHolder,
-) {
+actual class BiometricInteractor(context: Context) {
     private val logger = Logger.withTag("BiometricInteractor")
+    private val appContext: Context = context.applicationContext
+    private val activityProvider = CurrentActivityProvider(appContext as Application)
     private val prefs: SharedPreferences =
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    actual suspend fun canAuthenticate(): Boolean {
-        val bm = BiometricManager.from(context)
-        return bm.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
-    }
+    actual suspend fun canAuthenticate(): Boolean = BiometricManager
+        .from(appContext)
+        .canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
 
     actual fun hasStoredPassword(): Boolean =
         prefs.contains(KEY_CIPHERTEXT) && prefs.contains(KEY_IV)
@@ -43,21 +47,21 @@ actual class BiometricInteractor(
         subtitle: String,
         negativeButton: String,
     ): BiometricResult {
-        val activity = activityHolder.current()
+        val activity: FragmentActivity = activityProvider.current
             ?: return BiometricResult.Error("No active Activity for BiometricPrompt")
         clearStoredPassword()
-        val secretKey = try {
+        val secretKey: SecretKey = try {
             createOrGetKey()
         } catch (t: Throwable) {
             logger.e(t) { "Keystore failure" }
             return BiometricResult.Error(t.message ?: "Keystore failure")
         }
-        val cipher = Cipher.getInstance(TRANSFORMATION).apply {
+        val cipher: Cipher = Cipher.getInstance(TRANSFORMATION).apply {
             init(Cipher.ENCRYPT_MODE, secretKey)
         }
-        return when (val auth = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
+        return when (val auth: PromptOutcome = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
             is PromptOutcome.Authenticated -> {
-                val out = auth.cipher.doFinal(password.toString().toByteArray(Charsets.UTF_8))
+                val out: ByteArray = auth.cipher.doFinal(password.toString().toByteArray(Charsets.UTF_8))
                 prefs.edit {
                     putString(KEY_CIPHERTEXT, Base64.encodeToString(out, Base64.NO_WRAP))
                     putString(KEY_IV, Base64.encodeToString(auth.cipher.iv, Base64.NO_WRAP))
@@ -76,11 +80,12 @@ actual class BiometricInteractor(
         if (!hasStoredPassword()) {
             return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
         }
-        val activity = activityHolder.current() ?: return DecryptedPasswordResult.Failure(
-            result = BiometricResult.Error("No active Activity for BiometricPrompt")
-        )
-        val ciphertext: ByteArray? = Base64.decode(prefs.getString(KEY_CIPHERTEXT, null), Base64.NO_WRAP)
-        val iv: ByteArray? = Base64.decode(prefs.getString(KEY_IV, null), Base64.NO_WRAP)
+        val activity: FragmentActivity = activityProvider.current
+            ?: return DecryptedPasswordResult.Failure(
+                result = BiometricResult.Error("No active Activity for BiometricPrompt")
+            )
+        val ciphertext: ByteArray = Base64.decode(prefs.getString(KEY_CIPHERTEXT, null), Base64.NO_WRAP)
+        val iv: ByteArray = Base64.decode(prefs.getString(KEY_IV, null), Base64.NO_WRAP)
         val secretKey: SecretKey = try {
             existingKey() ?: run {
                 clearStoredPassword()
@@ -125,82 +130,110 @@ actual class BiometricInteractor(
             remove(KEY_IV)
         }
         runCatching {
-            val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
-            keyStore.load(null)
-            keyStore.deleteEntry(KEY_ALIAS)
+            KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }.deleteEntry(KEY_ALIAS)
         }
     }
 
     private fun existingKey(): SecretKey? {
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
-        keyStore.load(null)
+        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         return keyStore.getKey(KEY_ALIAS, null) as? SecretKey
     }
 
     private fun createOrGetKey(): SecretKey {
         existingKey()?.let { return it }
-        val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
-        val spec = KeyGenParameterSpec
+        val builder = KeyGenParameterSpec
             .Builder(KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
             .setUserAuthenticationRequired(true)
-            .setInvalidatedByBiometricEnrollment(true)
-            .build()
-        generator.init(spec)
+        // setInvalidatedByBiometricEnrollment requires API 24; minSdk is 23.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            builder.setInvalidatedByBiometricEnrollment(true)
+        }
+        val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
+        generator.init(builder.build())
         return generator.generateKey()
     }
 
+    // BiometricPrompt.authenticate(...) must run on the main thread; ViewModels invoke us from
+    // Dispatchers.IO, so we hop to Main.immediate before showing the prompt.
     private suspend fun runPrompt(
-        activity: AppCompatActivity,
+        activity: FragmentActivity,
         cipher: Cipher,
         title: String,
         subtitle: String,
         negativeButton: String,
-    ): PromptOutcome = suspendCancellableCoroutine { continuation ->
-        val executor = ContextCompat.getMainExecutor(context)
-        val callback = object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                val resultCipher = result.cryptoObject?.cipher
-                if (resultCipher == null) {
-                    continuation.resume(
+    ): PromptOutcome = withContext(Dispatchers.Main.immediate) {
+        suspendCancellableCoroutine { continuation ->
+            val executor = ContextCompat.getMainExecutor(appContext)
+            val callback = object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    val resultCipher: Cipher? = result.cryptoObject?.cipher
+                    val outcome: PromptOutcome = if (resultCipher == null) {
                         PromptOutcome.Failure(BiometricResult.Error("Missing CryptoObject"))
-                    )
-                } else {
-                    continuation.resume(PromptOutcome.Authenticated(resultCipher))
+                    } else {
+                        PromptOutcome.Authenticated(resultCipher)
+                    }
+                    if (continuation.isActive) continuation.resume(outcome)
+                }
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    val mapped: BiometricResult = when (errorCode) {
+                        BiometricPrompt.ERROR_USER_CANCELED,
+                        BiometricPrompt.ERROR_NEGATIVE_BUTTON,
+                        BiometricPrompt.ERROR_CANCELED -> BiometricResult.Cancelled
+                        BiometricPrompt.ERROR_NO_BIOMETRICS,
+                        BiometricPrompt.ERROR_HW_NOT_PRESENT,
+                        BiometricPrompt.ERROR_HW_UNAVAILABLE -> BiometricResult.Unavailable
+                        else -> BiometricResult.Error(errString.toString())
+                    }
+                    if (continuation.isActive) continuation.resume(PromptOutcome.Failure(mapped))
+                }
+                override fun onAuthenticationFailed() {
+                    // Wrong fingerprint; the system gives the user another try, so we wait for
+                    // the terminal onAuthenticationError callback before resuming.
                 }
             }
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                val mapped = when (errorCode) {
-                    BiometricPrompt.ERROR_USER_CANCELED,
-                    BiometricPrompt.ERROR_NEGATIVE_BUTTON,
-                    BiometricPrompt.ERROR_CANCELED -> BiometricResult.Cancelled
-                    BiometricPrompt.ERROR_NO_BIOMETRICS,
-                    BiometricPrompt.ERROR_HW_NOT_PRESENT,
-                    BiometricPrompt.ERROR_HW_UNAVAILABLE -> BiometricResult.Unavailable
-                    else -> BiometricResult.Error(errString.toString())
-                }
-                continuation.resume(PromptOutcome.Failure(mapped))
-            }
-            override fun onAuthenticationFailed() {
-                // Triggered on a wrong fingerprint; system gives the user another try, so do not
-                // resume the continuation here. The terminal callback is onAuthenticationError.
-            }
+            val prompt = BiometricPrompt(activity, executor, callback)
+            val info = BiometricPrompt.PromptInfo.Builder()
+                .setTitle(title)
+                .setSubtitle(subtitle)
+                .setNegativeButtonText(negativeButton)
+                .setAllowedAuthenticators(BIOMETRIC_STRONG)
+                .build()
+            continuation.invokeOnCancellation { runCatching { prompt.cancelAuthentication() } }
+            prompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))
         }
-        val prompt = BiometricPrompt(activity, executor, callback)
-        val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(title)
-            .setSubtitle(subtitle)
-            .setNegativeButtonText(negativeButton)
-            .setAllowedAuthenticators(BIOMETRIC_STRONG)
-            .build()
-        prompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))
-        continuation.invokeOnCancellation { runCatching { prompt.cancelAuthentication() } }
     }
 
     private sealed interface PromptOutcome {
         data class Authenticated(val cipher: Cipher) : PromptOutcome
         data class Failure(val result: BiometricResult) : PromptOutcome
+    }
+
+    private class CurrentActivityProvider(application: Application) : Application.ActivityLifecycleCallbacks {
+        var current: FragmentActivity? = null
+            private set
+
+        init {
+            application.registerActivityLifecycleCallbacks(this)
+        }
+
+        override fun onActivityResumed(activity: Activity) {
+            current = activity as? FragmentActivity
+        }
+
+        override fun onActivityPaused(activity: Activity) {
+            if (activity === current) current = null
+        }
+
+        override fun onActivityDestroyed(activity: Activity) {
+            if (activity === current) current = null
+        }
+
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+        override fun onActivityStarted(activity: Activity) = Unit
+        override fun onActivityStopped(activity: Activity) = Unit
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
     }
 
     companion object {

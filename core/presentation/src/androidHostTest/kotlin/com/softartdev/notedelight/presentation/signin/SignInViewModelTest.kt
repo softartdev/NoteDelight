@@ -49,7 +49,7 @@ class SignInViewModelTest {
     @Test
     fun showSignInForm() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -57,7 +57,7 @@ class SignInViewModelTest {
     @Test
     fun onSettingsClick() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSettingsClick)
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Settings)
@@ -69,7 +69,7 @@ class SignInViewModelTest {
     @Test
     fun navMain() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
@@ -84,10 +84,10 @@ class SignInViewModelTest {
     @Test
     fun showEmptyPassError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSignInClick(pass = StubEditable("")))
-            assertEquals(SignInResult.ShowEmptyPassError, awaitItem())
+            assertEquals(SignInResult.State.ShowEmptyPassError, awaitItem().state)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -96,12 +96,12 @@ class SignInViewModelTest {
     @Test
     fun showIncorrectPassError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
 
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
             signInViewModel.onAction(SignInAction.OnSignInClick(pass))
-            assertEquals(SignInResult.ShowIncorrectPassError, awaitItem())
+            assertEquals(SignInResult.State.ShowIncorrectPassError, awaitItem().state)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -110,7 +110,7 @@ class SignInViewModelTest {
     @Test
     fun showError() = runTest {
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
 
             val throwable = Throwable()
             Mockito.`when`(mockCheckPasswordUseCase(anyObject())).thenThrow(throwable)
@@ -127,10 +127,10 @@ class SignInViewModelTest {
     fun refreshBiometricVisibleWhenAvailable() = runTest {
         Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(true)
         Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(true)
-        signInViewModel.biometricVisibleFlow.test {
-            assertFalse(awaitItem())
+        signInViewModel.stateFlow.test {
+            assertFalse(awaitItem().biometricVisible)
             signInViewModel.onAction(SignInAction.RefreshBiometric)
-            assertTrue(awaitItem())
+            assertTrue(awaitItem().biometricVisible)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -142,7 +142,7 @@ class SignInViewModelTest {
             .thenReturn(DecryptedPasswordResult.Success(pass))
         Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
         signInViewModel.stateFlow.test {
-            assertEquals(SignInResult.ShowSignInForm, awaitItem())
+            assertEquals(SignInResult(), awaitItem())
             signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
             cancelAndIgnoreRemainingEvents()
@@ -153,8 +153,8 @@ class SignInViewModelTest {
     fun biometricSignInUnavailableClearsState() = runTest {
         Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject()))
             .thenReturn(DecryptedPasswordResult.Failure(BiometricResult.Unavailable))
-        signInViewModel.biometricVisibleFlow.test {
-            assertFalse(awaitItem())
+        signInViewModel.stateFlow.test {
+            assertFalse(awaitItem().biometricVisible)
             signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))
             Mockito.verify(mockBiometricInteractor).clearStoredPassword()
             cancelAndIgnoreRemainingEvents()

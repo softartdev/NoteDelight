@@ -22,8 +22,10 @@ import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -63,6 +65,16 @@ class SettingsViewModelTest {
         biometricInteractor = mockBiometricInteractor,
         coroutineDispatchers = coroutineDispatchers,
     )
+
+    @Before
+    fun stubBiometricDefaults() {
+        // Mockito returns null for unstubbed suspend methods; unboxing the null Boolean inside
+        // updateSwitches() would NPE and route to ErrorDialog, breaking unrelated tests.
+        runBlocking {
+            Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(false)
+        }
+        Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false)
+    }
 
     @After
     fun tearDown() = runTest {

@@ -61,8 +61,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SignInScreen(signInViewModel: SignInViewModel) {
     val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
-    val biometricVisibleState: State<Boolean> =
-        signInViewModel.biometricVisibleFlow.collectAsState()
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val autofillManager: AutofillManager? = LocalAutofillManager.current
     LaunchedEffect(key1 = signInViewModel, key2 = autofillManager) {
@@ -71,18 +69,19 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     LaunchedEffect(signInViewModel) {
         signInViewModel.onAction(SignInAction.RefreshBiometric)
     }
+    val result: SignInResult = signInResultState.value
     SignInScreenBody(
-        showLoading = signInResultState.value == SignInResult.ShowProgress,
+        showLoading = result.state == SignInResult.State.ShowProgress,
         passwordState = passwordState,
-        labelResource = when (signInResultState.value) {
-            SignInResult.ShowEmptyPassError -> Res.string.empty_password
-            SignInResult.ShowIncorrectPassError -> Res.string.incorrect_password
-            SignInResult.ShowBiometricError -> Res.string.biometric_error
+        labelResource = when (result.state) {
+            SignInResult.State.ShowEmptyPassError -> Res.string.empty_password
+            SignInResult.State.ShowIncorrectPassError -> Res.string.incorrect_password
+            SignInResult.State.ShowBiometricError -> Res.string.biometric_error
             else -> Res.string.enter_password
         },
-        isError = signInResultState.value.isError,
-        biometricVisible = biometricVisibleState.value,
-        onAction = signInViewModel::onAction
+        isError = result.isError,
+        biometricVisible = result.biometricVisible,
+        onAction = signInViewModel::onAction,
     )
 }
 

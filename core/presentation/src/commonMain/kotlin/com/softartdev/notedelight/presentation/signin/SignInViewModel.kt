@@ -5,29 +5,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.BiometricInteractor
-import com.softartdev.notedelight.interactor.DecryptedPasswordResult
 import com.softartdev.notedelight.interactor.BiometricResult
+import com.softartdev.notedelight.interactor.DecryptedPasswordResult
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.util.CountingIdlingRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val biometricInteractor: BiometricInteractor,
-    private val router: Router
+    private val router: Router,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SignInViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(
-        value = SignInResult.ShowSignInForm
-    )
-    val stateFlow: StateFlow<SignInResult> = mutableStateFlow
 
-    private val mutableBiometricVisibleFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val biometricVisibleFlow: StateFlow<Boolean> = mutableBiometricVisibleFlow
+    private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(SignInResult())
+    val stateFlow: StateFlow<SignInResult> = mutableStateFlow
 
     var autofillManager: AutofillManager? = null
 
@@ -38,34 +35,42 @@ class SignInViewModel(
         is SignInAction.OnBiometricClick -> signInWithBiometric(
             title = action.title,
             subtitle = action.subtitle,
-            negativeButton = action.negativeButton
+            negativeButton = action.negativeButton,
         )
     }
 
     private fun refreshBiometric() = viewModelScope.launch {
-        mutableBiometricVisibleFlow.value = biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
+        val visible: Boolean = biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
+        mutableStateFlow.update { it.copy(biometricVisible = visible) }
     }
 
     private fun signInWithBiometric(title: String, subtitle: String, negativeButton: String) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.value = SignInResult.ShowProgress
+        mutableStateFlow.update { it.copy(state = SignInResult.State.ShowProgress) }
         try {
             when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(title, subtitle, negativeButton)) {
-                is DecryptedPasswordResult.Success -> signInInternal(res.password)
+                is DecryptedPasswordResult.Success -> mutableStateFlow.update {
+                    it.copy(state = signInInternal(res.password))
+                }
                 is DecryptedPasswordResult.Failure -> when (res.result) {
-                    BiometricResult.Cancelled -> mutableStateFlow.value = SignInResult.ShowSignInForm
+                    BiometricResult.Cancelled -> mutableStateFlow.update {
+                        it.copy(state = SignInResult.State.ShowSignInForm)
+                    }
                     BiometricResult.Unavailable -> {
                         biometricInteractor.clearStoredPassword()
-                        mutableBiometricVisibleFlow.value = false
-                        mutableStateFlow.value = SignInResult.ShowSignInForm
+                        mutableStateFlow.update {
+                            it.copy(state = SignInResult.State.ShowSignInForm, biometricVisible = false)
+                        }
                     }
-                    else -> mutableStateFlow.value = SignInResult.ShowBiometricError
+                    else -> mutableStateFlow.update {
+                        it.copy(state = SignInResult.State.ShowBiometricError)
+                    }
                 }
             }
         } catch (error: Throwable) {
             logger.e(error) { "Error during biometric sign in" }
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.value = SignInResult.ShowSignInForm
+            mutableStateFlow.update { it.copy(state = SignInResult.State.ShowSignInForm) }
         } finally {
             CountingIdlingRes.decrement()
         }
@@ -73,26 +78,27 @@ class SignInViewModel(
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.value = SignInResult.ShowProgress
+        mutableStateFlow.update { it.copy(state = SignInResult.State.ShowProgress) }
         try {
-            mutableStateFlow.value = signInInternal(pass)
+            val nextState: SignInResult.State = signInInternal(pass)
+            mutableStateFlow.update { it.copy(state = nextState) }
         } catch (error: Throwable) {
             logger.e(error) { "Error during sign in" }
             autofillManager?.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.value = SignInResult.ShowSignInForm
+            mutableStateFlow.update { it.copy(state = SignInResult.State.ShowSignInForm) }
         } finally {
             CountingIdlingRes.decrement()
         }
     }
 
-    private suspend fun signInInternal(pass: CharSequence): SignInResult = when {
-        pass.isEmpty() -> SignInResult.ShowEmptyPassError
+    private suspend fun signInInternal(pass: CharSequence): SignInResult.State = when {
+        pass.isEmpty() -> SignInResult.State.ShowEmptyPassError
         checkPasswordUseCase(pass) -> {
             autofillManager?.commit()
             router.navigateClearingBackStack(AppNavGraph.Main)
-            SignInResult.ShowSignInForm
+            SignInResult.State.ShowSignInForm
         }
-        else -> SignInResult.ShowIncorrectPassError
+        else -> SignInResult.State.ShowIncorrectPassError
     }
 }
