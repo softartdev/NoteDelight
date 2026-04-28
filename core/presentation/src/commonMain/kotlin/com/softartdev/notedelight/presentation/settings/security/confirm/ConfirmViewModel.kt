@@ -31,7 +31,7 @@ class ConfirmViewModel(
         value = ConfirmResult()
     )
     val stateFlow: StateFlow<ConfirmResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
+    var autofillManager: AutofillManager? = null //TODO wrap in interactor for get rid of `androidx.compose` deps in presentation-modules
 
     fun onAction(action: ConfirmAction) = when (action) {
         is ConfirmAction.Cancel -> cancel()
@@ -74,8 +74,8 @@ class ConfirmViewModel(
                     if (biometricInteractor.hasStoredPassword()) {
                         biometricInteractor.clearStoredPassword()
                         snackbarInteractor.showMessage(
-                            SnackbarMessage.Resource(
-                                SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
                             )
                         )
                     }

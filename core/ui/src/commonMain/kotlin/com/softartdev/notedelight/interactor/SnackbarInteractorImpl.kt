@@ -53,8 +53,7 @@ class SnackbarInteractorImpl : SnackbarInteractor {
                     SnackbarTextResource.SAVED -> Res.string.note_saved
                     SnackbarTextResource.EMPTY -> Res.string.note_empty
                     SnackbarTextResource.DELETED -> Res.string.note_deleted
-                    SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED ->
-                        Res.string.biometric_disabled_due_to_password_change
+                    SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED -> Res.string.biometric_disabled_due_to_password_change
                 }
                 var text: String = getString(resource = resource)
                 if (message.suffix.isNotEmpty()) {

@@ -12,7 +12,6 @@ data class BiometricEnrollResult(
     fun showLoading(): BiometricEnrollResult = copy(loading = true)
     fun hideLoading(): BiometricEnrollResult = copy(loading = false)
     fun showError(): BiometricEnrollResult = copy(isError = true)
-    fun hideError(): BiometricEnrollResult = copy(isError = false)
     fun togglePasswordVisibility(): BiometricEnrollResult = copy(isPasswordVisible = !isPasswordVisible)
 }
 

@@ -71,9 +71,6 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     LaunchedEffect(signInViewModel) {
         signInViewModel.onAction(SignInAction.RefreshBiometric)
     }
-    val biometricTitle = stringResource(Res.string.biometric_prompt_title)
-    val biometricSubtitle = stringResource(Res.string.biometric_prompt_subtitle)
-    val biometricNegative = stringResource(Res.string.biometric_prompt_negative_button)
     SignInScreenBody(
         showLoading = signInResultState.value == SignInResult.ShowProgress,
         passwordState = passwordState,
@@ -85,14 +82,7 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         },
         isError = signInResultState.value.isError,
         biometricVisible = biometricVisibleState.value,
-        onAction = { action ->
-            val resolved = if (action is SignInAction.OnBiometricClick) {
-                SignInAction.OnBiometricClick(
-                    biometricTitle, biometricSubtitle, biometricNegative
-                )
-            } else action
-            signInViewModel.onAction(resolved)
-        }
+        onAction = signInViewModel::onAction
     )
 }
 
@@ -145,12 +135,15 @@ fun SignInScreenBody(
                 onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             ) { Text(text = stringResource(Res.string.sign_in)) }
             if (biometricVisible) {
+                val title = stringResource(Res.string.biometric_prompt_title)
+                val subtitle = stringResource(Res.string.biometric_prompt_subtitle)
+                val negative = stringResource(Res.string.biometric_prompt_negative_button)
                 OutlinedButton(
                     modifier = Modifier
                         .testTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    onClick = { onAction(SignInAction.OnBiometricClick("", "", "")) },
+                    onClick = { onAction(SignInAction.OnBiometricClick(title, subtitle, negative)) },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Fingerprint,

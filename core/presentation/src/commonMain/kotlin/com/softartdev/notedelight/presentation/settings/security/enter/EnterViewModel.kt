@@ -30,7 +30,7 @@ class EnterViewModel(
     private val logger = Logger.withTag(this@EnterViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
+    var autofillManager: AutofillManager? = null //TODO wrap in interactor for get rid of `androidx.compose` deps in presentation-modules
 
     fun onAction(action: EnterAction) = when (action) {
         is EnterAction.Cancel -> cancel()
@@ -64,8 +64,8 @@ class EnterViewModel(
                     if (biometricInteractor.hasStoredPassword()) {
                         biometricInteractor.clearStoredPassword()
                         snackbarInteractor.showMessage(
-                            SnackbarMessage.Resource(
-                                SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
                             )
                         )
                     }

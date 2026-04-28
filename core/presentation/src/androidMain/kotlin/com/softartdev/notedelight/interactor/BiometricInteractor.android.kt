@@ -6,10 +6,12 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -17,17 +19,19 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.coroutines.resume
+import androidx.core.content.edit
 
 actual class BiometricInteractor(
     private val context: Context,
     private val activityHolder: BiometricActivityHolder,
 ) {
+    private val logger = Logger.withTag("BiometricInteractor")
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     actual suspend fun canAuthenticate(): Boolean {
-        val mgr = BiometricManager.from(context)
-        return mgr.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
+        val bm = BiometricManager.from(context)
+        return bm.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
     }
 
     actual fun hasStoredPassword(): Boolean =
@@ -45,6 +49,7 @@ actual class BiometricInteractor(
         val secretKey = try {
             createOrGetKey()
         } catch (t: Throwable) {
+            logger.e(t) { "Keystore failure" }
             return BiometricResult.Error(t.message ?: "Keystore failure")
         }
         val cipher = Cipher.getInstance(TRANSFORMATION).apply {
@@ -53,10 +58,10 @@ actual class BiometricInteractor(
         return when (val auth = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
             is PromptOutcome.Authenticated -> {
                 val out = auth.cipher.doFinal(password.toString().toByteArray(Charsets.UTF_8))
-                prefs.edit()
-                    .putString(KEY_CIPHERTEXT, Base64.encodeToString(out, Base64.NO_WRAP))
-                    .putString(KEY_IV, Base64.encodeToString(auth.cipher.iv, Base64.NO_WRAP))
-                    .apply()
+                prefs.edit {
+                    putString(KEY_CIPHERTEXT, Base64.encodeToString(out, Base64.NO_WRAP))
+                    putString(KEY_IV, Base64.encodeToString(auth.cipher.iv, Base64.NO_WRAP))
+                }
                 BiometricResult.Success
             }
             is PromptOutcome.Failure -> auth.result
@@ -71,40 +76,43 @@ actual class BiometricInteractor(
         if (!hasStoredPassword()) {
             return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
         }
-        val activity = activityHolder.current()
-            ?: return DecryptedPasswordResult.Failure(
-                BiometricResult.Error("No active Activity for BiometricPrompt")
-            )
-        val ciphertext = Base64.decode(prefs.getString(KEY_CIPHERTEXT, null), Base64.NO_WRAP)
-        val iv = Base64.decode(prefs.getString(KEY_IV, null), Base64.NO_WRAP)
-        val secretKey = try {
+        val activity = activityHolder.current() ?: return DecryptedPasswordResult.Failure(
+            result = BiometricResult.Error("No active Activity for BiometricPrompt")
+        )
+        val ciphertext: ByteArray? = Base64.decode(prefs.getString(KEY_CIPHERTEXT, null), Base64.NO_WRAP)
+        val iv: ByteArray? = Base64.decode(prefs.getString(KEY_IV, null), Base64.NO_WRAP)
+        val secretKey: SecretKey = try {
             existingKey() ?: run {
                 clearStoredPassword()
                 return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
             }
         } catch (t: KeyPermanentlyInvalidatedException) {
+            logger.e(t) { "Key permanently invalidated" }
             clearStoredPassword()
             return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
         } catch (t: Throwable) {
+            logger.e(t) { "Keystore failure" }
             return DecryptedPasswordResult.Failure(
-                BiometricResult.Error(t.message ?: "Keystore failure")
+                result = BiometricResult.Error(t.message ?: "Keystore failure")
             )
         }
-        val cipher = try {
+        val cipher: Cipher = try {
             Cipher.getInstance(TRANSFORMATION).apply {
                 init(Cipher.DECRYPT_MODE, secretKey, GCMParameterSpec(GCM_TAG_BITS, iv))
             }
         } catch (t: KeyPermanentlyInvalidatedException) {
+            logger.e(t) { "Key permanently invalidated" }
             clearStoredPassword()
             return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
         } catch (t: Throwable) {
+            logger.e(t) { "Cipher init failed" }
             return DecryptedPasswordResult.Failure(
-                BiometricResult.Error(t.message ?: "Cipher init failed")
+                result = BiometricResult.Error(t.message ?: "Cipher init failed")
             )
         }
-        return when (val auth = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
+        return when (val auth: PromptOutcome = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
             is PromptOutcome.Authenticated -> {
-                val plain = auth.cipher.doFinal(ciphertext)
+                val plain: ByteArray = auth.cipher.doFinal(ciphertext)
                 DecryptedPasswordResult.Success(plain.toString(Charsets.UTF_8))
             }
             is PromptOutcome.Failure -> DecryptedPasswordResult.Failure(auth.result)
@@ -112,24 +120,28 @@ actual class BiometricInteractor(
     }
 
     actual fun clearStoredPassword() {
-        prefs.edit().remove(KEY_CIPHERTEXT).remove(KEY_IV).apply()
+        prefs.edit {
+            remove(KEY_CIPHERTEXT)
+            remove(KEY_IV)
+        }
         runCatching {
-            KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }.deleteEntry(KEY_ALIAS)
+            val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
+            keyStore.load(null)
+            keyStore.deleteEntry(KEY_ALIAS)
         }
     }
 
     private fun existingKey(): SecretKey? {
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
+        keyStore.load(null)
         return keyStore.getKey(KEY_ALIAS, null) as? SecretKey
     }
 
     private fun createOrGetKey(): SecretKey {
         existingKey()?.let { return it }
         val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
-        val spec = KeyGenParameterSpec.Builder(
-            KEY_ALIAS,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
-        )
+        val spec = KeyGenParameterSpec
+            .Builder(KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
             .setUserAuthenticationRequired(true)
@@ -140,7 +152,7 @@ actual class BiometricInteractor(
     }
 
     private suspend fun runPrompt(
-        activity: androidx.appcompat.app.AppCompatActivity,
+        activity: AppCompatActivity,
         cipher: Cipher,
         title: String,
         subtitle: String,
@@ -158,7 +170,6 @@ actual class BiometricInteractor(
                     continuation.resume(PromptOutcome.Authenticated(resultCipher))
                 }
             }
-
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 val mapped = when (errorCode) {
                     BiometricPrompt.ERROR_USER_CANCELED,
@@ -171,7 +182,6 @@ actual class BiometricInteractor(
                 }
                 continuation.resume(PromptOutcome.Failure(mapped))
             }
-
             override fun onAuthenticationFailed() {
                 // Triggered on a wrong fingerprint; system gives the user another try, so do not
                 // resume the continuation here. The terminal callback is onAuthenticationError.

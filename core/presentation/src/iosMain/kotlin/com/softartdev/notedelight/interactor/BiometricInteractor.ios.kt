@@ -3,10 +3,7 @@
 package com.softartdev.notedelight.interactor
 
 import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.CFBridgingRelease
-import kotlinx.cinterop.CFBridgingRetain
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
@@ -16,12 +13,16 @@ import platform.CoreFoundation.CFDictionaryAddValue
 import platform.CoreFoundation.CFDictionaryCreateMutable
 import platform.CoreFoundation.CFMutableDictionaryRef
 import platform.CoreFoundation.CFRelease
+import platform.CoreFoundation.CFTypeRef
 import platform.CoreFoundation.CFTypeRefVar
 import platform.CoreFoundation.kCFAllocatorDefault
 import platform.CoreFoundation.kCFBooleanTrue
 import platform.CoreFoundation.kCFTypeDictionaryKeyCallBacks
 import platform.CoreFoundation.kCFTypeDictionaryValueCallBacks
+import platform.Foundation.CFBridgingRelease
+import platform.Foundation.CFBridgingRetain
 import platform.Foundation.NSData
+import platform.Foundation.NSError
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
@@ -36,6 +37,7 @@ import platform.LocalAuthentication.LAErrorUserCancel
 import platform.LocalAuthentication.LAErrorUserFallback
 import platform.LocalAuthentication.LAPolicyDeviceOwnerAuthenticationWithBiometrics
 import platform.Security.SecAccessControlCreateWithFlags
+import platform.Security.SecAccessControlRef
 import platform.Security.SecItemAdd
 import platform.Security.SecItemCopyMatching
 import platform.Security.SecItemDelete
@@ -59,21 +61,20 @@ import kotlin.coroutines.resume
 
 actual class BiometricInteractor {
 
-    actual suspend fun canAuthenticate(): Boolean {
-        return LAContext().canEvaluatePolicy(LAPolicyDeviceOwnerAuthenticationWithBiometrics, null)
-    }
+    actual suspend fun canAuthenticate(): Boolean = LAContext()
+        .canEvaluatePolicy(LAPolicyDeviceOwnerAuthenticationWithBiometrics, null)
 
     actual fun hasStoredPassword(): Boolean = memScoped {
-        val service = CFBridgingRetain(SERVICE)
-        val account = CFBridgingRetain(ACCOUNT)
-        val query = newMutableDict()
+        val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+        val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+        val query: CFMutableDictionaryRef? = newMutableDict()
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrService, service)
         CFDictionaryAddValue(query, kSecAttrAccount, account)
         CFDictionaryAddValue(query, kSecUseAuthenticationUI, kSecUseAuthenticationUIFail)
         try {
-            val status = SecItemCopyMatching(query, null)
-            status == errSecSuccess || status == errSecInteractionNotAllowed
+            val status: OSStatus = SecItemCopyMatching(query, null)
+            return@memScoped status == errSecSuccess || status == errSecInteractionNotAllowed
         } finally {
             CFRelease(query)
             CFRelease(service)
@@ -92,23 +93,23 @@ actual class BiometricInteractor {
             localizedFallbackTitle = ""
             localizedCancelTitle = negativeButton
         }
-        val authResult = evaluatePolicy(context, "$title\n$subtitle")
+        val authResult: BiometricResult = evaluatePolicy(context, "$title\n$subtitle")
         if (authResult !is BiometricResult.Success) return authResult
-        val accessControl = SecAccessControlCreateWithFlags(
+        val accessControl: SecAccessControlRef = SecAccessControlCreateWithFlags(
             allocator = null,
             protection = kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
             flags = kSecAccessControlBiometryCurrentSet,
             error = null,
         ) ?: return BiometricResult.Error("Could not create access control")
-        val passwordData = (NSString.create(string = password.toString()))
+        val passwordData: NSData = NSString.create(string = password.toString())
             .dataUsingEncoding(NSUTF8StringEncoding)
             ?: return BiometricResult.Error("Could not encode password")
         return memScoped {
-            val service = CFBridgingRetain(SERVICE)
-            val account = CFBridgingRetain(ACCOUNT)
-            val data = CFBridgingRetain(passwordData)
-            val ctxRef = CFBridgingRetain(context)
-            val attrs = newMutableDict()
+            val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+            val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+            val data: CFTypeRef? = CFBridgingRetain(passwordData)
+            val ctxRef: CFTypeRef? = CFBridgingRetain(context)
+            val attrs: CFMutableDictionaryRef? = newMutableDict()
             CFDictionaryAddValue(attrs, kSecClass, kSecClassGenericPassword)
             CFDictionaryAddValue(attrs, kSecAttrService, service)
             CFDictionaryAddValue(attrs, kSecAttrAccount, account)
@@ -116,8 +117,10 @@ actual class BiometricInteractor {
             CFDictionaryAddValue(attrs, kSecAttrAccessControl, accessControl)
             CFDictionaryAddValue(attrs, kSecUseAuthenticationContext, ctxRef)
             try {
-                val status = SecItemAdd(attrs, null)
-                if (status == errSecSuccess) BiometricResult.Success else mapKeychainStatus(status)
+                return@memScoped when (val status: OSStatus = SecItemAdd(attrs, null)) {
+                    errSecSuccess -> BiometricResult.Success
+                    else -> mapKeychainStatus(status)
+                }
             } finally {
                 CFRelease(attrs)
                 CFRelease(service)
@@ -142,17 +145,17 @@ actual class BiometricInteractor {
             localizedCancelTitle = negativeButton
         }
         return memScoped {
-            val resultRef = alloc<CFTypeRefVar>()
-            val service = CFBridgingRetain(SERVICE)
-            val account = CFBridgingRetain(ACCOUNT)
-            val ctxRef = CFBridgingRetain(context)
-            val query = newMutableDict()
+            val resultRef: CFTypeRefVar = alloc<CFTypeRefVar>()
+            val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+            val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+            val ctxRef: CFTypeRef? = CFBridgingRetain(context)
+            val query: CFMutableDictionaryRef? = newMutableDict()
             CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
             CFDictionaryAddValue(query, kSecAttrService, service)
             CFDictionaryAddValue(query, kSecAttrAccount, account)
             CFDictionaryAddValue(query, kSecReturnData, kCFBooleanTrue)
             CFDictionaryAddValue(query, kSecUseAuthenticationContext, ctxRef)
-            val status = try {
+            val status: OSStatus = try {
                 SecItemCopyMatching(query, resultRef.ptr)
             } finally {
                 CFRelease(query)
@@ -181,39 +184,40 @@ actual class BiometricInteractor {
         }
     }
 
-    actual fun clearStoredPassword() {
-        memScoped {
-            val service = CFBridgingRetain(SERVICE)
-            val account = CFBridgingRetain(ACCOUNT)
-            val query = newMutableDict()
-            CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-            CFDictionaryAddValue(query, kSecAttrService, service)
-            CFDictionaryAddValue(query, kSecAttrAccount, account)
-            try {
-                SecItemDelete(query)
-            } finally {
-                CFRelease(query)
-                CFRelease(service)
-                CFRelease(account)
-            }
+    actual fun clearStoredPassword(): Unit = memScoped {
+        val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+        val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+        val query: CFMutableDictionaryRef? = newMutableDict()
+        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+        CFDictionaryAddValue(query, kSecAttrService, service)
+        CFDictionaryAddValue(query, kSecAttrAccount, account)
+        try {
+            SecItemDelete(query)
+        } finally {
+            CFRelease(query)
+            CFRelease(service)
+            CFRelease(account)
         }
     }
 
-    private fun MemScope.newMutableDict(): CFMutableDictionaryRef? = CFDictionaryCreateMutable(
-        kCFAllocatorDefault, 0,
-        kCFTypeDictionaryKeyCallBacks.ptr,
-        kCFTypeDictionaryValueCallBacks.ptr,
+    private fun newMutableDict(): CFMutableDictionaryRef? = CFDictionaryCreateMutable(
+        allocator = kCFAllocatorDefault,
+        capacity = 0,
+        keyCallBacks = kCFTypeDictionaryKeyCallBacks.ptr,
+        valueCallBacks = kCFTypeDictionaryValueCallBacks.ptr,
     )
 
-    private suspend fun evaluatePolicy(context: LAContext, reason: String): BiometricResult =
-        suspendCancellableCoroutine { continuation ->
-            context.evaluatePolicy(
-                policy = LAPolicyDeviceOwnerAuthenticationWithBiometrics,
-                localizedReason = reason,
-            ) { success, error ->
-                if (success) {
-                    continuation.resume(BiometricResult.Success)
-                } else {
+    private suspend fun evaluatePolicy(
+        context: LAContext,
+        reason: String
+    ): BiometricResult = suspendCancellableCoroutine { continuation ->
+        return@suspendCancellableCoroutine context.evaluatePolicy(
+            policy = LAPolicyDeviceOwnerAuthenticationWithBiometrics,
+            localizedReason = reason,
+        ) { success: Boolean, error: NSError? ->
+            when {
+                success -> continuation.resume(BiometricResult.Success)
+                else -> {
                     val mapped = when (error?.code) {
                         LAErrorUserCancel,
                         LAErrorSystemCancel,
@@ -223,13 +227,14 @@ actual class BiometricInteractor {
                         LAErrorPasscodeNotSet -> BiometricResult.Unavailable
                         LAErrorAuthenticationFailed -> BiometricResult.Failed
                         else -> BiometricResult.Error(
-                            error?.localizedDescription ?: "LAContext error"
+                            message = error?.localizedDescription ?: "LAContext error"
                         )
                     }
                     continuation.resume(mapped)
                 }
             }
         }
+    }
 
     private fun mapKeychainStatus(status: OSStatus): BiometricResult = when (status) {
         errSecItemNotFound -> BiometricResult.Unavailable

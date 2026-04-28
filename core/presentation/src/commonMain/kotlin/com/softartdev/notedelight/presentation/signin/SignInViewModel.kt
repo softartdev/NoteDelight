@@ -36,26 +36,21 @@ class SignInViewModel(
         is SignInAction.OnSignInClick -> signIn(action.pass)
         is SignInAction.RefreshBiometric -> refreshBiometric()
         is SignInAction.OnBiometricClick -> signInWithBiometric(
-            action.title, action.subtitle, action.negativeButton
+            title = action.title,
+            subtitle = action.subtitle,
+            negativeButton = action.negativeButton
         )
     }
 
     private fun refreshBiometric() = viewModelScope.launch {
-        mutableBiometricVisibleFlow.value =
-            biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
+        mutableBiometricVisibleFlow.value = biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
     }
 
-    private fun signInWithBiometric(
-        title: String,
-        subtitle: String,
-        negativeButton: String,
-    ) = viewModelScope.launch {
+    private fun signInWithBiometric(title: String, subtitle: String, negativeButton: String) = viewModelScope.launch {
         CountingIdlingRes.increment()
         mutableStateFlow.value = SignInResult.ShowProgress
         try {
-            when (val res = biometricInteractor.decryptStoredPassword(
-                title, subtitle, negativeButton
-            )) {
+            when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(title, subtitle, negativeButton)) {
                 is DecryptedPasswordResult.Success -> signInInternal(res.password)
                 is DecryptedPasswordResult.Failure -> when (res.result) {
                     BiometricResult.Cancelled -> mutableStateFlow.value = SignInResult.ShowSignInForm

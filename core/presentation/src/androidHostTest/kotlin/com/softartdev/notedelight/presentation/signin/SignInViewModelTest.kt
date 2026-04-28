@@ -138,11 +138,8 @@ class SignInViewModelTest {
     @Test
     fun biometricSignInSuccess() = runTest {
         val pass = StubEditable("pass")
-        Mockito.`when`(
-            mockBiometricInteractor.decryptStoredPassword(
-                anyObject(), anyObject(), anyObject()
-            )
-        ).thenReturn(DecryptedPasswordResult.Success(pass))
+        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject()))
+            .thenReturn(DecryptedPasswordResult.Success(pass))
         Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult.ShowSignInForm, awaitItem())
@@ -154,11 +151,8 @@ class SignInViewModelTest {
 
     @Test
     fun biometricSignInUnavailableClearsState() = runTest {
-        Mockito.`when`(
-            mockBiometricInteractor.decryptStoredPassword(
-                anyObject(), anyObject(), anyObject()
-            )
-        ).thenReturn(DecryptedPasswordResult.Failure(BiometricResult.Unavailable))
+        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject()))
+            .thenReturn(DecryptedPasswordResult.Failure(BiometricResult.Unavailable))
         signInViewModel.biometricVisibleFlow.test {
             assertFalse(awaitItem())
             signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))

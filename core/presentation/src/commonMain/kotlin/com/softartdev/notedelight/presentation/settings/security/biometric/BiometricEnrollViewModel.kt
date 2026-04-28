@@ -26,6 +26,7 @@ class BiometricEnrollViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@BiometricEnrollViewModel::class.simpleName.toString())
+
     private val mutableStateFlow: MutableStateFlow<BiometricEnrollResult> =
         MutableStateFlow(BiometricEnrollResult())
     val stateFlow: StateFlow<BiometricEnrollResult> = mutableStateFlow
@@ -35,14 +36,18 @@ class BiometricEnrollViewModel(
         is BiometricEnrollAction.OnEditPassword -> onEditPassword(action.password)
         is BiometricEnrollAction.TogglePasswordVisibility -> togglePasswordVisibility()
         is BiometricEnrollAction.OnEnrollClick -> enroll(
-            action.title, action.subtitle, action.negativeButton
+            title = action.title,
+            subtitle = action.subtitle,
+            negativeButton = action.negativeButton
         )
     }
 
-    private fun onEditPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(BiometricEnrollResult::hideError)
-        mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER_PASSWORD) }
-        mutableStateFlow.update { it.copy(password = password) }
+    private fun onEditPassword(password: String) = mutableStateFlow.update { result ->
+        return@update result.copy(
+            isError = false,
+            fieldLabel = FieldLabel.ENTER_PASSWORD,
+            password = password
+        )
     }
 
     private fun togglePasswordVisibility() = viewModelScope.launch {
@@ -57,27 +62,31 @@ class BiometricEnrollViewModel(
         CountingIdlingRes.increment()
         mutableStateFlow.update(BiometricEnrollResult::showLoading)
         try {
-            val password = mutableStateFlow.value.password
+            val password: String = mutableStateFlow.value.password
             when {
                 password.isEmpty() -> {
                     mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
                     mutableStateFlow.update(BiometricEnrollResult::showError)
                 }
-                !checkPasswordUseCase(password) -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
-                    mutableStateFlow.update(BiometricEnrollResult::showError)
-                }
-                else -> {
-                    val result = biometricInteractor.encryptAndStorePassword(
-                        password, title, subtitle, negativeButton
+                checkPasswordUseCase(password) -> {
+                    val result: BiometricResult = biometricInteractor.encryptAndStorePassword(
+                        password = password,
+                        title = title,
+                        subtitle = subtitle,
+                        negativeButton = negativeButton
                     )
-                    if (result is BiometricResult.Success) {
-                        withContext(coroutineDispatchers.main) {
+                    when (result) {
+                        is BiometricResult.Success -> withContext(coroutineDispatchers.main) {
                             router.popBackStack()
                         }
-                    } else {
-                        snackbarInteractor.showMessage(SnackbarMessage.Simple(result.toString()))
+                        else -> snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Simple(result.toString())
+                        )
                     }
+                }
+                else -> {
+                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
+                    mutableStateFlow.update(BiometricEnrollResult::showError)
                 }
             }
         } catch (e: Throwable) {
@@ -89,7 +98,5 @@ class BiometricEnrollViewModel(
         }
     }
 
-    private fun cancel() = viewModelScope.launch {
-        router.popBackStack()
-    }
+    private fun cancel() = viewModelScope.launch { router.popBackStack() }
 }

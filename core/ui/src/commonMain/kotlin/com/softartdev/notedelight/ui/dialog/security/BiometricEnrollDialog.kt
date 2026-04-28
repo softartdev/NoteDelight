@@ -41,21 +41,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun BiometricEnrollDialog(biometricEnrollViewModel: BiometricEnrollViewModel) {
     val result: BiometricEnrollResult by biometricEnrollViewModel.stateFlow.collectAsState()
-    val title = stringResource(Res.string.biometric_prompt_title)
-    val subtitle = stringResource(Res.string.biometric_prompt_subtitle)
-    val negative = stringResource(Res.string.biometric_prompt_negative_button)
-    ShowBiometricEnrollDialog(result) { action ->
-        val resolved = if (action is BiometricEnrollAction.OnEnrollClick) {
-            BiometricEnrollAction.OnEnrollClick(title, subtitle, negative)
-        } else action
-        biometricEnrollViewModel.onAction(resolved)
-    }
+    ShowBiometricEnrollDialog(result, biometricEnrollViewModel::onAction)
 }
 
 @Composable
 fun ShowBiometricEnrollDialog(
     result: BiometricEnrollResult,
     onAction: (action: BiometricEnrollAction) -> Unit = {},
+    title: String = stringResource(Res.string.biometric_prompt_title),
+    subtitle: String = stringResource(Res.string.biometric_prompt_subtitle),
+    negative: String = stringResource(Res.string.biometric_prompt_negative_button)
 ) = AlertDialog(
     modifier = Modifier.testTag(BIOMETRIC_ENROLL_DIALOG_TAG),
     title = { Text(text = stringResource(Res.string.biometric_enroll_dialog_title)) },
@@ -73,7 +68,7 @@ fun ShowBiometricEnrollDialog(
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Done,
                 keyboardActions = KeyboardActions {
-                    onAction(BiometricEnrollAction.OnEnrollClick("", "", ""))
+                    onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative))
                 },
                 labelTag = BIOMETRIC_ENROLL_DIALOG_LABEL_TAG,
                 visibilityTag = BIOMETRIC_ENROLL_DIALOG_VISIBILITY_TAG,
@@ -84,7 +79,7 @@ fun ShowBiometricEnrollDialog(
     confirmButton = {
         PasswordSaveButton(
             tag = BIOMETRIC_ENROLL_DIALOG_SAVE_BUTTON_TAG,
-            onClick = { onAction(BiometricEnrollAction.OnEnrollClick("", "", "")) },
+            onClick = { onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative)) },
         )
     },
     dismissButton = {
