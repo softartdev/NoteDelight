@@ -45,6 +45,8 @@ kotlin {
             implementation(projects.core.presentation)
             implementation(projects.feature.backup.domain)
             implementation(projects.feature.backup.ui)
+            implementation(projects.feature.biometric.domain)
+            implementation(projects.feature.biometric.presentation)
             implementation(projects.feature.fileExplorer.data)
             implementation(projects.feature.console.domain)
             implementation(projects.feature.console.presentation)

@@ -120,6 +120,8 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 
 ### Core Dependencies
 - `core:domain` - Domain models and use cases
+- `feature:biometric:domain` - BiometricInteractor (used by SignInViewModel and SettingsViewModel)
+- `feature:backup:domain` - Backup use cases
 - `androidx-lifecycle-viewmodel` - ViewModel base class (multiplatform)
 - `kotlinx-serialization-json` - Serialization support
 - `kotlinx-coroutines` - Asynchronous programming

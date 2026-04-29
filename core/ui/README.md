@@ -239,6 +239,11 @@ Platform-specific code is minimal (window configuration, system bars, etc.).
 - `core:domain` - Domain models
 - `core:data` (db-sqldelight or db-room) - Data layer
 - `core:presentation` - ViewModels
+- `feature:biometric:domain` - BiometricInteractor (registered in platform DI modules)
+- `feature:biometric:presentation` - BiometricEnrollViewModel (used by BiometricEnrollDialog)
+- `feature:backup:domain` - Backup use cases
+- `feature:backup:ui` - Backup screen composables
+- `feature:console:domain`, `feature:console:presentation`, `feature:console:ui` - SQL Console feature
 - `compose.ui` - Compose UI runtime
 - `compose.material3` - Material 3 components
 - `compose.materialIconsExtended` - Material icons
