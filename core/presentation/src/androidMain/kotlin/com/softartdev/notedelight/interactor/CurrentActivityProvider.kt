@@ -8,16 +8,19 @@ import co.touchlab.kermit.Logger
 import java.lang.ref.WeakReference
 
 /**
- * Tracks the currently `RESUMED` `FragmentActivity` for app-scoped components that need an
- * Activity host (e.g. `BiometricPrompt`). Holds the Activity in a `WeakReference` so a paused
- * Activity awaiting GC cannot keep its window alive through this provider.
+ * Tracks the latest live `FragmentActivity` for app-scoped components that need an Activity host
+ * (e.g. `BiometricPrompt`). The reference is set during creation/start/resume — the three early
+ * lifecycle callbacks that are guaranteed to fire while the Activity is still live — and cleared on
+ * destruction. We deliberately do **not** clear in `onActivityPaused`/`onActivityStopped` so that a
+ * brief pause (overlay dialog, configuration change in flight) does not blank the host.
  *
- * Registered as an [Application.ActivityLifecycleCallbacks] for the whole process at construction;
- * call [dispose] to unregister (mainly useful for tests — singletons normally live for the lifetime
- * of the process and the framework drops the registration when the process dies).
+ * The Activity is held weakly so a destroyed instance pending GC cannot keep its window leaked
+ * through this provider. Registered as an [Application.ActivityLifecycleCallbacks] for the whole
+ * process at construction; call [dispose] to unregister (mainly useful for tests — singletons
+ * normally live for the lifetime of the process).
  */
 internal class CurrentActivityProvider(
-    private val application: Application
+    private val application: Application,
 ) : Application.ActivityLifecycleCallbacks {
     private val logger = Logger.withTag("CurrentActivityProvider")
     private var ref: WeakReference<FragmentActivity>? = null
@@ -35,14 +38,33 @@ internal class CurrentActivityProvider(
         ref = null
     }
 
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        logger.i { "onActivityCreated: ${activity::class.java.simpleName}" }
+        captureIfFragmentActivity(activity)
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+        logger.i { "onActivityStarted: ${activity::class.java.simpleName}" }
+        captureIfFragmentActivity(activity)
+    }
+
     override fun onActivityResumed(activity: Activity) {
         logger.i { "onActivityResumed: ${activity::class.java.simpleName}" }
-        if (activity is FragmentActivity) ref = WeakReference(activity)
+        captureIfFragmentActivity(activity)
     }
 
     override fun onActivityPaused(activity: Activity) {
         logger.i { "onActivityPaused: ${activity::class.java.simpleName}" }
-        if (ref?.get() === activity) ref = null
+        // Intentionally keep ref: a paused Activity can still host a BiometricPrompt that is about
+        // to resume the same instance (e.g. a transient overlay).
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+        logger.i { "onActivityStopped: ${activity::class.java.simpleName}" }
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+        logger.i { "onActivitySaveInstanceState: ${activity::class.java.simpleName}" }
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -50,17 +72,7 @@ internal class CurrentActivityProvider(
         if (ref?.get() === activity) ref = null
     }
 
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        logger.i { "onActivityCreated: ${activity::class.java.simpleName}" }
-    }
-
-    override fun onActivityStarted(activity: Activity) {
-        logger.i { "onActivityStarted: ${activity::class.java.simpleName}" }
-    }
-    override fun onActivityStopped(activity: Activity) {
-        logger.i { "onActivityStopped: ${activity::class.java.simpleName}" }
-    }
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        logger.i { "onActivitySaveInstanceState: ${activity::class.java.simpleName}" }
+    private fun captureIfFragmentActivity(activity: Activity) {
+        if (activity is FragmentActivity) ref = WeakReference(activity)
     }
 }

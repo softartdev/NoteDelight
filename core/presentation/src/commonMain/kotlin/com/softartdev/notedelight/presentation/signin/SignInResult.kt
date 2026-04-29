@@ -1,19 +1,20 @@
 package com.softartdev.notedelight.presentation.signin
 
-sealed interface SignInResult {
+data class SignInResult(
+    val state: State = State.Form,
+    val biometricVisible: Boolean = false,
+) {
+    sealed interface State {
+        data object Form : State
 
-    val biometricVisible: Boolean
+        data object Progress : State
 
-    data class Form(override val biometricVisible: Boolean = false) : SignInResult
+        sealed interface Error : State {
+            data object EmptyPass : Error
 
-    data class Progress(override val biometricVisible: Boolean = false) : SignInResult
+            data object IncorrectPass : Error
 
-    sealed interface Error : SignInResult {
-
-        data class EmptyPass(override val biometricVisible: Boolean = false) : Error
-
-        data class IncorrectPass(override val biometricVisible: Boolean = false) : Error
-
-        data class Biometric(override val biometricVisible: Boolean = false) : Error
+            data object Biometric : Error
+        }
     }
 }
