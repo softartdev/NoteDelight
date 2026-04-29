@@ -18,5 +18,6 @@ sealed interface SnackbarMessage {
 enum class SnackbarTextResource {
     SAVED,
     EMPTY,
-    DELETED
+    DELETED,
+    BIOMETRIC_DISABLED_PASSWORD_CHANGED,
 }

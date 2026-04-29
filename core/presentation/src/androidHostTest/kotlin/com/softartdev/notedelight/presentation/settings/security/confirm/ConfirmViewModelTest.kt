@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -32,6 +33,7 @@ class ConfirmViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockChangePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(
@@ -39,6 +41,7 @@ class ConfirmViewModelTest {
     )
     private val viewModel = ConfirmViewModel(
         changePasswordUseCase = mockChangePasswordUseCase,
+        biometricInteractor = mockBiometricInteractor,
         snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         coroutineDispatchers = coroutineDispatchers
@@ -50,7 +53,7 @@ class ConfirmViewModelTest {
     @After
     fun tearDown() {
         Logger.setLogWriters()
-        Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter)
+        Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter, mockBiometricInteractor)
     }
 
     @Test

@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import notedelight.core.ui.generated.resources.Res
+import notedelight.core.ui.generated.resources.biometric_disabled_due_to_password_change
 import notedelight.core.ui.generated.resources.copy
 import notedelight.core.ui.generated.resources.note_deleted
 import notedelight.core.ui.generated.resources.note_empty
@@ -52,6 +53,7 @@ class SnackbarInteractorImpl : SnackbarInteractor {
                     SnackbarTextResource.SAVED -> Res.string.note_saved
                     SnackbarTextResource.EMPTY -> Res.string.note_empty
                     SnackbarTextResource.DELETED -> Res.string.note_deleted
+                    SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED -> Res.string.biometric_disabled_due_to_password_change
                 }
                 var text: String = getString(resource = resource)
                 if (message.suffix.isNotEmpty()) {

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Commit
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
@@ -63,6 +64,7 @@ import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.SettingsDetailPanePlaceholder
 import com.softartdev.notedelight.ui.icon.FileLock
+import com.softartdev.notedelight.util.ENABLE_BIOMETRIC_SWITCH_TAG
 import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
 import com.softartdev.notedelight.util.EXPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.IMPORT_DATABASE_BUTTON_TAG
@@ -76,6 +78,7 @@ import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.language
 import notedelight.core.ui.generated.resources.pref_subtitle_open_github
 import notedelight.core.ui.generated.resources.pref_title_check_cipher_version
+import notedelight.core.ui.generated.resources.pref_title_enable_biometric
 import notedelight.core.ui.generated.resources.pref_title_enable_encryption
 import notedelight.core.ui.generated.resources.pref_title_export_db
 import notedelight.core.ui.generated.resources.pref_title_file_list
@@ -203,6 +206,24 @@ private fun SecurityPreferences(result: SettingsResult, onAction: (SettingsActio
         vector = Icons.Default.Password,
         onClick = { onAction(SettingsAction.ChangePassword) }
     )
+    if (result.encryption && result.biometricAvailable) {
+        val enableBiometricPrefTitle = stringResource(Res.string.pref_title_enable_biometric)
+        Preference(
+            modifier = Modifier.semantics {
+                contentDescription = enableBiometricPrefTitle
+                toggleableState = ToggleableState(result.biometricEnabled)
+                semanticsTestTag = ENABLE_BIOMETRIC_SWITCH_TAG
+            },
+            title = enableBiometricPrefTitle,
+            vector = Icons.Default.Fingerprint,
+            onClick = { onAction(SettingsAction.ChangeBiometric(!result.biometricEnabled)) }
+        ) {
+            Switch(
+                checked = result.biometricEnabled,
+                onCheckedChange = { onAction(SettingsAction.ChangeBiometric(it)) }
+            )
+        }
+    }
     Preference(
         title = stringResource(Res.string.pref_title_check_cipher_version),
         vector = Icons.Filled.FileLock,

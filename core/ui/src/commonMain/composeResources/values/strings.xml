@@ -86,4 +86,14 @@
     <string name="console_input_placeholder">Enter a SQL statement</string>
     <string name="console_run">Run</string>
     <string name="autofill">Autofill</string>
+    <string name="pref_title_enable_biometric">Enable biometric sign-in</string>
+    <string name="biometric_prompt_title">Unlock your notes</string>
+    <string name="biometric_prompt_subtitle">Use biometrics to decrypt your password</string>
+    <string name="biometric_prompt_negative_button">Cancel</string>
+    <string name="biometric_signin_button">Use biometric</string>
+    <string name="biometric_enroll_dialog_title">Enable biometric sign-in</string>
+    <string name="biometric_enroll_dialog_subtitle">Confirm your password to allow biometric unlock.</string>
+    <string name="biometric_disabled_due_to_password_change">Biometric sign-in disabled — please re-enable in Settings.</string>
+    <string name="biometric_error">Biometric authentication failed</string>
+    <string name="biometric_unavailable">Biometric authentication is not available</string>
 </resources>

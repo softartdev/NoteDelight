@@ -4,8 +4,10 @@ import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 class EnterViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val biometricInteractor: BiometricInteractor,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -27,7 +30,7 @@ class EnterViewModel(
     private val logger = Logger.withTag(this@EnterViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
+    var autofillManager: AutofillManager? = null //TODO wrap in interactor for get rid of `androidx.compose` deps in presentation-modules
 
     fun onAction(action: EnterAction) = when (action) {
         is EnterAction.Cancel -> cancel()
@@ -58,6 +61,14 @@ class EnterViewModel(
                 }
                 checkPasswordUseCase(password) -> {
                     changePasswordUseCase(password, null)
+                    if (biometricInteractor.hasStoredPassword()) {
+                        biometricInteractor.clearStoredPassword()
+                        snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            )
+                        )
+                    }
                     autofillManager?.commit()
                     navigateUp()
                 }

@@ -47,6 +47,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.biometric)
         }
         val androidHostTest by getting {
             dependencies {

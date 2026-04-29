@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,6 +37,7 @@ import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.TooltipIconButton
+import com.softartdev.notedelight.util.SIGN_IN_BIOMETRIC_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
@@ -41,6 +45,11 @@ import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_VISIBILITY_TAG
 import com.softartdev.notedelight.util.SIGN_IN_SETTINGS_BUTTON_TAG
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.app_name
+import notedelight.core.ui.generated.resources.biometric_error
+import notedelight.core.ui.generated.resources.biometric_prompt_negative_button
+import notedelight.core.ui.generated.resources.biometric_prompt_subtitle
+import notedelight.core.ui.generated.resources.biometric_prompt_title
+import notedelight.core.ui.generated.resources.biometric_signin_button
 import notedelight.core.ui.generated.resources.empty_password
 import notedelight.core.ui.generated.resources.enter_password
 import notedelight.core.ui.generated.resources.incorrect_password
@@ -57,16 +66,21 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     LaunchedEffect(key1 = signInViewModel, key2 = autofillManager) {
         signInViewModel.autofillManager = autofillManager
     }
+    LaunchedEffect(signInViewModel) {
+        signInViewModel.onAction(SignInAction.RefreshBiometric)
+    }
     SignInScreenBody(
-        showLoading = signInResultState.value == SignInResult.ShowProgress,
+        showLoading = signInResultState.value.state is SignInResult.State.Progress,
         passwordState = passwordState,
-        labelResource = when (signInResultState.value) {
-            SignInResult.ShowEmptyPassError -> Res.string.empty_password
-            SignInResult.ShowIncorrectPassError -> Res.string.incorrect_password
+        labelResource = when (signInResultState.value.state) {
+            is SignInResult.State.Error.EmptyPass -> Res.string.empty_password
+            is SignInResult.State.Error.IncorrectPass -> Res.string.incorrect_password
+            is SignInResult.State.Error.Biometric -> Res.string.biometric_error
             else -> Res.string.enter_password
         },
-        isError = signInResultState.value.isError,
-        onAction = signInViewModel::onAction
+        isError = signInResultState.value.state is SignInResult.State.Error,
+        biometricVisible = signInResultState.value.biometricVisible,
+        onAction = signInViewModel::onAction,
     )
 }
 
@@ -77,6 +91,7 @@ fun SignInScreenBody(
     passwordState: MutableState<String> = mutableStateOf("password"),
     labelResource: StringResource = Res.string.enter_password,
     isError: Boolean = false,
+    biometricVisible: Boolean = false,
     onAction: (SignInAction) -> Unit = {},
 ) = Scaffold(
     topBar = {
@@ -117,6 +132,25 @@ fun SignInScreenBody(
                     .padding(top = 24.dp),
                 onClick = { onAction(SignInAction.OnSignInClick(passwordState.value)) },
             ) { Text(text = stringResource(Res.string.sign_in)) }
+            if (biometricVisible) {
+                val title = stringResource(Res.string.biometric_prompt_title)
+                val subtitle = stringResource(Res.string.biometric_prompt_subtitle)
+                val negative = stringResource(Res.string.biometric_prompt_negative_button)
+                OutlinedButton(
+                    modifier = Modifier
+                        .testTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    onClick = { onAction(SignInAction.OnBiometricClick(title, subtitle, negative)) },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Fingerprint,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+                    Text(text = stringResource(Res.string.biometric_signin_button))
+                }
+            }
         }
     }
 }

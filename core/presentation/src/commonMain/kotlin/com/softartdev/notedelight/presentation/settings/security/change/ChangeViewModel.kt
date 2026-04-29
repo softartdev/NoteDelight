@@ -4,8 +4,10 @@ import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -21,6 +23,7 @@ import kotlinx.coroutines.withContext
 class ChangeViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val biometricInteractor: BiometricInteractor,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -28,7 +31,7 @@ class ChangeViewModel(
     private val logger = Logger.withTag(this@ChangeViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(ChangeResult())
     val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
+    var autofillManager: AutofillManager? = null //TODO wrap in interactor for get rid of `androidx.compose` deps in presentation-modules
 
     fun onAction(action: ChangeAction) = when (action) {
         is ChangeAction.Cancel -> cancel()
@@ -76,6 +79,14 @@ class ChangeViewModel(
                 }
                 checkPasswordUseCase(oldPassword) -> {
                     changePasswordUseCase(oldPassword, newPassword)
+                    if (biometricInteractor.hasStoredPassword()) {
+                        biometricInteractor.clearStoredPassword()
+                        snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            )
+                        )
+                    }
                     autofillManager?.commit()
                     withContext(coroutineDispatchers.main) {
                         router.popBackStack()
