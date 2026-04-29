@@ -13,6 +13,7 @@ import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -51,7 +52,10 @@ class ChangeViewModelTest {
     )
 
     @Before
-    fun setUp() = Logger.setLogWriters(PrintLogWriter())
+    fun setUp() {
+        Logger.setLogWriters(PrintLogWriter())
+        runBlocking { Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false) }
+    }
 
     @After
     fun tearDown() {

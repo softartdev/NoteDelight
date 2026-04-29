@@ -64,7 +64,7 @@ actual class BiometricInteractor {
     actual suspend fun canAuthenticate(): Boolean = LAContext()
         .canEvaluatePolicy(LAPolicyDeviceOwnerAuthenticationWithBiometrics, null)
 
-    actual fun hasStoredPassword(): Boolean = memScoped {
+    actual suspend fun hasStoredPassword(): Boolean = memScoped {
         val service: CFTypeRef? = CFBridgingRetain(SERVICE)
         val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
         val query: CFMutableDictionaryRef? = newMutableDict()
@@ -184,7 +184,7 @@ actual class BiometricInteractor {
         }
     }
 
-    actual fun clearStoredPassword(): Unit = memScoped {
+    actual suspend fun clearStoredPassword(): Unit = memScoped {
         val service: CFTypeRef? = CFBridgingRetain(SERVICE)
         val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
         val query: CFMutableDictionaryRef? = newMutableDict()

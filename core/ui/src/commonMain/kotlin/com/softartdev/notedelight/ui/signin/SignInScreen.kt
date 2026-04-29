@@ -157,4 +157,4 @@ fun SignInScreenBody(
 
 @Preview
 @Composable
-fun PreviewSignInScreen() = SignInScreenBody()
+fun PreviewSignInScreen() = SignInScreenBody(biometricVisible = true)

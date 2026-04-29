@@ -4,7 +4,7 @@ expect class BiometricInteractor {
 
     suspend fun canAuthenticate(): Boolean
 
-    fun hasStoredPassword(): Boolean
+    suspend fun hasStoredPassword(): Boolean
 
     suspend fun encryptAndStorePassword(
         password: CharSequence,
@@ -19,5 +19,5 @@ expect class BiometricInteractor {
         negativeButton: String,
     ): DecryptedPasswordResult
 
-    fun clearStoredPassword()
+    suspend fun clearStoredPassword()
 }

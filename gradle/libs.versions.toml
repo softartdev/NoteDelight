@@ -25,6 +25,7 @@ composeMaterialIconsExtended = "1.7.3"
 composeMaterialAdaptive = "1.2.0"
 androidxAppcompat = "1.7.1"
 androidxBiometric = "1.1.0"
+androidxDatastore = "1.2.1"
 androidxViewModel = "2.10.0"
 androidxNavigation = "2.9.2"
 androidxNavigationEvent = "1.0.1"
@@ -122,6 +123,7 @@ compose-adaptive-navigation = { module = "org.jetbrains.compose.material3.adapti
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "androidxBiometric" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
 androidx-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "androidxNavigationEvent" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivityCompose" }

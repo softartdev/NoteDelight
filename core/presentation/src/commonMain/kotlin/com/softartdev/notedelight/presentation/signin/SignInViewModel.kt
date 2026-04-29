@@ -52,7 +52,7 @@ class SignInViewModel(
                 is DecryptedPasswordResult.Success -> mutableStateFlow.update {
                     it.copy(state = signInInternal(res.password))
                 }
-                is DecryptedPasswordResult.Failure -> when (res.result) {
+                is DecryptedPasswordResult.Failure -> when (val err: BiometricResult = res.result) {
                     BiometricResult.Cancelled -> mutableStateFlow.update {
                         it.copy(state = SignInResult.State.Form)
                     }
@@ -63,6 +63,7 @@ class SignInViewModel(
                         }
                     }
                     else -> mutableStateFlow.update {
+                        logger.e { (err as? BiometricResult.Error)?.message ?: err.toString() }
                         it.copy(state = SignInResult.State.Error.Biometric)
                     }
                 }

@@ -2,7 +2,6 @@ package com.softartdev.notedelight.interactor
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
@@ -12,10 +11,16 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.fragment.app.FragmentActivity
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.security.KeyStore
@@ -29,15 +34,19 @@ actual class BiometricInteractor(context: Context) {
     private val logger = Logger.withTag("BiometricInteractor")
     private val appContext: Context = context.applicationContext
     private val activityProvider = CurrentActivityProvider(appContext as Application)
-    private val prefs: SharedPreferences =
-        appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+        produceFile = { appContext.preferencesDataStoreFile(PREFS_NAME) }
+    )
 
     actual suspend fun canAuthenticate(): Boolean = BiometricManager
         .from(appContext)
         .canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
 
-    actual fun hasStoredPassword(): Boolean =
-        prefs.contains(KEY_CIPHERTEXT) && prefs.contains(KEY_IV)
+    actual suspend fun hasStoredPassword(): Boolean {
+        val prefs: Preferences = dataStore.data.first()
+        return prefs.contains(KEY_CIPHERTEXT) && prefs.contains(KEY_IV)
+    }
 
     actual suspend fun encryptAndStorePassword(
         password: CharSequence,
@@ -60,9 +69,9 @@ actual class BiometricInteractor(context: Context) {
         return when (val auth: PromptOutcome = runPrompt(activity, cipher, title, subtitle, negativeButton)) {
             is PromptOutcome.Authenticated -> {
                 val out: ByteArray = auth.cipher.doFinal(password.toString().toByteArray(Charsets.UTF_8))
-                prefs.edit {
-                    putString(KEY_CIPHERTEXT, Base64.encodeToString(out, Base64.NO_WRAP))
-                    putString(KEY_IV, Base64.encodeToString(auth.cipher.iv, Base64.NO_WRAP))
+                dataStore.edit { prefs ->
+                    prefs[KEY_CIPHERTEXT] = Base64.encodeToString(out, Base64.NO_WRAP)
+                    prefs[KEY_IV] = Base64.encodeToString(auth.cipher.iv, Base64.NO_WRAP)
                 }
                 BiometricResult.Success
             }
@@ -75,15 +84,17 @@ actual class BiometricInteractor(context: Context) {
         subtitle: String,
         negativeButton: String,
     ): DecryptedPasswordResult {
-        if (!hasStoredPassword()) {
-            return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
-        }
+        val prefs: Preferences = dataStore.data.first()
+        val ciphertextStr: String = prefs[KEY_CIPHERTEXT]
+            ?: return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
+        val ivStr: String = prefs[KEY_IV]
+            ?: return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
         val activity: FragmentActivity = activityProvider.current
             ?: return DecryptedPasswordResult.Failure(
                 result = BiometricResult.Error("No active Activity for BiometricPrompt")
             )
-        val ciphertext: ByteArray = Base64.decode(prefs.getString(KEY_CIPHERTEXT, null), Base64.NO_WRAP)
-        val iv: ByteArray = Base64.decode(prefs.getString(KEY_IV, null), Base64.NO_WRAP)
+        val ciphertext: ByteArray = Base64.decode(ciphertextStr, Base64.NO_WRAP)
+        val iv: ByteArray = Base64.decode(ivStr, Base64.NO_WRAP)
         val secretKey: SecretKey = try {
             existingKey() ?: run {
                 clearStoredPassword()
@@ -122,10 +133,10 @@ actual class BiometricInteractor(context: Context) {
         }
     }
 
-    actual fun clearStoredPassword() {
-        prefs.edit {
-            remove(KEY_CIPHERTEXT)
-            remove(KEY_IV)
+    actual suspend fun clearStoredPassword() {
+        dataStore.edit { prefs ->
+            prefs.remove(KEY_CIPHERTEXT)
+            prefs.remove(KEY_IV)
         }
         runCatching {
             KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }.deleteEntry(KEY_ALIAS)
@@ -217,7 +228,7 @@ actual class BiometricInteractor(context: Context) {
         private const val TRANSFORMATION = "AES/GCM/NoPadding"
         private const val GCM_TAG_BITS = 128
         private const val PREFS_NAME = "notedelight_biometric_prefs"
-        private const val KEY_CIPHERTEXT = "ciphertext"
-        private const val KEY_IV = "iv"
+        private val KEY_CIPHERTEXT: Preferences.Key<String> = stringPreferencesKey("ciphertext")
+        private val KEY_IV: Preferences.Key<String> = stringPreferencesKey("iv")
     }
 }

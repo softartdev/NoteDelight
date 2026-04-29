@@ -72,8 +72,8 @@ class SettingsViewModelTest {
         // updateSwitches() would NPE and route to ErrorDialog, breaking unrelated tests.
         runBlocking {
             Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(false)
+            Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false)
         }
-        Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false)
     }
 
     @After

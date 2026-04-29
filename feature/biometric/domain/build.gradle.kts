@@ -39,6 +39,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.biometric)
+            implementation(libs.androidx.datastore.preferences)
         }
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")

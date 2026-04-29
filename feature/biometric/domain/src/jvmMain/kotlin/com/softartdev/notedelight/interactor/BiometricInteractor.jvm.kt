@@ -3,7 +3,7 @@ package com.softartdev.notedelight.interactor
 actual class BiometricInteractor {
     actual suspend fun canAuthenticate(): Boolean = false
 
-    actual fun hasStoredPassword(): Boolean = false
+    actual suspend fun hasStoredPassword(): Boolean = false
 
     actual suspend fun encryptAndStorePassword(
         password: CharSequence,
@@ -18,5 +18,5 @@ actual class BiometricInteractor {
         negativeButton: String,
     ): DecryptedPasswordResult = DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
 
-    actual fun clearStoredPassword() = Unit
+    actual suspend fun clearStoredPassword() = Unit
 }
