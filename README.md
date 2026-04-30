@@ -41,6 +41,7 @@ Supported platforms:
 |      database      |    ✅    | ✅	  |      ✅	      |  ✅  |
 |     encryption     |    ✅    | ✅ 	 |      ✅	      |  ✅  |
 |       backup       |    ✅    | ✅	  |      ✅	      |  ✅  |
+|      biometric     |    ✅    | ✅	  |      	      |     |
 
 Interested in contributing new features or fixes? Check out [CONTRIBUTING.md](/CONTRIBUTING.md).
 
