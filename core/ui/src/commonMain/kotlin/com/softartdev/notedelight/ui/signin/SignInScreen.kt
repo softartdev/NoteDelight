@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.presentation.signin.SignInAction
-import com.softartdev.notedelight.presentation.signin.ErrorType
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -75,8 +74,8 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         showLoading = signInResultState.value.loading,
         passwordState = passwordState,
         labelResource = when (signInResultState.value.errorType) {
-            ErrorType.EMPTY_PASSWORD -> Res.string.empty_password
-            ErrorType.INCORRECT_PASSWORD -> Res.string.incorrect_password
+            SignInResult.ErrorType.EMPTY_PASSWORD -> Res.string.empty_password
+            SignInResult.ErrorType.INCORRECT_PASSWORD -> Res.string.incorrect_password
             null -> Res.string.enter_password
         },
         isError = signInResultState.value.errorType != null,
