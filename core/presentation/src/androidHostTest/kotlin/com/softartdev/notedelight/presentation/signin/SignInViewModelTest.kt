@@ -91,7 +91,7 @@ class SignInViewModelTest {
             assertEquals(SignInResult(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSignInClick(pass = StubEditable("")))
-            assertTrue(awaitItem().state is SignInResult.State.Error.EmptyPass)
+            assertEquals(ErrorType.EMPTY_PASSWORD, awaitItem().errorType)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -105,7 +105,7 @@ class SignInViewModelTest {
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
             signInViewModel.onAction(SignInAction.OnSignInClick(pass))
-            assertTrue(awaitItem().state is SignInResult.State.Error.IncorrectPass)
+            assertEquals(ErrorType.INCORRECT_PASSWORD, awaitItem().errorType)
 
             cancelAndIgnoreRemainingEvents()
         }
