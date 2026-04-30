@@ -16,6 +16,7 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
@@ -60,6 +61,7 @@ class SettingsViewModelTest {
         snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         revealFileListUseCase = RevealFileListUseCase(),
+        disableBiometricUseCase = DisableBiometricUseCase(mockBiometricInteractor),
         localeInteractor = mockLocaleInteractor,
         adaptiveInteractor = adaptiveInteractor,
         biometricInteractor = mockBiometricInteractor,
@@ -164,6 +166,52 @@ class SettingsViewModelTest {
     }
 
     @Test
+    fun changeBiometricEnableShowsEnrollDialog() = runTest {
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(true))
+
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricEnrollDialog)
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun changeBiometricDisableShowsConfirmationDialogAndKeepsStoredPasswordOnCancel() = runTest {
+        stubBiometricEnabled()
+        settingsViewModel.updateSwitches()
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
+
+        DisableBiometricUseCase.dialogChannel.send(false)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+        Mockito.verify(mockBiometricInteractor, Mockito.never()).clearStoredPassword()
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun changeBiometricDisableClearsStoredPasswordAfterConfirmation() = runTest {
+        stubBiometricEnabled()
+        settingsViewModel.updateSwitches()
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
+
+        DisableBiometricUseCase.dialogChannel.send(true)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)
+        Mockito.verify(mockBiometricInteractor).clearStoredPassword()
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
     fun changePasswordChangePasswordDialog() = runTest {
         Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
         settingsViewModel.stateFlow.test {
@@ -264,5 +312,14 @@ class SettingsViewModelTest {
             settingsViewModel.onAction(SettingsAction.RevealFileList)
         }
         assertFalse(settingsViewModel.stateFlow.value.fileListVisible)
+    }
+
+    private fun stubBiometricEnabled() {
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
+        Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        runBlocking {
+            Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(true)
+            Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(true)
+        }
     }
 }

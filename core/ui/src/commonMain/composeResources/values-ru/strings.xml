@@ -93,6 +93,9 @@
     <string name="biometric_signin_button">По биометрии</string>
     <string name="biometric_enroll_dialog_title">Включить вход по биометрии</string>
     <string name="biometric_enroll_dialog_subtitle">Подтвердите пароль, чтобы разрешить вход по биометрии.</string>
+    <string name="biometric_disable_dialog_title">Отключить вход по биометрии?</string>
+    <string name="biometric_disable_dialog_message">Чтобы снова включить вход по биометрии, потребуется заново ввести пароль.</string>
+    <string name="biometric_disable_dialog_confirm">Отключить</string>
     <string name="biometric_disabled_due_to_password_change">Вход по биометрии отключён — снова включите его в настройках.</string>
     <string name="biometric_error">Не удалось пройти биометрию</string>
     <string name="biometric_unavailable">Биометрия недоступна</string>

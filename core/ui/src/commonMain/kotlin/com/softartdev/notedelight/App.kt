@@ -27,6 +27,7 @@ import com.softartdev.notedelight.ui.dialog.ErrorDialog
 import com.softartdev.notedelight.ui.dialog.LanguageDialog
 import com.softartdev.notedelight.ui.dialog.note.DeleteDialog
 import com.softartdev.notedelight.ui.dialog.note.SaveDialog
+import com.softartdev.notedelight.ui.dialog.security.BiometricDisableConfirmationDialog
 import com.softartdev.notedelight.ui.dialog.security.BiometricEnrollDialog
 import com.softartdev.notedelight.ui.dialog.security.ChangePasswordDialog
 import com.softartdev.notedelight.ui.dialog.security.ConfirmPasswordDialog
@@ -103,6 +104,9 @@ fun App(
             }
             dialog<AppNavGraph.BiometricEnrollDialog> {
                 BiometricEnrollDialog(biometricEnrollViewModel = koinViewModel())
+            }
+            dialog<AppNavGraph.BiometricDisableConfirmationDialog> {
+                BiometricDisableConfirmationDialog(biometricDisableViewModel = koinViewModel())
             }
             dialog<AppNavGraph.ErrorDialog> { backStackEntry: NavBackStackEntry ->
                 ErrorDialog(

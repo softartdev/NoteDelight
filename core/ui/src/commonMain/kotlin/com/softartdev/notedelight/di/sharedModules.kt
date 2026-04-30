@@ -10,6 +10,7 @@ import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
+import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricDisableViewModel
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
@@ -19,6 +20,7 @@ import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.console.ConsoleUseCase
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
@@ -60,6 +62,7 @@ val useCaseModule: Module = module {
     factoryOf(::RevealFileListUseCase)
     factoryOf(::ExportDatabaseUseCase)
     factoryOf(::ImportDatabaseUseCase)
+    factoryOf(::DisableBiometricUseCase)
     factoryOfAppVersionUseCase()
     factoryOf(::ConsoleUseCase)
 }
@@ -78,6 +81,7 @@ val viewModelModule: Module = module {
     viewModelOf(::ConfirmViewModel)
     viewModelOf(::ChangeViewModel)
     viewModelOf(::BiometricEnrollViewModel)
+    viewModelOf(::BiometricDisableViewModel)
     viewModelOf(::LanguageViewModel)
     viewModelOf(::FilesViewModel)
     viewModelOf(::ConsoleViewModel)
