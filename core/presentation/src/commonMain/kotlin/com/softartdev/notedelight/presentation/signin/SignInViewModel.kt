@@ -29,7 +29,7 @@ class SignInViewModel(
     private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(SignInResult())
     val stateFlow: StateFlow<SignInResult> = mutableStateFlow
 
-    var autofillManager: AutofillManager? = null
+    var autofillManager: AutofillManager? = null //TODO wrap in interactor for get rid of androidx.compose deps in presentation-modules
 
     fun onAction(action: SignInAction) = when (action) {
         is SignInAction.OnSettingsClick -> router.navigateClearingBackStack(AppNavGraph.Settings)

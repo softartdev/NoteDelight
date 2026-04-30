@@ -65,12 +65,12 @@ app/android/note_room_key_store.jks
 
 ### iOS
 # Generated files
-/iosApp/iosApp.xcworkspace/xcuserdata/
-/iosApp/fastlane/report.xml
+/app/iosApp/iosApp.xcworkspace/xcuserdata/
+/app/iosApp/fastlane/report.xml
 
 # Built application files
-/iosApp/iosApp.app.dSYM.zip
-/iosApp/iosApp.ipa
+/app/iosApp/iosApp.app.dSYM.zip
+/app/iosApp/iosApp.ipa
 
 # Code signing files
 /app/iosApp/fastlane/28F5CB4337.json
