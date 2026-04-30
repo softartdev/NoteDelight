@@ -13,7 +13,6 @@ import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
@@ -37,7 +36,6 @@ class SettingsViewModel(
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val revealFileListUseCase: RevealFileListUseCase,
-    private val disableBiometricUseCase: DisableBiometricUseCase,
     private val localeInteractor: LocaleInteractor,
     private val adaptiveInteractor: AdaptiveInteractor,
     private val biometricInteractor: BiometricInteractor,
@@ -148,11 +146,11 @@ class SettingsViewModel(
             } else {
                 router.navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
                 val disableBiometric: Boolean = withContext(coroutineDispatchers.io) {
-                    DisableBiometricUseCase.dialogChannel.receive()
+                    BiometricInteractor.disableDialogChannel.receive()
                 }
                 if (disableBiometric) {
                     withContext(coroutineDispatchers.io) {
-                        disableBiometricUseCase()
+                        biometricInteractor.clearStoredPassword()
                     }
                     mutableStateFlow.update { it.copy(biometricEnabled = false) }
                 } else {

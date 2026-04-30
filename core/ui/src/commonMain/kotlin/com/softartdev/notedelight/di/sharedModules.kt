@@ -20,7 +20,6 @@ import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.repository.FileRepo
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.console.ConsoleUseCase
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
@@ -62,7 +61,6 @@ val useCaseModule: Module = module {
     factoryOf(::RevealFileListUseCase)
     factoryOf(::ExportDatabaseUseCase)
     factoryOf(::ImportDatabaseUseCase)
-    factoryOf(::DisableBiometricUseCase)
     factoryOfAppVersionUseCase()
     factoryOf(::ConsoleUseCase)
 }

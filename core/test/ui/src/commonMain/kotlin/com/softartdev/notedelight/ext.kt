@@ -15,7 +15,7 @@ import co.touchlab.kermit.Logger
 const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 20_000
 const val MAX_RETRY_ATTEMPTS = 100
 
-inline fun retryUntilDisplayed(
+fun retryUntilDisplayed(
     description: String,
     action: () -> Unit,
     sni: SemanticsNodeInteraction,
@@ -73,4 +73,3 @@ fun ComposeUiTest.waitUntilSelected(
     }
     return@waitUntil true
 }
-

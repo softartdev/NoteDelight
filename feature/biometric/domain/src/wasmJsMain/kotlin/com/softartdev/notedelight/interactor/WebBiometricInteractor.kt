@@ -1,11 +1,12 @@
 package com.softartdev.notedelight.interactor
 
-actual class BiometricInteractor {
-    actual suspend fun canAuthenticate(): Boolean = false
+class WebBiometricInteractor : BiometricInteractor {
 
-    actual suspend fun hasStoredPassword(): Boolean = false
+    override suspend fun canAuthenticate(): Boolean = false
 
-    actual suspend fun encryptAndStorePassword(
+    override suspend fun hasStoredPassword(): Boolean = false
+
+    override suspend fun encryptAndStorePassword(
         password: CharSequence,
         title: String,
         subtitle: String,
@@ -13,12 +14,12 @@ actual class BiometricInteractor {
         biometricPlatformWrapper: BiometricPlatformWrapper,
     ): BiometricResult = BiometricResult.Unavailable
 
-    actual suspend fun decryptStoredPassword(
+    override suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
         biometricPlatformWrapper: BiometricPlatformWrapper,
     ): DecryptedPasswordResult = DecryptedPasswordResult.Unavailable
 
-    actual suspend fun clearStoredPassword() = Unit
+    override suspend fun clearStoredPassword() = Unit
 }

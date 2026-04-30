@@ -16,7 +16,6 @@ import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
@@ -61,7 +60,6 @@ class SettingsViewModelTest {
         snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
         revealFileListUseCase = RevealFileListUseCase(),
-        disableBiometricUseCase = DisableBiometricUseCase(mockBiometricInteractor),
         localeInteractor = mockLocaleInteractor,
         adaptiveInteractor = adaptiveInteractor,
         biometricInteractor = mockBiometricInteractor,
@@ -184,7 +182,7 @@ class SettingsViewModelTest {
         settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
         Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
 
-        DisableBiometricUseCase.dialogChannel.send(false)
+        BiometricInteractor.disableDialogChannel.send(false)
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
         assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
@@ -203,7 +201,7 @@ class SettingsViewModelTest {
         settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
         Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
 
-        DisableBiometricUseCase.dialogChannel.send(true)
+        BiometricInteractor.disableDialogChannel.send(true)
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
         assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)

@@ -46,6 +46,7 @@ kotlin {
                 implementation(projects.core.presentation)
                 implementation(projects.core.ui)
                 implementation(projects.feature.backup.ui)
+                api(projects.feature.biometric.domain)
                 implementation(projects.feature.console.presentation)
                 implementation(projects.feature.console.ui)
                 implementation(libs.compose.ui.test)

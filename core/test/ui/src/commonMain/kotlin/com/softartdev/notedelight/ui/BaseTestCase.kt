@@ -9,6 +9,7 @@ import com.softartdev.notedelight.ui.screen.NoteScreen
 import com.softartdev.notedelight.ui.screen.SettingsTestScreen
 import com.softartdev.notedelight.ui.screen.SignInScreen
 import com.softartdev.notedelight.ui.screen.dialog.BiometricDisableConfirmationDialog
+import com.softartdev.notedelight.ui.screen.dialog.BiometricEnrollDialog
 import com.softartdev.notedelight.ui.screen.dialog.ChangePasswordDialog
 import com.softartdev.notedelight.ui.screen.dialog.CommonDialog
 import com.softartdev.notedelight.ui.screen.dialog.CommonDialogImpl
@@ -55,6 +56,9 @@ abstract class BaseTestCase(val composeUiTest: ComposeUiTest) {
     suspend inline fun biometricDisableConfirmationDialog(
         block: suspend BiometricDisableConfirmationDialog.() -> Unit,
     ) = BiometricDisableConfirmationDialog(commonDialog).block()
+
+    suspend inline fun biometricEnrollDialog(block: suspend BiometricEnrollDialog.() -> Unit) =
+        BiometricEnrollDialog(commonDialog).block()
 
     suspend inline fun languageDialog(block: suspend LanguageDialog.() -> Unit) =
         LanguageDialog(commonDialog).block()

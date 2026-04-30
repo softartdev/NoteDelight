@@ -27,7 +27,6 @@ import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.biometric.DisableBiometricUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
@@ -119,7 +118,6 @@ class AdaptiveInteractorTest {
             snackbarInteractor = mockSnackbarInteractor,
             router = mockRouter,
             revealFileListUseCase = revealFileListUseCase,
-            disableBiometricUseCase = DisableBiometricUseCase(mockBiometricInteractor),
             localeInteractor = mockLocaleInteractor,
             adaptiveInteractor = adaptiveInteractor,
             biometricInteractor = mockBiometricInteractor,
