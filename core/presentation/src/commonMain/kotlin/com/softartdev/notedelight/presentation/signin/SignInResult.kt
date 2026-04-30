@@ -13,8 +13,6 @@ data class SignInResult(
             data object EmptyPass : Error
 
             data object IncorrectPass : Error
-
-            data object Biometric : Error
         }
     }
 }

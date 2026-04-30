@@ -11,12 +11,14 @@ expect class BiometricInteractor {
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): BiometricResult
 
     suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): DecryptedPasswordResult
 
     suspend fun clearStoredPassword()

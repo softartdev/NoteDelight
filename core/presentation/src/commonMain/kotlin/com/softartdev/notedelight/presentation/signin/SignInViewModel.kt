@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.BiometricInteractor
-import com.softartdev.notedelight.interactor.BiometricResult
+import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.interactor.DecryptedPasswordResult
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
@@ -20,6 +22,7 @@ class SignInViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val biometricInteractor: BiometricInteractor,
     private val router: Router,
+    private val snackbarInteractor: SnackbarInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SignInViewModel::class.simpleName.toString())
 
@@ -36,6 +39,7 @@ class SignInViewModel(
             title = action.title,
             subtitle = action.subtitle,
             negativeButton = action.negativeButton,
+            biometricPlatformWrapper = action.biometricPlatformWrapper,
         )
     }
 
@@ -44,28 +48,41 @@ class SignInViewModel(
         mutableStateFlow.update { it.copy(biometricVisible = visible) }
     }
 
-    private fun signInWithBiometric(title: String, subtitle: String, negativeButton: String) = viewModelScope.launch {
+    private fun signInWithBiometric(
+        title: String,
+        subtitle: String,
+        negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper?,
+    ) = viewModelScope.launch {
+        val wrapper: BiometricPlatformWrapper = biometricPlatformWrapper ?: run {
+            logger.e { "BiometricPlatformWrapper is null — cannot show BiometricPrompt" }
+            return@launch
+        }
         CountingIdlingRes.increment()
         mutableStateFlow.update { it.copy(state = SignInResult.State.Progress) }
         try {
-            when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(title, subtitle, negativeButton)) {
+            when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(
+                title = title,
+                subtitle = subtitle,
+                negativeButton = negativeButton,
+                biometricPlatformWrapper = wrapper,
+            )) {
                 is DecryptedPasswordResult.Success -> mutableStateFlow.update {
                     it.copy(state = signInInternal(res.password))
                 }
-                is DecryptedPasswordResult.Failure -> when (val err: BiometricResult = res.result) {
-                    BiometricResult.Cancelled -> mutableStateFlow.update {
-                        it.copy(state = SignInResult.State.Form)
+                is DecryptedPasswordResult.Cancelled -> mutableStateFlow.update {
+                    it.copy(state = SignInResult.State.Form)
+                }
+                is DecryptedPasswordResult.Unavailable -> {
+                    biometricInteractor.clearStoredPassword()
+                    mutableStateFlow.update {
+                        it.copy(state = SignInResult.State.Form, biometricVisible = false)
                     }
-                    BiometricResult.Unavailable -> {
-                        biometricInteractor.clearStoredPassword()
-                        mutableStateFlow.update {
-                            it.copy(state = SignInResult.State.Form, biometricVisible = false)
-                        }
-                    }
-                    else -> mutableStateFlow.update {
-                        logger.e { (err as? BiometricResult.Error)?.message ?: err.toString() }
-                        it.copy(state = SignInResult.State.Error.Biometric)
-                    }
+                }
+                is DecryptedPasswordResult.Failure -> {
+                    logger.e { res.message }
+                    snackbarInteractor.showMessage(SnackbarMessage.Simple(res.message))
+                    mutableStateFlow.update { it.copy(state = SignInResult.State.Form) }
                 }
             }
         } catch (error: Throwable) {

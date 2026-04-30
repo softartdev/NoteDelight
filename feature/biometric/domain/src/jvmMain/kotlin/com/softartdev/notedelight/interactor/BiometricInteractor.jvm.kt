@@ -10,13 +10,15 @@ actual class BiometricInteractor {
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): BiometricResult = BiometricResult.Unavailable
 
     actual suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
-    ): DecryptedPasswordResult = DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
+        biometricPlatformWrapper: BiometricPlatformWrapper,
+    ): DecryptedPasswordResult = DecryptedPasswordResult.Unavailable
 
     actual suspend fun clearStoredPassword() = Unit
 }

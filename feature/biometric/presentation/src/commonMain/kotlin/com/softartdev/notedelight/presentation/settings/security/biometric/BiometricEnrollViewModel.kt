@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.BiometricInteractor
+import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.interactor.BiometricResult
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -38,7 +39,8 @@ class BiometricEnrollViewModel(
         is BiometricEnrollAction.OnEnrollClick -> enroll(
             title = action.title,
             subtitle = action.subtitle,
-            negativeButton = action.negativeButton
+            negativeButton = action.negativeButton,
+            biometricPlatformWrapper = action.biometricPlatformWrapper,
         )
     }
 
@@ -58,7 +60,12 @@ class BiometricEnrollViewModel(
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper?,
     ) = viewModelScope.launch(context = coroutineDispatchers.io) {
+        val wrapper: BiometricPlatformWrapper = biometricPlatformWrapper ?: run {
+            logger.e { "BiometricPlatformWrapper is null — cannot show BiometricPrompt" }
+            return@launch
+        }
         CountingIdlingRes.increment()
         mutableStateFlow.update(BiometricEnrollResult::showLoading)
         try {
@@ -73,7 +80,8 @@ class BiometricEnrollViewModel(
                         password = password,
                         title = title,
                         subtitle = subtitle,
-                        negativeButton = negativeButton
+                        negativeButton = negativeButton,
+                        biometricPlatformWrapper = wrapper,
                     )
                     when (result) {
                         is BiometricResult.Success -> withContext(coroutineDispatchers.main) {

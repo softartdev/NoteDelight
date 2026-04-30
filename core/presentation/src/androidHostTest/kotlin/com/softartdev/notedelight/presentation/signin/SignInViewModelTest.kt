@@ -5,9 +5,12 @@ import androidx.compose.ui.autofill.AutofillManager
 import app.cash.turbine.test
 import com.softartdev.notedelight.StubEditable
 import com.softartdev.notedelight.anyObject
+import androidx.fragment.app.FragmentActivity
+import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.interactor.BiometricInteractor
-import com.softartdev.notedelight.interactor.BiometricResult
 import com.softartdev.notedelight.interactor.DecryptedPasswordResult
+import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
@@ -35,13 +38,14 @@ class SignInViewModelTest {
     private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockAutofillManager = Mockito.mock(AutofillManager::class.java)
+    private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
 
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
     fun setUp() {
         signInViewModel = SignInViewModel(
-            mockCheckPasswordUseCase, mockBiometricInteractor, mockRouter
+            mockCheckPasswordUseCase, mockBiometricInteractor, mockRouter, mockSnackbarInteractor
         )
         signInViewModel.autofillManager = mockAutofillManager
     }
@@ -138,12 +142,12 @@ class SignInViewModelTest {
     @Test
     fun biometricSignInSuccess() = runTest {
         val pass = StubEditable("pass")
-        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject()))
+        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject(), anyObject()))
             .thenReturn(DecryptedPasswordResult.Success(pass))
         Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult(), awaitItem())
-            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
             cancelAndIgnoreRemainingEvents()
         }
@@ -151,12 +155,25 @@ class SignInViewModelTest {
 
     @Test
     fun biometricSignInUnavailableClearsState() = runTest {
-        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject()))
-            .thenReturn(DecryptedPasswordResult.Failure(BiometricResult.Unavailable))
+        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject(), anyObject()))
+            .thenReturn(DecryptedPasswordResult.Unavailable)
         signInViewModel.stateFlow.test {
             assertFalse(awaitItem().biometricVisible)
-            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c"))
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
             Mockito.verify(mockBiometricInteractor).clearStoredPassword()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun biometricSignInFailureShowsSnackbar() = runTest {
+        val errorMessage = "Biometric error"
+        Mockito.`when`(mockBiometricInteractor.decryptStoredPassword(anyObject(), anyObject(), anyObject(), anyObject()))
+            .thenReturn(DecryptedPasswordResult.Failure(errorMessage))
+        signInViewModel.stateFlow.test {
+            assertEquals(SignInResult(), awaitItem())
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
+            Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Simple(errorMessage))
             cancelAndIgnoreRemainingEvents()
         }
     }

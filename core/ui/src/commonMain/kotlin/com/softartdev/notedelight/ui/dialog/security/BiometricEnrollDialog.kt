@@ -21,6 +21,7 @@ import com.softartdev.notedelight.presentation.settings.security.biometric.Biome
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollResult
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollViewModel
 import com.softartdev.notedelight.ui.PasswordField
+import com.softartdev.notedelight.ui.rememberBiometricPlatformWrapper
 import com.softartdev.notedelight.ui.PasswordSaveButton
 import com.softartdev.notedelight.ui.dialog.PreviewDialog
 import com.softartdev.notedelight.util.BIOMETRIC_ENROLL_DIALOG_FIELD_TAG
@@ -41,7 +42,19 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun BiometricEnrollDialog(biometricEnrollViewModel: BiometricEnrollViewModel) {
     val result: BiometricEnrollResult by biometricEnrollViewModel.stateFlow.collectAsState()
-    ShowBiometricEnrollDialog(result, biometricEnrollViewModel::onAction)
+    val biometricPlatformWrapper = rememberBiometricPlatformWrapper()
+    ShowBiometricEnrollDialog(
+        result = result,
+        onAction = { action ->
+            biometricEnrollViewModel.onAction(
+                if (action is BiometricEnrollAction.OnEnrollClick) {
+                    action.copy(biometricPlatformWrapper = biometricPlatformWrapper)
+                } else {
+                    action
+                }
+            )
+        },
+    )
 }
 
 @Composable

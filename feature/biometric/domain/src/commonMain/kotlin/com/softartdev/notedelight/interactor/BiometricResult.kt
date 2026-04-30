@@ -10,5 +10,7 @@ sealed interface BiometricResult {
 
 sealed interface DecryptedPasswordResult {
     data class Success(val password: CharSequence) : DecryptedPasswordResult
-    data class Failure(val result: BiometricResult) : DecryptedPasswordResult
+    data object Cancelled : DecryptedPasswordResult
+    data object Unavailable : DecryptedPasswordResult
+    data class Failure(val message: String) : DecryptedPasswordResult
 }

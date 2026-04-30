@@ -37,6 +37,7 @@ import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
 import com.softartdev.notedelight.ui.TooltipIconButton
+import com.softartdev.notedelight.ui.rememberBiometricPlatformWrapper
 import com.softartdev.notedelight.util.SIGN_IN_BIOMETRIC_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
@@ -45,7 +46,6 @@ import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_VISIBILITY_TAG
 import com.softartdev.notedelight.util.SIGN_IN_SETTINGS_BUTTON_TAG
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.app_name
-import notedelight.core.ui.generated.resources.biometric_error
 import notedelight.core.ui.generated.resources.biometric_prompt_negative_button
 import notedelight.core.ui.generated.resources.biometric_prompt_subtitle
 import notedelight.core.ui.generated.resources.biometric_prompt_title
@@ -63,6 +63,7 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val autofillManager: AutofillManager? = LocalAutofillManager.current
+    val biometricPlatformWrapper = rememberBiometricPlatformWrapper()
     LaunchedEffect(key1 = signInViewModel, key2 = autofillManager) {
         signInViewModel.autofillManager = autofillManager
     }
@@ -75,12 +76,19 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         labelResource = when (signInResultState.value.state) {
             is SignInResult.State.Error.EmptyPass -> Res.string.empty_password
             is SignInResult.State.Error.IncorrectPass -> Res.string.incorrect_password
-            is SignInResult.State.Error.Biometric -> Res.string.biometric_error
             else -> Res.string.enter_password
         },
         isError = signInResultState.value.state is SignInResult.State.Error,
         biometricVisible = signInResultState.value.biometricVisible,
-        onAction = signInViewModel::onAction,
+        onAction = { action ->
+            signInViewModel.onAction(
+                if (action is SignInAction.OnBiometricClick) {
+                    action.copy(biometricPlatformWrapper = biometricPlatformWrapper)
+                } else {
+                    action
+                }
+            )
+        },
     )
 }
 

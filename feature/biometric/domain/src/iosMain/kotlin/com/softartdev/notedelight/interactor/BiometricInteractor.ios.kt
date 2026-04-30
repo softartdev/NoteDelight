@@ -87,6 +87,7 @@ actual class BiometricInteractor {
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): BiometricResult {
         clearStoredPassword()
         val context = LAContext().apply {
@@ -135,9 +136,10 @@ actual class BiometricInteractor {
         title: String,
         subtitle: String,
         negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): DecryptedPasswordResult {
         if (!hasStoredPassword()) {
-            return DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
+            return DecryptedPasswordResult.Unavailable
         }
         val context = LAContext().apply {
             localizedReason = "$title\n$subtitle"
@@ -172,14 +174,19 @@ actual class BiometricInteractor {
                     if (pwd != null) {
                         DecryptedPasswordResult.Success(pwd)
                     } else {
-                        DecryptedPasswordResult.Failure(BiometricResult.Error("Decoding failed"))
+                        DecryptedPasswordResult.Failure("Decoding failed")
                     }
                 }
                 errSecItemNotFound -> {
                     clearStoredPassword()
-                    DecryptedPasswordResult.Failure(BiometricResult.Unavailable)
+                    DecryptedPasswordResult.Unavailable
                 }
-                else -> DecryptedPasswordResult.Failure(mapKeychainStatus(status))
+                else -> when (val biometricResult: BiometricResult = mapKeychainStatus(status)) {
+                    BiometricResult.Unavailable -> DecryptedPasswordResult.Unavailable
+                    BiometricResult.Cancelled -> DecryptedPasswordResult.Cancelled
+                    is BiometricResult.Error -> DecryptedPasswordResult.Failure(biometricResult.message)
+                    else -> DecryptedPasswordResult.Failure(biometricResult.toString())
+                }
             }
         }
     }
