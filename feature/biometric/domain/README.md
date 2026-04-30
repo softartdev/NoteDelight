@@ -4,7 +4,7 @@ Biometric authentication domain module — platform-agnostic contract plus platf
 
 ## Overview
 
-Provides the `BiometricInteractor` expect class and its platform actuals, as well as `BiometricResult` / `DecryptedPasswordResult` domain types, and the `ActivityProvider` expect class used to pass the Android host Activity to the biometric prompt from Compose.
+Provides the `BiometricInteractor` expect class and its platform actuals, as well as `BiometricResult` / `DecryptedPasswordResult` domain types, and the `BiometricPlatformWrapper` expect class used to pass the Android host Activity to the biometric prompt from Compose.
 
 ## API
 
@@ -19,19 +19,19 @@ expect class BiometricInteractor {
         title: String,
         subtitle: String,
         negativeButton: String,
-        activityProvider: ActivityProvider,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): BiometricResult
     suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
-        activityProvider: ActivityProvider,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ): DecryptedPasswordResult
     suspend fun clearStoredPassword()
 }
 ```
 
-The `activityProvider` parameter is created in `@Composable` functions via `rememberActivityProvider()` (defined in `core:ui`) and stored as a var property on the ViewModel. On Android it carries the current `FragmentActivity`; on all other platforms it is an empty stub.
+The `biometricPlatformWrapper` parameter is created in `@Composable` functions via `rememberBiometricPlatformWrapper()` (defined in `core:ui`) and stored as a var property on the ViewModel. On Android it carries the current `FragmentActivity`; on all other platforms it is an empty stub.
 
 ### `BiometricResult`
 
@@ -58,15 +58,15 @@ sealed interface DecryptedPasswordResult {
 
 `Cancelled` and `Unavailable` are modelled as separate objects so callers can distinguish intent (user cancelled voluntarily vs. hardware/key no longer valid) without nesting `BiometricResult` inside `DecryptedPasswordResult`.
 
-### `ActivityProvider`
+### `BiometricPlatformWrapper`
 
 ```kotlin
-expect class ActivityProvider
-// Android actual:  actual class ActivityProvider(val activity: FragmentActivity)
-// iOS/JVM/wasmJs: actual class ActivityProvider   (empty stub)
+expect class BiometricPlatformWrapper
+// Android actual:  actual class BiometricPlatformWrapper(val activity: FragmentActivity)
+// iOS/JVM/wasmJs: actual class BiometricPlatformWrapper   (empty stub)
 ```
 
-Created from a Composable using `rememberActivityProvider()` (in `core:ui`) and stored as a var property on the ViewModel. Passed to `encryptAndStorePassword` / `decryptStoredPassword` so that the Android implementation can instantiate `BiometricPrompt`.
+Created from a Composable using `rememberBiometricPlatformWrapper()` (in `core:ui`) and stored as a var property on the ViewModel. Passed to `encryptAndStorePassword` / `decryptStoredPassword` so that the Android implementation can instantiate `BiometricPrompt`.
 
 ## Platform Implementations
 
@@ -96,7 +96,7 @@ Created from a Composable using `rememberActivityProvider()` (in `core:ui`) and 
 
 **Key design decisions**:
 - `BiometricPrompt.authenticate()` must run on the main thread — `runPrompt()` uses `withContext(Dispatchers.Main.immediate)`.
-- `ActivityProvider` is supplied from the composable layer (`rememberActivityProvider()` in `core:ui` uses `LocalContext.current as FragmentActivity`), stored as a var property on the ViewModel (same pattern as `autofillManager`). This replaces the previous `CurrentActivityProvider` (an `ActivityLifecycleCallbacks` singleton) which was broken because no lifecycle callbacks fired after the Koin singleton was created at app startup.
+- `BiometricPlatformWrapper` is supplied from the composable layer (`rememberBiometricPlatformWrapper()` in `core:ui` uses `LocalContext.current as FragmentActivity`), stored as a var property on the ViewModel (same pattern as `autofillManager`). This replaces the previous `CurrentActivityProvider` (an `ActivityLifecycleCallbacks` singleton) which was broken because no lifecycle callbacks fired after the Koin singleton was created at app startup.
 - `setInvalidatedByBiometricEnrollment(true)` is wrapped in `Build.VERSION.SDK_INT >= Build.VERSION_CODES.N` (API 24 lint requirement; minSdk is 23).
 
 **`BiometricCredentialsStore`** (internal, Android-only):

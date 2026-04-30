@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.presentation.signin.SignInAction
+import com.softartdev.notedelight.presentation.signin.ErrorType
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.ui.PasswordField
@@ -71,14 +72,14 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         signInViewModel.onAction(SignInAction.RefreshBiometric)
     }
     SignInScreenBody(
-        showLoading = signInResultState.value.state is SignInResult.State.Progress,
+        showLoading = signInResultState.value.loading,
         passwordState = passwordState,
-        labelResource = when (signInResultState.value.state) {
-            is SignInResult.State.Error.EmptyPass -> Res.string.empty_password
-            is SignInResult.State.Error.IncorrectPass -> Res.string.incorrect_password
-            else -> Res.string.enter_password
+        labelResource = when (signInResultState.value.errorType) {
+            ErrorType.EMPTY_PASSWORD -> Res.string.empty_password
+            ErrorType.INCORRECT_PASSWORD -> Res.string.incorrect_password
+            null -> Res.string.enter_password
         },
-        isError = signInResultState.value.state is SignInResult.State.Error,
+        isError = signInResultState.value.errorType != null,
         biometricVisible = signInResultState.value.biometricVisible,
         onAction = signInViewModel::onAction,
     )

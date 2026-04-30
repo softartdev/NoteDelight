@@ -55,7 +55,7 @@ class SignInViewModel(
         biometricPlatformWrapper: BiometricPlatformWrapper,
     ) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update { it.copy(state = SignInResult.State.Progress) }
+        mutableStateFlow.update { it.copy(loading = true, errorType = null) }
         try {
             when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(
                 title = title,
@@ -64,27 +64,27 @@ class SignInViewModel(
                 biometricPlatformWrapper = biometricPlatformWrapper,
             )) {
                 is DecryptedPasswordResult.Success -> mutableStateFlow.update {
-                    it.copy(state = signInInternal(res.password))
+                    it.updateFromSignInInternal(signInInternal(res.password))
                 }
                 is DecryptedPasswordResult.Cancelled -> mutableStateFlow.update {
-                    it.copy(state = SignInResult.State.Form)
+                    it.copy(loading = false, errorType = null)
                 }
                 is DecryptedPasswordResult.Unavailable -> {
                     biometricInteractor.clearStoredPassword()
                     mutableStateFlow.update {
-                        it.copy(state = SignInResult.State.Form, biometricVisible = false)
+                        it.copy(loading = false, errorType = null, biometricVisible = false)
                     }
                 }
                 is DecryptedPasswordResult.Failure -> {
                     logger.e { res.message }
                     snackbarInteractor.showMessage(SnackbarMessage.Simple(res.message))
-                    mutableStateFlow.update { it.copy(state = SignInResult.State.Form) }
+                    mutableStateFlow.update { it.copy(loading = false, errorType = null) }
                 }
             }
         } catch (error: Throwable) {
             logger.e(error) { "Error during biometric sign in" }
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.update { it.copy(state = SignInResult.State.Form) }
+            mutableStateFlow.update { it.copy(loading = false, errorType = null) }
         } finally {
             CountingIdlingRes.decrement()
         }
@@ -92,27 +92,38 @@ class SignInViewModel(
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update { it.copy(state = SignInResult.State.Progress) }
+        mutableStateFlow.update { it.copy(loading = true, errorType = null) }
         try {
-            val nextState: SignInResult.State = signInInternal(pass)
-            mutableStateFlow.update { it.copy(state = nextState) }
+            val nextState: SignInInternalResult = signInInternal(pass)
+            mutableStateFlow.update { it.updateFromSignInInternal(nextState) }
         } catch (error: Throwable) {
             logger.e(error) { "Error during sign in" }
             autofillManager?.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
-            mutableStateFlow.update { it.copy(state = SignInResult.State.Form) }
+            mutableStateFlow.update { it.copy(loading = false, errorType = null) }
         } finally {
             CountingIdlingRes.decrement()
         }
     }
 
-    private suspend fun signInInternal(pass: CharSequence): SignInResult.State = when {
-        pass.isEmpty() -> SignInResult.State.Error.EmptyPass
+    private suspend fun signInInternal(pass: CharSequence): SignInInternalResult = when {
+        pass.isEmpty() -> SignInInternalResult.Error(ErrorType.EMPTY_PASSWORD)
         checkPasswordUseCase(pass) -> {
             autofillManager?.commit()
             router.navigateClearingBackStack(AppNavGraph.Main)
-            SignInResult.State.Form
+            SignInInternalResult.Success
         }
-        else -> SignInResult.State.Error.IncorrectPass
+        else -> SignInInternalResult.Error(ErrorType.INCORRECT_PASSWORD)
     }
 }
+
+private sealed interface SignInInternalResult {
+    data object Success : SignInInternalResult
+    data class Error(val type: ErrorType) : SignInInternalResult
+}
+
+private fun SignInResult.updateFromSignInInternal(result: SignInInternalResult): SignInResult = when (result) {
+    SignInInternalResult.Success -> copy(loading = false, errorType = null)
+    is SignInInternalResult.Error -> copy(loading = false, errorType = result.type)
+}
+
