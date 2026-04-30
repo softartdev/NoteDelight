@@ -93,6 +93,9 @@
     <string name="biometric_signin_button">Use biometric</string>
     <string name="biometric_enroll_dialog_title">Enable biometric sign-in</string>
     <string name="biometric_enroll_dialog_subtitle">Confirm your password to allow biometric unlock.</string>
+    <string name="biometric_disable_dialog_title">Disable biometric sign-in?</string>
+    <string name="biometric_disable_dialog_message">To enable biometric sign-in again, you will need to enter your password.</string>
+    <string name="biometric_disable_dialog_confirm">Disable</string>
     <string name="biometric_disabled_due_to_password_change">Biometric sign-in disabled — please re-enable in Settings.</string>
     <string name="biometric_error">Biometric authentication failed</string>
     <string name="biometric_unavailable">Biometric authentication is not available</string>

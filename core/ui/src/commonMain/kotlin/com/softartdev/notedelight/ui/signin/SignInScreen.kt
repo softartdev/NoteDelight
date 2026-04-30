@@ -71,14 +71,14 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         signInViewModel.onAction(SignInAction.RefreshBiometric)
     }
     SignInScreenBody(
-        showLoading = signInResultState.value.state is SignInResult.State.Progress,
+        showLoading = signInResultState.value.loading,
         passwordState = passwordState,
-        labelResource = when (signInResultState.value.state) {
-            is SignInResult.State.Error.EmptyPass -> Res.string.empty_password
-            is SignInResult.State.Error.IncorrectPass -> Res.string.incorrect_password
-            else -> Res.string.enter_password
+        labelResource = when (signInResultState.value.errorType) {
+            SignInResult.ErrorType.EMPTY_PASSWORD -> Res.string.empty_password
+            SignInResult.ErrorType.INCORRECT_PASSWORD -> Res.string.incorrect_password
+            null -> Res.string.enter_password
         },
-        isError = signInResultState.value.state is SignInResult.State.Error,
+        isError = signInResultState.value.errorType != null,
         biometricVisible = signInResultState.value.biometricVisible,
         onAction = signInViewModel::onAction,
     )

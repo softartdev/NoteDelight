@@ -4,6 +4,7 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
+import com.softartdev.notedelight.util.SIGN_IN_BIOMETRIC_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_BUTTON_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_FIELD_TAG
 import com.softartdev.notedelight.util.SIGN_IN_PASSWORD_LABEL_TAG
@@ -31,5 +32,10 @@ value class SignInScreen(val nodeProvider: SemanticsNodeInteractionsProvider) {
     val signInButtonSNI: SemanticsNodeInteraction
         get() = nodeProvider
             .onNodeWithTag(SIGN_IN_BUTTON_TAG)
+            .assertIsDisplayed()
+
+    val biometricButtonSNI: SemanticsNodeInteraction
+        get() = nodeProvider
+            .onNodeWithTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
             .assertIsDisplayed()
 }

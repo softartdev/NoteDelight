@@ -10,6 +10,7 @@ import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
+import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricDisableViewModel
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollViewModel
 import com.softartdev.notedelight.presentation.settings.security.change.ChangeViewModel
 import com.softartdev.notedelight.presentation.settings.security.confirm.ConfirmViewModel
@@ -78,6 +79,7 @@ val viewModelModule: Module = module {
     viewModelOf(::ConfirmViewModel)
     viewModelOf(::ChangeViewModel)
     viewModelOf(::BiometricEnrollViewModel)
+    viewModelOf(::BiometricDisableViewModel)
     viewModelOf(::LanguageViewModel)
     viewModelOf(::FilesViewModel)
     viewModelOf(::ConsoleViewModel)

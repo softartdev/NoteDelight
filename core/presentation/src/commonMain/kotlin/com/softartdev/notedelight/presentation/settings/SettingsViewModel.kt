@@ -144,8 +144,18 @@ class SettingsViewModel(
             if (checked) {
                 router.navigate(route = AppNavGraph.BiometricEnrollDialog)
             } else {
-                biometricInteractor.clearStoredPassword()
-                mutableStateFlow.update { it.copy(biometricEnabled = false) }
+                router.navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
+                val disableBiometric: Boolean = withContext(coroutineDispatchers.io) {
+                    BiometricInteractor.disableDialogChannel.receive()
+                }
+                if (disableBiometric) {
+                    withContext(coroutineDispatchers.io) {
+                        biometricInteractor.clearStoredPassword()
+                    }
+                    mutableStateFlow.update { it.copy(biometricEnabled = false) }
+                } else {
+                    logger.d { "Don't disable biometric" }
+                }
             }
         } catch (e: Throwable) {
             handleError(e) { "error toggling biometric" }

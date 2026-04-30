@@ -15,7 +15,7 @@ import co.touchlab.kermit.Logger
 const val ASSERT_WAIT_TIMEOUT_MILLIS: Long = 20_000
 const val MAX_RETRY_ATTEMPTS = 100
 
-inline fun retryUntilDisplayed(
+fun retryUntilDisplayed(
     description: String,
     action: () -> Unit,
     sni: SemanticsNodeInteraction,
@@ -31,9 +31,9 @@ inline fun retryUntilDisplayed(
     return sni.assertIsDisplayed()
 }
 
-inline fun ComposeUiTest.waitUntilDisplayed(
+fun ComposeUiTest.waitUntilDisplayed(
     description: String,
-    crossinline blockSNI: () -> SemanticsNodeInteraction,
+    blockSNI: () -> SemanticsNodeInteraction,
 ) = waitUntil(conditionDescription = description, timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS) {
     try {
         val sni = blockSNI()
@@ -49,9 +49,9 @@ fun ComposeUiTest.waitUntilNotExist(tag: String) = waitUntilDoesNotExist(
     timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS,
 )
 
-inline fun ComposeUiTest.waitAssert(
+fun ComposeUiTest.waitAssert(
     description: String,
-    crossinline assert: () -> Unit
+    assert: () -> Unit
 ) = waitUntil(conditionDescription = description, timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS) {
     try {
         assert()
@@ -61,9 +61,9 @@ inline fun ComposeUiTest.waitAssert(
     return@waitUntil true
 }
 
-inline fun ComposeUiTest.waitUntilSelected(
+fun ComposeUiTest.waitUntilSelected(
     description: String,
-    crossinline blockSNI: () -> SemanticsNodeInteraction
+    blockSNI: () -> SemanticsNodeInteraction
 ) = waitUntil(conditionDescription = description, timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS) {
     val sni = blockSNI().assertIsSelectable()
     try {
@@ -73,5 +73,3 @@ inline fun ComposeUiTest.waitUntilSelected(
     }
     return@waitUntil true
 }
-
-

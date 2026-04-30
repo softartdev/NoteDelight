@@ -59,12 +59,12 @@ import platform.Security.kSecValueData
 import platform.darwin.OSStatus
 import kotlin.coroutines.resume
 
-actual class BiometricInteractor {
+class IosBiometricInteractor : BiometricInteractor {
 
-    actual suspend fun canAuthenticate(): Boolean = LAContext()
+    override suspend fun canAuthenticate(): Boolean = LAContext()
         .canEvaluatePolicy(LAPolicyDeviceOwnerAuthenticationWithBiometrics, null)
 
-    actual suspend fun hasStoredPassword(): Boolean = memScoped {
+    override suspend fun hasStoredPassword(): Boolean = memScoped {
         val service: CFTypeRef? = CFBridgingRetain(SERVICE)
         val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
         val query: CFMutableDictionaryRef? = newMutableDict()
@@ -82,7 +82,7 @@ actual class BiometricInteractor {
         }
     }
 
-    actual suspend fun encryptAndStorePassword(
+    override suspend fun encryptAndStorePassword(
         password: CharSequence,
         title: String,
         subtitle: String,
@@ -132,7 +132,7 @@ actual class BiometricInteractor {
         }
     }
 
-    actual suspend fun decryptStoredPassword(
+    override suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
@@ -191,7 +191,7 @@ actual class BiometricInteractor {
         }
     }
 
-    actual suspend fun clearStoredPassword(): Unit = memScoped {
+    override suspend fun clearStoredPassword(): Unit = memScoped {
         val service: CFTypeRef? = CFBridgingRetain(SERVICE)
         val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
         val query: CFMutableDictionaryRef? = newMutableDict()

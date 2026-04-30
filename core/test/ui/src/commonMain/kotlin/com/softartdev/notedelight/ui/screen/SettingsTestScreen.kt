@@ -5,6 +5,7 @@ import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.onNodeWithTag
+import com.softartdev.notedelight.util.ENABLE_BIOMETRIC_SWITCH_TAG
 import com.softartdev.notedelight.util.ENABLE_ENCRYPTION_SWITCH_TAG
 import com.softartdev.notedelight.util.EXPORT_DATABASE_BUTTON_TAG
 import com.softartdev.notedelight.util.IMPORT_DATABASE_BUTTON_TAG
@@ -48,6 +49,12 @@ value class SettingsTestScreen(val nodeProvider: SemanticsNodeInteractionsProvid
     val encryptionSwitchSNI: SemanticsNodeInteraction
         get() = nodeProvider
             .onNodeWithTag(ENABLE_ENCRYPTION_SWITCH_TAG)
+            .assertIsToggleable()
+            .assertIsDisplayed()
+
+    val biometricSwitchSNI: SemanticsNodeInteraction
+        get() = nodeProvider
+            .onNodeWithTag(ENABLE_BIOMETRIC_SWITCH_TAG)
             .assertIsToggleable()
             .assertIsDisplayed()
 

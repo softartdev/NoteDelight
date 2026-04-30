@@ -1,6 +1,8 @@
 package com.softartdev.notedelight.interactor
 
-expect class BiometricInteractor {
+import kotlinx.coroutines.channels.Channel
+
+interface BiometricInteractor {
 
     suspend fun canAuthenticate(): Boolean
 
@@ -22,4 +24,8 @@ expect class BiometricInteractor {
     ): DecryptedPasswordResult
 
     suspend fun clearStoredPassword()
+
+    companion object {
+        val disableDialogChannel: Channel<Boolean> by lazy { Channel() }
+    }
 }

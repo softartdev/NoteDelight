@@ -22,18 +22,18 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.coroutines.resume
 
-actual class BiometricInteractor(context: Context) {
+class AndroidBiometricInteractor(context: Context) : BiometricInteractor {
     private val logger = Logger.withTag("BiometricInteractor")
     private val appContext: Context = context.applicationContext
     private val credentialsStore = BiometricCredentialsStore(appContext)
 
-    actual suspend fun canAuthenticate(): Boolean = BiometricManager
+    override suspend fun canAuthenticate(): Boolean = BiometricManager
         .from(appContext)
         .canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
 
-    actual suspend fun hasStoredPassword(): Boolean = credentialsStore.hasCredentials()
+    override suspend fun hasStoredPassword(): Boolean = credentialsStore.hasCredentials()
 
-    actual suspend fun encryptAndStorePassword(
+    override suspend fun encryptAndStorePassword(
         password: CharSequence,
         title: String,
         subtitle: String,
@@ -64,7 +64,7 @@ actual class BiometricInteractor(context: Context) {
         }
     }
 
-    actual suspend fun decryptStoredPassword(
+    override suspend fun decryptStoredPassword(
         title: String,
         subtitle: String,
         negativeButton: String,
@@ -114,7 +114,7 @@ actual class BiometricInteractor(context: Context) {
         }
     }
 
-    actual suspend fun clearStoredPassword() {
+    override suspend fun clearStoredPassword() {
         credentialsStore.clear()
         runCatching {
             KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }.deleteEntry(KEY_ALIAS)

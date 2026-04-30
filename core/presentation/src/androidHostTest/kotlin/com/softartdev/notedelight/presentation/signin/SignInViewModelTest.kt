@@ -39,7 +39,9 @@ class SignInViewModelTest {
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockAutofillManager = Mockito.mock(AutofillManager::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
-
+    private val biometricPlatformWrapper: BiometricPlatformWrapper = BiometricPlatformWrapper(
+        activity = Mockito.mock(FragmentActivity::class.java)
+    )
     private lateinit var signInViewModel: SignInViewModel
 
     @Before
@@ -91,7 +93,7 @@ class SignInViewModelTest {
             assertEquals(SignInResult(), awaitItem())
 
             signInViewModel.onAction(SignInAction.OnSignInClick(pass = StubEditable("")))
-            assertTrue(awaitItem().state is SignInResult.State.Error.EmptyPass)
+            assertEquals(SignInResult.ErrorType.EMPTY_PASSWORD, awaitItem().errorType)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -105,7 +107,7 @@ class SignInViewModelTest {
             val pass = StubEditable("pass")
             Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(false)
             signInViewModel.onAction(SignInAction.OnSignInClick(pass))
-            assertTrue(awaitItem().state is SignInResult.State.Error.IncorrectPass)
+            assertEquals(SignInResult.ErrorType.INCORRECT_PASSWORD, awaitItem().errorType)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -147,7 +149,7 @@ class SignInViewModelTest {
         Mockito.`when`(mockCheckPasswordUseCase(pass)).thenReturn(true)
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult(), awaitItem())
-            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", biometricPlatformWrapper))
             Mockito.verify(mockRouter).navigateClearingBackStack(route = AppNavGraph.Main)
             cancelAndIgnoreRemainingEvents()
         }
@@ -159,7 +161,7 @@ class SignInViewModelTest {
             .thenReturn(DecryptedPasswordResult.Unavailable)
         signInViewModel.stateFlow.test {
             assertFalse(awaitItem().biometricVisible)
-            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", biometricPlatformWrapper))
             Mockito.verify(mockBiometricInteractor).clearStoredPassword()
             cancelAndIgnoreRemainingEvents()
         }
@@ -172,7 +174,7 @@ class SignInViewModelTest {
             .thenReturn(DecryptedPasswordResult.Failure(errorMessage))
         signInViewModel.stateFlow.test {
             assertEquals(SignInResult(), awaitItem())
-            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", BiometricPlatformWrapper(Mockito.mock(FragmentActivity::class.java))))
+            signInViewModel.onAction(SignInAction.OnBiometricClick("t", "s", "c", biometricPlatformWrapper))
             Mockito.verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Simple(errorMessage))
             cancelAndIgnoreRemainingEvents()
         }
