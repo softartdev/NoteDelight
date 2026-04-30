@@ -24,6 +24,6 @@ sealed interface BiometricEnrollAction {
         val title: String,
         val subtitle: String,
         val negativeButton: String,
-        val biometricPlatformWrapper: BiometricPlatformWrapper? = null,
+        val biometricPlatformWrapper: BiometricPlatformWrapper
     ) : BiometricEnrollAction
 }

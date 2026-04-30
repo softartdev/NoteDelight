@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollAction
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollResult
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollViewModel
@@ -42,19 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun BiometricEnrollDialog(biometricEnrollViewModel: BiometricEnrollViewModel) {
     val result: BiometricEnrollResult by biometricEnrollViewModel.stateFlow.collectAsState()
-    val biometricPlatformWrapper = rememberBiometricPlatformWrapper()
-    ShowBiometricEnrollDialog(
-        result = result,
-        onAction = { action ->
-            biometricEnrollViewModel.onAction(
-                if (action is BiometricEnrollAction.OnEnrollClick) {
-                    action.copy(biometricPlatformWrapper = biometricPlatformWrapper)
-                } else {
-                    action
-                }
-            )
-        },
-    )
+    ShowBiometricEnrollDialog(result, biometricEnrollViewModel::onAction)
 }
 
 @Composable
@@ -63,7 +52,8 @@ fun ShowBiometricEnrollDialog(
     onAction: (action: BiometricEnrollAction) -> Unit = {},
     title: String = stringResource(Res.string.biometric_prompt_title),
     subtitle: String = stringResource(Res.string.biometric_prompt_subtitle),
-    negative: String = stringResource(Res.string.biometric_prompt_negative_button)
+    negative: String = stringResource(Res.string.biometric_prompt_negative_button),
+    bio: BiometricPlatformWrapper = rememberBiometricPlatformWrapper()
 ) = AlertDialog(
     modifier = Modifier.testTag(BIOMETRIC_ENROLL_DIALOG_TAG),
     title = { Text(text = stringResource(Res.string.biometric_enroll_dialog_title)) },
@@ -81,7 +71,7 @@ fun ShowBiometricEnrollDialog(
                 contentDescription = stringResource(Res.string.enter_password),
                 imeAction = ImeAction.Done,
                 keyboardActions = KeyboardActions {
-                    onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative))
+                    onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative, bio))
                 },
                 labelTag = BIOMETRIC_ENROLL_DIALOG_LABEL_TAG,
                 visibilityTag = BIOMETRIC_ENROLL_DIALOG_VISIBILITY_TAG,
@@ -92,7 +82,7 @@ fun ShowBiometricEnrollDialog(
     confirmButton = {
         PasswordSaveButton(
             tag = BIOMETRIC_ENROLL_DIALOG_SAVE_BUTTON_TAG,
-            onClick = { onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative)) },
+            onClick = { onAction(BiometricEnrollAction.OnEnrollClick(title, subtitle, negative, bio)) },
         )
     },
     dismissButton = {

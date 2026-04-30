@@ -52,12 +52,8 @@ class SignInViewModel(
         title: String,
         subtitle: String,
         negativeButton: String,
-        biometricPlatformWrapper: BiometricPlatformWrapper?,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ) = viewModelScope.launch {
-        val wrapper: BiometricPlatformWrapper = biometricPlatformWrapper ?: run {
-            logger.e { "BiometricPlatformWrapper is null — cannot show BiometricPrompt" }
-            return@launch
-        }
         CountingIdlingRes.increment()
         mutableStateFlow.update { it.copy(state = SignInResult.State.Progress) }
         try {
@@ -65,7 +61,7 @@ class SignInViewModel(
                 title = title,
                 subtitle = subtitle,
                 negativeButton = negativeButton,
-                biometricPlatformWrapper = wrapper,
+                biometricPlatformWrapper = biometricPlatformWrapper,
             )) {
                 is DecryptedPasswordResult.Success -> mutableStateFlow.update {
                     it.copy(state = signInInternal(res.password))

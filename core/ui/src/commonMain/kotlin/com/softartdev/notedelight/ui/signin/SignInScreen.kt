@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.softartdev.notedelight.interactor.BiometricPlatformWrapper
 import com.softartdev.notedelight.presentation.signin.SignInAction
 import com.softartdev.notedelight.presentation.signin.SignInResult
 import com.softartdev.notedelight.presentation.signin.SignInViewModel
@@ -63,7 +64,6 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
     val signInResultState: State<SignInResult> = signInViewModel.stateFlow.collectAsState()
     val passwordState: MutableState<String> = remember { mutableStateOf("") }
     val autofillManager: AutofillManager? = LocalAutofillManager.current
-    val biometricPlatformWrapper = rememberBiometricPlatformWrapper()
     LaunchedEffect(key1 = signInViewModel, key2 = autofillManager) {
         signInViewModel.autofillManager = autofillManager
     }
@@ -80,15 +80,7 @@ fun SignInScreen(signInViewModel: SignInViewModel) {
         },
         isError = signInResultState.value.state is SignInResult.State.Error,
         biometricVisible = signInResultState.value.biometricVisible,
-        onAction = { action ->
-            signInViewModel.onAction(
-                if (action is SignInAction.OnBiometricClick) {
-                    action.copy(biometricPlatformWrapper = biometricPlatformWrapper)
-                } else {
-                    action
-                }
-            )
-        },
+        onAction = signInViewModel::onAction,
     )
 }
 
@@ -144,12 +136,13 @@ fun SignInScreenBody(
                 val title = stringResource(Res.string.biometric_prompt_title)
                 val subtitle = stringResource(Res.string.biometric_prompt_subtitle)
                 val negative = stringResource(Res.string.biometric_prompt_negative_button)
+                val bio: BiometricPlatformWrapper = rememberBiometricPlatformWrapper()
                 OutlinedButton(
                     modifier = Modifier
                         .testTag(SIGN_IN_BIOMETRIC_BUTTON_TAG)
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    onClick = { onAction(SignInAction.OnBiometricClick(title, subtitle, negative)) },
+                    onClick = { onAction(SignInAction.OnBiometricClick(title, subtitle, negative, bio)) },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Fingerprint,

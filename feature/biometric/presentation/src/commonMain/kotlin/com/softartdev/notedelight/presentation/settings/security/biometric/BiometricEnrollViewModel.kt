@@ -60,12 +60,8 @@ class BiometricEnrollViewModel(
         title: String,
         subtitle: String,
         negativeButton: String,
-        biometricPlatformWrapper: BiometricPlatformWrapper?,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
     ) = viewModelScope.launch(context = coroutineDispatchers.io) {
-        val wrapper: BiometricPlatformWrapper = biometricPlatformWrapper ?: run {
-            logger.e { "BiometricPlatformWrapper is null — cannot show BiometricPrompt" }
-            return@launch
-        }
         CountingIdlingRes.increment()
         mutableStateFlow.update(BiometricEnrollResult::showLoading)
         try {
@@ -81,7 +77,7 @@ class BiometricEnrollViewModel(
                         title = title,
                         subtitle = subtitle,
                         negativeButton = negativeButton,
-                        biometricPlatformWrapper = wrapper,
+                        biometricPlatformWrapper = biometricPlatformWrapper,
                     )
                     when (result) {
                         is BiometricResult.Success -> withContext(coroutineDispatchers.main) {
