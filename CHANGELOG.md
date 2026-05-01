@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.5] - 2026-05-01
+
+### Features
+- Biometric authentication (Android & iOS)
+- Implement tooltips and refine delete dialog UI
+
+### Refactoring
+- Decouple presentation from Compose and implement `AutofillInteractor` for cross-platform autofill support
+- Reorganize project structure by moving UI and test modules to the `core` namespace
+- Nested test module structure for better organization
+
 ## [8.5.4] - 2026-04-18
 
 ### Features
@@ -140,7 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Refactoring
 - Improve UI test stability and maintainability
-- Create multiplatform `ui:test` module and move UI tests
+- Create multiplatform `core:test:ui` module and move UI tests
 - Simplify navigation methods and improve null handling in RouterImpl
 - Improve UI test retry logic and stability
 

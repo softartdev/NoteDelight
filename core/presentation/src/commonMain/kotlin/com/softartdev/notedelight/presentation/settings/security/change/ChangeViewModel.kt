@@ -1,11 +1,13 @@
 package com.softartdev.notedelight.presentation.settings.security.change
 
-import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.interactor.AutofillInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -21,14 +23,15 @@ import kotlinx.coroutines.withContext
 class ChangeViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val biometricInteractor: BiometricInteractor,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
+    private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@ChangeViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(ChangeResult())
     val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
 
     fun onAction(action: ChangeAction) = when (action) {
         is ChangeAction.Cancel -> cancel()
@@ -37,6 +40,10 @@ class ChangeViewModel(
         is ChangeAction.OnEditRepeatPassword -> onEditRepeatPassword(action.password)
         is ChangeAction.OnChangeClick -> change()
     }
+
+    fun attachAutofillManager(autofillManager: Any) = autofillInteractor.attach(autofillManager)
+
+    fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditOldPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(ChangeResult::hideErrors)
@@ -76,7 +83,15 @@ class ChangeViewModel(
                 }
                 checkPasswordUseCase(oldPassword) -> {
                     changePasswordUseCase(oldPassword, newPassword)
-                    autofillManager?.commit()
+                    if (biometricInteractor.hasStoredPassword()) {
+                        biometricInteractor.clearStoredPassword()
+                        snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            )
+                        )
+                    }
+                    autofillInteractor.commit()
                     withContext(coroutineDispatchers.main) {
                         router.popBackStack()
                     }
@@ -87,7 +102,7 @@ class ChangeViewModel(
             }
         } catch (e: Throwable) {
             logger.e(e) { "Error changing password" }
-            autofillManager?.cancel()
+            autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(ChangeResult::hideLoading)

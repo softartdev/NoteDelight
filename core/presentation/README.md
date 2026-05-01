@@ -120,6 +120,8 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 
 ### Core Dependencies
 - `core:domain` - Domain models and use cases
+- `feature:biometric:domain` - BiometricInteractor (used by SignInViewModel and SettingsViewModel)
+- `feature:backup:domain` - Backup use cases
 - `androidx-lifecycle-viewmodel` - ViewModel base class (multiplatform)
 - `kotlinx-serialization-json` - Serialization support
 - `kotlinx-coroutines` - Asynchronous programming
@@ -127,7 +129,7 @@ All ViewModels are **100% shared** across platforms with no platform-specific co
 - `kermit` - Logging
 
 ### Testing Dependencies
-- `core:test` - Test utilities
+- `core:test:common` - Test utilities
 - `kotlinx-coroutines-test` - Coroutine testing
 - `turbine` - Flow testing
 - `mockito` (Android) - Mocking framework
@@ -200,6 +202,6 @@ The `Router` interface (see `navigation/Router.kt`) keeps ViewModels platform-ag
 
 ## Related Modules
 
-- **Used by**: `ui:shared`, `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
+- **Used by**: `core:ui`, `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
 - **Depends on**: `core:domain`
-- **Test dependencies**: `core:test`
+- **Test dependencies**: `core:test:common`

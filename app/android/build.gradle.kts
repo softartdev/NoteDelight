@@ -25,8 +25,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 854
-        versionName = "8.5.4"
+        versionCode = 855
+        versionName = "8.5.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -73,7 +73,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(project(project.property("CORE_DATA_DB_MODULE").toString()))
     implementation(projects.core.presentation)
-    implementation(projects.ui.shared)
+    implementation(projects.core.ui)
     implementation(projects.feature.backup.domain)
     implementation(projects.feature.backup.ui)
     implementation(kotlin("reflect", libs.versions.kotlin.get()))
@@ -101,8 +101,8 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mockito)
-    androidTestImplementation(projects.ui.test)
-    androidTestImplementation(projects.ui.testJvm) {
+    androidTestImplementation(projects.core.test.ui)
+    androidTestImplementation(projects.core.test.jvm) {
         exclude(group = "org.jetbrains.runtime", module = "jbr-api")
     }
     androidTestImplementation(libs.commonsware.saferoom)

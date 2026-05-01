@@ -294,7 +294,7 @@ class NoteSQLDelightDAO(
 
 ### UI Layer
 
-**Location**: `ui:shared`
+**Location**: `core:ui`
 
 **Purpose**: User interface rendering and interaction
 

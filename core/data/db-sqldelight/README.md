@@ -303,7 +303,7 @@ val notesFlow: Flow<List<Note>> = database.noteQueries
 
 ## Related Modules
 
-- **Used by**: `ui:shared`, `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
+- **Used by**: `core:ui`, `app:android`, `app:desktop`, `app:web`, `app:ios-kit`
 - **Depends on**: `core:domain`, `thirdparty:app:cash:sqldelight:paging3`
 - **Alternative**: `core:data:db-room` (Room implementation)
 

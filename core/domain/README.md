@@ -149,5 +149,5 @@ Unit tests are located in `commonTest/` and can run on all platforms:
 
 ## Related Modules
 
-- **Used by**: `core:presentation`, `core:data`, `ui:shared`
+- **Used by**: `core:presentation`, `core:data`, `core:ui`
 - **Depends on**: None (pure Kotlin)

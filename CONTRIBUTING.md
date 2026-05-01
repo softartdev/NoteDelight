@@ -27,7 +27,7 @@ NoteDelight is a **Kotlin Multiplatform** note-taking application with database 
 
 ### Supported Platforms
 
-- ✅ Android (minSdk 24)
+- ✅ Android (minSdk 23)
 - ✅ iOS (14.0+)
 - ✅ Desktop (Windows, macOS, Linux)
 - ✅ Web (WebAssembly, experimental)
@@ -89,6 +89,60 @@ kotlin.code.style=official
 - One blank line between functions
 - Two blank lines between top-level declarations
 - No blank lines at start/end of blocks
+- Inside an `expect`/`interface` body with several method signatures, separate them with blank lines so the
+  declaration list reads as members rather than a wall of text:
+  ```kotlin
+  expect class BiometricInteractor {
+
+      suspend fun canAuthenticate(): Boolean
+
+      fun hasStoredPassword(): Boolean
+      // ...
+  }
+  ```
+
+#### Call Sites & Lambdas
+- **Use named arguments** when calling a function with three or more parameters, or whenever the call site
+  would otherwise need a same-typed positional argument list. This is especially important for
+  cross-platform interactors and view-model actions:
+  ```kotlin
+  biometricInteractor.encryptAndStorePassword(
+      password = password,
+      title = title,
+      subtitle = subtitle,
+      negativeButton = negativeButton,
+  )
+  ```
+- **Annotate non-trivial local types** so the reader does not have to follow inference through several
+  generics or platform calls (`val res: DecryptedPasswordResult = ...`, `val plain: ByteArray = ...`).
+- **Order `when` branches by the success path first**, error/`else` branches afterwards — this matches the
+  way ViewModels read top-to-bottom in the project. Prefer `when (result) { is Success -> ...; else -> ... }`
+  over an inverted `if (!success) ... else ...` ladder.
+- **Collapse trivial `viewModelScope.launch` blocks to a single line** when their body is one statement
+  (e.g. `private fun cancel() = viewModelScope.launch { router.popBackStack() }`).
+- **Compose state edits**: prefer a single `mutableStateFlow.update { it.copy(...) }` that sets every field
+  affected by an event over multiple chained `update` calls. It keeps the resulting state atomic and
+  makes the visible transition obvious.
+
+#### Composables, strings, and event arguments
+- **Do not pipe localized strings through actions or screen wrappers as empty placeholders.** If a screen
+  needs a `stringResource` to dispatch an action, read it directly at the call site:
+  ```kotlin
+  // ❌ Avoid
+  onClick = { onAction(SignInAction.OnBiometricClick("", "", "")) }
+  // ...wrapper that overwrites the empty strings before forwarding to the ViewModel.
+
+  // ✅ Prefer
+  val title = stringResource(Res.string.biometric_prompt_title)
+  val subtitle = stringResource(Res.string.biometric_prompt_subtitle)
+  val negative = stringResource(Res.string.biometric_prompt_negative_button)
+  onClick = { onAction(SignInAction.OnBiometricClick(title, subtitle, negative)) }
+  ```
+  When the strings are needed inside a stateless `…Body` composable that also has its own preview, expose
+  them as defaulted parameters (`title: String = stringResource(Res.string.…)`) instead of forwarding the
+  action with empty strings and then re-resolving them in the stateful wrapper.
+- **Prefer method references for forwarding callbacks** (`onAction = signInViewModel::onAction`) when the
+  wrapper performs no transformation.
 
 ### Code Organization
 
@@ -455,7 +509,7 @@ Closes #123
 ```
 
 ```
-ui/shared: Fix dark theme colors in note editor
+core/ui: Fix dark theme colors in note editor
 
 - Update Material 3 color scheme
 - Fix text visibility issues

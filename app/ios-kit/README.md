@@ -209,7 +209,7 @@ func getName() -> String? { /* ... */ }
 - `core:domain` - Domain layer
 - `core:data:db-sqldelight` - Data layer
 - `core:presentation` - ViewModels
-- `ui:shared` - Shared Compose UI
+- `core:ui` - Shared Compose UI
 
 ### iOS Dependencies
 - `compose.ui` - Compose Multiplatform
@@ -362,7 +362,7 @@ Kotlin code can be debugged from Xcode with proper symbol mapping.
 
 ### UI Tests
 
-The iOS kit includes multiplatform Compose UI tests that extend `CommonUiTests` from the `ui/test` module:
+The iOS kit includes multiplatform Compose UI tests that extend `CommonUiTests` from the `core/test/ui` module:
 
 **Location**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt`
 
@@ -521,7 +521,7 @@ suspend fun loadNotes(): List<Note> {
 
 ## Related Modules
 
-- **Packages**: `ui:shared`, `core:presentation`, `core:data`, `core:domain`
+- **Packages**: `core:ui`, `core:presentation`, `core:data`, `core:domain`
 - **Consumed by**: `app:iosApp`
 - **Alternative**: Direct framework embedding (without CocoaPods)
 

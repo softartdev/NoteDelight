@@ -36,7 +36,7 @@ kotlin {
             dependencies {
                 implementation(projects.core.domain)
                 implementation(projects.core.presentation)
-                implementation(projects.ui.shared)
+                implementation(projects.core.ui)
                 implementation(libs.compose.ui)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
@@ -48,7 +48,7 @@ kotlin {
         wasmJsTest {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(projects.ui.test)
+                implementation(projects.core.test.ui)
                 implementation(libs.compose.ui.test)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material.icons.extended)

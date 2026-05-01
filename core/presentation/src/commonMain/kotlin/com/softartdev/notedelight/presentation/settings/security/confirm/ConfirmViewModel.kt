@@ -1,11 +1,13 @@
 package com.softartdev.notedelight.presentation.settings.security.confirm
 
-import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.interactor.AutofillInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -19,16 +21,17 @@ import kotlinx.coroutines.withContext
 
 class ConfirmViewModel(
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val biometricInteractor: BiometricInteractor,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
+    private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@ConfirmViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
         value = ConfirmResult()
     )
     val stateFlow: StateFlow<ConfirmResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
 
     fun onAction(action: ConfirmAction) = when (action) {
         is ConfirmAction.Cancel -> cancel()
@@ -36,6 +39,10 @@ class ConfirmViewModel(
         is ConfirmAction.OnEditRepeatPassword -> onEditRepeatPassword(action.password)
         is ConfirmAction.OnConfirmClick -> confirm()
     }
+
+    fun attachAutofillManager(autofillManager: Any) = autofillInteractor.attach(autofillManager)
+
+    fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(ConfirmResult::hideErrors)
@@ -68,7 +75,15 @@ class ConfirmViewModel(
                 }
                 else -> {
                     changePasswordUseCase(null, password)
-                    autofillManager?.commit()
+                    if (biometricInteractor.hasStoredPassword()) {
+                        biometricInteractor.clearStoredPassword()
+                        snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            )
+                        )
+                    }
+                    autofillInteractor.commit()
                     withContext(coroutineDispatchers.main) {
                         router.popBackStack()
                     }
@@ -76,7 +91,7 @@ class ConfirmViewModel(
             }
         } catch (e: Throwable) {
             logger.e(e) { "Error confirming password" }
-            autofillManager?.cancel()
+            autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(ConfirmResult::hideLoading)

@@ -37,12 +37,12 @@ Level 2 (Depends on domain):
 └── core:data:db-room
 
 Level 3 (Depends on presentation/data):
-├── ui:shared
-└── core:test
+├── core:ui
+└── core:test:common
 
 Level 4 (Integration):
-├── ui:test
-├── ui:test-jvm
+├── core:test:ui
+├── core:test:jvm
 └── app:ios-kit
 
 Level 5 (Platform apps):
@@ -56,7 +56,7 @@ Level 5 (Platform apps):
 
 1. **Start here**: `core/domain` - Pure business logic
 2. **Then**: `core/presentation` - ViewModels and state
-3. **Then**: `ui/shared` - UI implementation
+3. **Then**: `core/ui` - UI implementation
 4. **Then**: `core/data/db-sqldelight` - Data persistence
 5. **Finally**: `app/*` - Platform integration
 
@@ -74,7 +74,7 @@ core/presentation/src/commonMain/kotlin/
     ├── presentation/main/MainViewModel.kt # Example ViewModel
     └── navigation/Router.kt              # Navigation abstraction
 
-ui/shared/src/commonMain/kotlin/
+core/ui/src/commonMain/kotlin/
 └── com/softartdev/notedelight/
     ├── App.kt                           # App entry point
     └── ui/main/MainScreen.kt            # Example screen
@@ -161,7 +161,7 @@ sealed class YourState {
 
 ```kotlin
 // Add screen
-// ui/shared/src/commonMain/kotlin/ui/YourScreen.kt
+// core/ui/src/commonMain/kotlin/ui/YourScreen.kt
 @Composable
 fun YourScreen(viewModel: YourViewModel = koinViewModel()) {
     val state by viewModel.stateFlow.collectAsState()
@@ -187,7 +187,7 @@ private fun YourContent(data: List<YourEntity>) {
 
 ```kotlin
 // Add to Koin module
-// ui/shared/src/commonMain/kotlin/di/koinModules.kt
+// core/ui/src/commonMain/kotlin/di/koinModules.kt
 val sharedModule = module {
     factory { YourUseCase(get()) }
     viewModel { YourViewModel(get(), get()) }
@@ -426,8 +426,8 @@ Let Kotlin's type system guide you:
 ### Read Tests
 Tests often show how to use code correctly. Look at:
 - `core/presentation/src/androidHostTest/` for ViewModel examples (wired to `androidHostTest` source set)
-- `ui/test/src/commonMain/kotlin/ui/cases/` for multiplatform UI test examples
-- `ui/test-jvm/src/main/kotlin/` for JVM-specific test utilities
+- `core/test/ui/src/commonMain/kotlin/ui/cases/` for multiplatform UI test examples
+- `core/test/jvm/src/main/kotlin/` for JVM-specific test utilities
 
 ## Getting Unstuck
 

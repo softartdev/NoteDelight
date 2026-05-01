@@ -144,8 +144,8 @@ class NoteSQLDelightDAOTest {
 - `app/desktop/src/jvmTest/` (Desktop)
 - `app/ios-kit/src/commonTest/` (iOS - multiplatform Compose UI tests)
 - `app/web/src/wasmJsTest/` (Web - multiplatform Compose UI tests)
-- `ui/test/src/commonMain/kotlin/` (Multiplatform test framework - base classes)
-- `ui/test-jvm/src/main/kotlin/` (JVM-specific test utilities)
+- `core/test/ui/src/commonMain/kotlin/` (Multiplatform test framework - base classes)
+- `core/test/jvm/src/main/kotlin/` (JVM-specific test utilities)
 
 **Framework**:
 - Compose Multiplatform Test (`compose.uiTest`) - Common multiplatform testing API
@@ -155,7 +155,7 @@ class NoteSQLDelightDAOTest {
 
 **Example**:
 ```kotlin
-// Multiplatform test case (ui/test module)
+// Multiplatform test case (core/test/ui module)
 class CrudTestCase(
     composeUiTest: ComposeUiTest
 ) : () -> Unit, BaseTestCase(composeUiTest) {
@@ -193,16 +193,16 @@ class CrudTestCase(
 ```
 
 **Multiplatform Testing**:
-The `ui/test` module provides multiplatform UI tests that can run on all platforms (Android, iOS, JVM Desktop, Web) using the Compose Multiplatform testing API. The base test class `CommonUiTests` is defined in `ui/test/src/commonMain/kotlin/` and extended by platform-specific test classes:
+The `core/test/ui` module provides multiplatform UI tests that can run on all platforms (Android, iOS, JVM Desktop, Web) using the Compose Multiplatform testing API. The base test class `CommonUiTests` is defined in `core/test/ui/src/commonMain/kotlin/` and extended by platform-specific test classes:
 
 - **iOS**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt` extends `CommonUiTests`
 - **Web**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt` extends `CommonUiTests`
-- **Android/Desktop**: Use `AbstractJvmUiTests` from `ui/test-jvm` which bridges to `ComposeContentTestRule`
+- **Android/Desktop**: Use `AbstractJvmUiTests` from `core/test/jvm` which bridges to `ComposeContentTestRule`
 
-Test cases are written once in `ui/test/src/commonMain/kotlin/ui/cases/` and executed on each platform through the platform-specific test classes.
+Test cases are written once in `core/test/ui/src/commonMain/kotlin/ui/cases/` and executed on each platform through the platform-specific test classes.
 
 **Platform-Specific Test Utilities**:
-The `ui/test-jvm` module provides JVM-specific utilities and abstractions for Android and Desktop tests, including platform-specific implementations of `runOnUiThread` and test setup.
+The `core/test/jvm` module provides JVM-specific utilities and abstractions for Android and Desktop tests, including platform-specific implementations of `runOnUiThread` and test setup.
 
 ### Idling Resources for UI Tests
 
@@ -245,7 +245,7 @@ private fun loadData() = viewModelScope.launch {
 The `ComposeCountingIdlingResource` wraps `CountingIdlingRes` and implements `IdlingResource` for Compose UI tests:
 
 ```kotlin
-// In AbstractJvmUiTests (ui/test-jvm)
+// In AbstractJvmUiTests (core/test/jvm)
 override fun setUp() {
     super.setUp()
     composeTestRule.registerIdlingResource(ComposeCountingIdlingResource)
@@ -261,7 +261,7 @@ Tests automatically wait for `CountingIdlingRes.counter` to reach zero before pr
 
 **See also**:
 - [CountingIdlingRes](../core/domain/src/commonMain/kotlin/com/softartdev/notedelight/util/CountingIdlingRes.kt) - Core idling resource implementation
-- [ComposeCountingIdlingResource](../ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/util/ComposeCountingIdlingResource.kt) - Compose UI test integration
+- [ComposeCountingIdlingResource](../core/test/jvm/src/main/kotlin/com/softartdev/notedelight/util/ComposeCountingIdlingResource.kt) - Compose UI test integration
 
 ## Testing by Layer
 
@@ -409,7 +409,7 @@ class FeatureTestCase(
 }
 ```
 
-**Note**: Screen objects and test cases in `ui/test` use the multiplatform `ComposeUiTest` API. For JVM platforms, `AbstractJvmUiTests` in `ui/test-jvm` bridges `ComposeContentTestRule` to `ComposeUiTest`.
+**Note**: Screen objects and test cases in `core/test/ui` use the multiplatform `ComposeUiTest` API. For JVM platforms, `AbstractJvmUiTests` in `core/test/jvm` bridges `ComposeContentTestRule` to `ComposeUiTest`.
 
 ## Testing Patterns
 
@@ -480,7 +480,7 @@ class LocaleTestCase(
 }
 ```
 
-**Note**: This test case is in `ui/test` module and uses the multiplatform `ComposeUiTest` API, enabling it to run on all platforms.
+**Note**: This test case is in `core/test/ui` module and uses the multiplatform `ComposeUiTest` API, enabling it to run on all platforms.
 
 **Android**: Locale changes via `LocaleInteractor` update system locale
 **Desktop/JVM**: Locale changes via `Locale.setDefault()`
@@ -542,7 +542,7 @@ class FakeNoteDAO : NoteDAO {
 
 Navigation testing verifies that the `Router` implementation correctly prevents duplicate navigation using `launchSingleTop`. This is especially important for dialogs which can stack if navigated to multiple times.
 
-**Location**: [`ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt`](ui/test-jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt)
+**Location**: [`core/test/jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt`](core/test/jvm/src/main/kotlin/com/softartdev/notedelight/ui/AbstractNavigationTest.kt)
 
 **Pattern**: Abstract base class with platform-specific implementations
 
@@ -551,7 +551,7 @@ Navigation testing verifies that the `Router` implementation correctly prevents 
 - **Desktop**: [`app/desktop/src/jvmTest/kotlin/com/softartdev/notedelight/ui/DesktopNavTest.kt`](app/desktop/src/jvmTest/kotlin/com/softartdev/notedelight/ui/DesktopNavTest.kt)
 
 **Key Tests**:
-1. `routerLaunchSingleTopTest()` verifies that `Router.navigate()` (which uses `launchSingleTop = true` in [`RouterImpl.kt:40`](ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/navigation/RouterImpl.kt)) prevents duplicate navigation
+1. `routerLaunchSingleTopTest()` verifies that `Router.navigate()` (which uses `launchSingleTop = true` in [`RouterImpl.kt:40`](core/ui/src/commonMain/kotlin/com/softartdev/notedelight/navigation/RouterImpl.kt)) prevents duplicate navigation
 2. `navControllerLaunchDoubleTopTest()` demonstrates the difference - direct `NavController.navigate()` without `launchSingleTop` creates duplicates
 
 **Why This Matters**:
@@ -676,7 +676,7 @@ val signInButtonSNI: SemanticsNodeInteraction
     get() = nodeProvider.onNodeWithTag(SIGN_IN_BUTTON_TAG)
 ```
 
-All test tags are defined in [`ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt`](../ui/shared/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt).
+All test tags are defined in [`core/ui/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt`](../core/ui/src/commonMain/kotlin/com/softartdev/notedelight/util/TestTags.kt).
 
 Actions:
 ```kotlin
@@ -708,12 +708,12 @@ node.assertTextContains("partial")
 ./gradlew :app:desktop:jvmTest    # Desktop tests
 ./gradlew :app:ios-kit:iosSimulatorArm64Test  # iOS UI tests (requires simulator)
 ./gradlew :app:web:wasmJsBrowserTest  # Web UI tests (requires CHROME_BIN env var)
-./gradlew :ui:test:jvmTest        # Multiplatform UI test framework (JVM)
-./gradlew :ui:test:iosSimulatorArm64Test  # Multiplatform UI test framework (iOS)
-./gradlew :ui:test:connectedAndroidTest  # Multiplatform UI test framework (Android)
-./gradlew :ui:test:wasmJsTest     # Multiplatform UI test framework (Web)
+./gradlew :core:test:ui:jvmTest        # Multiplatform UI test framework (JVM)
+./gradlew :core:test:ui:iosSimulatorArm64Test  # Multiplatform UI test framework (iOS)
+./gradlew :core:test:ui:connectedAndroidTest  # Multiplatform UI test framework (Android)
+./gradlew :core:test:ui:wasmJsTest     # Multiplatform UI test framework (Web)
 ```
-Note: the `ui:test` CocoaPods **release** framework for the iOS simulator is disabled; tests only build debug binaries.
+Note: the `core:test:ui` CocoaPods **release** framework for the iOS simulator is disabled; tests only build debug binaries.
 
 ### IDE
 Right-click test class → Run, or click green arrow next to test method.
@@ -853,7 +853,7 @@ fun testWithTimeout() = runTest {
 **Location**: `app/ios-kit/src/commonTest/kotlin/IosUiTests.kt`
 
 **Structure**:
-- Extends `CommonUiTests` from `ui/test` module
+- Extends `CommonUiTests` from `core/test/ui` module
 - Runs on iOS Simulator (arm64)
 - Uses Compose Multiplatform testing API
 - Tests are shared across platforms via base class
@@ -885,7 +885,7 @@ class IosUiTests : CommonUiTests() {
 **Location**: `app/web/src/wasmJsTest/kotlin/WebUiTests.kt`
 
 **Structure**:
-- Extends `CommonUiTests` from `ui/test` module
+- Extends `CommonUiTests` from `core/test/ui` module
 - Runs in headless Chrome via Karma
 - Uses Compose Multiplatform testing API
 - Tests are shared across platforms via base class

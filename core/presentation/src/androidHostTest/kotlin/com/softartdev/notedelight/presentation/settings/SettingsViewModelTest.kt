@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
@@ -21,8 +22,10 @@ import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.ImportDatabaseUseCase
 import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -44,6 +47,7 @@ class SettingsViewModelTest {
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
     private val mockLocaleInteractor = Mockito.mock(LocaleInteractor::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val mockAppVersionUseCase = Mockito.mock(AppVersionUseCase::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher.scheduler)
@@ -58,12 +62,23 @@ class SettingsViewModelTest {
         revealFileListUseCase = RevealFileListUseCase(),
         localeInteractor = mockLocaleInteractor,
         adaptiveInteractor = adaptiveInteractor,
+        biometricInteractor = mockBiometricInteractor,
         coroutineDispatchers = coroutineDispatchers,
     )
 
+    @Before
+    fun stubBiometricDefaults() {
+        // Mockito returns null for unstubbed suspend methods; unboxing the null Boolean inside
+        // updateSwitches() would NPE and route to ErrorDialog, breaking unrelated tests.
+        runBlocking {
+            Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(false)
+            Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false)
+        }
+    }
+
     @After
     fun tearDown() = runTest {
-        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase)
+        Mockito.reset(mockSafeRepo, mockSnackbarInteractor, mockRouter, mockAppVersionUseCase, mockBiometricInteractor)
     }
 
     @Test
@@ -145,6 +160,52 @@ class SettingsViewModelTest {
             Mockito.verifyNoMoreInteractions(mockRouter)
             expectNoEvents()
         }
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun changeBiometricEnableShowsEnrollDialog() = runTest {
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(true))
+
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricEnrollDialog)
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun changeBiometricDisableShowsConfirmationDialogAndKeepsStoredPasswordOnCancel() = runTest {
+        stubBiometricEnabled()
+        settingsViewModel.updateSwitches()
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
+
+        BiometricInteractor.disableDialogChannel.send(false)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+        Mockito.verify(mockBiometricInteractor, Mockito.never()).clearStoredPassword()
+        Mockito.verifyNoMoreInteractions(mockRouter)
+    }
+
+    @Test
+    fun changeBiometricDisableClearsStoredPasswordAfterConfirmation() = runTest {
+        stubBiometricEnabled()
+        settingsViewModel.updateSwitches()
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(settingsViewModel.stateFlow.value.biometricEnabled)
+
+        settingsViewModel.onAction(SettingsAction.ChangeBiometric(false))
+        Mockito.verify(mockRouter).navigate(route = AppNavGraph.BiometricDisableConfirmationDialog)
+
+        BiometricInteractor.disableDialogChannel.send(true)
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(settingsViewModel.stateFlow.value.biometricEnabled)
+        Mockito.verify(mockBiometricInteractor).clearStoredPassword()
         Mockito.verifyNoMoreInteractions(mockRouter)
     }
 
@@ -249,5 +310,14 @@ class SettingsViewModelTest {
             settingsViewModel.onAction(SettingsAction.RevealFileList)
         }
         assertFalse(settingsViewModel.stateFlow.value.fileListVisible)
+    }
+
+    private fun stubBiometricEnabled() {
+        Mockito.`when`(mockSafeRepo.databaseState).thenReturn(ENCRYPTED)
+        Mockito.`when`(mockLocaleInteractor.languageEnum).thenReturn(LanguageEnum.ENGLISH)
+        runBlocking {
+            Mockito.`when`(mockBiometricInteractor.canAuthenticate()).thenReturn(true)
+            Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(true)
+        }
     }
 }

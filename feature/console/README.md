@@ -35,7 +35,7 @@ Custom Compose-Multiplatform terminal surface (Android/JVM/iOS/wasmJs).
 - `ConsoleTheme` / `rememberConsoleTheme()` — Material3-derived palette and typography (no hardcoded colors)
 - Internal renderers in `render/`: `ConsoleHistoryCanvas` (Canvas + `TextMeasurer`) and `ConsoleInputRow` (`BasicTextField` + Run button)
 
-The module is resource-free — the surrounding `ConsoleScreen` in `:ui:shared` resolves strings via `stringResource(...)` and passes them as plain parameters. See `feature/console/ui/README.md` for design rationale and roadmap.
+The module is resource-free — the surrounding `ConsoleScreen` in `:core:ui` resolves strings via `stringResource(...)` and passes them as plain parameters. See `feature/console/ui/README.md` for design rationale and roadmap.
 
 ## Limitations
 
@@ -43,7 +43,7 @@ The module is resource-free — the surrounding `ConsoleScreen` in `:ui:shared` 
 
 ## UI
 
-The `ConsoleScreen` composable lives in `ui:shared` alongside other settings detail screens. It owns the Scaffold/TopAppBar, tips dropdown, helper text, progress indicator, and Koin view-model wiring; the terminal body itself is delegated to `ConsoleSurface` from `:feature:console:ui`. Together they provide:
+The `ConsoleScreen` composable lives in `core:ui` alongside other settings detail screens. It owns the Scaffold/TopAppBar, tips dropdown, helper text, progress indicator, and Koin view-model wiring; the terminal body itself is delegated to `ConsoleSurface` from `:feature:console:ui`. Together they provide:
 - Top app bar with "Console tips" overflow menu
 - A custom Canvas-rendered scrollback with theme-aware colors
 - Multi-line input with `sqlite>` prompt and `    ...> ` continuation prompt
@@ -63,7 +63,7 @@ The `ConsoleScreen` composable lives in `ui:shared` alongside other settings det
 ./gradlew :feature:console:ui:jvmTest
 
 # Compose UI tests (ConsoleScreen)
-./gradlew :ui:test-jvm:jvmTest
+./gradlew :core:test:jvm:jvmTest
 
 # Full build
 ./gradle/build_quick.sh

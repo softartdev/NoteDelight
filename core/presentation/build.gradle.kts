@@ -8,8 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.compose)
-    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
@@ -33,14 +31,15 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.domain)
             implementation(projects.feature.backup.domain)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(projects.feature.biometric.domain)
+            implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kermit)
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
-            implementation(projects.core.test)
+            implementation(projects.core.test.common)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(libs.turbine)

@@ -40,7 +40,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(projects.core.test)
+            implementation(projects.core.test.common)
         }
         androidMain.dependencies {
         }

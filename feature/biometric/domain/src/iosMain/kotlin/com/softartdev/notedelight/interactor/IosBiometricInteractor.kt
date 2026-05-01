@@ -1,0 +1,255 @@
+@file:OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+
+package com.softartdev.notedelight.interactor
+
+import kotlinx.cinterop.BetaInteropApi
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
+import kotlinx.coroutines.suspendCancellableCoroutine
+import platform.CoreFoundation.CFDictionaryAddValue
+import platform.CoreFoundation.CFDictionaryCreateMutable
+import platform.CoreFoundation.CFMutableDictionaryRef
+import platform.CoreFoundation.CFRelease
+import platform.CoreFoundation.CFTypeRef
+import platform.CoreFoundation.CFTypeRefVar
+import platform.CoreFoundation.kCFAllocatorDefault
+import platform.CoreFoundation.kCFBooleanTrue
+import platform.CoreFoundation.kCFTypeDictionaryKeyCallBacks
+import platform.CoreFoundation.kCFTypeDictionaryValueCallBacks
+import platform.Foundation.CFBridgingRelease
+import platform.Foundation.CFBridgingRetain
+import platform.Foundation.NSData
+import platform.Foundation.NSError
+import platform.Foundation.NSString
+import platform.Foundation.NSUTF8StringEncoding
+import platform.Foundation.create
+import platform.Foundation.dataUsingEncoding
+import platform.LocalAuthentication.LAContext
+import platform.LocalAuthentication.LAErrorAuthenticationFailed
+import platform.LocalAuthentication.LAErrorBiometryNotAvailable
+import platform.LocalAuthentication.LAErrorBiometryNotEnrolled
+import platform.LocalAuthentication.LAErrorPasscodeNotSet
+import platform.LocalAuthentication.LAErrorSystemCancel
+import platform.LocalAuthentication.LAErrorUserCancel
+import platform.LocalAuthentication.LAErrorUserFallback
+import platform.LocalAuthentication.LAPolicyDeviceOwnerAuthenticationWithBiometrics
+import platform.Security.SecAccessControlCreateWithFlags
+import platform.Security.SecAccessControlRef
+import platform.Security.SecItemAdd
+import platform.Security.SecItemCopyMatching
+import platform.Security.SecItemDelete
+import platform.Security.errSecInteractionNotAllowed
+import platform.Security.errSecItemNotFound
+import platform.Security.errSecSuccess
+import platform.Security.kSecAccessControlBiometryCurrentSet
+import platform.Security.kSecAttrAccessControl
+import platform.Security.kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+import platform.Security.kSecAttrAccount
+import platform.Security.kSecAttrService
+import platform.Security.kSecClass
+import platform.Security.kSecClassGenericPassword
+import platform.Security.kSecReturnData
+import platform.Security.kSecUseAuthenticationContext
+import platform.Security.kSecUseAuthenticationUI
+import platform.Security.kSecUseAuthenticationUIFail
+import platform.Security.kSecValueData
+import platform.darwin.OSStatus
+import kotlin.coroutines.resume
+
+class IosBiometricInteractor : BiometricInteractor {
+
+    override suspend fun canAuthenticate(): Boolean = LAContext()
+        .canEvaluatePolicy(LAPolicyDeviceOwnerAuthenticationWithBiometrics, null)
+
+    override suspend fun hasStoredPassword(): Boolean = memScoped {
+        val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+        val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+        val query: CFMutableDictionaryRef? = newMutableDict()
+        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+        CFDictionaryAddValue(query, kSecAttrService, service)
+        CFDictionaryAddValue(query, kSecAttrAccount, account)
+        CFDictionaryAddValue(query, kSecUseAuthenticationUI, kSecUseAuthenticationUIFail)
+        try {
+            val status: OSStatus = SecItemCopyMatching(query, null)
+            status == errSecSuccess || status == errSecInteractionNotAllowed
+        } finally {
+            CFRelease(query)
+            CFRelease(service)
+            CFRelease(account)
+        }
+    }
+
+    override suspend fun encryptAndStorePassword(
+        password: CharSequence,
+        title: String,
+        subtitle: String,
+        negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
+    ): BiometricResult {
+        clearStoredPassword()
+        val context = LAContext().apply {
+            localizedFallbackTitle = ""
+            localizedCancelTitle = negativeButton
+        }
+        val authResult: BiometricResult = evaluatePolicy(context, "$title\n$subtitle")
+        if (authResult !is BiometricResult.Success) return authResult
+        val accessControl: SecAccessControlRef = SecAccessControlCreateWithFlags(
+            allocator = null,
+            protection = kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+            flags = kSecAccessControlBiometryCurrentSet,
+            error = null,
+        ) ?: return BiometricResult.Error("Could not create access control")
+        val passwordData: NSData = NSString.create(string = password.toString())
+            .dataUsingEncoding(NSUTF8StringEncoding)
+            ?: return BiometricResult.Error("Could not encode password")
+        return memScoped {
+            val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+            val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+            val data: CFTypeRef? = CFBridgingRetain(passwordData)
+            val ctxRef: CFTypeRef? = CFBridgingRetain(context)
+            val attrs: CFMutableDictionaryRef? = newMutableDict()
+            CFDictionaryAddValue(attrs, kSecClass, kSecClassGenericPassword)
+            CFDictionaryAddValue(attrs, kSecAttrService, service)
+            CFDictionaryAddValue(attrs, kSecAttrAccount, account)
+            CFDictionaryAddValue(attrs, kSecValueData, data)
+            CFDictionaryAddValue(attrs, kSecAttrAccessControl, accessControl)
+            CFDictionaryAddValue(attrs, kSecUseAuthenticationContext, ctxRef)
+            try {
+                when (val status: OSStatus = SecItemAdd(attrs, null)) {
+                    errSecSuccess -> BiometricResult.Success
+                    else -> mapKeychainStatus(status)
+                }
+            } finally {
+                CFRelease(attrs)
+                CFRelease(service)
+                CFRelease(account)
+                CFRelease(data)
+                CFRelease(ctxRef)
+            }
+        }
+    }
+
+    override suspend fun decryptStoredPassword(
+        title: String,
+        subtitle: String,
+        negativeButton: String,
+        biometricPlatformWrapper: BiometricPlatformWrapper,
+    ): DecryptedPasswordResult {
+        if (!hasStoredPassword()) {
+            return DecryptedPasswordResult.Unavailable
+        }
+        val context = LAContext().apply {
+            localizedReason = "$title\n$subtitle"
+            localizedFallbackTitle = ""
+            localizedCancelTitle = negativeButton
+        }
+        return memScoped {
+            val resultRef: CFTypeRefVar = alloc<CFTypeRefVar>()
+            val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+            val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+            val ctxRef: CFTypeRef? = CFBridgingRetain(context)
+            val query: CFMutableDictionaryRef? = newMutableDict()
+            CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+            CFDictionaryAddValue(query, kSecAttrService, service)
+            CFDictionaryAddValue(query, kSecAttrAccount, account)
+            CFDictionaryAddValue(query, kSecReturnData, kCFBooleanTrue)
+            CFDictionaryAddValue(query, kSecUseAuthenticationContext, ctxRef)
+            val status: OSStatus = try {
+                SecItemCopyMatching(query, resultRef.ptr)
+            } finally {
+                CFRelease(query)
+                CFRelease(service)
+                CFRelease(account)
+                CFRelease(ctxRef)
+            }
+            when (status) {
+                errSecSuccess -> {
+                    val data = CFBridgingRelease(resultRef.value) as? NSData
+                    val pwd = data?.let { nsData ->
+                        NSString.create(data = nsData, encoding = NSUTF8StringEncoding)?.toString()
+                    }
+                    if (pwd != null) {
+                        DecryptedPasswordResult.Success(pwd)
+                    } else {
+                        DecryptedPasswordResult.Failure("Decoding failed")
+                    }
+                }
+                errSecItemNotFound -> {
+                    clearStoredPassword()
+                    DecryptedPasswordResult.Unavailable
+                }
+                else -> when (val biometricResult: BiometricResult = mapKeychainStatus(status)) {
+                    BiometricResult.Unavailable -> DecryptedPasswordResult.Unavailable
+                    BiometricResult.Cancelled -> DecryptedPasswordResult.Cancelled
+                    is BiometricResult.Error -> DecryptedPasswordResult.Failure(biometricResult.message)
+                    else -> DecryptedPasswordResult.Failure(biometricResult.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun clearStoredPassword(): Unit = memScoped {
+        val service: CFTypeRef? = CFBridgingRetain(SERVICE)
+        val account: CFTypeRef? = CFBridgingRetain(ACCOUNT)
+        val query: CFMutableDictionaryRef? = newMutableDict()
+        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+        CFDictionaryAddValue(query, kSecAttrService, service)
+        CFDictionaryAddValue(query, kSecAttrAccount, account)
+        try {
+            SecItemDelete(query)
+        } finally {
+            CFRelease(query)
+            CFRelease(service)
+            CFRelease(account)
+        }
+    }
+
+    private fun newMutableDict(): CFMutableDictionaryRef? = CFDictionaryCreateMutable(
+        allocator = kCFAllocatorDefault,
+        capacity = 0,
+        keyCallBacks = kCFTypeDictionaryKeyCallBacks.ptr,
+        valueCallBacks = kCFTypeDictionaryValueCallBacks.ptr,
+    )
+
+    private suspend fun evaluatePolicy(
+        context: LAContext,
+        reason: String
+    ): BiometricResult = suspendCancellableCoroutine { continuation ->
+        context.evaluatePolicy(
+            policy = LAPolicyDeviceOwnerAuthenticationWithBiometrics,
+            localizedReason = reason,
+        ) { success: Boolean, error: NSError? ->
+            when {
+                success -> continuation.resume(BiometricResult.Success)
+                else -> {
+                    val mapped = when (error?.code) {
+                        LAErrorUserCancel,
+                        LAErrorSystemCancel,
+                        LAErrorUserFallback -> BiometricResult.Cancelled
+                        LAErrorBiometryNotAvailable,
+                        LAErrorBiometryNotEnrolled,
+                        LAErrorPasscodeNotSet -> BiometricResult.Unavailable
+                        LAErrorAuthenticationFailed -> BiometricResult.Failed
+                        else -> BiometricResult.Error(
+                            message = error?.localizedDescription ?: "LAContext error"
+                        )
+                    }
+                    continuation.resume(mapped)
+                }
+            }
+        }
+    }
+
+    private fun mapKeychainStatus(status: OSStatus): BiometricResult = when (status) {
+        errSecItemNotFound -> BiometricResult.Unavailable
+        else -> BiometricResult.Error("Keychain status: $status")
+    }
+
+    companion object {
+        private const val SERVICE = "com.softartdev.notedelight.biometric"
+        private const val ACCOUNT = "db_password"
+    }
+}

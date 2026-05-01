@@ -13,7 +13,7 @@ NoteDelight's web application uses **OPFS (Origin-Private FileSystem)** to provi
 │                    NoteDelight Web App                         │
 ├─────────────────────────────────────────────────────────────────┤
 │  Frontend (Compose Multiplatform)                              │
-│  ├── UI Components (ui:shared)                                 │
+│  ├── UI Components (core:ui)                                 │
 │  ├── ViewModels (core:presentation)                            │
 │  └── Domain Logic (core:domain)                                │
 ├─────────────────────────────────────────────────────────────────┤

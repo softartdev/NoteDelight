@@ -31,7 +31,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core.domain)
-            api(projects.ui.shared)
+            api(projects.core.ui)
             implementation(libs.compose.ui)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -42,7 +42,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(projects.ui.test)
+            implementation(projects.core.test.ui)
             implementation(libs.compose.ui.test)
             implementation(libs.compose.material.icons.extended)
             implementation(libs.androidx.lifecycle.runtime.compose)

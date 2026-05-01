@@ -1,11 +1,13 @@
 package com.softartdev.notedelight.presentation.settings.security.enter
 
-import androidx.compose.ui.autofill.AutofillManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.interactor.AutofillInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
+import com.softartdev.notedelight.interactor.SnackbarTextResource
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -20,14 +22,15 @@ import kotlinx.coroutines.launch
 class EnterViewModel(
     private val checkPasswordUseCase: CheckPasswordUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val biometricInteractor: BiometricInteractor,
     private val snackbarInteractor: SnackbarInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
+    private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@EnterViewModel::class.simpleName.toString())
     private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
     val stateFlow: StateFlow<EnterResult> = mutableStateFlow
-    var autofillManager: AutofillManager? = null
 
     fun onAction(action: EnterAction) = when (action) {
         is EnterAction.Cancel -> cancel()
@@ -35,6 +38,10 @@ class EnterViewModel(
         is EnterAction.TogglePasswordVisibility -> togglePasswordVisibility()
         is EnterAction.OnEnterClick -> enterCheck()
     }
+
+    fun attachAutofillManager(autofillManager: Any) = autofillInteractor.attach(autofillManager)
+
+    fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
         mutableStateFlow.update(EnterResult::hideError)
@@ -58,7 +65,15 @@ class EnterViewModel(
                 }
                 checkPasswordUseCase(password) -> {
                     changePasswordUseCase(password, null)
-                    autofillManager?.commit()
+                    if (biometricInteractor.hasStoredPassword()) {
+                        biometricInteractor.clearStoredPassword()
+                        snackbarInteractor.showMessage(
+                            message = SnackbarMessage.Resource(
+                                res = SnackbarTextResource.BIOMETRIC_DISABLED_PASSWORD_CHANGED
+                            )
+                        )
+                    }
+                    autofillInteractor.commit()
                     navigateUp()
                 }
                 else -> {
@@ -68,7 +83,7 @@ class EnterViewModel(
             }
         } catch (e: Throwable) {
             logger.e(e) { "Error entering password" }
-            autofillManager?.cancel()
+            autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
             mutableStateFlow.update(EnterResult::hideLoading)

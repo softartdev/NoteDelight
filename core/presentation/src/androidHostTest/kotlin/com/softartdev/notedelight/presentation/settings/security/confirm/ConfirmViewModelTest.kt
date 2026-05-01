@@ -5,12 +5,16 @@ import app.cash.turbine.test
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
+import com.softartdev.notedelight.interactor.AutofillInteractor
+import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
+import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.presentation.settings.security.FieldLabel
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -32,25 +36,32 @@ class ConfirmViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val mockChangePasswordUseCase = Mockito.mock(ChangePasswordUseCase::class.java)
+    private val mockBiometricInteractor = Mockito.mock(BiometricInteractor::class.java)
     private val mockRouter = Mockito.mock(Router::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
+    private val mockAutofillInteractor = Mockito.mock(AutofillInteractor::class.java)
     private val coroutineDispatchers = CoroutineDispatchersStub(
         scheduler = mainDispatcherRule.testDispatcher.scheduler
     )
     private val viewModel = ConfirmViewModel(
         changePasswordUseCase = mockChangePasswordUseCase,
+        biometricInteractor = mockBiometricInteractor,
         snackbarInteractor = mockSnackbarInteractor,
         router = mockRouter,
-        coroutineDispatchers = coroutineDispatchers
+        coroutineDispatchers = coroutineDispatchers,
+        autofillInteractor = mockAutofillInteractor,
     )
 
     @Before
-    fun setUp() = Logger.setLogWriters(PrintLogWriter())
+    fun setUp() {
+        Logger.setLogWriters(PrintLogWriter())
+        runBlocking { Mockito.`when`(mockBiometricInteractor.hasStoredPassword()).thenReturn(false) }
+    }
 
     @After
     fun tearDown() {
         Logger.setLogWriters()
-        Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter)
+        Mockito.reset(mockChangePasswordUseCase, mockSnackbarInteractor, mockRouter, mockBiometricInteractor, mockAutofillInteractor)
     }
 
     @Test
@@ -94,6 +105,33 @@ class ConfirmViewModelTest {
             assertTrue(state.loading)
 
             verify(mockRouter).popBackStack()
+            verify(mockAutofillInteractor).commit()
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `confirm failure cancels autofill`() = runTest {
+        val password = "password"
+        val error = RuntimeException("error")
+        Mockito.doThrow(error).`when`(mockChangePasswordUseCase).invoke(null, password)
+
+        viewModel.stateFlow.test {
+            awaitItem()
+
+            viewModel.onAction(ConfirmAction.OnEditPassword(password))
+            awaitItem()
+
+            viewModel.onAction(ConfirmAction.OnEditRepeatPassword(password))
+            awaitItem()
+
+            viewModel.onAction(ConfirmAction.OnConfirmClick)
+            assertTrue(awaitItem().loading)
+            awaitItem()
+
+            verify(mockAutofillInteractor).cancel()
+            verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Simple(error.message!!))
 
             cancelAndIgnoreRemainingEvents()
         }
