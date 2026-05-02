@@ -11,11 +11,15 @@ on:
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
-    runs-on: macos-latest
+    runs-on: macos-26
 
     steps:
       - name: Check out
         uses: actions/checkout@v6
+      - name: Show Xcode version
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
