@@ -14,11 +14,11 @@ permissions:
 jobs:
   build_job:
     name: Build (Unit-tests & Android-Lint)
-    runs-on: macos-latest
+    runs-on: macos-26
     continue-on-error: true
     steps:
       - name: Check out
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Gradle Wrapper Validation
         uses: gradle/actions/wrapper-validation@v6
       - name: Set up JDK 17
@@ -35,7 +35,7 @@ jobs:
         id: kotlin-version
         run: echo "version=$(.github/scripts/extract-kotlin-version.sh)" >> "$GITHUB_OUTPUT"
       - name: Cache Kotlin/Native
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.konan
           key: kotlin-${{ steps.kotlin-version.outputs.version }}
@@ -49,6 +49,7 @@ jobs:
         with:
           name: output-build-artifacts
           path: |
+            core/data/db-sqldelight/build/reports
             ui/shared/build/reports
             ui/test/build/reports
             app/android/build/reports
@@ -66,7 +67,7 @@ jobs:
         target: [default]
     steps:
       - name: Check out
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
@@ -83,7 +84,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: AVD cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: avd-cache
         with:
           path: |

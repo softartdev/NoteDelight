@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -9,7 +8,6 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.cocoapods)
 }
 compose.resources {
     publicResClass = true
@@ -32,11 +30,18 @@ kotlin {
         }
         withHostTest { }
     }
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            isStatic = false
+            freeCompilerArgs += "-Xoverride-konan-properties=minVersion.ios=14.1"
+        }
+    }
     wasmJs {
         browser()
         binaries.executable()
+    }
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget = "14.1"
     }
     sourceSets {
         commonMain.dependencies {
@@ -104,17 +109,6 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
-    }
-    cocoapods {
-        summary = "Shared library for the NoteDelight app"
-        homepage = "https://github.com/softartdev/NoteDelight"
-        version = "1.0"
-        ios.deploymentTarget = "14.0"
-        pod("SQLCipher", libs.versions.iosSqlCipher.get(), linkOnly = true)
-        framework {
-            isStatic = false
-        }
-        if (!OperatingSystem.current().isMacOsX) noPodspec()
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }

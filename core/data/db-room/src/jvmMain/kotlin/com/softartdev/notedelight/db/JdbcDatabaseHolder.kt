@@ -1,14 +1,17 @@
 package com.softartdev.notedelight.db
 
-import androidx.room.Room
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.room3.Room
 import kotlinx.coroutines.Dispatchers
 import java.util.Properties
 
-class JdbcDatabaseHolder(props: Properties = Properties()) : RoomDbHolder {
+class JdbcDatabaseHolder(
+    props: Properties = Properties(),
+    dbPath: String = FilePathResolver().invoke(),
+) : RoomDbHolder {
     val noteDatabase: NoteDatabase = Room
-        .databaseBuilder<NoteDatabase>(name = FilePathResolver().invoke())
-        .setDriver(BundledSQLiteDriver())
+        .databaseBuilder<NoteDatabase>(name = dbPath)
+        .setDriver(JdbcSQLiteDriver(props))
+        .addMigrations(NOTE_DATABASE_MIGRATION_1_2)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 

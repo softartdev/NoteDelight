@@ -1,28 +1,34 @@
 package com.softartdev.notedelight.db
 
 import androidx.paging.PagingSource
-import androidx.room.ConstructedBy
-import androidx.room.Dao
-import androidx.room.Database
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
-import androidx.room.Query
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import androidx.room.Update
+import androidx.room3.ColumnTypeConverters
+import androidx.room3.ConstructedBy
+import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.Database
+import androidx.room3.Entity
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.PrimaryKey
+import androidx.room3.Query
+import androidx.room3.RoomDatabase
+import androidx.room3.Update
+import androidx.room3.migration.Migration
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
-@Database(entities = [Note::class], version = 1, exportSchema = false)
+@Database(entities = [Note::class], version = 2, exportSchema = false)
 @ConstructedBy(NoteDatabaseConstructor::class)
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteRoomDao
 }
 
-@Entity
-@TypeConverters(NoteTypeConverters::class)
+// SQLDelight is already at version 2 because it contains the empty 1.sqm migration.
+internal val NOTE_DATABASE_MIGRATION_1_2 = Migration(1, 2) { }
+
+@Entity(tableName = "note")
+@ColumnTypeConverters(NoteTypeConverters::class)
 data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val title: String,
@@ -32,6 +38,7 @@ data class Note(
 )
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface NoteRoomDao {
 
     @Query("SELECT * FROM note ORDER BY dateModified DESC")

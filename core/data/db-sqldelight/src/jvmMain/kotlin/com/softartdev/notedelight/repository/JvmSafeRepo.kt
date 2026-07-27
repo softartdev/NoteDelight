@@ -14,6 +14,7 @@ import java.util.Properties
 class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : SafeRepo() {
     @Volatile
     private var databaseHolder: JdbcDatabaseHolder? = null
+    private var dbPathOverride: String? = null
 
     override val databaseState: PlatformSQLiteState
         get() = JvmCipherUtils.getDatabaseState(dbPath)
@@ -22,14 +23,18 @@ class JvmSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         get() = SqlDelightNoteDAO({ databaseHolder!!.noteQueries }, coroutineDispatchers)
 
     override val dbPath: String
-        get() = FilePathResolver().invoke()
+        get() = dbPathOverride ?: FilePathResolver().invoke()
+
+    internal fun overrideDbPath(dbPath: String) {
+        dbPathOverride = dbPath
+    }
 
     override suspend fun buildDbIfNeed(passphrase: CharSequence): JdbcDatabaseHolder {
         var instance = databaseHolder
         if (instance == null) {
             val properties = Properties()
             if (passphrase.isNotEmpty()) properties["password"] = StringBuilder(passphrase).toString()
-            instance = JdbcDatabaseHolder(properties)
+            instance = JdbcDatabaseHolder(properties, dbPath)
             instance.createSchema()
             databaseHolder = instance
         }

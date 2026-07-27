@@ -8,10 +8,10 @@
 ## Quick Reference
 
 ### Project Structure & Module Organization
-- Core: `core/domain`, `core/presentation`, `core/data/db-sqldelight` (default), `core/data/db-room` (optional), `core/test/common`.
+- Core: `core/domain`, `core/presentation`, selectable `core/data/db-sqldelight` or `core/data/db-room`, `core/test/common`.
 - Features: `feature/backup/{domain,ui}`, `feature/console/{domain,presentation,ui}`, `feature/file-explorer/data`.
 - UI: `core/ui` (common Compose code and resources), `core/test/ui` (multiplatform Compose UI tests), `core/test/jvm` (JVM-specific UI test utilities).
-- Apps: `app/android`, `app/desktop`, `app/web`, `app/ios-kit` (CocoaPods framework), `app/iosApp` (Xcode project).
+- Apps: `app/android`, `app/desktop`, `app/web`, `app/ios-kit` (SwiftPM-linked framework), `app/iosApp` (Xcode project).
 - Tooling: `build-logic` (Gradle conventions), `thirdparty` (vendored modules), `gradle/libs.versions.toml` (versions).
 - Switch DB module via `gradle.properties` key `CORE_DATA_DB_MODULE`.
 
@@ -21,7 +21,7 @@
 - Android instrumentation tests: `./gradlew :app:android:connectedCheck` (requires emulator/device; uses AndroidX Test Orchestrator).
 - Desktop app: `./gradlew :app:desktop:run` (launches JVM desktop Compose app).
 - Desktop UI tests: `./gradlew :app:desktop:jvmTest` (uses `uiTestJUnit4`).
-- iOS: `cd iosApp && pod install` then open `iosApp/iosApp.xcworkspace` in Xcode and run. Regenerate podspec if needed: `./gradlew :app:ios-kit:podspec`.
+- iOS: open `app/iosApp/iosApp.xcodeproj` in Xcode and run. Kotlin frameworks and SwiftPM packages are built and embedded by the Gradle build phase.
 - iOS UI tests: `./gradlew :app:ios-kit:iosSimulatorArm64Test` (requires iOS simulator; uses multiplatform Compose UI tests).
 - Web app: `./gradlew :app:web:wasmJsBrowserDevelopmentRun --continuous` (launches the web app in a browser with hot reload).
 - Web UI tests: `./gradlew :app:web:wasmJsBrowserTest` (requires Chrome binary via `CHROME_BIN` environment variable; uses Karma/Chrome headless).

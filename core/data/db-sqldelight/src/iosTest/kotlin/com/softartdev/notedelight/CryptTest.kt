@@ -56,7 +56,7 @@ class CryptTest {
         assertEquals(expected = 3, actual = noteList.size)
 
         val cipherVersion = IosCipherUtils.checkCipherVersion(dbName = DB_NAME)
-        assertEquals(expected = "4.9.0 community", actual = cipherVersion)
+        assertEquals(expected = "4.16.0 community", actual = cipherVersion)
 
         logger.v { "1️⃣'st step - encrypt database" }
         safeRepo.closeDatabase()

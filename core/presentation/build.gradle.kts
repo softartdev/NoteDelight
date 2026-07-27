@@ -67,7 +67,7 @@ kotlin {
         wasmJsTest.dependencies {
         }
     }
-    compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+    compilerOptions.freeCompilerArgs.addAll("-Xexpect-actual-classes", "-Xexplicit-backing-fields")
 }
 
 dependencies {

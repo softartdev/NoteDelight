@@ -177,9 +177,7 @@ fun TooltipIconButton(
 )
 
 @Composable
-fun ThreePaneScaffoldScope.VerticalPaneExpansionDragHandle(
-    paneExpansionState: PaneExpansionState,
-) {
+fun ThreePaneScaffoldScope.VerticalPaneExpansionDragHandle(paneExpansionState: PaneExpansionState) {
     val mutableInteractionSource = remember { MutableInteractionSource() }
     VerticalDragHandle(
         modifier = Modifier.paneExpansionDraggable(

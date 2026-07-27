@@ -2,9 +2,8 @@ package com.softartdev.notedelight.repository
 
 import android.content.Context
 import android.text.SpannableStringBuilder
+import androidx.room3.useWriterConnection
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
-import androidx.sqlite.db.SupportSQLiteStatement
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.softartdev.notedelight.db.AndroidDatabaseHolder
@@ -18,6 +17,9 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
     @Volatile
     private var databaseHolder: RoomDbHolder? = null
 
+    private val noteDatabase: NoteDatabase
+        get() = (requireNotNull(databaseHolder) as AndroidDatabaseHolder).noteDatabase
+
     override val databaseState: PlatformSQLiteState
         get() = when (SQLCipherUtils.getDatabaseState(context, DB_NAME)!!) {
             SQLCipherUtils.State.DOES_NOT_EXIST -> PlatformSQLiteState.DOES_NOT_EXIST
@@ -26,14 +28,12 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         }
 
     override val noteDAO: NoteDAO
-        get() = RoomNoteDAO(
-            noteDatabase = (buildDbIfNeed() as AndroidDatabaseHolder).noteDatabase,
-        )
+        get() = RoomNoteDAO(this@AndroidSafeRepo::noteDatabase)
 
     override val dbPath: String
         get() = context.getDatabasePath(DB_NAME).absolutePath
 
-    override fun buildDbIfNeed(passphrase: CharSequence): RoomDbHolder = synchronized(this) {
+    override suspend fun buildDbIfNeed(passphrase: CharSequence): RoomDbHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
             val passCopy = SpannableStringBuilder(passphrase) // threadsafe
@@ -43,7 +43,7 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         return instance
     }
 
-    override fun decrypt(oldPass: CharSequence) {
+    override suspend fun decrypt(oldPass: CharSequence) {
         val originalFile = context.getDatabasePath(DB_NAME)
 
         val oldCopy = SpannableStringBuilder(oldPass) // threadsafe
@@ -56,17 +56,18 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         buildDbIfNeed()
     }
 
-    override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+    override suspend fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         val androidDatabaseHolder = buildDbIfNeed(oldPass) as AndroidDatabaseHolder
-        val supportSQLiteDatabase: SupportSQLiteDatabase = androidDatabaseHolder.noteDatabase.openHelper.writableDatabase
+        val supportSQLiteDatabase: SupportSQLiteDatabase = androidDatabaseHolder.openHelper.writableDatabase
         SafeHelperFactory.rekey(supportSQLiteDatabase, passphrase)
 
+        closeDatabase()
         buildDbIfNeed(newPass)
     }
 
-    override fun encrypt(newPass: CharSequence) {
+    override suspend fun encrypt(newPass: CharSequence) {
         val passphrase = SpannableStringBuilder(newPass) // threadsafe
 
         closeDatabase()
@@ -75,15 +76,16 @@ class AndroidSafeRepo(private val context: Context) : SafeRepo() {
         buildDbIfNeed(newPass)
     }
 
-    override fun execute(query: String): String? {
-        val noteDatabase: NoteDatabase = (buildDbIfNeed() as AndroidDatabaseHolder).noteDatabase
-        val openHelper: SupportSQLiteOpenHelper = noteDatabase.openHelper
-        val supportSQLiteDatabase: SupportSQLiteDatabase = openHelper.writableDatabase
-        val statement: SupportSQLiteStatement = supportSQLiteDatabase.compileStatement(query)
-        return statement.simpleQueryForString()
+    override suspend fun execute(query: String): String? {
+        buildDbIfNeed()
+        return noteDatabase.useWriterConnection { connection ->
+            connection.usePrepared(query) { statement ->
+                if (statement.step()) statement.getText(0) else null
+            }
+        }
     }
 
-    override fun closeDatabase() = synchronized(this) {
+    override suspend fun closeDatabase() = synchronized(this) {
         databaseHolder?.close()
         databaseHolder = null
     }

@@ -388,7 +388,7 @@ val stateFlow: StateFlow<State> = _stateFlow
 ### iOS
 - Use `iosMain/` for iOS-specific code
 - Use `actual` for platform implementations
-- SQLCipher via CocoaPods
+- SQLCipher via Kotlin SwiftPM import
 - Memory model considerations (use Stately)
 
 ### Desktop

@@ -5,18 +5,6 @@ package com.softartdev.notedelight.db
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
 import co.touchlab.kermit.Logger
-import cocoapods.SQLCipher.SQLITE_OK
-import cocoapods.SQLCipher.SQLITE_ROW
-import cocoapods.SQLCipher.sqlite3_close
-import cocoapods.SQLCipher.sqlite3_column_text
-import cocoapods.SQLCipher.sqlite3_errmsg
-import cocoapods.SQLCipher.sqlite3_exec
-import cocoapods.SQLCipher.sqlite3_finalize
-import cocoapods.SQLCipher.sqlite3_key
-import cocoapods.SQLCipher.sqlite3_open
-import cocoapods.SQLCipher.sqlite3_prepare
-import cocoapods.SQLCipher.sqlite3_prepare_v2
-import cocoapods.SQLCipher.sqlite3_step
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
 import kotlinx.cinterop.BetaInteropApi
@@ -41,19 +29,30 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUserDomainMask
 import platform.Foundation.create
 import platform.Foundation.stringByAppendingPathComponent
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.SQLITE_OK
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.SQLITE_ROW
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_close
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_column_text
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_errmsg
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_exec
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_finalize
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_key
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_open
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_prepare
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_prepare_v2
+import swiftPMImport.com.softartdev.notedelight.core.data.db.sqldelight.sqlite3_step
 
 object IosCipherUtils {
     private val logger = Logger.withTag(this@IosCipherUtils::class.simpleName.toString())
 
-    private val dbDirPath: String by lazy {
-        val paths: List<*> = NSSearchPathForDirectoriesInDomains(
-            directory = NSApplicationSupportDirectory,
-            domainMask = NSUserDomainMask,
-            expandTilde = true
-        )
-        val zeroPath: NSString = paths.first() as NSString
-        return@lazy zeroPath.stringByAppendingPathComponent(str = "databases")
-    }
+    private val dbDirPath: String = NSSearchPathForDirectoriesInDomains(
+        directory = NSApplicationSupportDirectory,
+        domainMask = NSUserDomainMask,
+        expandTilde = true
+    ).firstNotNullOf { path: Any? ->
+        return@firstNotNullOf path as? NSString
+    }.stringByAppendingPathComponent(str = "databases")
+
     private val nsFileManager = NSFileManager.defaultManager
 
     fun getDatabaseState(dbName: String): PlatformSQLiteState {
@@ -101,7 +100,7 @@ object IosCipherUtils {
                 var rc: Int = sqlite3_open(dbPath, db.ptr)
                 checkError(rc, db, "Error opening database")
                 val key: CValues<ByteVar>? = password?.cstr
-                logger.d { "sqlite3_key key: ${key?.ptr?.toKString()}, rc: $rc, db: $db, dbPath: ${db.value}" }
+                logger.d { "Applying sqlite3_key during password check" }
                 rc = sqlite3_key(db.value, key?.ptr, key?.size ?: 0)
                 checkError(rc, db, "Error key database")
                 rc = sqlite3_exec(db.value, "SELECT count(*) FROM sqlite_master;", null, null, null)
@@ -281,6 +280,7 @@ object IosCipherUtils {
             nsFileManager.createDirectoryAtPath(path, true, null, null)
         }
         val dbPath = getDatabasePath(dbName)
+        val dbFileExisted = nsFileManager.fileExistsAtPath(dbPath)
         val paths = listOf(
             dbPath,
             "$dbPath-wal",
@@ -293,7 +293,7 @@ object IosCipherUtils {
                 deleted = nsFileManager.removeItemAtPath(path, null) && deleted
             }
         }
-        return deleted
+        return dbFileExisted && deleted
     }
 
     fun checkCipherVersion(dbName: String): String? {

@@ -42,6 +42,7 @@ class NoteUseCaseTest : BaseTest() {
     @BeforeTest
     fun setUp() = runTest {
         Logger.setLogWriters(PrintLogWriter())
+        deleteDb()
         val noteDB = noteDB()
         noteDAO = safeRepo.noteDAO
         createNoteUseCase = CreateNoteUseCase(noteDAO!!)
@@ -52,7 +53,9 @@ class NoteUseCaseTest : BaseTest() {
 
     @AfterTest
     fun tearDown() = runTest {
-        noteDAO!!.deleteAll()
+        noteDAO?.deleteAll()
+        safeRepo.closeDatabase()
+        deleteDb()
         noteDAO = null
         createNoteUseCase = null
         saveNoteUseCase = null

@@ -8,11 +8,11 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.commonsware.cwac.saferoom.SQLCipherUtils
 import com.commonsware.cwac.saferoom.SafeHelperFactory
-import com.softartdev.notedelight.db.AsyncSchema
 import com.softartdev.notedelight.db.NoteDb
 import com.softartdev.notedelight.db.TestSchema
 import com.softartdev.notedelight.db.TestSchema.firstNote
@@ -22,7 +22,6 @@ import com.softartdev.notedelight.db.createQueryWrapper
 import com.softartdev.notedelight.db.toModel
 import com.softartdev.notedelight.repository.SafeRepo.Companion.DB_NAME
 import com.softartdev.notedelight.shared.db.Note
-import com.softartdev.notedelight.util.CoroutineDispatchersImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -43,9 +42,7 @@ class SqlDelightCipherInstrumentedTest {
         assertEquals(SQLCipherUtils.State.DOES_NOT_EXIST, databaseState)
 
         val emptyPassword: Editable = SpannableStringBuilder.valueOf("")
-        val coroutineDispatchers = CoroutineDispatchersImpl()
-        val asyncSchema = AsyncSchema(NoteDb.Schema, coroutineDispatchers)
-        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(asyncSchema)
+        val callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(NoteDb.Schema.synchronous())
         var openDatabase: SupportSQLiteDatabase = SafeHelperFactory
             .fromUser(emptyPassword)
             .create(context, DB_NAME, callback)

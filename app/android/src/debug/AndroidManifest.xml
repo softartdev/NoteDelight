@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Required by Espresso Device to connect from the test process to the emulator control service. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
+</manifest>

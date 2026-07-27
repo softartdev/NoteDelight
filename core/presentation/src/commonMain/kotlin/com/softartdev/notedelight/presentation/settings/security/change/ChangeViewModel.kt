@@ -30,8 +30,9 @@ class ChangeViewModel(
     private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@ChangeViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<ChangeResult> = MutableStateFlow(ChangeResult())
-    val stateFlow: StateFlow<ChangeResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<ChangeResult>
+        field = MutableStateFlow(ChangeResult())
 
     fun onAction(action: ChangeAction) = when (action) {
         is ChangeAction.Cancel -> cancel()
@@ -46,36 +47,35 @@ class ChangeViewModel(
     fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditOldPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(ChangeResult::hideErrors)
-        mutableStateFlow.update { it.copy(oldPassword = password) }
+        stateFlow.update(ChangeResult::hideErrors)
+        stateFlow.update { it.copy(oldPassword = password) }
     }
 
     private fun onEditNewPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(ChangeResult::hideErrors)
-        mutableStateFlow.update { it.copy(newPassword = password) }
+        stateFlow.update(ChangeResult::hideErrors)
+        stateFlow.update { it.copy(newPassword = password) }
     }
 
     private fun onEditRepeatPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(ChangeResult::hideErrors)
-        mutableStateFlow.update { it.copy(repeatNewPassword = password) }
+        stateFlow.update(ChangeResult::hideErrors)
+        stateFlow.update { it.copy(repeatNewPassword = password) }
     }
 
     private fun change() = viewModelScope.launch(context = coroutineDispatchers.io) {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(ChangeResult::showLoading)
+        stateFlow.update(ChangeResult::showLoading)
         try {
-            val oldPassword = mutableStateFlow.value.oldPassword
-            val newPassword = mutableStateFlow.value.newPassword
-            val repeatNewPassword = mutableStateFlow.value.repeatNewPassword
-
+            val oldPassword = stateFlow.value.oldPassword
+            val newPassword = stateFlow.value.newPassword
+            val repeatNewPassword = stateFlow.value.repeatNewPassword
             when {
-                oldPassword.isEmpty() -> mutableStateFlow.update {
+                oldPassword.isEmpty() -> stateFlow.update {
                     it.copy(oldPasswordFieldLabel = FieldLabel.EMPTY_PASSWORD, isOldPasswordError = true)
                 }
-                newPassword.isEmpty() -> mutableStateFlow.update {
+                newPassword.isEmpty() -> stateFlow.update {
                     it.copy(newPasswordFieldLabel = FieldLabel.EMPTY_PASSWORD, isNewPasswordError = true)
                 }
-                newPassword != repeatNewPassword -> mutableStateFlow.update {
+                newPassword != repeatNewPassword -> stateFlow.update {
                     it.copy(
                         repeatPasswordFieldLabel = FieldLabel.PASSWORDS_NOT_MATCH,
                         isRepeatPasswordError = true
@@ -96,7 +96,7 @@ class ChangeViewModel(
                         router.popBackStack()
                     }
                 }
-                else -> mutableStateFlow.update {
+                else -> stateFlow.update {
                     it.copy(oldPasswordFieldLabel = FieldLabel.INCORRECT_PASSWORD, isOldPasswordError = true)
                 }
             }
@@ -105,7 +105,7 @@ class ChangeViewModel(
             autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(ChangeResult::hideLoading)
+            stateFlow.update(ChangeResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }

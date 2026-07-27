@@ -1,8 +1,10 @@
 package com.softartdev.notedelight.repository
 
+import androidx.room3.useWriterConnection
 import com.softartdev.notedelight.db.IosCipherUtils
 import com.softartdev.notedelight.db.IosDatabaseHolder
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.db.NoteDatabase
 import com.softartdev.notedelight.db.RoomNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 
@@ -10,16 +12,19 @@ class IosSafeRepo : SafeRepo() {
 
     private var dbHolder: IosDatabaseHolder? = null
 
+    private val noteDatabase: NoteDatabase
+        get() = requireNotNull(dbHolder).noteDatabase
+
     override val databaseState: PlatformSQLiteState
         get() = IosCipherUtils.getDatabaseState(DB_NAME)
 
     override val noteDAO: NoteDAO
-        get() = RoomNoteDAO(noteDatabase = buildDbIfNeed().noteDatabase)
+        get() = RoomNoteDAO(this@IosSafeRepo::noteDatabase)
 
     override val dbPath: String
         get() = IosCipherUtils.getDatabasePath(DB_NAME)
 
-    override fun buildDbIfNeed(passphrase: CharSequence): IosDatabaseHolder {
+    override suspend fun buildDbIfNeed(passphrase: CharSequence): IosDatabaseHolder {
         var instance = dbHolder
         if (instance == null) {
             IosCipherUtils.ensureDatabaseDir()
@@ -30,29 +35,34 @@ class IosSafeRepo : SafeRepo() {
         return instance
     }
 
-    override fun decrypt(oldPass: CharSequence) {
+    override suspend fun decrypt(oldPass: CharSequence) {
         closeDatabase()
         IosCipherUtils.decrypt(oldPass.toString(), DB_NAME)
         dbHolder = IosDatabaseHolder()
     }
 
-    override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+    override suspend fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
-        dbHolder = IosDatabaseHolder(key = oldPass.toString(), rekey = newPass.toString())
-//        dbHolder?.driver?.execute(null, "VACUUM;", 0)
+        IosCipherUtils.rekey(oldPass.toString(), newPass.toString(), DB_NAME)
+        dbHolder = IosDatabaseHolder(key = newPass.toString())
     }
 
-    override fun encrypt(newPass: CharSequence) {
+    override suspend fun encrypt(newPass: CharSequence) {
         closeDatabase()
         IosCipherUtils.encrypt(newPass.toString(), DB_NAME)
         dbHolder = IosDatabaseHolder(key = newPass.toString())
     }
 
-    override fun execute(query: String): String? {
-        return TODO()
+    override suspend fun execute(query: String): String? {
+        buildDbIfNeed()
+        return noteDatabase.useWriterConnection { connection ->
+            connection.usePrepared(query) { statement ->
+                if (statement.step()) statement.getText(0) else null
+            }
+        }
     }
 
-    override fun closeDatabase() {
+    override suspend fun closeDatabase() {
         dbHolder?.close()
         dbHolder = null
     }

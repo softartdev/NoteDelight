@@ -1,5 +1,4 @@
 const path = require("path");
-const os = require("os");
 const dist = path.resolve("../../node_modules/sql.js/dist/")
 const wasm = path.join(dist, "sql-wasm.wasm")
 
@@ -13,15 +12,33 @@ config.files.push({
 
 config.proxies["/sql-wasm.wasm"] = path.join("/absolute/", wasm)
 
-// Adapted from: https://github.com/ryanclark/karma-webpack/issues/498#issuecomment-790040818
-const output = {
-  path: path.join(os.tmpdir(), '_karma_webpack_') + Math.floor(Math.random() * 1000000),
+const sqliteAssets = [
+  'sqlite.worker.js',
+  'sqlite3.js',
+  'sqlite3.wasm',
+  'sqlite3-opfs-async-proxy.js',
+];
+
+for (const asset of sqliteAssets) {
+  const assetPath = path.resolve(config.basePath, 'kotlin', asset);
+  config.files.push({
+    pattern: assetPath,
+    served: true,
+    watched: false,
+    included: false,
+    nocache: false,
+  });
+  config.proxies[`/${asset}`] = `/absolute/${assetPath}`;
 }
+
 config.set({
-  webpack: {...config.webpack, output}
-});
-config.files.push({
-  pattern: `${output.path}/**/*`,
-  watched: false,
-  included: false,
+  customHeaders: [{
+    match: '.*',
+    name: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin',
+  }, {
+    match: '.*',
+    name: 'Cross-Origin-Embedder-Policy',
+    value: 'require-corp',
+  }]
 });

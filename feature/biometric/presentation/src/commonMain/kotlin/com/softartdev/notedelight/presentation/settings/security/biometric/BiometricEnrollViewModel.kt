@@ -28,9 +28,8 @@ class BiometricEnrollViewModel(
 ) : ViewModel() {
     private val logger = Logger.withTag(this@BiometricEnrollViewModel::class.simpleName.toString())
 
-    private val mutableStateFlow: MutableStateFlow<BiometricEnrollResult> =
-        MutableStateFlow(BiometricEnrollResult())
-    val stateFlow: StateFlow<BiometricEnrollResult> = mutableStateFlow
+    val stateFlow: StateFlow<BiometricEnrollResult>
+        field = MutableStateFlow(BiometricEnrollResult())
 
     fun onAction(action: BiometricEnrollAction) = when (action) {
         is BiometricEnrollAction.Cancel -> cancel()
@@ -44,7 +43,7 @@ class BiometricEnrollViewModel(
         )
     }
 
-    private fun onEditPassword(password: String) = mutableStateFlow.update { result ->
+    private fun onEditPassword(password: String) = stateFlow.update { result ->
         return@update result.copy(
             isError = false,
             fieldLabel = FieldLabel.ENTER_PASSWORD,
@@ -53,7 +52,7 @@ class BiometricEnrollViewModel(
     }
 
     private fun togglePasswordVisibility() = viewModelScope.launch {
-        mutableStateFlow.update(BiometricEnrollResult::togglePasswordVisibility)
+        stateFlow.update(BiometricEnrollResult::togglePasswordVisibility)
     }
 
     private fun enroll(
@@ -63,13 +62,13 @@ class BiometricEnrollViewModel(
         biometricPlatformWrapper: BiometricPlatformWrapper,
     ) = viewModelScope.launch(context = coroutineDispatchers.io) {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(BiometricEnrollResult::showLoading)
+        stateFlow.update(BiometricEnrollResult::showLoading)
         try {
-            val password: String = mutableStateFlow.value.password
+            val password: String = stateFlow.value.password
             when {
                 password.isEmpty() -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
-                    mutableStateFlow.update(BiometricEnrollResult::showError)
+                    stateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
+                    stateFlow.update(BiometricEnrollResult::showError)
                 }
                 checkPasswordUseCase(password) -> {
                     val result: BiometricResult = biometricInteractor.encryptAndStorePassword(
@@ -94,15 +93,15 @@ class BiometricEnrollViewModel(
                     }
                 }
                 else -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
-                    mutableStateFlow.update(BiometricEnrollResult::showError)
+                    stateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
+                    stateFlow.update(BiometricEnrollResult::showError)
                 }
             }
         } catch (e: Throwable) {
             logger.e(e) { "Error enrolling biometric" }
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(BiometricEnrollResult::hideLoading)
+            stateFlow.update(BiometricEnrollResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }

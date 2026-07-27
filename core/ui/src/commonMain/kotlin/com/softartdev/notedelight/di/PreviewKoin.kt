@@ -1,6 +1,9 @@
 package com.softartdev.notedelight.di
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
+import androidx.navigationevent.compose.rememberNavigationEventDispatcherOwner
 import org.koin.compose.KoinApplicationPreview
 import org.koin.core.logger.Level
 import org.koin.dsl.KoinConfiguration
@@ -14,7 +17,12 @@ fun PreviewKoin(content: @Composable () -> Unit) {
             includes(config)
             modules(sharedModules + uiModules)
         },
-        content = content
+        content = {
+            val dispatcherOwner = rememberNavigationEventDispatcherOwner(parent = null)
+            CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides dispatcherOwner) {
+                content()
+            }
+        }
     )
 }
 

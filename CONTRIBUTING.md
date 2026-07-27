@@ -446,9 +446,7 @@ cd NoteDelight
 
 #### iOS
 ```bash
-cd app/iosApp
-pod install
-open iosApp.xcworkspace
+open app/iosApp/iosApp.xcodeproj
 # Build and run in Xcode
 ```
 
@@ -462,16 +460,19 @@ open iosApp.xcworkspace
 Edit `gradle.properties`:
 
 ```properties
-# Use SQLDelight (default)
+# Use SQLDelight
 CORE_DATA_DB_MODULE=:core:data:db-sqldelight
 
 # Or use Room
 CORE_DATA_DB_MODULE=:core:data:db-room
 ```
 
-Then rebuild:
+Only the selected module is included by `settings.gradle.kts`; invalid values fail during
+settings evaluation. Keep exactly one assignment active, then run the full verification workflow:
 ```bash
-./gradlew clean build
+./gradle/build_quick.sh
+./gradlew :app:android:connectedCheck
+./gradlew build
 ```
 
 ## Testing Guidelines

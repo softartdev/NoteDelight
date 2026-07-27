@@ -61,7 +61,7 @@ sqlite> SELECT * FROM note;
 | Platform | Encryption library | `PRAGMA cipher_version` result |
 |----------|-------------------|-------------------------------|
 | Android | SQLCipher (Zetetic) | e.g. `4.6.1 community` |
-| iOS | SQLCipher (CocoaPod) | e.g. `4.5.5 community` |
+| iOS | SQLCipher (Swift package) | `4.16.0 community` |
 | Desktop (JVM) | SQLite3 Multiple Ciphers | e.g. `SQLite3 Multiple Ciphers 2.2.7` |
 | Web | sql.js (no encryption) | N/A |
 

@@ -1,14 +1,17 @@
-//
-//  AppDelegate.swift
-//  iosApp
-//
-//  Created by Artur Babichev on 05.12.2022.
-//  Copyright © 2022 orgName. All rights reserved.
-//
-
+import FirebaseCore
 import UIKit
 import iosComposeKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    let rootHolder: RootHolder = RootHolder()
+    let appLauncher = IosAppLauncher()
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        #if DEBUG
+        appLauncher.doInit(debug: true)
+        #else
+        appLauncher.doInit(debug: false)
+        #endif
+        return true
+    }
 }

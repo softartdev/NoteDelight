@@ -1,19 +1,39 @@
-## SCREENSHOTS 🎞️
+## SCREENSHOTS
 
-<p><img src="web/dark/0.png" height="447"> <img src="web/light/0.png" height="447"></p>
-<p><img src="android/dark/1.png" height="447"> <img src="ios/dark/1.png" height="447"> <img src="desktop/dark/1.png" height="447"></p>
-<p><img src="android/light/1.png" height="447"> <img src="ios/light/1.png" height="447"> <img src="desktop/light/1.png" height="447"></p>
-<p><img src="android/dark/2.png" height="447"> <img src="ios/dark/2.png" height="447"> <img src="desktop/dark/2.png" height="447"></p>
-<p><img src="android/light/2.png" height="447"> <img src="ios/light/2.png" height="447"> <img src="desktop/light/2.png" height="447"></p>
-<p><img src="android/dark/3.png" height="447"> <img src="ios/dark/3.png" height="447"> <img src="desktop/dark/3.png" height="447"></p>
-<p><img src="android/light/3.png" height="447"> <img src="ios/light/3.png" height="447"> <img src="desktop/light/3.png" height="447"></p>
-<p><img src="android/dark/4.png" height="447"> <img src="ios/dark/4.png" height="447"> <img src="desktop/dark/4.png" height="447"></p>
-<p><img src="android/light/4.png" height="447"> <img src="ios/light/4.png" height="447"> <img src="desktop/light/4.png" height="447"></p>
-<p><img src="android/dark/5.png" height="447"> <img src="ios/dark/5.png" height="447"> <img src="desktop/dark/5.png" height="447"></p>
-<p><img src="android/light/5.png" height="447"> <img src="ios/light/5.png" height="447"> <img src="desktop/light/5.png" height="447"></p>
-<p><img src="android/dark/6.png" height="447"> <img src="ios/dark/6.png" height="447"> <img src="desktop/dark/6.png" height="447"></p>
-<p><img src="android/light/6.png" height="447"> <img src="ios/light/6.png" height="447"> <img src="desktop/light/6.png" height="447"></p>
-<p><img src="android/dark/7.png" height="447"> <img src="ios/dark/7.png" height="447"> <img src="desktop/dark/7.png" height="447"></p>
-<p><img src="android/light/7.png" height="447"> <img src="ios/light/7.png" height="447"> <img src="desktop/light/7.png" height="447"></p>
-<p><img src="android/dark/8.png" height="447"> <img src="ios/dark/8.png" height="447"> <img src="desktop/dark/8.png" height="447"></p>
-<p><img src="android/light/8.png" height="447"> <img src="ios/light/8.png" height="447"> <img src="desktop/light/8.png" height="447"></p>
+These screenshots are generated from dedicated Compose Preview functions in
+`core/test/ui/src/androidMain/kotlin/com/softartdev/notedelight/screenshot_preview/ScreenshootPreview.kt`.
+See [docs/SCREENSHOTS.md](../SCREENSHOTS.md) for the generation workflow.
+
+### Phone - Light
+
+<p>
+  <img src="store/phone/light/01-notes.png" height="447">
+  <img src="store/phone/light/02-note-detail.png" height="447">
+  <img src="store/phone/light/03-sign-in.png" height="447">
+  <img src="store/phone/light/04-security-settings.png" height="447">
+</p>
+
+### Phone - Dark
+
+<p>
+  <img src="store/phone/dark/01-notes.png" height="447">
+  <img src="store/phone/dark/02-note-detail.png" height="447">
+  <img src="store/phone/dark/03-sign-in.png" height="447">
+  <img src="store/phone/dark/04-security-settings.png" height="447">
+</p>
+
+### Tablet - Light
+
+<p>
+  <img src="store/tablet/light/01-notes.png" width="680">
+  <img src="store/tablet/light/02-sign-in.png" width="680">
+  <img src="store/tablet/light/03-security-settings.png" width="680">
+</p>
+
+### Tablet - Dark
+
+<p>
+  <img src="store/tablet/dark/01-notes.png" width="680">
+  <img src="store/tablet/dark/02-sign-in.png" width="680">
+  <img src="store/tablet/dark/03-security-settings.png" width="680">
+</p>

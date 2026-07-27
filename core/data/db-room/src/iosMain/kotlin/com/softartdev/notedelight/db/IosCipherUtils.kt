@@ -1,30 +1,27 @@
-@file:OptIn(ExperimentalForeignApi::class)
+@file:OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 
 package com.softartdev.notedelight.db
 
 import cnames.structs.sqlite3
 import cnames.structs.sqlite3_stmt
-import cocoapods.SQLCipher.*
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
 import co.touchlab.kermit.Logger
 import kotlinx.cinterop.*
 import platform.Foundation.*
+import swiftPMImport.com.softartdev.notedelight.core.data.db.room.*
 
 object IosCipherUtils {
     private val logger = Logger.withTag("IosCipherUtils")
     private val nsFileManager = NSFileManager.defaultManager
 
-    private val dbDirPath: String by lazy {
-        val documentDirectory: NSURL? = nsFileManager.URLForDirectory(
-            directory = NSDocumentDirectory,
-            inDomain = NSUserDomainMask,
-            appropriateForURL = null,
-            create = false,
-            error = null,
-        )
-        return@lazy requireNotNull(documentDirectory?.path)
-    }
+    private val dbDirPath: String = NSSearchPathForDirectoriesInDomains(
+        directory = NSApplicationSupportDirectory,
+        domainMask = NSUserDomainMask,
+        expandTilde = true,
+    ).firstNotNullOf { path: Any? ->
+        return@firstNotNullOf path as? NSString
+    }.stringByAppendingPathComponent(str = "databases")
 
     fun getDatabaseState(dbName: String): PlatformSQLiteState {
         var result = PlatformSQLiteState.DOES_NOT_EXIST
@@ -228,6 +225,30 @@ object IosCipherUtils {
         nsFileManager.moveItemAtPath(newDbPath, dbPath, null)
     }
 
+    fun rekey(oldPassword: String, newPassword: String, dbName: String) {
+        val dbPath = getDatabasePath(dbName)
+        memScoped {
+            val database = allocPointerTo<sqlite3>()
+            try {
+                var resultCode = sqlite3_open(dbPath, database.ptr)
+                checkError(resultCode, database, "Error opening database")
+
+                val oldKey = oldPassword.cstr
+                resultCode = sqlite3_key(database.value, oldKey.ptr, oldKey.size - 1)
+                checkError(resultCode, database, "Error applying old database key")
+
+                resultCode = sqlite3_exec(database.value, "SELECT count(*) FROM sqlite_master;", null, null, null)
+                checkError(resultCode, database, "Incorrect old database key")
+
+                val newKey = newPassword.cstr
+                resultCode = sqlite3_rekey(database.value, newKey.ptr, newKey.size - 1)
+                checkError(resultCode, database, "Error changing database key")
+            } finally {
+                sqlite3_close(database.value)
+            }
+        }
+    }
+
     fun getDatabasePath(dbName: String): String {
         return NSString.create(string = dbDirPath).stringByAppendingPathComponent(dbName)
     }
@@ -247,6 +268,7 @@ object IosCipherUtils {
             nsFileManager.createDirectoryAtPath(path, true, null, null)
         }
         val dbPath = getDatabasePath(dbName)
+        val dbFileExisted = nsFileManager.fileExistsAtPath(dbPath)
         val paths = listOf(
             dbPath,
             "$dbPath-wal",
@@ -259,7 +281,7 @@ object IosCipherUtils {
                 deleted = nsFileManager.removeItemAtPath(path, null) && deleted
             }
         }
-        return deleted
+        return dbFileExisted && deleted
     }
 
     fun checkCipherVersion(dbName: String): String? {

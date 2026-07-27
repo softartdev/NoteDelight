@@ -89,6 +89,9 @@ HTML entry point:
 - **Web Worker**: Database operations run off the main thread
 - **Encryption ready**: [SQLite3MultipleCiphers](https://github.com/utelle/SQLite3MultipleCiphers) provides cipher support in the browser
 
+The first password setup normalizes the existing plaintext database to SQLCipher's 4096-byte page
+layout before rekeying it. Password changes and removal use only `PRAGMA rekey`, preserving notes.
+
 ### Webpack
 
 - **Module bundler**: Bundles Wasm, JS, and resources
@@ -115,6 +118,12 @@ This starts a webpack dev server at `http://localhost:8080`
 
 Output: `app/web/build/dist/wasmJs/productionExecutable/`
 
+### Offline WASM builds
+
+The first online build stores the SQLite3MultipleCiphers archive in
+`${GRADLE_USER_HOME}/caches/notedelight/sqlite3mc/<version>/`. Later Web builds, including after
+`clean`, reuse that archive and can run with `--offline`. An empty cache requires one online build.
+
 ### Build Output
 
 ```
@@ -125,7 +134,7 @@ build/dist/wasmJs/productionExecutable/
 ├── skiko.wasm                   # Skia graphics engine
 ├── sqlite3.js                   # SQLite JavaScript
 ├── sqlite3.wasm                 # SQLite3MultipleCiphers WASM (with encryption)
-├── sqlite.worker.js             # Custom OPFS worker
+├── <selected ORM worker>        # SQLDelight or bundled Room 3 OPFS worker
 ├── coi-serviceworker.js         # Service worker for headers
 └── sql-wasm.wasm               # Legacy SQL.js (fallback)
 ```
@@ -578,4 +587,3 @@ try {
 - [SQL.js](https://sql.js.org/)
 - [WebAssembly](https://webassembly.org/)
 - [PWA Documentation](https://web.dev/progressive-web-apps/)
-

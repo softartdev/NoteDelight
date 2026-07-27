@@ -51,23 +51,17 @@ TARGET_SUFFIXES=(
 # "Task middle" part. Add new items here when new iOS tasks appear.
 # Example result task path: :core:ui:${taskMiddle}${targetSuffix}
 TASK_MIDDLES=(
-  "cinteropSQLCipher"
   "compileTestKotlin"
   "compileKotlin"
   "link"
+  "linkDebugFramework"
   "linkDebugTest"
-  "linkPod"
-  "linkPodDebugFramework"
-  "linkPodReleaseFramework"
+  "linkReleaseFramework"
 )
 
 # Tasks that don't fit (module + middle + target) shape.
 TASKS_NO_TARGET=(
   "compileIosMainKotlinMetadata"
-  "podInstallSyntheticIos"
-  "podBuildSQLCipherIos"
-  "podBuildSQLCipherIosSimulator"
-  "podSetupBuildSQLCipherIos"
   "iosArm64Test"
   "iosSimulatorArm64Test"
 )

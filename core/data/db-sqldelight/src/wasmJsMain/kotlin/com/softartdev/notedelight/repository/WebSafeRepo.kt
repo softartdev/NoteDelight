@@ -19,7 +19,7 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     override val noteDAO: NoteDAO
         get() = SqlDelightNoteDAO({ dbHolder!!.noteQueries }, coroutineDispatchers)
 
-    override val dbPath: String = "database.db"
+    override val dbPath: String = DB_NAME
 
     override suspend fun buildDbIfNeed(passphrase: CharSequence): WebDatabaseHolder {
         var instance = dbHolder
@@ -75,6 +75,7 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
     override suspend fun encrypt(newPass: CharSequence) {
         logger.d { "Encrypting database" }
         val holder = dbHolder ?: buildDbIfNeed()
+        holder.normalizePageSizeForSqlCipher()
         val escapedKey = newPass.toString().replace("'", "''")
         holder.driver.execute(null, "PRAGMA cipher = 'sqlcipher'", 0, null).await()
         holder.driver.execute(null, "PRAGMA legacy = 4", 0, null).await()
@@ -124,4 +125,10 @@ class WebSafeRepo(private val coroutineDispatchers: CoroutineDispatchers) : Safe
         dbHolder?.close()
         dbHolder = null
     }
+}
+
+private suspend fun WebDatabaseHolder.normalizePageSizeForSqlCipher() {
+    driver.execute(null, "PRAGMA journal_mode = DELETE", 0, null).await()
+    driver.execute(null, "PRAGMA page_size = 4096", 0, null).await()
+    driver.execute(null, "VACUUM", 0, null).await()
 }

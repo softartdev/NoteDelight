@@ -1,18 +1,17 @@
 package com.softartdev.notedelight.db
 
-import androidx.room.Room
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.room3.Room
 import com.softartdev.notedelight.repository.SafeRepo
 
 class IosDatabaseHolder(
     key: String? = null,
-    rekey: String? = null,
     name: String = SafeRepo.DB_NAME,
 ) : RoomDbHolder {
 
     val noteDatabase: NoteDatabase = Room
         .databaseBuilder<NoteDatabase>(name = IosCipherUtils.getDatabasePath(name))
-        .setDriver(BundledSQLiteDriver())
+        .setDriver(IosCipherDriver(key))
+        .addMigrations(NOTE_DATABASE_MIGRATION_1_2)
         .fallbackToDestructiveMigrationOnDowngrade(false)
         .build()
 

@@ -10,7 +10,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.testing.TestLifecycleOwner
@@ -29,9 +29,6 @@ import com.softartdev.notedelight.ui.cases.LocaleTestCase
 import com.softartdev.notedelight.ui.cases.PrepopulateDbTestCase
 import com.softartdev.notedelight.ui.cases.SettingPasswordTestCase
 import com.softartdev.notedelight.util.kermitLogger
-import kotlinx.coroutines.await
-import kotlinx.coroutines.test.TestResult
-import kotlinx.coroutines.test.runTest
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
@@ -44,7 +41,7 @@ import kotlin.test.Test
 
 /**
  * Web UI tests without inheritance from [CommonUiTests] to avoid issues with awaiting test results
- * on a Web platform. See [awaitComposeUiTest] function for details.
+ * on a Web platform.
  * The version with inheritance from [CommonUiTests] in the end of the file.
  */
 @Ignore
@@ -73,79 +70,79 @@ class WebUiTests {
     }
 
     @Test
-    fun crudNoteTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
-        CrudTestCase(composeUiTest = this@awaitComposeUiTest).invoke()
+    fun crudNoteTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        CrudTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     @Test
-    fun createNoteWhileSelectedTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
-        CreateNoteWhileSelectedTestCase(composeUiTest = this@awaitComposeUiTest).invoke()
+    fun createNoteWhileSelectedTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        CreateNoteWhileSelectedTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     @Test
-    fun editTitleAfterCreateTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
-        EditTitleAfterCreateTestCase(composeUiTest = this@awaitComposeUiTest).invoke()
+    fun editTitleAfterCreateTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        EditTitleAfterCreateTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     @Test
-    fun editTitleAfterSaveTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
-        EditTitleAfterSaveTestCase(composeUiTest = this@awaitComposeUiTest).invoke()
+    fun editTitleAfterSaveTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        EditTitleAfterSaveTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     @Test
-    fun prepopulateDatabase() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
-        PrepopulateDbTestCase(composeUiTest = this@awaitComposeUiTest).invoke()
+    fun prepopulateDatabase() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        PrepopulateDbTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     @Test
-    fun flowAfterCryptTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
+    fun flowAfterCryptTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
         FlowAfterCryptTestCase(
-            composeUiTest = this@awaitComposeUiTest,
-            pressBack = { clickBack(this@awaitComposeUiTest) },
+            composeUiTest = this@runComposeUiTest,
+            pressBack = { clickBack(this@runComposeUiTest) },
             closeSoftKeyboard = ::closeSoftKeyboard
         ).invoke()
     }
 
     @Test
-    fun settingPasswordTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
+    fun settingPasswordTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
         SettingPasswordTestCase(
-            composeUiTest = this@awaitComposeUiTest,
+            composeUiTest = this@runComposeUiTest,
             closeSoftKeyboard = ::closeSoftKeyboard
         ).invoke()
     }
 
     @Test
-    fun localeTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
+    fun localeTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
         LocaleTestCase(
-            composeUiTest = this@awaitComposeUiTest,
-            pressBack = { clickBack(this@awaitComposeUiTest) }
+            composeUiTest = this@runComposeUiTest,
+            pressBack = { clickBack(this@runComposeUiTest) }
         ).invoke()
     }
 
     @Test
-    fun backupFeatureTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
+    fun backupFeatureTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
         BackupFeatureTestCase(
-            composeUiTest = this@awaitComposeUiTest,
-            pressBack = { clickBack(this@awaitComposeUiTest) },
+            composeUiTest = this@runComposeUiTest,
+            pressBack = { clickBack(this@runComposeUiTest) },
             closeSoftKeyboard = ::closeSoftKeyboard
         ).invoke()
     }
 
     @Test
-    fun consoleFeatureTest() = awaitComposeUiTest {
-        launchApp(composeUiTest = this@awaitComposeUiTest)
+    fun consoleFeatureTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
         ConsoleFeatureTestCase(
-            composeUiTest = this@awaitComposeUiTest,
-            pressBack = { clickBack(this@awaitComposeUiTest) },
+            composeUiTest = this@runComposeUiTest,
+            pressBack = { clickBack(this@runComposeUiTest) },
         ).invoke()
     }
 
@@ -156,11 +153,6 @@ class WebUiTests {
                 App()
             }
         }
-    }
-
-    private fun awaitComposeUiTest(block: suspend ComposeUiTest.() -> Unit) = runComposeUiTest {
-        val testResult: TestResult = runTest { block() }
-        testResult.await()
     }
 
     private fun clickBack(composeUiTest: ComposeUiTest) {

@@ -21,10 +21,9 @@ class EditTitleViewModel(
     private val router: Router,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@EditTitleViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<EditTitleResult> = MutableStateFlow(
-        value = EditTitleResult()
-    )
-    val stateFlow: StateFlow<EditTitleResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<EditTitleResult>
+        field = MutableStateFlow(value = EditTitleResult())
 
     fun onAction(action: EditTitleAction) = when (action) {
         is EditTitleAction.Cancel -> cancel()
@@ -33,31 +32,31 @@ class EditTitleViewModel(
     }
 
     fun loadTitle() = viewModelScope.launch {
-        mutableStateFlow.update(EditTitleResult::showLoading)
+        stateFlow.update(EditTitleResult::showLoading)
         try {
             val note = noteDAO.load(noteId)
-            mutableStateFlow.update { it.copy(title = note.title) }
+            stateFlow.update { it.copy(title = note.title) }
         } catch (e: Throwable) {
             logger.e(e) { "Error loading note title" }
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(EditTitleResult::hideLoading)
+            stateFlow.update(EditTitleResult::hideLoading)
         }
     }
 
     private fun onEditTitle(newTitle: String) = viewModelScope.launch {
-        mutableStateFlow.update(EditTitleResult::hideError)
-        mutableStateFlow.update { it.copy(title = newTitle) }
+        stateFlow.update(EditTitleResult::hideError)
+        stateFlow.update { it.copy(title = newTitle) }
     }
 
     private fun editTitle() = viewModelScope.launch {
-        mutableStateFlow.update(EditTitleResult::showLoading)
+        stateFlow.update(EditTitleResult::showLoading)
         try {
-            val noteTitle: String = mutableStateFlow.value.title.trim()
+            val noteTitle: String = stateFlow.value.title.trim()
             if (noteTitle.isEmpty()) {
-                mutableStateFlow.update(EditTitleResult::showError)
+                stateFlow.update(EditTitleResult::showError)
             } else {
-                mutableStateFlow.update(EditTitleResult::hideError)
+                stateFlow.update(EditTitleResult::hideError)
                 updateTitleUseCase(noteId, noteTitle)
                 UpdateTitleUseCase.dialogChannel.send(noteTitle)
                 router.popBackStack()
@@ -66,7 +65,7 @@ class EditTitleViewModel(
             logger.e(e) { "Error updating note title" }
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(EditTitleResult::hideLoading)
+            stateFlow.update(EditTitleResult::hideLoading)
         }
     }
 

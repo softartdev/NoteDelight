@@ -1,6 +1,6 @@
 package com.softartdev.notedelight.ui
 
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.FlakyTest
@@ -27,8 +27,8 @@ class AndroidUiTests : AbstractJvmUiTests() {
 
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
-        .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
+        .around(DetectLeaksAfterTestSuccess())
 
     @Before
     override fun setUp() = super.setUp()

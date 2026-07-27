@@ -75,10 +75,10 @@ gradlePlugin {
 `convention/src/main/kotlin/com/softartdev/notedelight/ProjectExtensions.kt` contains reusable extension functions used by module `build.gradle.kts` files to keep scripts small and focused.
 
 Current extracted helpers include:
-- `disableIosReleaseTasks()` for iOS pod release link task disabling
 - `excludeSqliteJdbcFromNonTestConfigurations()` for SQLDelight/JVM driver substitution
 - `configureWasmJsChromeForKarmaTests()` for web Karma Chrome auto-detection (`CHROME_BIN`)
-- `configureWebSqlite3mcWasmResources()` for SQLite3MultipleCiphers WASM download/unzip task wiring
+- `configureWebSqlite3mcWasmResources()` for shared cached SQLite3MultipleCiphers WASM download/unzip task wiring
+- `configureSwiftPmOfflineResolution()` for cached SwiftPM resolution arguments
 - `forceAndroidXDependencyVersions()` for Android dependency resolution forcing
 
 Typical module usage:

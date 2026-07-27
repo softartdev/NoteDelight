@@ -1,7 +1,11 @@
-@file:OptIn(ExperimentalWasmDsl::class)
+@file:OptIn(
+    ExperimentalWasmDsl::class,
+    org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class,
+)
 
 import com.softartdev.notedelight.excludeSqliteJdbcFromNonTestConfigurations
-import org.gradle.internal.os.OperatingSystem
+import com.softartdev.notedelight.configureWasmJsChromeForKarmaTests
+import com.softartdev.notedelight.configureWebSqlite3mcWasmResources
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -10,8 +14,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.sqlDelight)
-    alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.download)
 }
+
+group = "com.softartdev.notedelight"
 
 project.excludeSqliteJdbcFromNonTestConfigurations()
 
@@ -28,10 +34,29 @@ kotlin {
         withHostTest { }
         withDeviceTest { }
     }
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            isStatic = false
+            freeCompilerArgs += "-Xoverride-konan-properties=minVersion.ios=14.1"
+        }
+        iosTarget.compilations.getByName("main").cinterops.configureEach {
+            if (name == "swiftPMImport") {
+                compilerOpts("-DSQLITE_HAS_CODEC")
+            }
+        }
+    }
     wasmJs {
         browser()
+    }
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget = "14.1"
+        discoverClangModulesImplicitly = false
+        swiftPackage(
+            url = url("https://github.com/sqlcipher/SQLCipher.swift.git"),
+            version = exact(libs.versions.iosSqlCipher.get()),
+            products = listOf(product("SQLCipher")),
+            importedClangModules = listOf("SQLCipher"),
+        )
     }
     sourceSets {
         commonMain.dependencies {
@@ -90,17 +115,12 @@ kotlin {
         }
         wasmJsTest.dependencies {
         }
-    }
-    cocoapods {
-        summary = "Data library for the NoteDelight app"
-        homepage = "https://github.com/softartdev/NoteDelight"
-        version = "1.0"
-        ios.deploymentTarget = "14.0"
-        pod("SQLCipher", libs.versions.iosSqlCipher.get())
-        framework {
-            isStatic = false
+        named("wasmJsMain") {
+            resources.srcDir(layout.buildDirectory.dir("sqlite"))
         }
-        if (!OperatingSystem.current().isMacOsX) noPodspec()
+        named("wasmJsTest") {
+            resources.srcDir(layout.buildDirectory.dir("sqlite"))
+        }
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
@@ -118,3 +138,6 @@ sqldelight {
     }
     linkSqlite.set(false)
 }
+
+project.configureWasmJsChromeForKarmaTests()
+project.configureWebSqlite3mcWasmResources()

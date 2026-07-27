@@ -15,6 +15,6 @@ class UpdateTitleUseCase(private val noteDAO: NoteDAO) : suspend (Long, String) 
     }
 
     companion object {
-        val dialogChannel: Channel<String?> by lazy { return@lazy Channel<String?>() }
+        val dialogChannel: Channel<String?> by lazy(::Channel)
     }
 }

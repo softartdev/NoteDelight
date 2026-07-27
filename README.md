@@ -25,10 +25,11 @@ Supported platforms:
 
 ## SCREENSHOTS 🎞️
 
-<img src="docs/screenshoots/android/dark/1.png" height="447"> <img src="docs/screenshoots/ios/light/5.png" height="447"> <img src="docs/screenshoots/desktop/dark/6.png" height="447">
-<img src="docs/screenshoots/web/light/0.png" height="447">
+<p>
+  <img src="docs/screenshoots/store/tablet/light/01-notes.png" width="860">
+</p>
 
-[More screenshoots…](/docs/screenshoots/screenshots.md)
+[More screenshots…](/docs/screenshoots/screenshots.md)
 
 ## ARCHITECTURE 🏛
 

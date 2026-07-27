@@ -2,17 +2,28 @@ package com.softartdev.notedelight.db
 
 import com.softartdev.notedelight.BaseTest
 import com.softartdev.notedelight.model.PlatformSQLiteState
+import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import platform.Foundation.NSFileManager
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import com.softartdev.notedelight.repository.SafeRepo
-import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class IosCipherUtilsTest : BaseTest() {
+
+    @Test
+    fun databasePathMatchesSqlDelightLocation() {
+        val path = IosCipherUtils.getDatabasePath(SafeRepo.DB_NAME)
+
+        assertTrue(
+            actual = path.endsWith("/Library/Application Support/databases/${SafeRepo.DB_NAME}"),
+            message = "Unexpected database path: $path",
+        )
+    }
 
     @Test
     @Ignore

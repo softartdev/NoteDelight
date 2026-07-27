@@ -25,10 +25,9 @@ class MainViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@MainViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<NoteListResult> = MutableStateFlow(
-        value = NoteListResult.Loading
-    )
-    val stateFlow: StateFlow<NoteListResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<NoteListResult>
+        field: MutableStateFlow<NoteListResult> = MutableStateFlow(value = NoteListResult.Loading)
 
     private var job: Job? = null
 
@@ -70,18 +69,18 @@ class MainViewModel(
     fun updateNotes() {
         job?.cancel()
         try {
-            mutableStateFlow.value = NoteListResult.Loading
+            stateFlow.value = NoteListResult.Loading
             val pagingDataFlow: Flow<PagingData<Note>> = safeRepo.noteDAO.pagingDataFlow
                 .cachedIn(viewModelScope)
-            mutableStateFlow.value = NoteListResult.Success(result = pagingDataFlow, selectedId = null)
+            stateFlow.value = NoteListResult.Success(result = pagingDataFlow, selectedId = null)
         } catch (throwable: Throwable) {
             handleError("Error loading notes", throwable)
         }
         job = viewModelScope.launch {
             adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedId: Long? ->
-                val currentState = mutableStateFlow.value
+                val currentState = stateFlow.value
                 if (currentState is NoteListResult.Success) {
-                    mutableStateFlow.value = currentState.copy(selectedId = selectedId)
+                    stateFlow.value = currentState.copy(selectedId = selectedId)
                 }
             }
         }
@@ -92,7 +91,7 @@ class MainViewModel(
         if (isDbError(throwable)) viewModelScope.launch(coroutineDispatchers.main) {
             router.navigateClearingBackStack(AppNavGraph.Splash)
         }
-        mutableStateFlow.value = NoteListResult.Error(throwable.message)
+        stateFlow.value = NoteListResult.Error(throwable.message)
     }
 
     private fun isDbError(throwable: Throwable): Boolean {

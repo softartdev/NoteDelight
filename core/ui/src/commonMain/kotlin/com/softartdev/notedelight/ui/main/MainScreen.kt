@@ -49,7 +49,7 @@ import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.CREATE_NOTE_FAB_TAG
 import com.softartdev.notedelight.util.MAIN_SETTINGS_BUTTON_TAG
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.app_name
 import notedelight.core.ui.generated.resources.create_note
@@ -138,7 +138,7 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
     val pagingData: PagingData<Note> = PagingData.from(data = TestSchema.notes)
-    val pagingFlow: Flow<PagingData<Note>> = flowOf(pagingData)
+    val pagingFlow: Flow<PagingData<Note>> = MutableStateFlow(pagingData)
     val noteListState: MutableState<NoteListResult> = remember {
         mutableStateOf(NoteListResult.Success(pagingFlow, null))
     }

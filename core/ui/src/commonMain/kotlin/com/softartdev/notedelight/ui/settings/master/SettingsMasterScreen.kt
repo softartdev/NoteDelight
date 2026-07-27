@@ -49,22 +49,32 @@ fun SettingsMasterScreen(categoriesViewModel: SettingsCategoriesViewModel) {
     LaunchedEffect(categoriesViewModel) {
         categoriesViewModel.launchCategories()
     }
-    val resultState: State<SettingsCategoriesResult> = categoriesViewModel.stateFlow.collectAsState()
-    val result: SettingsCategoriesResult = resultState.value
+    SettingsMasterScreen(
+        settingsCategoriesResultState = categoriesViewModel.stateFlow.collectAsState(),
+        onSettingsCategoriesAction = categoriesViewModel::onAction
+    )
+}
+
+@Composable
+fun SettingsMasterScreen(
+    settingsCategoriesResultState: State<SettingsCategoriesResult>,
+    onSettingsCategoriesAction: (SettingsCategoriesAction) -> Unit,
+) {
+    val result: SettingsCategoriesResult = settingsCategoriesResultState.value
     val refreshState: State<Boolean> = remember {
-        derivedStateOf { resultState.value.loading }
+        derivedStateOf { settingsCategoriesResultState.value.loading }
     }
     SettingsMasterScreenBody(
         selectedCategoryId = result.selectedCategoryId,
         onCategoryClick = { category: SettingsCategory ->
-            categoriesViewModel.onAction(SettingsCategoriesAction.SelectCategory(category))
+            onSettingsCategoriesAction(SettingsCategoriesAction.SelectCategory(category))
         },
-        onRefresh = { categoriesViewModel.onAction(SettingsCategoriesAction.Refresh) },
+        onRefresh = { onSettingsCategoriesAction(SettingsCategoriesAction.Refresh) },
         refreshState = refreshState,
-        onNavigateBack = { categoriesViewModel.onAction(SettingsCategoriesAction.NavBack) }
+        onNavigateBack = { onSettingsCategoriesAction(SettingsCategoriesAction.NavBack) }
     )
     NavBackHandler(enabled = result.selectedCategoryId == null) {
-        categoriesViewModel.onAction(SettingsCategoriesAction.NavBack)
+        onSettingsCategoriesAction(SettingsCategoriesAction.NavBack)
     }
 }
 

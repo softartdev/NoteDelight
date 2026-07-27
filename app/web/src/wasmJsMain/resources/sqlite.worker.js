@@ -21,7 +21,7 @@ async function createDatabase() {
     try {
       const rc = capi.sqlite3mc_vfs_create("opfs", 0);
       if (rc === 0) {
-        db = new sqlite3.oo1.DB("file:database.db?vfs=multipleciphers-opfs", "c");
+        db = new sqlite3.oo1.DB("file:notes.db?vfs=multipleciphers-opfs", "c");
         return;
       }
     } catch (error) {
@@ -30,7 +30,7 @@ async function createDatabase() {
 
     // Fallback: try opfs without encryption
     try {
-      db = new sqlite3.oo1.DB("file:database.db?vfs=opfs", "c");
+      db = new sqlite3.oo1.DB("file:notes.db?vfs=opfs", "c");
       return;
     } catch (error) {
       try {

@@ -31,7 +31,7 @@ final class Note_Delight_Unit_Tests: XCTestCase {
         let cipherChecker = CipherChecker()
         let cipherVersion = cipherChecker.checkCipherVersion()
         XCTAssertNotNil(cipherVersion)
-        XCTAssertEqual(cipherVersion, "4.5.4 community")
+        XCTAssertEqual(cipherVersion, "4.16.0 community")
     }
 
     func testPerformanceExample() throws {

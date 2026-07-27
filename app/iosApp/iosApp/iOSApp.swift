@@ -1,21 +1,28 @@
 import SwiftUI
+import UIKit
 import iosComposeKit
 
 @main
 struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
-    var appDelegate
-    
-    @Environment(\.scenePhase)
-    var scenePhase: ScenePhase
-
-    var appHelper: AppHelper { appDelegate.rootHolder.appHelper }
+    private var appDelegate
 
     var body: some Scene {
         WindowGroup {
-            ComposeController(appHelper: appHelper)
+            ComposeView(appLauncher: appDelegate.appLauncher)
                 .ignoresSafeArea(edges: .all)
                 .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
         }
+    }
+}
+
+private struct ComposeView: UIViewControllerRepresentable {
+    let appLauncher: IosAppLauncher
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        appLauncher.mainViewController
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 }

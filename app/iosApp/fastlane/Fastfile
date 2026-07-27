@@ -48,9 +48,11 @@ platform :ios do
 #     increment_version_number # Automatically increment version number. Manually: "bundle exec fastlane run increment_version_number".
     build_num = app_store_build_number(api_key_path:"fastlane/28F5CB4337.json", live: false)
     increment_build_number(
-      build_number: build_num + 1 # set a specific number
+      build_number: build_num + 1, # set a specific number
+      xcodeproj: "iosApp.xcodeproj"
     )
     gym(
+      project: 'iosApp.xcodeproj',
       scheme: 'iosApp',
       export_method: 'app-store',
       export_options: {

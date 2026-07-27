@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.download)
 }
 
+val coreDataDbModule = providers.gradleProperty("CORE_DATA_DB_MODULE").get()
+
 kotlin {
     wasmJs {
         outputModuleName.set("composeApp")
@@ -42,8 +44,15 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.kermit)
+                implementation(npm("firebase", libs.versions.firebaseWeb.get()))
+                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
             resources.srcDir(layout.buildDirectory.dir("sqlite"))
+            if (coreDataDbModule == ":core:data:db-room") {
+                resources.srcDir(
+                    project(coreDataDbModule).layout.projectDirectory.dir("src/wasmJsMain/resources")
+                )
+            }
         }
         wasmJsTest {
             dependencies {

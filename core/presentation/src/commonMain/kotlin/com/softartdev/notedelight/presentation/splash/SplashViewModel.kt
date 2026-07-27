@@ -17,8 +17,9 @@ class SplashViewModel(
     private val router: Router
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SplashViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    val stateFlow: StateFlow<Boolean> = mutableStateFlow
+
+    val stateFlow: StateFlow<Boolean>
+        field = MutableStateFlow(true)
 
     fun checkEncryption() = viewModelScope.launch {
         CountingIdlingRes.increment()
@@ -40,7 +41,7 @@ class SplashViewModel(
             logger.e(error) { "❌" }
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
         } finally {
-            mutableStateFlow.value = false
+            stateFlow.value = false
             CountingIdlingRes.decrement()
         }
     }

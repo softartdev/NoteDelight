@@ -22,7 +22,7 @@ The `core/test/ui` module provides the base test framework. Platform-specific te
 # Run test framework tests
 ./gradlew :core:test:ui:iosSimulatorArm64Test
 ```
-Note: the `core:test:ui` CocoaPods **release** framework for the iOS simulator is disabled because tests only need debug binaries.
+The `core:test:ui` iOS framework is configured directly through Kotlin Multiplatform and supports debug and release binaries.
 
 ### Android (Requires emulator/device)
 ```bash

@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.lifecycle.Lifecycle.State.DESTROYED
 import androidx.test.espresso.Espresso
@@ -9,7 +9,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.softartdev.notedelight.MainActivity
 import com.softartdev.notedelight.util.CREATE_NOTE_FAB_TAG
-import kotlinx.coroutines.test.runTest
 import leakcanary.DetectLeaksAfterTestSuccess
 import leakcanary.TestDescriptionHolder
 import org.junit.Assert.assertTrue
@@ -26,11 +25,11 @@ class SignOutTest {
 
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
-        .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
+        .around(DetectLeaksAfterTestSuccess())
 
     @Test
-    fun signOutTest() = runTest {
+    fun signOutTest() {
         composeTestRule
             .onNodeWithTag(CREATE_NOTE_FAB_TAG)
             .assertIsDisplayed()

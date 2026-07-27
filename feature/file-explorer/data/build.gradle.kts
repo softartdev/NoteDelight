@@ -19,19 +19,16 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
         }
+        withHostTest { }
     }
     iosArm64()
     iosSimulatorArm64()
     wasmJs {
         browser()
     }
-    sourceSets.forEach {
-        it.dependencies {
-            implementation(project.dependencies.enforcedPlatform(libs.coroutines.bom))
-        }
-    }
     sourceSets {
         commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(projects.core.domain)
             implementation(libs.coroutines.core)
             implementation(libs.kermit)

@@ -39,6 +39,9 @@ We follow the **Testing Pyramid** approach:
 - `core/data/db-sqldelight/src/androidHostTest` (androidHostTest source set)
 - `core/data/db-sqldelight/src/commonTest`
 - `core/data/db-sqldelight/src/wasmJsTest`
+- `core/data/db-room/src/androidHostTest` (androidHostTest source set)
+- `core/data/db-room/src/jvmTest` (Room CRUD, Flow, Paging, schema, and encryption)
+- `core/data/db-room/src/wasmJsTest` (Room worker protocol and OPFS persistence)
 
 **Framework**: 
 - Kotlin Test (multiplatform)
@@ -336,7 +339,7 @@ class MainViewModelTest {
     @Test
     fun `loading notes should update state from Loading to Success`() = runTest {
         // Given
-        val notes = flowOf(PagingData.from(TestData.sampleNotes))
+        val notes = MutableStateFlow(PagingData.from(TestData.sampleNotes))
         whenever(mockRepo.noteDAO.pagingDataFlow).thenReturn(notes)
         
         // When
@@ -713,7 +716,7 @@ node.assertTextContains("partial")
 ./gradlew :core:test:ui:connectedAndroidTest  # Multiplatform UI test framework (Android)
 ./gradlew :core:test:ui:wasmJsTest     # Multiplatform UI test framework (Web)
 ```
-Note: the `core:test:ui` CocoaPods **release** framework for the iOS simulator is disabled; tests only build debug binaries.
+The `core:test:ui` iOS framework is configured directly through Kotlin Multiplatform and can build debug or release binaries.
 
 ### IDE
 Right-click test class → Run, or click green arrow next to test method.
@@ -902,11 +905,10 @@ export CHROME_BIN=/path/to/chrome
 - Uses SQL.js fallback when SQLite3 WASM is not available (e.g., in headless browsers)
 - Handles web-specific database worker setup
 
-**Database Fallback**:
-The web tests use a fallback mechanism:
-1. First tries to use official SQLite3 WASM with OPFS support
-2. Falls back to SQL.js (in-memory) if SQLite3 is not available
-3. This ensures tests can run in headless browser environments
+**Database drivers**:
+SQLDelight uses its `sqlite.worker.js` protocol and Room 3 uses the AndroidX SQLite
+`WebWorkerSQLiteDriver` protocol in `room3.worker.js`. Both target the same `notes.db` OPFS file
+through SQLite3MultipleCiphers and fall back to in-memory storage only when OPFS is unavailable.
 
 **Example**:
 ```kotlin

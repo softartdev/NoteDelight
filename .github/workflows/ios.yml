@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Show Xcode version
         run: |
           xcodebuild -version
@@ -44,7 +44,7 @@ jobs:
           KEYCHAIN_NAME: app-signing
         run: fastlane setup_certificates_lane
       - name: Pre-build with Gradle
-        run: ./gradlew :app:ios-kit:linkPodReleaseFrameworkIosArm64
+        run: ./gradlew :app:ios-kit:linkReleaseFrameworkIosArm64
       - name: AppStore build lane with gym
         working-directory: ./app/iosApp
         run: fastlane appstore_build_gym_lane

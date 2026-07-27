@@ -28,10 +28,9 @@ class ConfirmViewModel(
     private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@ConfirmViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<ConfirmResult> = MutableStateFlow(
-        value = ConfirmResult()
-    )
-    val stateFlow: StateFlow<ConfirmResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<ConfirmResult>
+        field = MutableStateFlow(value = ConfirmResult())
 
     fun onAction(action: ConfirmAction) = when (action) {
         is ConfirmAction.Cancel -> cancel()
@@ -45,29 +44,29 @@ class ConfirmViewModel(
     fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(ConfirmResult::hideErrors)
-        mutableStateFlow.update { it.copy(password = password) }
+        stateFlow.update(ConfirmResult::hideErrors)
+        stateFlow.update { it.copy(password = password) }
     }
 
     private fun onEditRepeatPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(ConfirmResult::hideErrors)
-        mutableStateFlow.update { it.copy(repeatPassword = password) }
+        stateFlow.update(ConfirmResult::hideErrors)
+        stateFlow.update { it.copy(repeatPassword = password) }
     }
 
     private fun confirm() = viewModelScope.launch(context = coroutineDispatchers.io) {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(ConfirmResult::showLoading)
+        stateFlow.update(ConfirmResult::showLoading)
         try {
-            val password = mutableStateFlow.value.password
-            val repeatPassword = mutableStateFlow.value.repeatPassword
+            val password = stateFlow.value.password
+            val repeatPassword = stateFlow.value.repeatPassword
             when {
-                password != repeatPassword -> mutableStateFlow.update {
+                password != repeatPassword -> stateFlow.update {
                     it.copy(
                         repeatPasswordFieldLabel = FieldLabel.PASSWORDS_NOT_MATCH,
                         isRepeatPasswordError = true
                     )
                 }
-                password.isEmpty() -> mutableStateFlow.update {
+                password.isEmpty() -> stateFlow.update {
                     it.copy(
                         passwordFieldLabel = FieldLabel.EMPTY_PASSWORD,
                         isPasswordError = true
@@ -94,7 +93,7 @@ class ConfirmViewModel(
             autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(ConfirmResult::hideLoading)
+            stateFlow.update(ConfirmResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }

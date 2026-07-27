@@ -1,22 +1,22 @@
 [versions]
 jdk = "17"
-agp = "9.2.0"
-kotlin = "2.3.21"
+agp = "9.3.1"
+kotlin = "2.4.10"
 compileSdk = "37"
 targetSdk = "37"
 minSdk = "23"
-compose = "1.10.3"
-coroutines = "1.10.2"
+compose = "1.11.1"
+coroutines = "1.11.0"
 sqlDelight = "2.3.2"
-room = "2.8.4"
-androidxSqlite = "2.6.2"
+room3 = "3.0.0"
+androidxSqlite = "2.7.0"
 saferoom = "1.4.0"
-androidSqlCipher = "4.15.0"
-iosSqlCipher = "4.9.0"
-jdbcSQLite = "3.51.2.0"
-koin-bom = "4.2.1"
+androidSqlCipher = "4.17.0"
+iosSqlCipher = "4.16.0"
+jdbcSQLite = "3.53.2.0"
+koin-bom = "4.2.2"
 kotlinx-serialization = "1.11.0"
-kotlinx-datetime = "0.7.1"
+kotlinx-datetime = "0.8.0-0.6.x-compat"
 kotlinx-browser = "0.5.0"
 kermit = "2.1.0"
 materialThemePrefs = "1.0.0"
@@ -26,20 +26,21 @@ composeMaterialAdaptive = "1.2.0"
 androidxAppcompat = "1.7.1"
 androidxBiometric = "1.1.0"
 androidxDatastore = "1.2.1"
-androidxViewModel = "2.10.0"
+androidxViewModel = "2.11.0"
 androidxNavigation = "2.9.2"
-androidxNavigationEvent = "1.0.1"
+androidxNavigationEvent = "1.1.0"
 androidxActivityCompose = "1.13.0"
-androidxComposeTest = "1.11.0"
+androidxComposeTest = "1.11.4"
 androidxCoreSplashscreen = "1.2.0"
 androidxTracing = "1.3.0"
-androidxLifecycle = "2.10.0"
+androidxLifecycle = "2.11.0"
 androidxArch = "2.2.0"
-androidxPaging = "3.4.2"
+androidxPaging = "3.5.0"
 androidxTestExt = "1.3.0"
 androidxTest = "1.7.0"
 androidxTestOrchestrator = "1.6.1"
-firebase = "34.12.0"
+firebase = "34.16.0"
+firebaseWeb = "12.15.0"
 leakCanary = "2.14"
 junit = "4.13.2"
 mockito = "5.23.0"
@@ -48,12 +49,12 @@ espresso = "3.7.0"
 desugar = "2.1.5"
 androidSecurityLint = "1.0.4"
 appdirs = "1.5.0"
-uiTooling = "1.11.0"
+uiTooling = "1.11.4"
 download = "5.7.0"
 okio = "3.17.0"
 accompanist-permissions = "0.37.3"
-ksp = "2.3.6"
-gms = "4.4.4"
+ksp = "2.3.9"
+gms = "4.5.0"
 crashlytics = "3.0.7"
 
 [libraries]
@@ -72,16 +73,16 @@ sqlDelight-web = { module = "app.cash.sqldelight:web-worker-driver", version.ref
 sqlDelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 sqlDelight-asyncExt = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqlDelight" }
 
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+room3-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room3" }
+room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3" }
+room3-paging = { module = "androidx.room3:room3-paging", version.ref = "room3" }
+room3-testing = { module = "androidx.room3:room3-testing", version.ref = "room3" }
 
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "androidxSqlite" }
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidxSqlite" }
+androidx-sqlite-web = { module = "androidx.sqlite:sqlite-web", version.ref = "androidxSqlite" }
 
 commonsware-saferoom = { module = "io.github.softartdev:saferoom.x", version.ref = "saferoom" }
 android-sqlcipher = { module = "net.zetetic:sqlcipher-android", version.ref = "androidSqlCipher" }
@@ -190,14 +191,13 @@ gradle-convention = { id = "com.softartdev.notedelight.buildlogic.convention", v
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
-room = { id = "androidx.room", version.ref = "room" }
+room3 = { id = "androidx.room3", version.ref = "room3" }
 gms = { id = "com.google.gms.google-services", version.ref = "gms" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 download = { id = "de.undercouch.download", version.ref = "download" }

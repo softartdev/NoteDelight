@@ -17,7 +17,6 @@ import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -35,12 +34,11 @@ class NoteViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@NoteViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<NoteResult> = MutableStateFlow(NoteResult())
-    val stateFlow: StateFlow<NoteResult> = mutableStateFlow
 
-    val checkSaveChangeChannel: Channel<Unit>
-        get() = adaptiveInteractor.checkSaveChangeChannel
-
+    val stateFlow: StateFlow<NoteResult>
+        field = MutableStateFlow(
+            value = NoteResult(checkSaveChangeChannel = adaptiveInteractor.checkSaveChangeChannel)
+        )
     private var noteId: Long
         set(value) { adaptiveInteractor.selectedNoteIdStateFlow.value = value }
         get() = requireNotNull(adaptiveInteractor.selectedNoteIdStateFlow.value)
@@ -53,7 +51,7 @@ class NoteViewModel(
             adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedNoteId: Long? ->
                 logger.d { "Collected note id = $selectedNoteId" }
                 when (selectedNoteId) {
-                    null -> mutableStateFlow.update { result -> result.copy(note = null) }
+                    null -> stateFlow.update { result -> result.copy(note = null) }
                     else -> createOrLoadNote()
                 }
             }
@@ -74,7 +72,7 @@ class NoteViewModel(
     }
 
     private fun createNote() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val id: Long = withContext(coroutineDispatchers.io) {
                 createNoteUseCase()
@@ -84,29 +82,29 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error creating note" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun loadNote() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val note = withContext(coroutineDispatchers.io) {
                 noteDAO.load(noteId)
             }
             logger.d { "Loaded note with id = $noteId" }
-            mutableStateFlow.update { result -> result.copy(note = note) }
+            stateFlow.update { result -> result.copy(note = note) }
         } catch (e: Throwable) {
             handleError(e) { "Error loading note" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun saveNote(text: String) = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
-            var title: String? = mutableStateFlow.value.note?.title
+            var title: String? = stateFlow.value.note?.title
             if (title.isNullOrEmpty() && text.isEmpty()) {
                 snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
             } else {
@@ -115,7 +113,7 @@ class NoteViewModel(
                     saveNoteUseCase(noteId, title, text)
                 }
                 logger.d { "Saved note with id=$noteId" }
-                mutableStateFlow.update { result: NoteResult ->
+                stateFlow.update { result: NoteResult ->
                     result.copy(note = result.note?.copy(title = title, text = text))
                 }
                 snackbarInteractor.showMessage(SnackbarMessage.Resource(
@@ -126,27 +124,27 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error saving note" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun editTitle() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             subscribeToEditTitle()
             router.navigate(route = AppNavGraph.EditTitleDialog(noteId = noteId))
         } catch (e: Throwable) {
             handleError(e) { "Error navigating to edit title dialog" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun checkSaveChange(text: String) = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val title: String = createTitleIfNeed(text)
-            mutableStateFlow.update { result: NoteResult ->
+            stateFlow.update { result: NoteResult ->
                 result.copy(note = result.note?.copy(title = title, text = text))
             }
             val changed: Boolean = isChanged(noteId, title, text)
@@ -159,12 +157,12 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error checking save changes" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun showSaveChangesDialog(text: String) = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             router.navigate(route = AppNavGraph.SaveChangesDialog)
             logger.d { "Subscribe to save note dialog channel" }
@@ -179,12 +177,12 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error subscribing to save note dialog channel" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun saveNoteAndNavBack(text: String) = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val title: String = createTitleIfNeed(text)
             saveNoteUseCase(noteId, title, text)
@@ -193,12 +191,12 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error saving note and navigating back" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun doNotSaveAndNavBack() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val noteIsEmpty: Boolean = isEmpty(noteId)
             if (noteIsEmpty) {
@@ -210,12 +208,12 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error not saving note and navigating back" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
     private fun subscribeToDeleteNote() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             router.navigate(route = AppNavGraph.DeleteNoteDialog)
             val doDelete: Boolean = withContext(coroutineDispatchers.io) {
@@ -230,7 +228,7 @@ class NoteViewModel(
         } catch (e: Throwable) {
             handleError(e) { "Error subscribing to delete note dialog channel" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
@@ -249,25 +247,25 @@ class NoteViewModel(
     }
 
     private fun subscribeToEditTitle() = viewModelScope.launch {
-        mutableStateFlow.update(NoteResult::showLoading)
+        stateFlow.update(NoteResult::showLoading)
         try {
             val title: String? = withContext(coroutineDispatchers.io) {
                 UpdateTitleUseCase.dialogChannel.receive()
             }
             if (title.isNullOrEmpty()) return@launch
 
-            mutableStateFlow.update { result: NoteResult ->
+            stateFlow.update { result: NoteResult ->
                 val updatedNote = result.note?.copy(title = title)
                 result.copy(note = updatedNote)
             }
         } catch (e: Throwable) {
             handleError(e) { "Error subscribing to edit title dialog channel" }
         } finally {
-            mutableStateFlow.update(NoteResult::hideLoading)
+            stateFlow.update(NoteResult::hideLoading)
         }
     }
 
-    private fun createTitleIfNeed(text: String): String = mutableStateFlow.value.note?.title
+    private fun createTitleIfNeed(text: String): String = stateFlow.value.note?.title
         ?.takeIf(String::isNotEmpty)
         ?: createTitle(text)
 
@@ -303,7 +301,7 @@ class NoteViewModel(
     }
 
     @VisibleForTesting
-    fun resetResultState(noteId: Long = 0L) = mutableStateFlow.update { noteResult ->
+    fun resetResultState(noteId: Long = 0L) = stateFlow.update { noteResult ->
         this@NoteViewModel.noteId = noteId
         return@update noteResult.copy(loading = false, note = null)
     }

@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 
 class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
     private val logger = Logger.withTag(this@FilesViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<FilesResult> = MutableStateFlow(
-        value = FilesResult.Loading
-    )
-    val resultStateFlow: StateFlow<FilesResult> = mutableStateFlow
+
+    val resultStateFlow: StateFlow<FilesResult>
+        field: MutableStateFlow<FilesResult> = MutableStateFlow(value = FilesResult.Loading)
+
     var job: Job? = null
 
     fun updateFiles() {
@@ -23,13 +23,13 @@ class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
         job = viewModelScope.launch {
             fileRepo.fileListFlow
                 .map(FilesResult::Success)
-                .collect(mutableStateFlow::emit)
+                .collect(resultStateFlow::emit)
         }
         try {
             fileRepo.goToStartPath()
         } catch (e: Throwable) {
             logger.e(e) { "Error goToStartPath" }
-            mutableStateFlow.value = FilesResult.Error(e.message)
+            resultStateFlow.value = FilesResult.Error(e.message)
         }
     }
 
@@ -38,7 +38,7 @@ class FilesViewModel(private val fileRepo: FileRepo) : ViewModel() {
             fileRepo.goTo(fileName)
         } catch (e: Throwable) {
             logger.e(e) { "Error onItemClicked: $fileName" }
-            mutableStateFlow.value = FilesResult.Error(e.message)
+            resultStateFlow.value = FilesResult.Error(e.message)
         }
     }
 }

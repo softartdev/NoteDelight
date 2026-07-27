@@ -27,8 +27,8 @@ class SignInViewModel(
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SignInViewModel::class.simpleName.toString())
 
-    private val mutableStateFlow: MutableStateFlow<SignInResult> = MutableStateFlow(SignInResult())
-    val stateFlow: StateFlow<SignInResult> = mutableStateFlow
+    val stateFlow: StateFlow<SignInResult>
+        field = MutableStateFlow(SignInResult())
 
     fun onAction(action: SignInAction) = when (action) {
         is SignInAction.OnSettingsClick -> router.navigateClearingBackStack(AppNavGraph.Settings)
@@ -48,7 +48,7 @@ class SignInViewModel(
 
     private fun refreshBiometric() = viewModelScope.launch {
         val visible: Boolean = biometricInteractor.hasStoredPassword() && biometricInteractor.canAuthenticate()
-        mutableStateFlow.update { it.copy(biometricVisible = visible) }
+        stateFlow.update { it.copy(biometricVisible = visible) }
     }
 
     private fun signInWithBiometric(
@@ -58,8 +58,8 @@ class SignInViewModel(
         biometricPlatformWrapper: BiometricPlatformWrapper,
     ) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SignInResult::hideErrors)
-        mutableStateFlow.update(SignInResult::showLoading)
+        stateFlow.update(SignInResult::hideErrors)
+        stateFlow.update(SignInResult::showLoading)
         try {
             when (val res: DecryptedPasswordResult = biometricInteractor.decryptStoredPassword(
                 title = title,
@@ -71,7 +71,7 @@ class SignInViewModel(
                 is DecryptedPasswordResult.Cancelled -> Unit
                 is DecryptedPasswordResult.Unavailable -> {
                     biometricInteractor.clearStoredPassword()
-                    mutableStateFlow.update(SignInResult::hideBiometric)
+                    stateFlow.update(SignInResult::hideBiometric)
                 }
                 is DecryptedPasswordResult.Failure -> {
                     logger.e { res.message }
@@ -82,15 +82,15 @@ class SignInViewModel(
             logger.e(error) { "Error during biometric sign in" }
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
         } finally {
-            mutableStateFlow.update(SignInResult::hideLoading)
+            stateFlow.update(SignInResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun signIn(pass: CharSequence) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SignInResult::hideErrors)
-        mutableStateFlow.update(SignInResult::showLoading)
+        stateFlow.update(SignInResult::hideErrors)
+        stateFlow.update(SignInResult::showLoading)
         try {
             signInInternal(pass)
         } catch (error: Throwable) {
@@ -98,17 +98,17 @@ class SignInViewModel(
             autofillInteractor.cancel()
             router.navigate(route = AppNavGraph.ErrorDialog(message = error.message))
         } finally {
-            mutableStateFlow.update(SignInResult::hideLoading)
+            stateFlow.update(SignInResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private suspend fun signInInternal(pass: CharSequence) = when {
-        pass.isEmpty() -> mutableStateFlow.update(SignInResult::showEmptyPasswordError)
+        pass.isEmpty() -> stateFlow.update(SignInResult::showEmptyPasswordError)
         checkPasswordUseCase(pass) -> {
             autofillInteractor.commit()
             router.navigateClearingBackStack(AppNavGraph.Main)
         }
-        else -> mutableStateFlow.update(SignInResult::showIncorrectPasswordError)
+        else -> stateFlow.update(SignInResult::showIncorrectPasswordError)
     }
 }

@@ -95,30 +95,38 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
     LaunchedEffect(settingsViewModel) {
         settingsViewModel.launchCollectingSelectedCategoryId()
     }
-    val resultState: State<SettingsResult> = settingsViewModel.stateFlow.collectAsState()
-    val result: SettingsResult = resultState.value
-    val refreshState: State<Boolean> = remember {
-        derivedStateOf { resultState.value.loading }
-    }
     LifecycleResumeEffect(key1 = settingsViewModel) {
         settingsViewModel.updateSwitches()
         onPauseOrDispose {}
     }
+    SettingsDetailScreen(
+        settingsResultState = settingsViewModel.stateFlow.collectAsState(),
+        onSettingsAction = settingsViewModel::onAction
+    )
+}
+
+@Composable
+fun SettingsDetailScreen(
+    settingsResultState: State<SettingsResult>,
+    onSettingsAction: (SettingsAction) -> Unit,
+) {
+    val result: SettingsResult = settingsResultState.value
+    val refreshState: State<Boolean> = remember {
+        derivedStateOf { settingsResultState.value.loading }
+    }
     when (result.selectedCategory) {
         null -> SettingsDetailPanePlaceholder()
         SettingsCategory.Console -> {
-            ConsoleScreen(onBackClick = { settingsViewModel.onAction(SettingsAction.NavBack) })
-            NavBackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
+            ConsoleScreen(onBackClick = { onSettingsAction(SettingsAction.NavBack) })
+            NavBackHandler { onSettingsAction(SettingsAction.NavBack) }
         }
         else -> {
             SettingsDetailScreenBody(
                 result = result,
-                onBackClick = { settingsViewModel.onAction(SettingsAction.NavBack) },
-                onAction = settingsViewModel::onAction,
-                onRefresh = { settingsViewModel.onAction(SettingsAction.Refresh) },
+                onAction = onSettingsAction,
                 refreshState = refreshState,
             )
-            NavBackHandler { settingsViewModel.onAction(SettingsAction.NavBack) }
+            NavBackHandler { onSettingsAction(SettingsAction.NavBack) }
         }
     }
 }
@@ -127,9 +135,7 @@ fun SettingsDetailScreen(settingsViewModel: SettingsViewModel) {
 fun SettingsDetailScreenBody(
     result: SettingsResult = SettingsResult(),
     category: SettingsCategory = result.selectedCategory!!,
-    onBackClick: () -> Unit = {},
     onAction: (action: SettingsAction) -> Unit = {},
-    onRefresh: () -> Unit = {},
     pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     refreshState: State<Boolean> = remember { derivedStateOf { result.loading } },
 ) = Scaffold(
@@ -137,7 +143,7 @@ fun SettingsDetailScreenBody(
         TopAppBar(
             title = { Text(stringResource(category.titleRes)) },
             navigationIcon = {
-                IconButton(onClick = onBackClick) {
+                IconButton(onClick = { onAction(SettingsAction.NavBack) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
@@ -150,7 +156,7 @@ fun SettingsDetailScreenBody(
         PullToRefreshBox(
             modifier = Modifier.padding(paddingValues),
             isRefreshing = refreshState.value,
-            onRefresh = onRefresh,
+            onRefresh = { onAction(SettingsAction.Refresh) },
             state = pullToRefreshState
         ) {
             LaunchedEffect(key1 = refreshState.value) {

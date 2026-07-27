@@ -27,7 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,14 +37,13 @@ import androidx.compose.ui.unit.dp
 import com.softartdev.notedelight.presentation.note.NoteAction
 import com.softartdev.notedelight.presentation.note.NoteResult
 import com.softartdev.notedelight.presentation.note.NoteViewModel
-import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.MainDetailPanePlaceholder
+import com.softartdev.notedelight.ui.NavBackHandler
 import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
 import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
 import com.softartdev.theme.material3.PreferableMaterialTheme
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.action_delete_note
@@ -61,22 +59,23 @@ fun NoteDetail(noteViewModel: NoteViewModel) {
     LaunchedEffect(noteViewModel) {
         noteViewModel.launchCollectingSelectedNoteId()
     }
-    val result: NoteResult by noteViewModel.stateFlow.collectAsState()
-    when (result.note) {
-        null -> MainDetailPanePlaceholder()
-        else -> NoteDetail(
-            result = result,
-            onAction = noteViewModel::onAction,
-            checkSaveChangeChannel = noteViewModel.checkSaveChangeChannel
-        )
-    }
+    val noteDetailState: State<NoteResult> = noteViewModel.stateFlow.collectAsState()
+    NoteDetailScreen(noteDetailState, noteViewModel::onAction)
+}
+
+@Composable
+fun NoteDetailScreen(
+    noteDetailState: State<NoteResult>,
+    onAction: (NoteAction) -> Unit,
+) = when (noteDetailState.value.note) {
+    null -> MainDetailPanePlaceholder()
+    else -> NoteDetail(noteDetailState.value, onAction)
 }
 
 @Composable
 fun NoteDetail(
     result: NoteResult,
     onAction: (NoteAction) -> Unit,
-    checkSaveChangeChannel: Channel<Unit>
 ) {
     // Change selected note on adaptive (tablet) layout must change the text too.
     // The `rememberTextFieldState` and `rememberSaveable` doesn't support `key` parameters.
@@ -87,8 +86,8 @@ fun NoteDetail(
             initialSelection = TextRange(result.note?.text?.length ?: 0)
         )
     }
-    LaunchedEffect(checkSaveChangeChannel) {
-        checkSaveChangeChannel.receiveAsFlow().collect {
+    LaunchedEffect(key1 = result.checkSaveChangeChannel) {
+        result.checkSaveChangeChannel.receiveAsFlow().collect {
             onAction(NoteAction.ShowCheckSaveChangeDialog(textState.text))
         }
     }

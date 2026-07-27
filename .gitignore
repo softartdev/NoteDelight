@@ -65,8 +65,18 @@ app/android/note_room_key_store.jks
 
 ### iOS
 # Generated files
-/app/iosApp/iosApp.xcworkspace/xcuserdata/
+/app/iosApp/KotlinMultiplatformLinkedPackage/.build/
+/app/iosApp/KotlinMultiplatformLinkedPackage/**/.swiftpm/
+/.swiftpm-locks/default/swiftImport/.build/
+/.swiftpm-locks/default/swiftImport/Package.swift
+/.swiftpm-locks/default/swiftImport/Sources/
+/.swiftpm-locks/default/swiftImport/subpackages/
+/.swiftpm-locks/default/swiftPMCheckout/
 /app/iosApp/fastlane/report.xml
+
+# Xcode user-specific state
+**/xcuserdata/
+*.xcuserstate
 
 # Built application files
 /app/iosApp/iosApp.app.dSYM.zip

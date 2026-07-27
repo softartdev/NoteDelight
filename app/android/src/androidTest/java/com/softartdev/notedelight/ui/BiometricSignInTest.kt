@@ -42,8 +42,8 @@ class BiometricSignInTest {
 
     @get:Rule
     val rules: RuleChain = RuleChain.outerRule(TestDescriptionHolder)
-        .around(DetectLeaksAfterTestSuccess())
         .around(composeTestRule)
+        .around(DetectLeaksAfterTestSuccess())
 
     private val composeUiTest: ComposeUiTest = reflect(composeTestRule)
 

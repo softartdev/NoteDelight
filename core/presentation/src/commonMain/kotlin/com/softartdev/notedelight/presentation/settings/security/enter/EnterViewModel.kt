@@ -29,11 +29,12 @@ class EnterViewModel(
     private val autofillInteractor: AutofillInteractor,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@EnterViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<EnterResult> = MutableStateFlow(EnterResult())
-    val stateFlow: StateFlow<EnterResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<EnterResult>
+        field = MutableStateFlow(EnterResult())
 
     fun onAction(action: EnterAction) = when (action) {
-        is EnterAction.Cancel -> cancel()
+        is EnterAction.Cancel -> navigateUp()
         is EnterAction.OnEditPassword -> onEditPassword(action.password)
         is EnterAction.TogglePasswordVisibility -> togglePasswordVisibility()
         is EnterAction.OnEnterClick -> enterCheck()
@@ -44,24 +45,24 @@ class EnterViewModel(
     fun detachAutofillManager() = autofillInteractor.detach()
 
     private fun onEditPassword(password: String) = viewModelScope.launch {
-        mutableStateFlow.update(EnterResult::hideError)
-        mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER_PASSWORD) }
-        mutableStateFlow.update { it.copy(password = password) }
+        stateFlow.update(EnterResult::hideError)
+        stateFlow.update { it.copy(fieldLabel = FieldLabel.ENTER_PASSWORD) }
+        stateFlow.update { it.copy(password = password) }
     }
 
     private fun togglePasswordVisibility() = viewModelScope.launch {
-        mutableStateFlow.update(EnterResult::togglePasswordVisibility)
+        stateFlow.update(EnterResult::togglePasswordVisibility)
     }
 
     private fun enterCheck() = viewModelScope.launch(context = coroutineDispatchers.io) {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(EnterResult::showLoading)
+        stateFlow.update(EnterResult::showLoading)
         try {
-            val password = mutableStateFlow.value.password
+            val password = stateFlow.value.password
             when {
                 password.isEmpty() -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
-                    mutableStateFlow.update(EnterResult::showError)
+                    stateFlow.update { it.copy(fieldLabel = FieldLabel.EMPTY_PASSWORD) }
+                    stateFlow.update(EnterResult::showError)
                 }
                 checkPasswordUseCase(password) -> {
                     changePasswordUseCase(password, null)
@@ -77,8 +78,8 @@ class EnterViewModel(
                     navigateUp()
                 }
                 else -> {
-                    mutableStateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
-                    mutableStateFlow.update(EnterResult::showError)
+                    stateFlow.update { it.copy(fieldLabel = FieldLabel.INCORRECT_PASSWORD) }
+                    stateFlow.update(EnterResult::showError)
                 }
             }
         } catch (e: Throwable) {
@@ -86,13 +87,9 @@ class EnterViewModel(
             autofillInteractor.cancel()
             e.message?.let { snackbarInteractor.showMessage(SnackbarMessage.Simple(it)) }
         } finally {
-            mutableStateFlow.update(EnterResult::hideLoading)
+            stateFlow.update(EnterResult::hideLoading)
             CountingIdlingRes.decrement()
         }
-    }
-
-    private fun cancel() = viewModelScope.launch {
-        router.popBackStack()
     }
 
     private fun navigateUp() = viewModelScope.launch {

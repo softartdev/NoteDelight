@@ -25,8 +25,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 855
-        versionName = "8.5.5"
+        versionCode = 856
+        versionName = "8.5.6"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true
@@ -67,6 +67,7 @@ android {
         emulatorControl.enable = true
     }
     androidResources.generateLocaleConfig = true
+    lint.disable += "Instantiatable"
 }
 
 dependencies {
@@ -86,6 +87,8 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.test.manifest)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.common)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.material.theme.prefs)
     implementation(libs.kermit)
     implementation(libs.kermit.crashlytics)

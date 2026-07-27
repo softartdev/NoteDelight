@@ -11,6 +11,7 @@ Welcome to the NoteDelight documentation! This directory contains comprehensive 
 - **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing strategy, patterns, and tools
 - **[AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md)** - AI agent quick reference and common tasks
 - **[MANUAL_BUILD_INSTALL.md](MANUAL_BUILD_INSTALL.md)** - Step-by-step manual build and install instructions for all platforms
+- **[SCREENSHOTS.md](SCREENSHOTS.md)** - Compose Preview screenshot generation workflow
 
 ### 📦 Module Documentation
 
@@ -32,7 +33,7 @@ Each module has its own detailed README.md:
 - **[app/android/README.md](../app/android/README.md)** - Android application
 - **[app/desktop/README.md](../app/desktop/README.md)** - Desktop JVM application
 - **[app/web/README.md](../app/web/README.md)** - Web (Wasm) application
-- **[app/ios-kit/README.md](../app/ios-kit/README.md)** - iOS framework (CocoaPods)
+- **[app/ios-kit/README.md](../app/ios-kit/README.md)** - iOS framework and SwiftPM integration
 - **[app/iosApp/README.md](../app/iosApp/README.md)** - iOS application (Swift)
 
 #### Build Modules
@@ -51,11 +52,10 @@ Each module has its own detailed README.md:
 - **Architecture & Design** → [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Development & Code Style** → [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Testing** → [TESTING_GUIDE.md](TESTING_GUIDE.md)
+- **Screenshots** → [SCREENSHOTS.md](SCREENSHOTS.md)
 - **AI Agent Tasks** → [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md)
 - **Manual Build & Install** → [MANUAL_BUILD_INSTALL.md](MANUAL_BUILD_INSTALL.md)
 - **Version Management & CI/CD** → [VERSION_MANAGEMENT_GUIDE.md](VERSION_MANAGEMENT_GUIDE.md)
 - **Web Development** → [WEB_DEVELOPMENT_WORKFLOW.md](WEB_DEVELOPMENT_WORKFLOW.md)
 - **Platform-Specific** → Module READMEs in `app/` directories
 - **Data & Persistence** → Module READMEs in `core/data/` directories
-
-

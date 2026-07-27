@@ -2,8 +2,8 @@ rootProject.name = "NoteDelight"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":core:domain")
-//include(":core:data:db-room")
-include(":core:data:db-sqldelight")
+
+include(providers.gradleProperty("CORE_DATA_DB_MODULE").get())
 include(":feature:file-explorer:data")
 include(":feature:backup:domain")
 include(":feature:backup:ui")

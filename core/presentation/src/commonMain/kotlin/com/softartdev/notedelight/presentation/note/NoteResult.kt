@@ -1,10 +1,12 @@
 package com.softartdev.notedelight.presentation.note
 
 import com.softartdev.notedelight.model.Note
+import kotlinx.coroutines.channels.Channel
 
 data class NoteResult(
     val loading: Boolean = false,
     val note: Note? = null,
+    val checkSaveChangeChannel: Channel<Unit> = Channel()
 ) {
     fun showLoading(): NoteResult = copy(loading = true)
     fun hideLoading(): NoteResult = copy(loading = false)

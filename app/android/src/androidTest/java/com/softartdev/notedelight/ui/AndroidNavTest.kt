@@ -1,7 +1,7 @@
 package com.softartdev.notedelight.ui
 
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import com.softartdev.notedelight.di.sharedModules
 import com.softartdev.notedelight.di.uiModules
 import org.junit.Rule

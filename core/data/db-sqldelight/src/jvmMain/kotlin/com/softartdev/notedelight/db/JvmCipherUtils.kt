@@ -103,7 +103,7 @@ object JvmCipherUtils {
             try {
                 // Open encrypted database using sqlite-jdbc-crypt URL format
                 val encryptedUrl = buildEncryptedUrl(originalFile.absolutePath, password)
-                logger.d { "Opening encrypted database: $encryptedUrl" }
+                logger.d { "Opening encrypted database for decrypt" }
                 var connection = getConnection(encryptedUrl, isEncrypted = true)
                 
                 // Get version from encrypted database
@@ -141,13 +141,18 @@ object JvmCipherUtils {
                     
                     // Create tables in unencrypted (plaintext) database and copy data FROM main (encrypted) TO plaintext
                     for ((tableName, createSql) in tableSchemas) {
-                        // Modify CREATE TABLE statement to create table in plaintext database
-                        val plaintextCreateSql = createSql.replace("CREATE TABLE $tableName", "CREATE TABLE plaintext.$tableName")
-                            .replace("CREATE TABLE IF NOT EXISTS $tableName", "CREATE TABLE IF NOT EXISTS plaintext.$tableName")
+                        val plaintextCreateSql = createTableInSchema(
+                            createSql = createSql,
+                            tableName = tableName,
+                            schemaName = "plaintext",
+                        )
                         // Execute CREATE TABLE in plaintext (unencrypted) database
                         connection.createStatement().execute(plaintextCreateSql)
                         // Copy data FROM main (encrypted) TO plaintext (unencrypted)
-                        connection.createStatement().execute("INSERT INTO plaintext.$tableName SELECT * FROM $tableName")
+                        connection.createStatement().execute(
+                            "INSERT INTO plaintext.${tableName.sqlIdentifier()} " +
+                                "SELECT * FROM main.${tableName.sqlIdentifier()}",
+                        )
                         logger.d { "Copied table: $tableName from encrypted to unencrypted" }
                     }
                 }
@@ -392,3 +397,17 @@ object JvmCipherUtils {
         }
     }
 }
+
+private fun createTableInSchema(
+    createSql: String,
+    tableName: String,
+    schemaName: String,
+): String {
+    val tableDeclaration = Regex(
+        pattern = """(?is)^\s*(CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?)(?:\"(?:[^\"]|\"\")*\"|`(?:[^`]|``)*`|\[[^]]+]|[^\s(]+)""",
+    ).find(createSql) ?: error("Unsupported CREATE TABLE statement: $createSql")
+    val replacement = tableDeclaration.groupValues[1] + "$schemaName.${tableName.sqlIdentifier()}"
+    return createSql.replaceRange(tableDeclaration.range, replacement)
+}
+
+private fun String.sqlIdentifier(): String = "\"${replace("\"", "\"\"")}\""

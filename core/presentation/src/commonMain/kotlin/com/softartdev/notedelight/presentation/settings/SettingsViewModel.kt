@@ -42,10 +42,9 @@ class SettingsViewModel(
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@SettingsViewModel::class.simpleName.toString())
-    private val mutableStateFlow: MutableStateFlow<SettingsResult> = MutableStateFlow(
-        value = SettingsResult()
-    )
-    val stateFlow: StateFlow<SettingsResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<SettingsResult>
+        field = MutableStateFlow(value = SettingsResult())
 
     private val dbIsEncrypted: Boolean
         get() = safeRepo.databaseState == PlatformSQLiteState.ENCRYPTED
@@ -76,9 +75,9 @@ class SettingsViewModel(
 
     fun updateSwitches() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
-            mutableStateFlow.update { result ->
+            stateFlow.update { result ->
                 result.copy(
                     encryption = dbIsEncrypted,
                     biometricEnabled = biometricInteractor.hasStoredPassword(),
@@ -90,7 +89,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error checking encryption" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -109,7 +108,7 @@ class SettingsViewModel(
         selectedCategoryJob?.cancel()
         selectedCategoryJob = viewModelScope.launch {
             adaptiveInteractor.selectedSettingsCategoryIdStateFlow.collect { selectedId: Long? ->
-                mutableStateFlow.update { result ->
+                stateFlow.update { result ->
                     result.copy(selectedCategory = SettingsCategory.fromId(selectedId))
                 }
             }
@@ -122,19 +121,19 @@ class SettingsViewModel(
 
     private fun changeEncryption(checked: Boolean) = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             when {
                 checked -> router.navigate(route = AppNavGraph.ConfirmPasswordDialog)
                 else -> when {
                     dbIsEncrypted -> router.navigate(route = AppNavGraph.EnterPasswordDialog)
-                    else -> mutableStateFlow.update(SettingsResult::hideEncryption)
+                    else -> stateFlow.update(SettingsResult::hideEncryption)
                 }
             }
         } catch (e: Throwable) {
             handleError(e) { "error changing encryption" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -152,7 +151,7 @@ class SettingsViewModel(
                     withContext(coroutineDispatchers.io) {
                         biometricInteractor.clearStoredPassword()
                     }
-                    mutableStateFlow.update { it.copy(biometricEnabled = false) }
+                    stateFlow.update { it.copy(biometricEnabled = false) }
                 } else {
                     logger.d { "Don't disable biometric" }
                 }
@@ -164,7 +163,7 @@ class SettingsViewModel(
 
     private fun changePassword() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             when {
                 dbIsEncrypted -> router.navigate(route = AppNavGraph.ChangePasswordDialog)
@@ -173,35 +172,35 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error changing password" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun showCipherVersion() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             val cipherVersion: String? = checkSqlCipherVersionUseCase.invoke()
             snackbarInteractor.showMessage(SnackbarMessage.Copyable(cipherVersion.toString()))
         } catch (e: Throwable) {
             handleError(e) { "error checking sqlcipher version" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
 
     private fun showDatabasePath() = viewModelScope.launch {
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             val dbPath: String = safeRepo.dbPath
             snackbarInteractor.showMessage(SnackbarMessage.Copyable(dbPath))
         } catch (e: Throwable) {
             handleError(e) { "error getting database path" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -212,7 +211,7 @@ class SettingsViewModel(
             return@launch
         }
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             withContext(coroutineDispatchers.io) {
                 exportDatabaseUseCase(destinationPath)
@@ -221,7 +220,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error exporting database" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -232,7 +231,7 @@ class SettingsViewModel(
             return@launch
         }
         CountingIdlingRes.increment()
-        mutableStateFlow.update(SettingsResult::showLoading)
+        stateFlow.update(SettingsResult::showLoading)
         try {
             withContext(coroutineDispatchers.io) {
                 importDatabaseUseCase(sourcePath)
@@ -242,7 +241,7 @@ class SettingsViewModel(
         } catch (e: Throwable) {
             handleError(e) { "error importing database" }
         } finally {
-            mutableStateFlow.update(SettingsResult::hideLoading)
+            stateFlow.update(SettingsResult::hideLoading)
             CountingIdlingRes.decrement()
         }
     }
@@ -250,9 +249,9 @@ class SettingsViewModel(
     private fun showFileList() = router.navigate(route = AppNavGraph.FileList)
 
     private fun revealFileList() {
-        if (mutableStateFlow.value.fileListVisible) return
+        if (stateFlow.value.fileListVisible) return
         revealFileListUseCase.onTap(viewModelScope) {
-            mutableStateFlow.update(SettingsResult::showFileList)
+            stateFlow.update(SettingsResult::showFileList)
         }
     }
 

@@ -16,8 +16,9 @@ class ConsoleViewModel(
     private val consoleUseCase: ConsoleUseCase,
 ) : ViewModel() {
     private val logger = Logger.withTag("ConsoleViewModel")
-    private val mutableStateFlow = MutableStateFlow(ConsoleResult())
-    val stateFlow: StateFlow<ConsoleResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<ConsoleResult>
+        field = MutableStateFlow(ConsoleResult())
 
     fun onAction(action: ConsoleAction) = when (action) {
         is ConsoleAction.UpdateInput -> updateInput(action.text)
@@ -25,14 +26,14 @@ class ConsoleViewModel(
     }
 
     private fun updateInput(text: String) {
-        mutableStateFlow.update { it.copy(input = text) }
+        stateFlow.update { it.copy(input = text) }
     }
 
     private fun submit() {
-        if (mutableStateFlow.value.running) return
-        val input = mutableStateFlow.value.input
+        if (stateFlow.value.running) return
+        val input = stateFlow.value.input
         if (input.isBlank()) return
-        mutableStateFlow.update { it.copy(running = true) }
+        stateFlow.update { it.copy(running = true) }
         viewModelScope.launch {
             when (val result = consoleUseCase(input)) {
                 is ConsoleUseCaseResult.Executed -> {
@@ -40,7 +41,7 @@ class ConsoleViewModel(
                         kind = ConsoleTranscriptEntryKind.COMMAND,
                         text = result.normalizedCommand,
                     )
-                    mutableStateFlow.update { state ->
+                    stateFlow.update { state ->
                         state.copy(
                             input = "",
                             running = false,
@@ -51,7 +52,7 @@ class ConsoleViewModel(
                 }
                 is ConsoleUseCaseResult.ValidationError -> {
                     logger.d { "Validation error: ${result.message}" }
-                    mutableStateFlow.update { it.copy(running = false) }
+                    stateFlow.update { it.copy(running = false) }
                 }
             }
         }

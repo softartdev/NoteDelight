@@ -1,32 +1,24 @@
-import org.gradle.internal.os.OperatingSystem
-
 plugins {
+    alias(libs.plugins.gradle.convention)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
 kotlin {
-    iosArm64()
-    iosSimulatorArm64()
-    applyDefaultHierarchyTemplate()
-
-    cocoapods {
-        name = "iosComposePod"
-        summary = "Common UI-kit for the NoteDelight app"
-        homepage = "https://github.com/softartdev/NoteDelight"
-        version = "1.0"
-        ios.deploymentTarget = "14.0"
-        podfile = project.file("../iosApp/Podfile")
-        pod("SQLCipher", libs.versions.iosSqlCipher.get(), linkOnly = true)
-        framework {
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
             baseName = "iosComposeKit"
             isStatic = false
+            freeCompilerArgs += listOf("-Xoverride-konan-properties=minVersion.ios=14.1", "-linker-options", "-U _FIRCLSExceptionRecordNSException -U _OBJC_CLASS_\$_FIRStackFrame -U _OBJC_CLASS_\$_FIRExceptionModel -U _OBJC_CLASS_\$_FIRCrashlytics")
             export(projects.core.domain)
             export(project.dependencies.platform(libs.koin.bom))
             export(libs.koin.core)
         }
-        if (!OperatingSystem.current().isMacOsX) noPodspec()
+    }
+    applyDefaultHierarchyTemplate()
+
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget = "14.1"
     }
     sourceSets {
         commonMain.dependencies {
@@ -39,6 +31,7 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
             implementation(libs.kermit)
+            implementation(libs.kermit.crashlytics)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

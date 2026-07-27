@@ -98,6 +98,44 @@ class JvmCipherUtilsEncryptionTest {
     }
 
     @Test
+    fun encryptDecryptRoomStyleQuotedNoteTable() {
+        val password = "testPassword123"
+        val connection = DriverManager.getConnection("jdbc:sqlite:file:$testDbPath")
+        connection.createStatement().execute(
+            """
+            CREATE TABLE `note` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `title` TEXT NOT NULL,
+                `text` TEXT NOT NULL,
+                `dateCreated` INTEGER NOT NULL,
+                `dateModified` INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
+        connection.createStatement().execute(
+            "INSERT INTO `note` (`title`, `text`, `dateCreated`, `dateModified`) VALUES " +
+                "('title', 'text', 1, 2)",
+        )
+        connection.createStatement().execute("PRAGMA user_version = 2")
+        connection.close()
+
+        JvmCipherUtils.encrypt(password, testDbPath)
+        JvmCipherUtils.decrypt(password, testDbPath)
+
+        val decrypted = DriverManager.getConnection("jdbc:sqlite:file:$testDbPath")
+        val version = decrypted.createStatement().executeQuery("PRAGMA user_version")
+        assertEquals(true, version.next())
+        assertEquals(2, version.getInt(1))
+        val note = decrypted.createStatement().executeQuery("SELECT title, text FROM `note`")
+        assertEquals(true, note.next())
+        assertEquals("title", note.getString("title"))
+        assertEquals("text", note.getString("text"))
+        note.close()
+        version.close()
+        decrypted.close()
+    }
+
+    @Test
     fun testCheckSqlCipherAvailable() {
         // Test if SQLCipher functions are available
         // sqlite-jdbc-crypt uses URL parameters: cipher=sqlcipher&legacy=4&key=password

@@ -16,10 +16,9 @@ class SettingsCategoriesViewModel(
     private val router: Router,
     private val adaptiveInteractor: AdaptiveInteractor,
 ) : ViewModel() {
-    private val mutableStateFlow: MutableStateFlow<SettingsCategoriesResult> = MutableStateFlow(
-        value = SettingsCategoriesResult()
-    )
-    val stateFlow: StateFlow<SettingsCategoriesResult> = mutableStateFlow
+
+    val stateFlow: StateFlow<SettingsCategoriesResult>
+        field = MutableStateFlow(value = SettingsCategoriesResult())
 
     private var job: Job? = null
 
@@ -40,19 +39,19 @@ class SettingsCategoriesViewModel(
     }
 
     private fun refresh() = viewModelScope.launch {
-        mutableStateFlow.update(SettingsCategoriesResult::showLoading)
+        stateFlow.update(SettingsCategoriesResult::showLoading)
         startCollectingSelection()
-        mutableStateFlow.update { result ->
+        stateFlow.update { result ->
             result.copy(selectedCategoryId = adaptiveInteractor.selectedSettingsCategoryIdStateFlow.value)
         }
-        mutableStateFlow.update(SettingsCategoriesResult::hideLoading)
+        stateFlow.update(SettingsCategoriesResult::hideLoading)
     }
 
     private fun startCollectingSelection() {
         job?.cancel()
         job = viewModelScope.launch {
             adaptiveInteractor.selectedSettingsCategoryIdStateFlow.collect { selectedId: Long? ->
-                mutableStateFlow.update { result -> result.copy(selectedCategoryId = selectedId) }
+                stateFlow.update { result -> result.copy(selectedCategoryId = selectedId) }
             }
         }
     }

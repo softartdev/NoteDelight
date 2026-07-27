@@ -6,6 +6,8 @@ Biometric authentication domain module — platform-agnostic contract plus platf
 
 Provides the `BiometricInteractor` expect class and its platform actuals, as well as `BiometricResult` / `DecryptedPasswordResult` domain types, and the `BiometricPlatformWrapper` expect class used to pass the Android host Activity to the biometric prompt from Compose.
 
+For a detailed platform security model with Android and iOS biometric encryption diagrams, see [Biometric Encryption and Key Storage](../../../docs/BIOMETRIC_ENCRYPTION.md).
+
 ## API
 
 ### `BiometricInteractor`
@@ -74,17 +76,17 @@ Created from a Composable using `rememberBiometricPlatformWrapper()` (in `core:u
 
 **Password storage** uses two independent layers of protection:
 
-1. **Android Keystore (AES-256-GCM)** — A hardware-backed symmetric key (`notedelight_biometric_key`) is generated with `setUserAuthenticationRequired(true)` and (on API 24+) `setInvalidatedByBiometricEnrollment(true)`. The key can only be used after a successful biometric authentication and never leaves the secure hardware element.
+1. **Android Keystore (AES-GCM)** — A symmetric key (`notedelight_biometric_key`) is generated in `AndroidKeyStore` with `setUserAuthenticationRequired(true)` and (on API 24+) `setInvalidatedByBiometricEnrollment(true)`. The key can only be used after successful biometric-gated authentication. Hardware backing depends on the device and Keystore provider; the current code does not require StrongBox or verify the hardware security level.
 
 2. **DataStore Preferences** (`BiometricCredentialsStore`)— The *encrypted* output of AES-GCM (ciphertext + IV, both Base64-encoded) is stored via DataStore Preferences.
 
-> **Is the DataStore encrypted?** No — DataStore writes a plain binary Protobuf file on disk and applies no application-level encryption. However, the *values* stored inside it are already opaque AES-GCM ciphertext — they cannot be decrypted without the Android Keystore key, which is hardware-bound and biometric-gated and never leaves the secure element. An attacker with raw filesystem access would obtain unintelligible bytes with no way to recover the plaintext password without also defeating the device's secure hardware.
+> **Is the DataStore encrypted?** No — DataStore writes a plain binary Protobuf file on disk and applies no application-level encryption. However, the *values* stored inside it are already opaque AES-GCM ciphertext — they cannot be decrypted without the Android Keystore key for this app on this device. An attacker with only raw filesystem access would obtain Base64-encoded ciphertext and IV, not the plaintext password.
 
 **Enroll flow** (`encryptAndStorePassword`):
 1. The existing Keystore key is reused, or a new one is generated.
 2. A `Cipher` is initialised in `ENCRYPT_MODE` with the Keystore key.
 3. `BiometricPrompt` shows the system biometric UI (via `runPrompt`); the `Cipher` is passed as a `CryptoObject` so Android can attest the authentication.
-4. On success the `CryptoObject`'s cipher is used to encrypt the password bytes (AES-256-GCM).
+4. On success the `CryptoObject`'s cipher is used to encrypt the password bytes (AES-GCM).
 5. `BiometricCredentialsStore.save(ciphertext, iv)` persists both Base64-encoded values.
 
 **Sign-in flow** (`decryptStoredPassword`):
@@ -117,7 +119,7 @@ Encapsulates all DataStore read/write operations. Exposes `hasCredentials()`, `l
    - On success the raw `NSData` is decoded as UTF-8 and returned as `DecryptedPasswordResult.Success`.
    - `errSecItemNotFound` → `Unavailable` (item gone or biometry enrollment changed); other statuses are mapped via `mapKeychainStatus`.
 
-> **Security note**: On iOS the password is **not** encrypted at the application layer — it is stored as plaintext bytes inside a hardware-protected Keychain item. Security is provided entirely by the Secure Enclave and `kSecAccessControlBiometryCurrentSet`. The flag ensures the item is bound to the current biometric set and invalidated on any enrollment change.
+> **Security note**: On iOS the password is **not** encrypted at the application layer — it is stored as plaintext bytes inside a Keychain item protected by iOS Keychain data protection and `kSecAccessControlBiometryCurrentSet`. The flag ensures the item is bound to the current biometric set and invalidated on any enrollment change.
 
 ### Desktop/Web (`jvmMain`, `wasmJsMain`)
 

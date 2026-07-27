@@ -35,4 +35,4 @@ class WebDatabaseHolder(private val key: String? = null) : SqlDelightDbHolder {
 }
 
 // Create worker with custom OPFS-enabled script
-private fun jsWorker(): Worker = js("new Worker(new URL('sqlite.worker.js', import.meta.url))")
+private fun jsWorker(): Worker = js("new Worker('sqlite.worker.js')")

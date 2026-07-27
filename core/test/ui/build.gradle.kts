@@ -1,7 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import com.softartdev.notedelight.disableIosReleaseTasks
-import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -11,7 +9,6 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.cocoapods)
 }
 
 kotlin {
@@ -29,71 +26,68 @@ kotlin {
         androidResources {
             enable = true
         }
+        withHostTest { }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            isStatic = false
+            freeCompilerArgs += "-Xoverride-konan-properties=minVersion.ios=14.1"
+        }
+    }
     wasmJs {
         browser()
     }
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(projects.core.domain)
-                implementation(projects.core.presentation)
-                implementation(projects.core.ui)
-                implementation(projects.feature.backup.ui)
-                api(projects.feature.biometric.domain)
-                implementation(projects.feature.console.presentation)
-                implementation(projects.feature.console.ui)
-                implementation(libs.compose.ui.test)
-                implementation(libs.compose.material3)
-                implementation(libs.compose.material.icons.extended)
-                implementation(libs.compose.components.resources)
-                implementation(libs.material.theme.prefs)
-                implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.androidx.lifecycle.runtime.testing)
-                implementation(libs.turbine)
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.koin.core)
-                implementation(libs.kermit)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-            }
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.androidx.test.ext.junit)
-            }
-        }
-        val androidDeviceTest by getting
-        all {
-            languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop")
-        }
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget = "14.1"
     }
-    cocoapods {
-        summary = "UI test library for the NoteDelight app"
-        homepage = "https://github.com/softartdev/NoteDelight"
-        version = "1.0"
-        ios.deploymentTarget = "14.0"
-        pod("SQLCipher", libs.versions.iosSqlCipher.get(), linkOnly = true)
-        framework {
-            isStatic = false
+    sourceSets {
+        applyDefaultHierarchyTemplate()
+        commonMain.dependencies {
+            implementation(kotlin("test"))
+            implementation(projects.core.domain)
+            implementation(projects.core.presentation)
+            implementation(projects.core.ui)
+            implementation(projects.feature.backup.ui)
+            api(projects.feature.biometric.domain)
+            implementation(projects.feature.console.presentation)
+            implementation(projects.feature.console.ui)
+            implementation(libs.compose.ui.test)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.material.icons.extended)
+            implementation(libs.compose.components.resources)
+            implementation(libs.material.theme.prefs)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.runtime.testing)
+            implementation(libs.turbine)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.kermit)
         }
-        if (!OperatingSystem.current().isMacOsX) noPodspec()
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.paging.common)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.test.ext.junit)
+            implementation(libs.kotlinx.datetime)
+        }
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.androidx.test.runner)
+                implementation(libs.androidx.compose.test.manifest)
+                implementation(libs.espresso.core)
+            }
+        }
+        all { languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop") }
     }
     compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 }
-
-project.disableIosReleaseTasks()

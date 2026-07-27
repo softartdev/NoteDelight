@@ -50,7 +50,7 @@ NoteDelight follows **Clean Architecture** principles combined with **MVVM (Mode
 │  (Data Access & Persistence)                                   │
 │  ┌──────────────────┐              ┌──────────────────┐        │
 │  │   SQLDelight     │      OR      │      Room        │        │
-│  │  (Default Impl)  │              │ (Alternative)    │        │
+│  │   (Selectable)   │              │   (Selectable)   │        │
 │  └──────────────────┘              └──────────────────┘        │
 │  DAOs, Database, Repositories, Data Sources                    │
 └─────────────────────────────────────────────────────────────────┘
@@ -263,9 +263,14 @@ Skip Action interfaces for **simple cases with 1-2 actions** or functions called
 - **Data Sources**: Local/remote data sources
 
 **Technologies**:
-- **SQLDelight** (default): Type-safe SQL, multiplatform
-- **Room** (alternative): Android-first ORM, experimental KMP support
-- **SQLCipher**: Database encryption (Android, iOS, Desktop JVM)
+- **SQLDelight**: Type-safe SQL on Android, Desktop, iOS, and WasmJS
+- **Room 3**: Annotation-based ORM on Android, Desktop, iOS, and WasmJS
+- **SQLCipher / SQLite3MultipleCiphers**: Compatible encryption on native/JVM and Web
+
+`CORE_DATA_DB_MODULE` is the single selector. `settings.gradle.kts` validates it and includes
+only the selected module. Both implementations preserve `notes.db`, the v1 `note` table, epoch
+millisecond dates, and the domain contracts, so switching requires only exchanging the two
+comments in `gradle.properties`.
 
 **Rules**:
 - ✅ Implements domain interfaces
@@ -606,9 +611,9 @@ val pagingDataFlow: Flow<PagingData<Note>> = Pager(
 ### Database Encryption
 
 - **Android**: SQLCipher via SafeRoom
-- **iOS**: SQLCipher via CocoaPods
-- **Desktop**: Not implemented yet
-- **Web**: Not supported (browser limitation)
+- **iOS**: SQLCipher via Kotlin SwiftPM import
+- **Desktop**: SQLCipher through `sqlite-jdbc-crypt`
+- **Web**: SQLite3MultipleCiphers through an OPFS Web Worker
 
 ### Best Practices
 

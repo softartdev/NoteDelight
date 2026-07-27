@@ -168,22 +168,15 @@ adb shell am start -n com.softartdev.noteroom/.MainActivity
 #### Setup
 
 ```bash
-# Install CocoaPods (if needed)
-sudo gem install cocoapods
-
-# Install dependencies
-cd app/iosApp
-pod install
-
-# Regenerate podspec (if needed)
-./gradlew :app:ios-kit:podspec
+# Resolve and compile Kotlin SwiftPM imports
+./gradlew :app:ios-kit:compileKotlinIosSimulatorArm64
 ```
 
 #### Build
 
 ```bash
-# Open workspace in Xcode
-open app/iosApp/iosApp.xcworkspace
+# Open the Xcode project
+open app/iosApp/iosApp.xcodeproj
 ```
 
 Then in Xcode:
@@ -191,17 +184,17 @@ Then in Xcode:
 - Press `Cmd + B` to build
 - Press `Cmd + R` to run
 
-**Note:** Always open `.xcworkspace`, not `.xcodeproj`
+The Xcode build phase invokes Gradle to build and embed `iosComposeKit`. SQLCipher is resolved through Kotlin SwiftPM import.
 
 #### Command Line Build
 
 ```bash
 # Pre-build: Link Kotlin framework
-./gradlew :app:ios-kit:linkPodReleaseFrameworkIosArm64
+./gradlew :app:ios-kit:linkReleaseFrameworkIosArm64
 
 # Build in Xcode command line
 cd app/iosApp
-xcodebuild -workspace iosApp.xcworkspace \
+xcodebuild -project iosApp.xcodeproj \
            -scheme iosApp \
            -configuration Debug \
            -sdk iphonesimulator \

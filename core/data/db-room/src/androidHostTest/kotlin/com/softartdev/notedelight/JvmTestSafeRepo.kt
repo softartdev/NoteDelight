@@ -1,6 +1,9 @@
 package com.softartdev.notedelight
 
+import androidx.room3.useReaderConnection
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.db.NoteDatabase
+import com.softartdev.notedelight.db.RoomNoteDAO
 import com.softartdev.notedelight.model.PlatformSQLiteState
 import com.softartdev.notedelight.repository.SafeRepo
 
@@ -9,46 +12,57 @@ import com.softartdev.notedelight.repository.SafeRepo
  */
 class JvmTestSafeRepo : SafeRepo() {
     @Volatile
-    private var databaseHolder: JdbcDatabaseTestHolder? = buildDbIfNeed()
+    private var databaseHolder: JdbcDatabaseTestHolder? = null
 
-    override val databaseState: PlatformSQLiteState
-        get() = TODO("Not yet implemented")
+    private val noteDatabase: NoteDatabase
+        get() = requireNotNull(databaseHolder).noteDatabase
+
+    override var databaseState: PlatformSQLiteState = PlatformSQLiteState.UNENCRYPTED
+        private set
 
     override val noteDAO: NoteDAO
-        get() = TODO()
+        get() = RoomNoteDAO(this@JvmTestSafeRepo::noteDatabase)
 
-    override val dbPath: String
-        get() = TODO("Not yet implemented")
+    override val dbPath: String = ":memory:"
 
-    override fun buildDbIfNeed(passphrase: CharSequence): JdbcDatabaseTestHolder = synchronized(this) {
+    override suspend fun buildDbIfNeed(passphrase: CharSequence): JdbcDatabaseTestHolder = synchronized(this) {
         var instance = databaseHolder
         if (instance == null) {
             instance = JdbcDatabaseTestHolder()
             databaseHolder = instance
         }
+        databaseState = when {
+            passphrase.isEmpty() -> PlatformSQLiteState.UNENCRYPTED
+            else -> PlatformSQLiteState.ENCRYPTED
+        }
         return instance
     }
 
-    override fun decrypt(oldPass: CharSequence) {
+    override suspend fun decrypt(oldPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed()
     }
 
-    override fun rekey(oldPass: CharSequence, newPass: CharSequence) {
+    override suspend fun rekey(oldPass: CharSequence, newPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed(newPass)
     }
 
-    override fun encrypt(newPass: CharSequence) {
+    override suspend fun encrypt(newPass: CharSequence) {
         closeDatabase()
         buildDbIfNeed(newPass)
     }
 
-    override fun execute(query: String): String? {
-        return TODO()
+    override suspend fun execute(query: String): String? {
+        buildDbIfNeed()
+        return noteDatabase.useReaderConnection { connection ->
+            connection.usePrepared(query) { statement ->
+                if (statement.step()) statement.getText(0) else null
+            }
+        }
     }
 
-    override fun closeDatabase() = synchronized(this) {
+    override suspend fun closeDatabase() = synchronized(this) {
         databaseHolder?.close()
         databaseHolder = null
     }

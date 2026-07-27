@@ -23,6 +23,8 @@ class PrepopulateDbTestCase(
     private val createNoteUseCase: CreateNoteUseCase by KoinPlatform.getKoin().inject()
 
     override fun invoke() = runTest(timeout = 3.minutes) {
+        composeUiTest.awaitIdle()
+
         noteDAO.listFlow.test {
             var notes: List<Note> = awaitItem()
             assertEquals(0, notes.size)

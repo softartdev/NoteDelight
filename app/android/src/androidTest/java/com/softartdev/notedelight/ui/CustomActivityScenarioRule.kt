@@ -3,6 +3,7 @@ package com.softartdev.notedelight.ui
 import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.junit4.v2.AndroidComposeTestRule as AndroidComposeTestRuleV2
 import androidx.test.core.app.ActivityScenario
 import kotlinx.coroutines.runBlocking
 import org.junit.rules.ExternalResource
@@ -16,7 +17,7 @@ inline fun <reified A : ComponentActivity> customAndroidComposeRule(
 fun <A : ComponentActivity> customAndroidComposeRule(
     activityClass: Class<A>,
     beforeActivityLaunched: suspend () -> Unit
-): AndroidComposeTestRule<CustomActivityScenarioRule<A>, A> = AndroidComposeTestRule(
+): AndroidComposeTestRule<CustomActivityScenarioRule<A>, A> = AndroidComposeTestRuleV2(
     activityRule = CustomActivityScenarioRule(activityClass, beforeActivityLaunched),
     activityProvider = ::provideActivity
 )

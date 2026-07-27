@@ -100,11 +100,11 @@ SQLDelight **generates type-safe Kotlin code** from these SQL statements at comp
 ### iOS (`iosMain/`)
 
 - **Driver**: `NativeSqliteDriver`
-- **Encryption**: ✅ SQLCipher via CocoaPods
+- **Encryption**: ✅ SQLCipher via Kotlin SwiftPM import
 - **Storage**: iOS Documents directory
 - **Dependencies**:
   - `sqlDelight.native`
-  - SQLCipher pod (specified in `cocoapods {}` block)
+  - SQLCipher Swift package (specified in `swiftPMDependencies {}` block)
   - `stately` (for iOS memory model)
 
 ### Desktop JVM (`jvmMain/`)

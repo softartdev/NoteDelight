@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.6] - 2026-07-28
+
+### Features
+- Add Room 3.0 as a selectable database module alongside SQLDelight
+- Initialize Firebase for the WebAssembly web target and add Firebase Crashlytics integration for iOS
+- Migrate the iOS SQLCipher integration from CocoaPods to Swift Package Manager
+- Automate generation of Android, iOS, Desktop, and Web application screenshots
+
+### Bug Fixes
+- Align coroutine dependency handling for Android and JVM platforms
+- Restore Android Compose previews for biometric authentication
+- Sanitize database encryption and connection logging
+
+### Refactoring
+- Migrate presentation state properties to Kotlin explicit backing fields
+- Simplify app launch, UI state hoisting, note-use-case channels, and iOS database-path resolution
+- Improve Koin preview navigation support
+
+### Tests
+- Migrate to Compose UI Test v2 and expand Console screen UI coverage across platforms
+- Improve Android rotation-test stability and extend SQLDelight web-worker test timeouts
+
+### Documentation
+- Document biometric-encryption and screenshot-generation workflows
+
+### Chores
+- Upgrade Gradle, Android Gradle Plugin, Kotlin, Compose, Firebase, and other dependencies
+- Improve Gradle sync performance and KMP/Android CI reporting and configuration
+- Update GitHub Actions and iOS Ruby dependencies
+
 ## [8.5.5] - 2026-05-01
 
 ### Features

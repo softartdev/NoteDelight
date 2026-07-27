@@ -26,13 +26,9 @@ kotlin {
     wasmJs {
         browser()
     }
-    sourceSets.forEach {
-        it.dependencies {
-            implementation(project.dependencies.enforcedPlatform(libs.coroutines.bom))
-        }
-    }
     sourceSets {
         commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.androidx.paging.common)
@@ -43,12 +39,14 @@ kotlin {
             implementation(projects.core.test.common)
         }
         androidMain.dependencies {
+            implementation(libs.coroutines.android)
         }
         iosMain.dependencies {
         }
         iosTest.dependencies {
         }
         jvmMain.dependencies {
+            implementation(libs.coroutines.swing)
         }
         jvmTest.dependencies {
         }

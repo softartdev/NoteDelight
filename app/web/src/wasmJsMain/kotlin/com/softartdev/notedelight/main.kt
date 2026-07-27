@@ -14,6 +14,7 @@ import org.koin.core.context.startKoin
 
 fun main() {
     if (isKarmaTestRunner()) return
+    initializeFirebase()
     Logger.setTag(DEFAULT_APP_LOG_TAG)
     startKoin {
         kermitLogger()
@@ -23,6 +24,9 @@ fun main() {
         App()
     }
 }
+
+@JsModule("./firebase.js")
+private external fun initializeFirebase()
 
 @JsFun("() => typeof window !== 'undefined' && window.__karma__ != null")
 private external fun isKarmaTestRunner(): Boolean

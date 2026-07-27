@@ -8,6 +8,6 @@ class DeleteNoteUseCase(private val noteDAO: NoteDAO) : suspend (Long) -> Unit {
     override suspend fun invoke(id: Long) = noteDAO.delete(id)
 
     companion object {
-        val deleteChannel: Channel<Boolean> by lazy { return@lazy Channel<Boolean>() }
+        val deleteChannel: Channel<Boolean> by lazy(::Channel)
     }
 }

@@ -25,7 +25,7 @@ annotation class PreviewDeviceMode
 
 @PreviewDeviceMode
 @Composable
-fun SignInScreenPreview() = PreferableMaterialTheme { SignInScreenBody() }
+fun SignInScreenPreview() = PreferableMaterialTheme { SignInScreenBody(biometricVisible = true) }
 
 @PreviewDeviceMode
 @Composable
