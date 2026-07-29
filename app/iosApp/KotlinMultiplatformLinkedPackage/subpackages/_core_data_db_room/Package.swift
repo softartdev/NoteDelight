@@ -3,7 +3,7 @@ import PackageDescription
 let package = Package(
   name: "_core_data_db_room",
   platforms: [
-    .iOS("14.1")
+    .iOS("15.0")
   ],
   products: [
     .library(

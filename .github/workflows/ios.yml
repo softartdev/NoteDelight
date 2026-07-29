@@ -48,6 +48,8 @@ jobs:
       - name: AppStore build lane with gym
         working-directory: ./app/iosApp
         run: fastlane appstore_build_gym_lane
+      - name: Verify Crashlytics symbols in App Store IPA
+        run: ./.github/scripts/verify_ios_crashlytics_symbols.sh app/iosApp/iosApp.ipa
       - name: AppStore publish lane with deliver
         working-directory: ./app/iosApp
         run: fastlane appstore_publish_deliver_lane

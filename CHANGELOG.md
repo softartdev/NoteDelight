@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.7] - 2026-07-29
+
+### Bug Fixes
+- Preserve and export Firebase Crashlytics symbols from the iOS host executable so App Store builds can load the dynamic Kotlin framework at launch
+
+### Chores
+- Verify required Crashlytics symbols in the generated IPA before App Store publication
+- Raise and synchronize the minimum iOS deployment target to 15.0 across Kotlin Multiplatform, SwiftPM, and Xcode configurations
+
 ## [8.5.6] - 2026-07-28
 
 ### Features

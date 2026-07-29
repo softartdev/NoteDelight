@@ -18,7 +18,7 @@ listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
 }
 
 swiftPMDependencies {
-    iosMinimumDeploymentTarget = "14.1"
+    iosMinimumDeploymentTarget = "15.0"
 }
 ```
 
@@ -59,8 +59,8 @@ Swift application sources import the framework by its configured base name:
 import iosComposeKit
 ```
 
-The framework remains dynamic by project policy. Any change to linkage must be validated by launching the iOS application because link-only builds do not detect all framework embedding and dyld failures.
+The framework remains dynamic by project policy. Firebase Crashlytics symbols referenced by the framework are force-linked and exported by the Xcode application target. `CrashlyticsDynamicSymbols.txt` also preserves those exports when Xcode strips an archive. The generated IPA is verified before publishing. Any change to linkage must be validated by launching the iOS application because link-only builds do not detect all framework embedding and dyld failures.
 
 ## Verification
 
-After changes, compile and link the framework, build `app/iosApp/iosApp.xcodeproj`, run the Xcode SQLCipher unit test, and launch the application on a simulator. Then run the repository verification sequence documented in `AGENTS.md`.
+After changes, compile and link the framework, build `app/iosApp/iosApp.xcodeproj`, run the Xcode SQLCipher unit test, launch the application on a simulator, and run `.github/scripts/verify_ios_crashlytics_symbols.sh` against the generated IPA. Then run the repository verification sequence documented in `AGENTS.md`.

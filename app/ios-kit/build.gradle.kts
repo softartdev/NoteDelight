@@ -9,7 +9,12 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "iosComposeKit"
             isStatic = false
-            freeCompilerArgs += listOf("-Xoverride-konan-properties=minVersion.ios=14.1", "-linker-options", "-U _FIRCLSExceptionRecordNSException -U _OBJC_CLASS_\$_FIRStackFrame -U _OBJC_CLASS_\$_FIRExceptionModel -U _OBJC_CLASS_\$_FIRCrashlytics")
+            freeCompilerArgs += listOf(
+                "-Xoverride-konan-properties=minVersion.ios=15.0",
+                "-linker-options",
+                "-U _FIRCLSExceptionRecordNSException -U _OBJC_CLASS_\$_FIRStackFrame " +
+                    "-U _OBJC_CLASS_\$_FIRExceptionModel -U _OBJC_CLASS_\$_FIRCrashlytics",
+            )
             export(projects.core.domain)
             export(project.dependencies.platform(libs.koin.bom))
             export(libs.koin.core)
@@ -18,7 +23,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     swiftPMDependencies {
-        iosMinimumDeploymentTarget = "14.1"
+        iosMinimumDeploymentTarget = "15.0"
     }
     sourceSets {
         commonMain.dependencies {

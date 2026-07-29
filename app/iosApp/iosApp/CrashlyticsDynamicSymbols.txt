@@ -1,0 +1,4 @@
+_FIRCLSExceptionRecordNSException
+_OBJC_CLASS_$_FIRStackFrame
+_OBJC_CLASS_$_FIRExceptionModel
+_OBJC_CLASS_$_FIRCrashlytics

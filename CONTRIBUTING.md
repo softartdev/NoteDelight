@@ -28,7 +28,7 @@ NoteDelight is a **Kotlin Multiplatform** note-taking application with database 
 ### Supported Platforms
 
 - ✅ Android (minSdk 23)
-- ✅ iOS (14.0+)
+- ✅ iOS (15.0+)
 - ✅ Desktop (Windows, macOS, Linux)
 - ✅ Web (WebAssembly, experimental)
 

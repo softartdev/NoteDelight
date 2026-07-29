@@ -6,6 +6,8 @@
 **Kotlin version:** 2.4.0 -> 2.4.0
 **Status:** Completed successfully for the active SQLDelight configuration; optional Room verification is blocked by a pre-existing version-catalog error
 
+> **Current configuration:** The deployment target was raised to iOS 15.0 after this migration so it matches the Firebase 12.14 requirement. References to iOS 14.0/14.1 below describe the historical migration state.
+
 ---
 
 ## Pre-Migration State

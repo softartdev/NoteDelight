@@ -34,14 +34,14 @@ kotlin {
     listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             isStatic = false
-            freeCompilerArgs += "-Xoverride-konan-properties=minVersion.ios=14.1"
+            freeCompilerArgs += "-Xoverride-konan-properties=minVersion.ios=15.0"
         }
     }
     wasmJs {
         browser()
     }
     swiftPMDependencies {
-        iosMinimumDeploymentTarget = "14.1"
+        iosMinimumDeploymentTarget = "15.0"
     }
     sourceSets {
         applyDefaultHierarchyTemplate()
