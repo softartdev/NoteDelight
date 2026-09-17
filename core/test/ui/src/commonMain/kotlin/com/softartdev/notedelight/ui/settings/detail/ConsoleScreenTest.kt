@@ -5,6 +5,7 @@ package com.softartdev.notedelight.ui.settings.detail
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
@@ -28,15 +29,25 @@ abstract class ConsoleScreenTest {
         }
         // Open tips menu
         onNodeWithTag(CONSOLE_TIPS_BUTTON_TAG).assertIsDisplayed().performClick()
-        waitForIdle()
+        waitUntil(
+            conditionDescription = "tip buttons exist",
+            timeoutMillis = 10_000,
+        ) {
+            onAllNodes(hasTestTag("${CONSOLE_TIP_COPY_PREFIX}0")).fetchSemanticsNodes().isNotEmpty() &&
+                onAllNodes(hasTestTag("${CONSOLE_TIP_AUTOFILL_PREFIX}0")).fetchSemanticsNodes().isNotEmpty()
+        }
         // Verify copy and autofill buttons exist for first tip
         onNodeWithTag("${CONSOLE_TIP_COPY_PREFIX}0").assertIsDisplayed()
         onNodeWithTag("${CONSOLE_TIP_AUTOFILL_PREFIX}0").assertIsDisplayed()
         // Tap autofill on first tip (PRAGMA cipher_version;)
         onNodeWithTag("${CONSOLE_TIP_AUTOFILL_PREFIX}0").performClick()
-        waitForIdle()
+        waitUntil(
+            conditionDescription = "autofill action was dispatched",
+            timeoutMillis = 10_000,
+        ) {
+            actions.isNotEmpty()
+        }
         // Verify autofill action was dispatched
-        assertTrue(actions.isNotEmpty())
         val autofillAction = actions.last()
         assertTrue(autofillAction is ConsoleAction.UpdateInput)
         assertEquals("PRAGMA cipher_version;", autofillAction.text)
@@ -48,7 +59,12 @@ abstract class ConsoleScreenTest {
         }
         // Open tips menu
         onNodeWithTag(CONSOLE_TIPS_BUTTON_TAG).assertIsDisplayed().performClick()
-        waitForIdle()
+        waitUntil(
+            conditionDescription = "tip copy button exists",
+            timeoutMillis = 10_000,
+        ) {
+            onAllNodes(hasTestTag("${CONSOLE_TIP_COPY_PREFIX}1")).fetchSemanticsNodes().isNotEmpty()
+        }
         // Tap copy on second tip (SELECT sqlite3mc_version();)
         onNodeWithTag("${CONSOLE_TIP_COPY_PREFIX}1").assertIsDisplayed().performClick()
         waitForIdle()
