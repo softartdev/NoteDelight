@@ -39,6 +39,7 @@ kotlin {
     }
     wasmJs {
         browser()
+        binaries.executable()
     }
     swiftPMDependencies {
         iosMinimumDeploymentTarget = "15.0"

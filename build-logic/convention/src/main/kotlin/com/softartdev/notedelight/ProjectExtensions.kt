@@ -108,11 +108,11 @@ private fun Task.addArgumentsToInternalListProperty(
     getterName: String,
     arguments: List<String>,
 ) {
-    val getter = javaClass.methods.single { method ->
+    val getter = javaClass.methods.singleOrNull { method ->
         method.name == getterName && method.parameterCount == 0
-    }
+    } ?: return
     @Suppress("UNCHECKED_CAST")
-    val property = getter.invoke(this) as ListProperty<String>
+    val property = getter.invoke(this) as? ListProperty<String> ?: return
     property.addAll(arguments)
 }
 

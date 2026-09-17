@@ -24,6 +24,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
+@Ignore("Unable to connect to Emulator gRPC port on CI")
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class RotationTest {
