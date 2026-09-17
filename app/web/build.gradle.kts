@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.download)
+    alias(libs.plugins.koin.compiler)
 }
 
 val coreDataDbModule = providers.gradleProperty("CORE_DATA_DB_MODULE").get()

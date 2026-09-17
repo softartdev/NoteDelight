@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.gms)
     alias(libs.plugins.crashlytics)
+    alias(libs.plugins.koin.compiler)
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 

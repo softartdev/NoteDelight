@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.koin.compiler)
 }
 apply(from = "$rootDir/gradle/common-desktop-mac-sign-conf.gradle")
 group = "com.softartdev"

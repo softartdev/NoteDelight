@@ -15,6 +15,7 @@ androidSqlCipher = "4.19.0"
 iosSqlCipher = "4.16.0"
 jdbcSQLite = "3.53.4.0"
 koin-bom = "4.2.2"
+koin-compiler = "1.2.1"
 kotlinx-serialization = "1.11.0"
 kotlinx-datetime = "0.8.0-0.6.x-compat"
 kotlinx-browser = "0.5.0"
@@ -201,6 +202,7 @@ room3 = { id = "androidx.room3", version.ref = "room3" }
 gms = { id = "com.google.gms.google-services", version.ref = "gms" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 download = { id = "de.undercouch.download", version.ref = "download" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-compiler" }
 
 [bundles]
 mockito = ["mockito-core", "mockito-inline"]
