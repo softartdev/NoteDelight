@@ -1,7 +1,7 @@
 [versions]
 jdk = "17"
 agp = "9.4.1"
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 compileSdk = "37"
 targetSdk = "37"
 minSdk = "24"
