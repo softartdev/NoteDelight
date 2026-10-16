@@ -1,4 +1,4 @@
-package com.softartdev.notedelight.ui
+package com.softartdev.notedelight.util
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.ClipEntry

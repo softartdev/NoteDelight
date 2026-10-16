@@ -41,7 +41,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.softartdev.notedelight.ui.setText
+import com.softartdev.notedelight.util.setText
 import kotlinx.coroutines.launch
 import com.softartdev.notedelight.feature.console.ui.ConsoleSurface
 import com.softartdev.notedelight.feature.console.ui.buffer.ConsoleBuffer
