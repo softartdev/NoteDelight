@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -108,6 +109,7 @@ fun ConsoleScreenBody(
                             expanded = tipsExpanded,
                             onDismissRequest = { tipsExpanded = false },
                         ) {
+                            val monospaceBodySmall: TextStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace)
                             ConsoleTips.entries.forEachIndexed { index, tip ->
                                 TipMenuItem(
                                     tip = tip.sql,
@@ -120,10 +122,9 @@ fun ConsoleScreenBody(
                                         onAction(ConsoleAction.UpdateInput(tip.sql))
                                         tipsExpanded = false
                                     },
+                                    textStyle = monospaceBodySmall,
                                 )
-                                if (index < ConsoleTips.entries.lastIndex) {
-                                    HorizontalDivider()
-                                }
+                                if (index < ConsoleTips.entries.lastIndex) HorizontalDivider()
                             }
                         }
                     }
@@ -145,6 +146,7 @@ private fun TipMenuItem(
     index: Int,
     onCopy: () -> Unit,
     onAutofill: () -> Unit,
+    textStyle: TextStyle,
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 8.dp),
@@ -152,7 +154,7 @@ private fun TipMenuItem(
     ) {
         Text(
             text = tip,
-            style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+            style = textStyle,
             modifier = Modifier.weight(1f).padding(start = 8.dp),
         )
         IconButton(

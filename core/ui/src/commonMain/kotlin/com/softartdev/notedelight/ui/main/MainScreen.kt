@@ -96,7 +96,7 @@ fun MainScreen(
             onRefresh = { onAction(MainAction.OnRefresh) },
             state = pullToRefreshState
         ) {
-            LaunchedEffect(key1 = noteListState.value) {
+            LaunchedEffect(key1 = refreshState.value) {
                 pullToRefreshState.animateToHidden()
             }
             when (val noteListResult = noteListState.value) {

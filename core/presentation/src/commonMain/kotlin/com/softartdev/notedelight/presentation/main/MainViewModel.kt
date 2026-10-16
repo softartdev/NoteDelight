@@ -95,7 +95,8 @@ class MainViewModel(
     }
 
     private fun isDbError(throwable: Throwable): Boolean {
-        if (throwable::class.simpleName.orEmpty().contains("SQLite", ignoreCase = true)) return true
-        return throwable.message.orEmpty().contains("database not open", ignoreCase = true)
+        val sqlError = throwable::class.simpleName?.contains("SQLite", ignoreCase = true) ?: false
+        val dbClosed = throwable.message?.contains("database not open", ignoreCase = true) ?: false
+        return sqlError || dbClosed
     }
 }
