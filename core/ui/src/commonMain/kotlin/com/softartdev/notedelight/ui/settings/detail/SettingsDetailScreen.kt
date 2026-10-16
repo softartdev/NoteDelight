@@ -41,8 +41,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -311,13 +309,11 @@ private fun Preference(
 private fun AppVersionItem(appVersion: String?, onAction: (SettingsAction) -> Unit) {
     if (appVersion != null) {
         val defaultColors: ListItemColors = ListItemDefaults.colors()
-        val disabledColors: ListItemColors by remember(defaultColors) {
-            mutableStateOf(
-                defaultColors.copy(
-                    headlineColor = defaultColors.disabledHeadlineColor,
-                    leadingIconColor = defaultColors.disabledLeadingIconColor,
-                    supportingTextColor = defaultColors.disabledHeadlineColor
-                )
+        val disabledColors: ListItemColors = remember(defaultColors) {
+            defaultColors.copy(
+                headlineColor = defaultColors.disabledHeadlineColor,
+                leadingIconColor = defaultColors.disabledLeadingIconColor,
+                supportingTextColor = defaultColors.disabledHeadlineColor
             )
         }
         ListItem(
