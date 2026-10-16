@@ -3,8 +3,8 @@ package com.softartdev.notedelight.interactor
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.Clipboard
+import com.softartdev.notedelight.ui.setText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -19,18 +19,18 @@ import org.jetbrains.compose.resources.getString
 
 class SnackbarInteractorImpl : SnackbarInteractor {
     private var snackbarHostState: SnackbarHostState? = null
-    private var clipboardManager: ClipboardManager? = null
+    private var clipboard: Clipboard? = null
     private var coroutineScope: CoroutineScope? = null
 
     override fun setDependencies(hostState: Any, clipboard: Any, coroutineScope: CoroutineScope) {
         this.snackbarHostState = hostState as SnackbarHostState
-        this.clipboardManager = clipboard as ClipboardManager
+        this.clipboard = clipboard as Clipboard
         this.coroutineScope = coroutineScope
     }
 
     override fun releaseDependencies() {
         this.snackbarHostState = null
-        this.clipboardManager = null
+        this.clipboard = null
         this.coroutineScope = null
     }
 
@@ -45,7 +45,7 @@ class SnackbarInteractorImpl : SnackbarInteractor {
                     duration = SnackbarDuration.Long
                 )
                 if (result == SnackbarResult.ActionPerformed) {
-                    clipboardManager?.setText(AnnotatedString(message.text))
+                    clipboard?.setText(message.text)
                 }
             }
             is SnackbarMessage.Resource -> {

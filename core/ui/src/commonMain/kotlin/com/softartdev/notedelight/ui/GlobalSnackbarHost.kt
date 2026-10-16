@@ -14,8 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.Clipboard
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.tooling.preview.Preview
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.ui.main.PreviewMainScreen
@@ -27,10 +27,10 @@ fun GlobalSnackbarHost(
     snackbarInteractor: SnackbarInteractor,
     snackbarHostState: SnackbarHostState,
 ) {
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val clipboard: Clipboard = LocalClipboard.current
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    DisposableEffect(key1 = snackbarInteractor, key2 = snackbarHostState, key3 = clipboardManager) {
-        snackbarInteractor.setDependencies(snackbarHostState, clipboardManager, coroutineScope)
+    DisposableEffect(key1 = snackbarInteractor, key2 = snackbarHostState, key3 = clipboard) {
+        snackbarInteractor.setDependencies(snackbarHostState, clipboard, coroutineScope)
         onDispose(snackbarInteractor::releaseDependencies)
     }
     SnackbarHost(

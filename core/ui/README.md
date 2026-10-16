@@ -112,7 +112,7 @@ Each screen is a composable function connected to a ViewModel:
 
 ### Global Snackbar Host (`ui/GlobalSnackbarHost.kt`)
 
-- Provides a single `SnackbarHost` for the entire app and wires `SnackbarInteractor` dependencies (`SnackbarHostState`, `ClipboardManager`, `CoroutineScope`).
+- Provides a single `SnackbarHost` for the entire app and wires `SnackbarInteractor` dependencies (`SnackbarHostState`, `Clipboard`, `CoroutineScope`).
 - Installed once in `App.kt`; Compose disposes it safely across Android, Desktop, Web, and iOS targets.
 - Use `SnackbarMessage` variants from `core/presentation` to trigger user messages—never create view-specific hosts.
 
