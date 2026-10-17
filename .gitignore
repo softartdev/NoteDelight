@@ -98,3 +98,4 @@ kotlin-js-store/
 # AI
 .claude/
 .codex/
+.agents/
