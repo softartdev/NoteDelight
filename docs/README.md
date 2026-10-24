@@ -6,6 +6,7 @@ Welcome to the NoteDelight documentation! This directory contains comprehensive 
 
 ### 📖 Main Documentation
 
+- **[ROADMAP.md](ROADMAP.md)** - Product roadmap, prioritized milestones, and architectural notes
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Clean Architecture, MVVM, data flow, state management
 - **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Code style, development workflow, commit conventions
 - **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing strategy, patterns, and tools
@@ -49,6 +50,7 @@ Each module has its own detailed README.md:
 
 ## Documentation by Topic
 
+- **Roadmap & Planned Features** → [ROADMAP.md](ROADMAP.md)
 - **Architecture & Design** → [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Development & Code Style** → [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Testing** → [TESTING_GUIDE.md](TESTING_GUIDE.md)
