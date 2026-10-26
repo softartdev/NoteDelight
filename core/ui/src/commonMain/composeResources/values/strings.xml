@@ -4,6 +4,7 @@
     <string name="press_add_note"><![CDATA[Press "+" to add a note.]]></string>
     <string name="title_activity_note">New Note</string>
     <string name="action_save_note">Save note</string>
+    <string name="action_share_note">Share note</string>
     <string name="action_delete_note">Delete note</string>
     <string name="type_text">Type Text</string>
     <string name="note_deleted">Note deleted</string>

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.8] - 2026-10-26
+
+### Features
+- Add outbound note sharing across Android (`Intent.ACTION_SEND` chooser), iOS (`UIActivityViewController`), Desktop (copyable snackbar), and Web (`navigator.share` with copyable snackbar fallback) via `ShareInteractor`
+- Support inbound plain-text sharing on Android (`Intent.ACTION_SEND` in `MainActivity`) and iOS (`ShareExtension` target with `SLComposeServiceViewController`, App Group container `group.com.softartdev.notedelight`, and plain-text document opening)
+- Integrate the Koin compiler plugin (`io.insert-koin.compiler.plugin`) across app, UI, and feature modules
+
+### Refactoring
+- Replace deprecated Compose `ClipboardManager` with `Clipboard` and move `ClipboardHelper` to the `util` package across all platforms
+- Optimize `LazyColumn` items with `key` and `contentType` parameters in `NoteList`, `FileListScreen`, and `SettingsDetailScreen`
+- Improve error handling in `MainViewModel` and optimize state management in `MainScreen`, `ConsoleScreen`, and `SettingsMasterScreen`
+- Safeguard internal task property reflection in `ProjectExtensions`
+
+### Tests
+- Add `ShareTestCase`, `ShareIntentTest` (unencrypted and encrypted DB flows), `ShareInteractorStub`, and ViewModel unit tests for outbound and inbound note sharing
+- Enhance `ConsoleScreenTest` stability with `waitUntil` conditions and expand `ComposeTestNodeProvider` reflection for Compose UI Test rules
+- Temporarily ignore `RotationTest` due to CI emulator connection issues
+
+### Documentation
+- Add `docs/ROADMAP.md` and update `docs/ARCHITECTURE.md` and module `README.md` files for inter-app sharing and iOS `ShareExtension`
+
+### Chores
+- Add iOS `ShareExtension` provisioning profile support to `Fastfile` and GPG secret management scripts (`encrypt_secret.sh`, `decrypt_secret.sh`, `check_secret_integrity.sh`)
+- Update Gradle Wrapper (9.6.1 → 9.8.1), AGP (9.3.1 → 9.4.1), Kotlin (2.4.10 → 2.4.21), Compose (1.11.1 → 1.12.2), SQLDelight (2.3.2 → 2.4.1), Room 3 (3.0.0 → 3.0.3), Android `minSdk` (23 → 24), and other dependencies in `libs.versions.toml`
+- Update KMP CI test report paths in `.github/workflows/kmp.yml` and clean up `gradle.properties`
+
 ## [8.5.7] - 2026-07-29
 
 ### Bug Fixes

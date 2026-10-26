@@ -22,6 +22,9 @@ gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_P
 --output ./.github/secrets/NoteDelight_Distribution_Profile.mobileprovision.gpg ./app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision
 
 gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./.github/secrets/NoteDelight_ShareExtension_Distribution_Profile.mobileprovision.gpg ./app/iosApp/fastlane/NoteDelight_ShareExtension_Distribution_Profile.mobileprovision
+
+gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./.github/secrets/desktop.keystore.properties.gpg ./app/desktop/keystore.properties
 
 gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase="$LARGE_SECRET_PASSPHRASE" \

@@ -10,6 +10,8 @@ import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
+import com.softartdev.notedelight.interactor.ShareInteractor
+import com.softartdev.notedelight.interactor.ShareInteractorStub
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.model.Note
@@ -72,6 +74,7 @@ class AdaptiveInteractorTest {
     private val checkSqlCipherVersionUseCase = CheckSqlCipherVersionUseCase(mockSafeRepo)
     private val revealFileListUseCase = RevealFileListUseCase()
     private val adaptiveInteractor = AdaptiveInteractor()
+    private val shareInteractor: ShareInteractor = ShareInteractorStub()
     private val coroutineDispatchers = CoroutineDispatchersStub(mainDispatcherRule.testDispatcher)
 
     private lateinit var mainViewModel: MainViewModel
@@ -93,6 +96,8 @@ class AdaptiveInteractorTest {
             safeRepo = mockSafeRepo,
             router = mockRouter,
             adaptiveInteractor = adaptiveInteractor,
+            shareInteractor = shareInteractor,
+            createNoteUseCase = mockCreateNoteUseCase,
             coroutineDispatchers = coroutineDispatchers
         )
         noteViewModel = NoteViewModel(
@@ -102,6 +107,7 @@ class AdaptiveInteractorTest {
             saveNoteUseCase = SaveNoteUseCase(mockNoteDAO),
             deleteNoteUseCase = mockDeleteNoteUseCase,
             snackbarInteractor = mockSnackbarInteractor,
+            shareInteractor = shareInteractor,
             router = mockRouter,
             coroutineDispatchers = coroutineDispatchers
         )

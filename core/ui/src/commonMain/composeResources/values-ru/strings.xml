@@ -4,6 +4,7 @@
     <string name="press_add_note"><![CDATA[Нажмите "+", чтобы добавить заметку.]]></string>
     <string name="title_activity_note">Новая заметка</string>
     <string name="action_save_note">Сохранить заметку</string>
+    <string name="action_share_note">Поделиться заметкой</string>
     <string name="action_delete_note">Удалить заметку</string>
     <string name="type_text">Введите текст</string>
     <string name="note_deleted">Заметка удалена</string>

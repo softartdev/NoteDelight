@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.gradle.convention)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -39,6 +40,7 @@ kotlin {
     }
     wasmJs {
         browser()
+        binaries.executable()
     }
     swiftPMDependencies {
         iosMinimumDeploymentTarget = "15.0"

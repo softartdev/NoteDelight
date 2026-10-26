@@ -122,7 +122,11 @@ fun FileList(
 ) {
     val listState = rememberLazyListState()
     LazyColumn(modifier = modifier, state = listState) {
-        items(items = fileList) { fileName: String ->
+        items(
+            items = fileList,
+            key = { fileName: String -> fileName },
+            contentType = { "file" },
+        ) { fileName: String ->
             FileItem(fileName, onItemClicked)
             HorizontalDivider()
         }

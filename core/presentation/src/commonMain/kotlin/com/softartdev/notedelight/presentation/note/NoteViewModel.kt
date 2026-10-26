@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.interactor.SnackbarTextResource
@@ -30,6 +31,7 @@ class NoteViewModel(
     private val saveNoteUseCase: SaveNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val snackbarInteractor: SnackbarInteractor,
+    private val shareInteractor: ShareInteractor,
     private val router: Router,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
@@ -61,6 +63,7 @@ class NoteViewModel(
     fun onAction(action: NoteAction) = when (action) {
         is NoteAction.Save -> saveNote(text = action.text.toString())
         is NoteAction.Edit -> editTitle()
+        is NoteAction.Share -> shareNote(text = action.text.toString())
         is NoteAction.Delete -> subscribeToDeleteNote()
         is NoteAction.CheckSaveChange -> checkSaveChange(text = action.text.toString())
         is NoteAction.ShowCheckSaveChangeDialog -> showSaveChangesDialog(text = action.text.toString())
@@ -84,6 +87,14 @@ class NoteViewModel(
         } finally {
             stateFlow.update(NoteResult::hideLoading)
         }
+    }
+
+    private fun shareNote(text: String) = viewModelScope.launch {
+        if (text.isEmpty()) {
+            snackbarInteractor.showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
+            return@launch
+        }
+        shareInteractor.shareText(text = text)
     }
 
     private fun loadNote() = viewModelScope.launch {
@@ -267,23 +278,7 @@ class NoteViewModel(
 
     private fun createTitleIfNeed(text: String): String = stateFlow.value.note?.title
         ?.takeIf(String::isNotEmpty)
-        ?: createTitle(text)
-
-    private fun createTitle(text: String): String {
-        var title = text.take(30.coerceAtMost(text.length))
-
-        if (text.length > 30) {
-            val lastSpace: Int = title.lastIndexOf(' ')
-            if (lastSpace > 0) {
-                title = title.take(lastSpace)
-            }
-        }
-        val firstLine = title.indexOf('\n')
-        if (firstLine > 0) {
-            title = title.take(firstLine)
-        }
-        return title
-    }
+        ?: CreateNoteUseCase.createTitle(text)
 
     private suspend fun isChanged(id: Long, title: String, text: String): Boolean {
         val note = noteDAO.load(id)

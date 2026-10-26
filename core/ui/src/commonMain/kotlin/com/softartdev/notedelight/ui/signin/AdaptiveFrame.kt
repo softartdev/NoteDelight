@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +21,7 @@ fun AdaptiveFrame(
     expandedMaxWidth: Dp = 600.dp,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val info: WindowAdaptiveInfo = currentWindowAdaptiveInfo()
+    val info: WindowAdaptiveInfo = currentWindowAdaptiveInfoV2()
     val sizeClass: WindowSizeClass = info.windowSizeClass
     val isAtLeastMedium: Boolean = sizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
     val isAtLeastExpanded: Boolean = sizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)

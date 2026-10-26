@@ -5,9 +5,11 @@ import com.softartdev.notedelight.interactor.AutofillInteractor
 import com.softartdev.notedelight.interactor.AutofillInteractorImpl
 import com.softartdev.notedelight.interactor.BiometricInteractor
 import com.softartdev.notedelight.interactor.LocaleInteractor
-import com.softartdev.notedelight.interactor.WebBiometricInteractor
+import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractorImpl
+import com.softartdev.notedelight.interactor.WebBiometricInteractor
+import com.softartdev.notedelight.interactor.WebShareInteractor
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -17,6 +19,7 @@ actual val interactorModule: Module = module {
     singleOf(::AdaptiveInteractor)
     factoryOf<AutofillInteractor>(::AutofillInteractorImpl)
     singleOf<SnackbarInteractor>(::SnackbarInteractorImpl)
+    single<ShareInteractor> { WebShareInteractor(get()) }
     singleOf(::LocaleInteractor)
     singleOf<BiometricInteractor>(::WebBiometricInteractor)
 }

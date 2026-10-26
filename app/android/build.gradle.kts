@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.gms)
     alias(libs.plugins.crashlytics)
+    alias(libs.plugins.koin.compiler)
 }
 apply(from = "$rootDir/gradle/common-android-sign-conf.gradle")
 
@@ -25,8 +26,8 @@ android {
         applicationId = "com.softartdev.noteroom"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 857
-        versionName = "8.5.7"
+        versionCode = 858
+        versionName = "8.5.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         vectorDrawables.useSupportLibrary = true

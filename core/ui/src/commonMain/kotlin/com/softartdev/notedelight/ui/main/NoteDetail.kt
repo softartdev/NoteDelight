@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,12 +44,14 @@ import com.softartdev.notedelight.ui.TooltipIconButton
 import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
 import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
+import com.softartdev.notedelight.util.SHARE_NOTE_BUTTON_TAG
 import com.softartdev.theme.material3.PreferableMaterialTheme
 import kotlinx.coroutines.flow.receiveAsFlow
 import notedelight.core.ui.generated.resources.Res
 import notedelight.core.ui.generated.resources.action_delete_note
 import notedelight.core.ui.generated.resources.action_edit_title
 import notedelight.core.ui.generated.resources.action_save_note
+import notedelight.core.ui.generated.resources.action_share_note
 import notedelight.core.ui.generated.resources.type_text
 import org.jetbrains.compose.resources.stringResource
 
@@ -129,6 +132,12 @@ fun NoteDetailBody(
                     onClick = { onAction(NoteAction.Edit) },
                     testTag = EDIT_TITLE_BUTTON_TAG,
                     label = stringResource(Res.string.action_edit_title),
+                )
+                TooltipIconButton(
+                    imageVector = Icons.Default.Share,
+                    onClick = { onAction(NoteAction.Share(textState.text)) },
+                    testTag = SHARE_NOTE_BUTTON_TAG,
+                    label = stringResource(Res.string.action_share_note),
                 )
                 TooltipIconButton(
                     imageVector = Icons.Default.Delete,

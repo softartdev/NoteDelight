@@ -2,21 +2,20 @@
 
 package com.softartdev.notedelight.ui.cases
 
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.performSemanticsAction
-import androidx.compose.ui.semantics.SemanticsActions
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.createTempBackupPath
 import com.softartdev.notedelight.ui.BaseTestCase
 import com.softartdev.notedelight.ui.screen.MainTestScreen
-import com.softartdev.notedelight.ui.settings.detail.DatabaseFilePicker
 import com.softartdev.notedelight.ui.settings.detail.TestDatabaseFilePicker
 import com.softartdev.notedelight.util.CONFIRM_PASSWORD_DIALOG_TAG
 import com.softartdev.notedelight.util.ENTER_PASSWORD_DIALOG_TAG
@@ -43,7 +42,7 @@ class BackupFeatureTestCase(
         val firstExportPath = createTempBackupPath("backup-one")
         val secondExportPath = createTempBackupPath("backup-two")
         val testDatabaseFilePicker: TestDatabaseFilePicker =
-            KoinPlatformTools.defaultContext().get().get(DatabaseFilePicker::class)
+            KoinPlatformTools.defaultContext().get().get()
         testDatabaseFilePicker.setQueues(
             exportPaths = listOf(firstExportPath, secondExportPath),
             importPaths = listOf(firstExportPath, secondExportPath)

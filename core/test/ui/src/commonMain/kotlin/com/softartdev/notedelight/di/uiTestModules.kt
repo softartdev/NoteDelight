@@ -18,7 +18,8 @@ val navigationTestModule = module {
 }
 
 val backupTestModule = module {
-    single<DatabaseFilePicker> { TestDatabaseFilePicker() }
+    single { TestDatabaseFilePicker() }
+    single<DatabaseFilePicker> { get<TestDatabaseFilePicker>() }
 }
 
 val biometricTestModule = module {

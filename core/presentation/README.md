@@ -70,7 +70,8 @@ Each screen has a dedicated ViewModel following **MVVM pattern**:
 ### Interactors (`interactor/`)
 
 - `AdaptiveInteractor`: Shared state holder that bridges adaptive navigation between `MainViewModel`, `SettingsCategoriesViewModel`, router, and UI panes. It also exposes `selectedSettingsCategoryIdStateFlow` for settings selection sync and `checkSaveChangeChannel` so the list pane can request a save-change confirmation before switching or creating notes in adaptive layouts.
-- `SnackbarInteractor`: Multiplatform contract used by ViewModels to emit UI messages without depending on Compose APIs.
+- `ShareInteractor`: Multiplatform abstract class (`ShareInteractor` + platform implementations) for outbound note text sharing (Android `Intent.createChooser`, iOS `UIActivityViewController`, Web `navigator.share` with copyable snackbar fallback, Desktop copyable snackbar feedback via `SnackbarMessage.Copyable`) and holding pending inbound shared text (`sharedTextStateFlow`) until the database is unlocked and `MainViewModel` creates and opens the shared note.
+- `SnackbarInteractor`: Multiplatform contract used by ViewModels to emit UI messages and copy text to clipboard without depending on Compose APIs.
 
 ### Navigation (`navigation/`)
 

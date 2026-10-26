@@ -38,7 +38,7 @@ fun ComposeUiTest.waitUntilDisplayed(
     try {
         val sni = blockSNI()
         sni.assertIsDisplayed()
-    } catch (_: AssertionError) {
+    } catch (_: Throwable) {
         return@waitUntil false
     }
     return@waitUntil true
@@ -55,7 +55,7 @@ fun ComposeUiTest.waitAssert(
 ) = waitUntil(conditionDescription = description, timeoutMillis = ASSERT_WAIT_TIMEOUT_MILLIS) {
     try {
         assert()
-    } catch (_: AssertionError) {
+    } catch (_: Throwable) {
         return@waitUntil false
     }
     return@waitUntil true
@@ -68,7 +68,7 @@ fun ComposeUiTest.waitUntilSelected(
     val sni = blockSNI().assertIsSelectable()
     try {
         sni.assertIsSelected()
-    } catch (_: AssertionError) {
+    } catch (_: Throwable) {
         return@waitUntil false
     }
     return@waitUntil true

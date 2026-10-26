@@ -9,6 +9,7 @@ import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.ShareInteractorStub
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarMessage
 import com.softartdev.notedelight.interactor.SnackbarTextResource
@@ -51,6 +52,7 @@ class NoteViewModelTest {
     private val saveNoteUseCase = SaveNoteUseCase(mockNoteDAO)
     private val mockDeleteNoteUseCase = Mockito.mock(DeleteNoteUseCase::class.java)
     private val mockSnackbarInteractor = Mockito.mock(SnackbarInteractor::class.java)
+    private val shareInteractor = ShareInteractorStub()
     private val mockRouter = Mockito.mock(Router::class.java)
     private val adaptiveInteractor = AdaptiveInteractor()
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
@@ -68,6 +70,7 @@ class NoteViewModelTest {
         saveNoteUseCase = saveNoteUseCase,
         deleteNoteUseCase = mockDeleteNoteUseCase,
         snackbarInteractor = mockSnackbarInteractor,
+        shareInteractor = shareInteractor,
         router = mockRouter,
         coroutineDispatchers = coroutineDispatchers
     )
@@ -75,12 +78,14 @@ class NoteViewModelTest {
     @Before
     fun setUp() = runTest {
         Logger.setLogWriters(PrintLogWriter())
+        shareInteractor.reset()
         Mockito.`when`(mockCreateNoteUseCase.invoke()).thenReturn(id)
         Mockito.`when`(mockNoteDAO.load(id)).thenReturn(note)
     }
 
     @After
     fun tearDown() = runTest {
+        shareInteractor.reset()
         viewModel.resetResultState(noteId = id)
         Logger.setLogWriters()
         Mockito.reset(mockNoteDAO, mockCreateNoteUseCase, mockDeleteNoteUseCase, mockSnackbarInteractor, mockRouter)
@@ -315,6 +320,41 @@ class NoteViewModelTest {
             viewModel.onAction(NoteAction.CheckSaveChange(""))
             verify(mockDeleteNoteUseCase).invoke(id)
             verify(mockRouter).adaptiveNavigateBack()
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun shareNoteEmpty() = runTest {
+        viewModel.launchCollectingSelectedNoteId()
+        val emptyNote = note.copy(title = "", text = "")
+        Mockito.`when`(mockNoteDAO.load(id)).thenReturn(emptyNote)
+        adaptiveInteractor.selectedNoteIdStateFlow.value = id
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(emptyNote, actualResult.note)
+
+            viewModel.onAction(NoteAction.Share(""))
+            verify(mockSnackbarInteractor).showMessage(SnackbarMessage.Resource(SnackbarTextResource.EMPTY))
+            assertEquals(null, shareInteractor.lastSharedText)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun shareNote() = runTest {
+        viewModel.launchCollectingSelectedNoteId()
+        adaptiveInteractor.selectedNoteIdStateFlow.value = id
+        viewModel.stateFlow.test {
+            val actualResult: NoteResult = awaitItem()
+            assertFalse(actualResult.loading)
+            assertEquals(note, actualResult.note)
+
+            viewModel.onAction(NoteAction.Share(text))
+            assertEquals(text, shareInteractor.lastSharedText)
 
             cancelAndIgnoreRemainingEvents()
         }

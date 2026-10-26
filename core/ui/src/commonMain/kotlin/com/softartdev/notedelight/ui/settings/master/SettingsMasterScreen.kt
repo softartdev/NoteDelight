@@ -5,6 +5,7 @@ package com.softartdev.notedelight.ui.settings.master
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
@@ -26,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -61,16 +64,13 @@ fun SettingsMasterScreen(
     onSettingsCategoriesAction: (SettingsCategoriesAction) -> Unit,
 ) {
     val result: SettingsCategoriesResult = settingsCategoriesResultState.value
-    val refreshState: State<Boolean> = remember {
-        derivedStateOf { settingsCategoriesResultState.value.loading }
-    }
     SettingsMasterScreenBody(
         selectedCategoryId = result.selectedCategoryId,
         onCategoryClick = { category: SettingsCategory ->
             onSettingsCategoriesAction(SettingsCategoriesAction.SelectCategory(category))
         },
         onRefresh = { onSettingsCategoriesAction(SettingsCategoriesAction.Refresh) },
-        refreshState = refreshState,
+        refreshState = remember { derivedStateOf { settingsCategoriesResultState.value.loading } },
         onNavigateBack = { onSettingsCategoriesAction(SettingsCategoriesAction.NavBack) }
     )
     NavBackHandler(enabled = result.selectedCategoryId == null) {
@@ -85,7 +85,7 @@ fun SettingsMasterScreenBody(
     onNavigateBack: () -> Unit = {},
     onRefresh: () -> Unit = {},
     pullToRefreshState: PullToRefreshState = rememberPullToRefreshState(),
-    refreshState: State<Boolean> = remember { derivedStateOf { false } },
+    refreshState: State<Boolean> = remember { mutableStateOf(false) },
 ) = Scaffold(
     topBar = {
         TopAppBar(
@@ -110,9 +110,8 @@ fun SettingsMasterScreenBody(
             LaunchedEffect(key1 = refreshState.value) {
                 pullToRefreshState.animateToHidden()
             }
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                if (refreshState.value) LinearProgressIndicator(Modifier.fillMaxWidth())
                 SettingsCategory.entries.forEach { category: SettingsCategory ->
                     SettingsCategoryItem(
                         category = category,
@@ -142,7 +141,5 @@ private fun SettingsCategoryItem(
 @Preview
 @Composable
 fun PreviewSettingsMasterScreen() = PreferableMaterialTheme {
-    SettingsMasterScreenBody(
-        selectedCategoryId = SettingsCategory.Security.id,
-    )
+    SettingsMasterScreenBody(selectedCategoryId = SettingsCategory.Security.id)
 }

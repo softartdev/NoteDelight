@@ -7,6 +7,7 @@ The `app:iosApp` module is the native SwiftUI/UIKit shell for NoteDelight. It co
 ```text
 app/iosApp/
 ├── iosApp/                              # Swift application sources
+├── ShareExtension/                      # iOS Share Extension (com.apple.share-services)
 ├── Note Delight Unit-Tests/             # Xcode unit tests
 ├── iosApp.xcodeproj/                    # Open and build this project
 ├── KotlinMultiplatformLinkedPackage/    # Generated Swift package used for linkage

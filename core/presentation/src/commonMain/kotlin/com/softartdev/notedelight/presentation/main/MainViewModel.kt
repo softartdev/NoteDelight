@@ -6,15 +6,21 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
+import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
+import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -22,6 +28,8 @@ class MainViewModel(
     private val safeRepo: SafeRepo,
     private val router: Router,
     private val adaptiveInteractor: AdaptiveInteractor,
+    private val shareInteractor: ShareInteractor,
+    private val createNoteUseCase: CreateNoteUseCase,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@MainViewModel::class.simpleName.toString())
@@ -77,11 +85,21 @@ class MainViewModel(
             handleError("Error loading notes", throwable)
         }
         job = viewModelScope.launch {
-            adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedId: Long? ->
-                val currentState = stateFlow.value
-                if (currentState is NoteListResult.Success) {
-                    stateFlow.value = currentState.copy(selectedId = selectedId)
+            launch {
+                adaptiveInteractor.selectedNoteIdStateFlow.collect { selectedId: Long? ->
+                    val currentState = stateFlow.value
+                    if (currentState is NoteListResult.Success) {
+                        stateFlow.value = currentState.copy(selectedId = selectedId)
+                    }
                 }
+            }
+            launch {
+                shareInteractor.sharedTextStateFlow.filterNotNull()
+                    .onEach { shareInteractor.sharedTextStateFlow.value = null }
+                    .map { text -> createNoteUseCase(text = text) }
+                    .flowOn(coroutineDispatchers.io)
+                    .map(MainAction::OnNoteClick)
+                    .collect(::onAction)
             }
         }
     }
@@ -95,7 +113,8 @@ class MainViewModel(
     }
 
     private fun isDbError(throwable: Throwable): Boolean {
-        if (throwable::class.simpleName.orEmpty().contains("SQLite", ignoreCase = true)) return true
-        return throwable.message.orEmpty().contains("database not open", ignoreCase = true)
+        val sqlError = throwable::class.simpleName?.contains("SQLite", ignoreCase = true) ?: false
+        val dbClosed = throwable.message?.contains("database not open", ignoreCase = true) ?: false
+        return sqlError || dbClosed
     }
 }

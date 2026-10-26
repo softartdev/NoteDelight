@@ -42,6 +42,7 @@ platform :ios do
       keychain_password: ENV["LARGE_SECRET_PASSPHRASE"]
     )
     install_provisioning_profile(path: "fastlane/NoteDelight_Distribution_Profile.mobileprovision")
+    install_provisioning_profile(path: "fastlane/NoteDelight_ShareExtension_Distribution_Profile.mobileprovision")
   end
   desc "AppStore build lane with gym"
   lane :appstore_build_gym_lane do
@@ -57,7 +58,8 @@ platform :ios do
       export_method: 'app-store',
       export_options: {
         provisioningProfiles: {
-          "com.softartdev.notedelight" => "NoteDelight_Distribution_Profile"
+          "com.softartdev.notedelight" => "NoteDelight_Distribution_Profile",
+          "com.softartdev.notedelight.ShareExtension" => "NoteDelight_ShareExtension_Distribution_Profile"
         }
       }
     )

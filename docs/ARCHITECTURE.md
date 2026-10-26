@@ -177,10 +177,12 @@ data class NoteResult(
 
 // Action Interface
 sealed interface NoteAction {
-    data class Save(val text: String) : NoteAction
+    data class Save(val text: CharSequence) : NoteAction
     data object Edit : NoteAction
+    data class Share(val text: CharSequence) : NoteAction
     data object Delete : NoteAction
-    data class CheckSaveChange(val text: String) : NoteAction
+    data class CheckSaveChange(val text: CharSequence) : NoteAction
+    data class ShowCheckSaveChangeDialog(val text: CharSequence) : NoteAction
 }
 
 // ViewModel
@@ -189,10 +191,12 @@ class NoteViewModel(...) : ViewModel() {
     val stateFlow: StateFlow<NoteResult> = mutableStateFlow
     
     fun onAction(action: NoteAction) = when (action) {
-        is NoteAction.Save -> saveNote(action.text)
+        is NoteAction.Save -> saveNote(action.text.toString())
         is NoteAction.Edit -> editTitle()
+        is NoteAction.Share -> shareNote(action.text.toString())
         is NoteAction.Delete -> subscribeToDeleteNote()
-        is NoteAction.CheckSaveChange -> checkSaveChange(action.text)
+        is NoteAction.CheckSaveChange -> checkSaveChange(action.text.toString())
+        is NoteAction.ShowCheckSaveChangeDialog -> showSaveChangesDialog(action.text.toString())
     }
     
     private fun saveNote(text: String) { /* ... */ }
@@ -220,6 +224,7 @@ fun NoteDetailBody(
     // Usage in UI components
     IconButton(onClick = { onAction(NoteAction.Save(text)) })
     IconButton(onClick = { onAction(NoteAction.Edit) })
+    IconButton(onClick = { onAction(NoteAction.Share(text)) })
     IconButton(onClick = { onAction(NoteAction.Delete) })
 }
 ```
@@ -235,7 +240,7 @@ fun NoteDetailBody(
 **When to Use Action Interfaces**:
 
 Use Action interfaces when you have **3+ different user actions** that need to be passed down through multiple Composable layers. Examples:
-- ✅ `NoteAction` (Save, Edit, Delete, CheckSaveChange) - 4 actions
+- ✅ `NoteAction` (Save, Edit, Share, Delete, CheckSaveChange, ShowCheckSaveChangeDialog) - 6 actions
 - ✅ `MainAction` (OnNoteClick, OnSettingsClick, OnRefresh) - 3 actions  
 - ✅ `SettingsAction` (NavBack, Refresh, ChangeTheme, ChangeLanguage, ChangeEncryption, ChangePassword, ShowCipherVersion, ShowDatabasePath, ShowFileList, RevealFileList) - 10 actions
 - ✅ `ChangeAction` (OnEditOldPassword, OnEditNewPassword, OnEditRepeatPassword, etc.) - 5 actions

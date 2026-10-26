@@ -3,7 +3,6 @@ package com.softartdev.notedelight.ui.settings.detail
 import androidx.compose.runtime.Composable
 import co.touchlab.kermit.Logger
 import org.koin.compose.currentKoinScope
-import org.koin.compose.koinInject
 
 /**
  * Interface for picking database files.
@@ -20,7 +19,7 @@ interface DatabaseFilePicker {
 fun rememberDatabaseFilePicker(): DatabaseFilePicker {
     val testDbFilePicker: DatabaseFilePicker? = currentKoinScope().getOrNull()
     Logger.withTag("rememberDatabaseFilePicker").d { "TestDatabaseFilePicker: $testDbFilePicker" }
-    return if (testDbFilePicker != null) koinInject() else rememberPlatformDatabaseFilePicker()
+    return testDbFilePicker ?: rememberPlatformDatabaseFilePicker()
 }
 
 @Composable

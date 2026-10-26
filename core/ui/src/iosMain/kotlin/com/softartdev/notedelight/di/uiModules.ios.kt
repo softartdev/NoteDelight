@@ -4,8 +4,10 @@ import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.AutofillInteractor
 import com.softartdev.notedelight.interactor.AutofillInteractorImpl
 import com.softartdev.notedelight.interactor.BiometricInteractor
-import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.IosBiometricInteractor
+import com.softartdev.notedelight.interactor.IosShareInteractor
+import com.softartdev.notedelight.interactor.LocaleInteractor
+import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractor
 import com.softartdev.notedelight.interactor.SnackbarInteractorImpl
 import org.koin.core.module.Module
@@ -17,6 +19,7 @@ actual val interactorModule: Module = module {
     singleOf(::AdaptiveInteractor)
     factoryOf<AutofillInteractor>(::AutofillInteractorImpl)
     singleOf<SnackbarInteractor>(::SnackbarInteractorImpl)
+    singleOf<ShareInteractor>(::IosShareInteractor)
     singleOf(::LocaleInteractor)
     singleOf<BiometricInteractor>(::IosBiometricInteractor)
 }

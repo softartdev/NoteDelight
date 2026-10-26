@@ -11,6 +11,7 @@ import com.softartdev.notedelight.ui.main.NOTE_TEXT_FIELD_TAG
 import com.softartdev.notedelight.util.DELETE_NOTE_BUTTON_TAG
 import com.softartdev.notedelight.util.EDIT_TITLE_BUTTON_TAG
 import com.softartdev.notedelight.util.SAVE_NOTE_BUTTON_TAG
+import com.softartdev.notedelight.util.SHARE_NOTE_BUTTON_TAG
 import kotlin.jvm.JvmInline
 
 @JvmInline
@@ -29,6 +30,11 @@ value class NoteScreen(val nodeProvider: SemanticsNodeInteractionsProvider) {
     val editTitleMenuButtonSNI: SemanticsNodeInteraction
         get() = nodeProvider
             .onNodeWithTag(EDIT_TITLE_BUTTON_TAG)
+            .assertIsDisplayed()
+
+    val shareNoteMenuButtonSNI: SemanticsNodeInteraction
+        get() = nodeProvider
+            .onNodeWithTag(SHARE_NOTE_BUTTON_TAG)
             .assertIsDisplayed()
 
     val deleteNoteMenuButtonSNI: SemanticsNodeInteraction

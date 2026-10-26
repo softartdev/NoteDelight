@@ -51,15 +51,27 @@ app:android (Android Application)
 
 ### MainActivity.kt
 
-Main activity using Jetpack Compose:
+Main activity using Jetpack Compose and handling inbound `ACTION_SEND` (`text/plain`) share intents:
 
 ```kotlin
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private val shareInteractor: ShareInteractor by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            handleIncomingIntent(intent)
+        }
         setContent {
             App() // Shared Compose UI
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingIntent(intent)
     }
 }
 ```

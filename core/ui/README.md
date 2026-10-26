@@ -112,7 +112,7 @@ Each screen is a composable function connected to a ViewModel:
 
 ### Global Snackbar Host (`ui/GlobalSnackbarHost.kt`)
 
-- Provides a single `SnackbarHost` for the entire app and wires `SnackbarInteractor` dependencies (`SnackbarHostState`, `ClipboardManager`, `CoroutineScope`).
+- Provides a single `SnackbarHost` for the entire app and wires `SnackbarInteractor` dependencies (`SnackbarHostState`, `Clipboard`, `CoroutineScope`).
 - Installed once in `App.kt`; Compose disposes it safely across Android, Desktop, Web, and iOS targets.
 - Use `SnackbarMessage` variants from `core/presentation` to trigger user messages—never create view-specific hosts.
 
@@ -175,7 +175,7 @@ composeResources/
 ## Dependency Injection
 
 - `di/sharedModules.kt` exports a list combining repository, DAO, use case, and ViewModel modules (multiplatform safe).
-- `di/uiModules.kt` registers UI-only singletons: `RouterImpl`, `AdaptiveInteractor`, `SnackbarInteractorImpl`, and `CoroutineDispatchersImpl`.
+- `di/uiModules.kt` (and platform-specific `uiModules.*.kt`) registers UI singletons: `RouterImpl`, `AdaptiveInteractor`, `SnackbarInteractorImpl`, `ShareInteractor`, `LocaleInteractor`, `BiometricInteractor`, and `CoroutineDispatchersImpl`.
 - `App.kt` loads both module lists through `PreviewKoin` or the platform-specific composition root.
 - Platform targets contribute their repository wiring via `expect val repoModule` implementations.
 

@@ -22,6 +22,9 @@ gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./app/iosApp/fastlane/NoteDelight_Distribution_Profile.mobileprovision ./.github/secrets/NoteDelight_Distribution_Profile.mobileprovision.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
+--output ./app/iosApp/fastlane/NoteDelight_ShareExtension_Distribution_Profile.mobileprovision ./.github/secrets/NoteDelight_ShareExtension_Distribution_Profile.mobileprovision.gpg
+
+gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \
 --output ./app/desktop/keystore.properties ./.github/secrets/desktop.keystore.properties.gpg
 
 gpg --quiet --batch --yes --decrypt --passphrase="$LARGE_SECRET_PASSPHRASE" \

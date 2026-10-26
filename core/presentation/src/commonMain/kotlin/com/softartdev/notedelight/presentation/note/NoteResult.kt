@@ -15,6 +15,7 @@ data class NoteResult(
 sealed interface NoteAction {
     data class Save(val text: CharSequence) : NoteAction
     data object Edit : NoteAction
+    data class Share(val text: CharSequence) : NoteAction
     data object Delete : NoteAction
     data class CheckSaveChange(val text: CharSequence) : NoteAction
     data class ShowCheckSaveChangeDialog(val text: CharSequence) : NoteAction

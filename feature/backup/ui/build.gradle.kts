@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
     iosSimulatorArm64()
     wasmJs {
         browser()
+        binaries.executable()
     }
     sourceSets {
         val commonMain by getting {

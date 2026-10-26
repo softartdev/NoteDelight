@@ -11,6 +11,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.softartdev.notedelight.db.TestSchema.firstNote
 import com.softartdev.notedelight.db.TestSchema.secondNote
 import com.softartdev.notedelight.db.TestSchema.thirdNote
@@ -24,7 +26,11 @@ fun NoteList(
     selectedNoteId: Long?
 ) {
     LazyColumn {
-        items(count = pagingItems.itemCount) { index ->
+        items(
+            count = pagingItems.itemCount,
+            key = pagingItems.itemKey(Note::id),
+            contentType = pagingItems.itemContentType { "note" },
+        ) { index ->
             when (val note: Note? = pagingItems[index]) {
                 null -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 else -> NoteItem(note = note, onItemClicked = onItemClicked, selected = note.id == selectedNoteId)
