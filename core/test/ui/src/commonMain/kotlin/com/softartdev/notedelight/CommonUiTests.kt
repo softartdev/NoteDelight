@@ -131,6 +131,12 @@ abstract class CommonUiTests : AbstractUITests() {
         super.consoleFeatureTest()
     }
 
+    override fun sortNotesTest(): TestResult = runComposeUiTest {
+        _composeUiTest = this
+        beforeTest()
+        super.sortNotesTest()
+    }
+
     override fun pressBack() {
         composeUiTest.onNodeWithContentDescription(label = Icons.AutoMirrored.Filled.ArrowBack.name)
             .assertIsDisplayed()

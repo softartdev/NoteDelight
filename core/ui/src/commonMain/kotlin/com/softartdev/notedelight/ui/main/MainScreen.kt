@@ -81,6 +81,10 @@ fun MainScreen(
         TopAppBar(
             title = { Text(stringResource(Res.string.app_name)) },
             actions = {
+                SortMenuButton(
+                    noteListResult = noteListState.value,
+                    onAction = onAction,
+                )
                 TooltipIconButton(
                     imageVector = Icons.Default.Settings,
                     onClick = { onAction(MainAction.OnSettingsClick) },
@@ -107,7 +111,7 @@ fun MainScreen(
                         pagingItems.itemCount > 0 -> NoteList(
                             pagingItems = pagingItems,
                             onItemClicked = { id -> onAction(MainAction.OnNoteClick(id)) },
-                            selectedNoteId = noteListResult.selectedId
+                            selectedNoteId = noteListResult.selectedId,
                         )
                         else -> Empty()
                     }

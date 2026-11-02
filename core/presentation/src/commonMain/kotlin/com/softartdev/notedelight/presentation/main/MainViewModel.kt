@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import co.touchlab.kermit.Logger
+import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.model.NoteSort
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.usecase.note.NoteSortUseCase
 import com.softartdev.notedelight.util.CoroutineDispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +33,7 @@ class MainViewModel(
     private val adaptiveInteractor: AdaptiveInteractor,
     private val shareInteractor: ShareInteractor,
     private val createNoteUseCase: CreateNoteUseCase,
+    private val noteSortUseCase: NoteSortUseCase,
     private val coroutineDispatchers: CoroutineDispatchers,
 ) : ViewModel() {
     private val logger = Logger.withTag(this@MainViewModel::class.simpleName.toString())
@@ -53,8 +57,17 @@ class MainViewModel(
             adaptiveInteractor.selectedNoteIdStateFlow.value = action.id
             router.adaptiveNavigateToDetail(contentKey = action.id)
         }
+        is MainAction.OnSortChange -> onSortChange(action.noteSort)
         is MainAction.OnSettingsClick -> router.navigate(route = AppNavGraph.Settings)
         is MainAction.OnRefresh -> updateNotes()
+    }
+
+    private fun onSortChange(noteSort: NoteSort) {
+        noteSortUseCase(noteSort)
+        val currentState = stateFlow.value
+        if (currentState is NoteListResult.Success) {
+            stateFlow.value = currentState.copy(noteSort = noteSort)
+        }
     }
 
     fun launchNotes() = viewModelScope.launch {
@@ -80,7 +93,11 @@ class MainViewModel(
             stateFlow.value = NoteListResult.Loading
             val pagingDataFlow: Flow<PagingData<Note>> = safeRepo.noteDAO.pagingDataFlow
                 .cachedIn(viewModelScope)
-            stateFlow.value = NoteListResult.Success(result = pagingDataFlow, selectedId = null)
+            stateFlow.value = NoteListResult.Success(
+                result = pagingDataFlow,
+                selectedId = null,
+                noteSort = NoteDAO.noteSortFlow.value,
+            )
         } catch (throwable: Throwable) {
             handleError("Error loading notes", throwable)
         }

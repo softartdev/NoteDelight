@@ -100,4 +100,11 @@
     <string name="biometric_disabled_due_to_password_change">Вход по биометрии отключён — снова включите его в настройках.</string>
     <string name="biometric_error">Не удалось пройти биометрию</string>
     <string name="biometric_unavailable">Биометрия недоступна</string>
+    <string name="sort">Сортировка</string>
+    <string name="sort_modified_desc">Изменено: сначала новые</string>
+    <string name="sort_modified_asc">Изменено: сначала старые</string>
+    <string name="sort_created_desc">Создано: сначала новые</string>
+    <string name="sort_created_asc">Создано: сначала старые</string>
+    <string name="sort_title_asc">Заголовок: А–Я</string>
+    <string name="sort_title_desc">Заголовок: Я–А</string>
 </resources>

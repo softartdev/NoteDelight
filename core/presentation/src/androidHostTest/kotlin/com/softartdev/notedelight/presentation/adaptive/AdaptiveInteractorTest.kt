@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import app.cash.turbine.test
 import co.touchlab.kermit.Logger
+import com.russhwolf.settings.MapSettings
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
@@ -13,8 +14,9 @@ import com.softartdev.notedelight.interactor.LocaleInteractor
 import com.softartdev.notedelight.interactor.ShareInteractor
 import com.softartdev.notedelight.interactor.ShareInteractorStub
 import com.softartdev.notedelight.interactor.SnackbarInteractor
-import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.model.NoteSort
+import com.softartdev.notedelight.model.SettingsCategory
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
 import com.softartdev.notedelight.presentation.main.MainAction
@@ -28,10 +30,12 @@ import com.softartdev.notedelight.presentation.settings.SettingsAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesAction
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
+import com.softartdev.notedelight.repository.PreferencesRepoImpl
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
+import com.softartdev.notedelight.usecase.note.NoteSortUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
 import com.softartdev.notedelight.usecase.settings.ExportDatabaseUseCase
@@ -40,6 +44,7 @@ import com.softartdev.notedelight.usecase.settings.RevealFileListUseCase
 import com.softartdev.notedelight.util.createLocalDateTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDateTime
@@ -92,12 +97,14 @@ class AdaptiveInteractorTest {
     fun setUp() = runTest {
         Logger.setLogWriters(PrintLogWriter())
 
+        val preferencesRepo = PreferencesRepoImpl(MapSettings())
         mainViewModel = MainViewModel(
             safeRepo = mockSafeRepo,
             router = mockRouter,
             adaptiveInteractor = adaptiveInteractor,
             shareInteractor = shareInteractor,
             createNoteUseCase = mockCreateNoteUseCase,
+            noteSortUseCase = NoteSortUseCase(preferencesRepo),
             coroutineDispatchers = coroutineDispatchers
         )
         noteViewModel = NoteViewModel(

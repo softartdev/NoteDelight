@@ -5,18 +5,26 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import app.cash.turbine.test
 import co.touchlab.kermit.Logger
+import com.russhwolf.settings.MapSettings
 import com.softartdev.notedelight.CoroutineDispatchersStub
 import com.softartdev.notedelight.PrintLogWriter
 import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.interactor.AdaptiveInteractor
 import com.softartdev.notedelight.interactor.ShareInteractorStub
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.model.NoteSort
+import com.softartdev.notedelight.model.SortField
+import com.softartdev.notedelight.model.SortOrder
 import com.softartdev.notedelight.navigation.AppNavGraph
 import com.softartdev.notedelight.navigation.Router
 import com.softartdev.notedelight.presentation.MainDispatcherRule
+import com.softartdev.notedelight.repository.PreferencesRepo
+import com.softartdev.notedelight.repository.PreferencesRepoImpl
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
+import com.softartdev.notedelight.usecase.note.NoteSortUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -42,12 +50,15 @@ class MainViewModelTest {
     private val adaptiveInteractor = AdaptiveInteractor()
     private val shareInteractor = ShareInteractorStub()
     private val coroutineDispatchers = CoroutineDispatchersStub(testDispatcher = mainDispatcherRule.testDispatcher)
+    private lateinit var preferencesRepo: PreferencesRepo
     private lateinit var mainViewModel: MainViewModel
 
     @Before
     fun setUp() = runTest {
         Logger.setLogWriters(PrintLogWriter())
         shareInteractor.reset()
+        NoteDAO.noteSortFlow.value = NoteSort()
+        preferencesRepo = PreferencesRepoImpl(MapSettings())
         Mockito.`when`(mockSafeRepo.noteDAO).thenReturn(mockNoteDAO)
         Mockito.`when`(mockNoteDAO.count()).thenReturn(0)
         mainViewModel = MainViewModel(
@@ -56,12 +67,14 @@ class MainViewModelTest {
             adaptiveInteractor = adaptiveInteractor,
             shareInteractor = shareInteractor,
             createNoteUseCase = mockCreateNoteUseCase,
-            coroutineDispatchers = coroutineDispatchers
+            noteSortUseCase = NoteSortUseCase(preferencesRepo),
+            coroutineDispatchers = coroutineDispatchers,
         )
     }
 
     @After
     fun tearDown() = runTest {
+        NoteDAO.noteSortFlow.value = NoteSort()
         shareInteractor.reset()
         Mockito.reset(mockSafeRepo, mockRouter, mockNoteDAO, mockCreateNoteUseCase)
         Logger.setLogWriters()
@@ -145,6 +158,31 @@ class MainViewModelTest {
             assertEquals(null, shareInteractor.sharedTextStateFlow.value)
             Mockito.verify(mockCreateNoteUseCase).invoke(text = sharedText)
             Mockito.verify(mockRouter).adaptiveNavigateToDetail(contentKey = noteId)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun onSortChangeUpdatesPreferencesDaoFlowAndSuccessState() = runTest {
+        val pagingFlow = flowOf(PagingData.empty<Note>())
+        Mockito.`when`(mockNoteDAO.pagingDataFlow).thenReturn(pagingFlow)
+
+        mainViewModel.stateFlow.test {
+            assertEquals(NoteListResult.Loading, awaitItem())
+
+            mainViewModel.launchNotes()
+            val initial = awaitItem() as NoteListResult.Success
+            assertEquals(NoteSort(SortField.DATE_MODIFIED, SortOrder.DESC), initial.noteSort)
+
+            val newSort = NoteSort(SortField.TITLE, SortOrder.ASC)
+            mainViewModel.onAction(MainAction.OnSortChange(newSort))
+
+            val updated = awaitItem() as NoteListResult.Success
+            assertEquals(newSort, updated.noteSort)
+            assertEquals(newSort.field, preferencesRepo.sortField)
+            assertEquals(newSort.order, preferencesRepo.sortOrder)
+            assertEquals(newSort, NoteDAO.noteSortFlow.value)
 
             cancelAndIgnoreRemainingEvents()
         }

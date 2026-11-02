@@ -1,12 +1,10 @@
 package com.softartdev.notedelight
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import co.touchlab.kermit.Logger
 import com.softartdev.notedelight.db.AndroidDatabaseHolder
 import com.softartdev.notedelight.db.NoteDb
 import com.softartdev.notedelight.db.SqlDelightNoteDAO
 import com.softartdev.notedelight.db.TestSchema
-import com.softartdev.notedelight.db.createQueryWrapper
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
@@ -30,12 +28,12 @@ class NoteUseCaseUnitTest {
     private val mockSafeRepo = Mockito.mock(SafeRepo::class.java)
     private val mockDbHolder = Mockito.mock(AndroidDatabaseHolder::class.java)
 
-    private val noteDb = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
-        runBlocking { NoteDb.Schema.create(driver).await() }
-        return@let createQueryWrapper(driver)
+    private val dbHolder = JdbcDatabaseTestHolder().also { holder ->
+        runBlocking { NoteDb.Schema.create(holder.driver).await() }
     }
+    private val noteDb: NoteDb get() = dbHolder.noteDb
     private val noteDAO = SqlDelightNoteDAO(
-        noteQueriesGetter = { noteDb.noteQueries },
+        noteQueriesGetter = { dbHolder.noteQueries },
         coroutineDispatchers = CoroutineDispatchersStub(UnconfinedTestDispatcher())
     )
     private val createNoteUseCase = CreateNoteUseCase(noteDAO)

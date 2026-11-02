@@ -8,7 +8,7 @@ This document outlines the strategic plan, architectural considerations, and pri
 
 | Milestone | Focus | Key Features | Status |
 | :--- | :--- | :--- | :--- |
-| **v1.1** | **Performance & List Usability** | Note list SQL projection (`NoteHeader`), Note sorting, Pin to top | 📋 Planned |
+| **v1.1** | **Performance & List Usability** | Note list SQL projection (`NoteHeader`), Note sorting (✅), Pin to top | 🚧 In Progress |
 | **v1.2** | **Inter-App Sharing & Integration** | Share export (`ShareInteractor`), Share import (`ACTION_SEND`), Encrypted pending state | ✅ Completed |
 | **v1.3** | **Search & Content Formatting** | Full-text / local search, basic Markdown support, Single-note export/import (.md/.txt) | 💡 Backlog |
 | **v1.4** | **Security & Safety Enhancements** | Trash / Soft delete, Auto-lock background timer | 💡 Backlog |
@@ -40,15 +40,17 @@ This document outlines the strategic plan, architectural considerations, and pri
   * In UI ([`NoteItem.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/NoteItem.kt)): bind to `NoteHeader` instead of full `Note`.
   * The full note text continues to be retrieved on-demand via `noteDAO.load(id)` only when opening [`NoteDetail`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/NoteDetail.kt).
 
-#### 2. Note Sorting
-* **UI:** Add a Sort action with `Icons.AutoMirrored.Filled.Sort` in [`MainScreen`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/MainScreen.kt) top app bar actions with a dropdown menu:
-  * By Last Modified Date (*default: Descending*)
+#### 2. Note Sorting ✅
+* **Domain & Reactive Data Layer:**
+  * [`SortField`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/model/SortField.kt) (`DATE_MODIFIED`, `DATE_CREATED`, `TITLE` holding SQL `columnName`) and [`SortOrder`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/model/SortOrder.kt) (`ASC`, `DESC` holding SQL `sql`) compose [`NoteSort`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/model/NoteSort.kt), orchestrated by [`NoteSortUseCase`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/usecase/note/NoteSortUseCase.kt) without touching [`SafeRepo`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/repository/SafeRepo.kt).
+  * Non-breaking reactive [`NoteDAO`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/db/NoteDAO.kt) API: `pagingDataFlow` switches automatically via `noteSortFlow.flatMapLatest`, executing dynamic raw SQL `ORDER BY ${sort.field.columnName} COLLATE NOCASE ${sort.order.sql}, id DESC` in both SQLDelight ([`SqlDelightNoteDAO.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/data/db-sqldelight/src/commonMain/kotlin/com/softartdev/notedelight/db/SqlDelightNoteDAO.kt)) and Room (`@RawQuery` in [`Database.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/data/db-room/src/commonMain/kotlin/com/softartdev/notedelight/db/Database.kt) / [`RoomNoteDAO.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/data/db-room/src/commonMain/kotlin/com/softartdev/notedelight/db/RoomNoteDAO.kt)).
+  * *Limitation:* Title sorting uses SQLite's built-in `COLLATE NOCASE`, which folds ASCII (`A-Z` / `a-z`) case-insensitively; non-ASCII (e.g. Cyrillic) characters sort by UTF-8 codepoint order unless a custom Unicode collator is registered across drivers.
+* **UI:** [`SortMenuButton`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/SortMenuButton.kt) and [`SortOption`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/SortOption.kt) with `Icons.AutoMirrored.Filled.Sort` in [`MainScreen`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/MainScreen.kt) top app bar actions with 6 options:
+  * By Last Modified Date (Descending *default* / Ascending)
   * By Creation Date (Descending / Ascending)
-  * By Title (A-Z / Z-A)
-* **Dynamic Date Display:** Update [`NoteItem.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/NoteItem.kt):
-  * When sorted by modification date, display `dateModified` in `overlineContent`.
-  * When sorted by creation date, display `dateCreated` in `overlineContent`.
-* **Persistence:** Persist selected sort order in settings/preferences so it survives app restarts.
+  * By Title (A–Z / Z–A)
+* **Smart Date Display:** [`NoteItem.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/NoteItem.kt) (`NoteItemDates`) displays a single creation timestamp with `Icons.Default.CalendarToday` when the note has not been modified after creation, or both `dateCreated` (`Icons.Default.AddCircleOutline`) and `dateModified` (`Icons.Default.Edit`) side-by-side when modified.
+* **Persistence:** Persisted across app restarts via [`PreferencesRepo`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/repository/PreferencesRepo.kt) / [`PreferencesRepoImpl`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/presentation/src/commonMain/kotlin/com/softartdev/notedelight/repository/PreferencesRepoImpl.kt) backed by `multiplatform-settings`.
 
 #### 3. Pin to Top / Favorite Notes
 * **Data Layer:** Add `isPinned: Boolean` flag in SQLite schema with migration.
@@ -110,7 +112,7 @@ This document outlines the strategic plan, architectural considerations, and pri
 | Feature | Target Milestone | Domain / Data Layer | Presentation / UI Layer | Platforms Affected |
 | :--- | :---: | :--- | :--- | :--- |
 | **Note List Memory Optimization** | v1.1 | `NoteHeader`, SQLDelight query, Room DAO | `MainViewModel`, `NoteItem` | All |
-| **Note Sorting** | v1.1 | `NoteDAO` sort order parameter | `MainScreen`, `NoteItem`, Settings | All |
+| **Note Sorting** ✅ | v1.1 | `SortField`, `SortOrder`, `NoteSort`, `NoteSortUseCase`, `PreferencesRepo`, reactive `NoteDAO.noteSortFlow` | `MainScreen`, `SortMenuButton`, `SortOption`, `NoteItem`, `PreferencesRepoImpl` | All |
 | **Pin to Top** | v1.1 | Schema `isPinned`, queries | `NoteItem`, `MainViewModel` | All |
 | **Share Outbound** | v1.2 | `ShareInteractor` contract | `NoteDetail`, `NoteViewModel`, platform share handlers | Android, iOS, Desktop, Web |
 | **Share Inbound** | v1.2 | `ShareInteractor`, `CreateNoteUseCase` | `MainActivity`, `MainViewModel` | Android (primary) |
@@ -119,3 +121,16 @@ This document outlines the strategic plan, architectural considerations, and pri
 | **Single-Note Export/Import** | v1.3 | `FileRepo` / Document file picker | `NoteDetail` menu | All |
 | **Trash (Soft Delete)** | v1.4 | `isDeleted` schema flag, cleanup job | Settings / Trash UI | All |
 | **Auto-Lock Timer** | v1.4 | Lifecycle observer, `SafeRepo` close | App lifecycle, Security settings | All |
+
+---
+
+## 🛠️ Maintenance & Technical Debt
+
+* **Remove LeakCanary from Android Debug Builds:**
+  * Remove `leakcanary-android`, `plumber-android`, and `leakcanary-android-instrumentation` from [`app/android/build.gradle.kts`](file:///Users/artur/AndroidStudioProjects/NoteDelight/app/android/build.gradle.kts) and [`gradle/libs.versions.toml`](file:///Users/artur/AndroidStudioProjects/NoteDelight/gradle/libs.versions.toml).
+  * *Rationale:* `leakcanary-android` merges `android.permission.POST_NOTIFICATIONS` and `leakcanary.internal.RequestPermissionActivity` into debug builds (triggering `"Allow Note Delight to send you notifications?"` prompts), while Jetpack Compose UI and Android Studio's built-in Memory Profiler make runtime LeakCanary overhead redundant.
+* **Refactor `SafeRepo.relaunchListFlowCallback` out of `MainViewModel.init`:**
+  * Replace the mutable callback assignment (`safeRepo.relaunchListFlowCallback = this::updateNotes`) in [`MainViewModel`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/presentation/src/commonMain/kotlin/com/softartdev/notedelight/presentation/main/MainViewModel.kt) / [`SafeRepo`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/domain/src/commonMain/kotlin/com/softartdev/notedelight/repository/SafeRepo.kt) with a reactive signal or dedicated use-case orchestration when database encryption, decryption, rekeying, or import resets the active SQLite connection.
+* **Pre-formatted Date Strings at Query / Mapping Stage (Presentation / Domain Model):**
+  * Shift date-to-text formatting (`DateTimeFormatter.format(...)`) from the Compose composition phase in [`NoteItem.kt`](file:///Users/artur/AndroidStudioProjects/NoteDelight/core/ui/src/commonMain/kotlin/com/softartdev/notedelight/ui/main/NoteItem.kt) to the database query or presentation mapping layer (e.g., inside `NoteHeader` or a dedicated presentation list item model) so that the model already contains pre-computed display strings.
+  * *Rationale:* Avoids repetitive date parsing and string formatting during Compose list scrolling and recompositions, supplying the UI with ready-to-render display strings directly.

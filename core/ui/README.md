@@ -81,9 +81,8 @@ Box(modifier = Modifier.fillMaxSize()) {
 Each screen is a composable function connected to a ViewModel:
 
 #### Main Screen (`ui/main/`)
-- `MainScreen.kt`: Notes list with pagination
-- `NoteListItem.kt`: Individual note card component
-- Shows notes in grid/list layout with search/filter
+- `MainScreen.kt`: Notes list with pagination, sort dropdown action (`SortMenuButton.kt` + `SortOption.kt`), and settings navigation
+- `NoteList.kt` / `NoteItem.kt`: Paginated note list where `NoteItemDates` displays a single date with `Icons.Default.CalendarToday` when a note has not been modified after creation, or both `dateCreated` (`Icons.Default.AddCircleOutline`) and `dateModified` (`Icons.Default.Edit`) when modified
 
 #### Note Screen (`ui/note/`)
 - `NoteScreen.kt`: Note editor with rich text input

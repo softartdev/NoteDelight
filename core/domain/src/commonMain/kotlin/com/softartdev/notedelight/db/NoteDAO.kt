@@ -5,7 +5,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.model.NoteSort
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 
 /**
  * Data Access Object for the notes table.
@@ -26,11 +30,14 @@ interface NoteDAO {
     /**
      * Get a [Flow] of [PagingData] for the notes table.
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pagingDataFlow: Flow<PagingData<Note>>
-        get() = Pager(
-            config = PagingConfig(pageSize = 20),
-            pagingSourceFactory = this::pagingSource
-        ).flow
+        get() = noteSortFlow.flatMapLatest {
+            Pager(
+                config = PagingConfig(pageSize = 20),
+                pagingSourceFactory = this::pagingSource
+            ).flow
+        }
 
     /**
      * Select the count of notes from the notes table.
@@ -70,4 +77,11 @@ interface NoteDAO {
      * Delete all notes.
      */
     suspend fun deleteAll()
+
+    companion object {
+        /**
+         * Active sort state observed by [pagingDataFlow] and read by [pagingSource].
+         */
+        val noteSortFlow: MutableStateFlow<NoteSort> = MutableStateFlow(NoteSort())
+    }
 }

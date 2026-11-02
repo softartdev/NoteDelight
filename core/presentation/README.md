@@ -40,8 +40,9 @@ core:presentation (Presentation Layer - Platform-independent ViewModels)
 Each screen has a dedicated ViewModel following **MVVM pattern**:
 
 #### Main Screen
-- `MainViewModel`: Manages the note list, keeps the encrypted database alive, and coordinates `AdaptiveInteractor` so adaptive layouts stay in sync.
-- `NoteListResult`: Sealed interface with `Loading`, `Success(result: Flow<PagingData<Note>>, selectedId: Long?)`, and `Error` variants.
+- `MainViewModel`: Manages the note list via `SafeRepo.noteDAO`, delegates sort updates to `NoteSortUseCase`, keeps the encrypted database alive, and coordinates `AdaptiveInteractor` so adaptive layouts stay in sync.
+- `NoteListResult`: Sealed interface with `Loading`, `Success(result: Flow<PagingData<Note>>, selectedId: Long?, noteSort: NoteSort)`, and `Error` variants.
+- `PreferencesRepoImpl`: Multiplatform `PreferencesRepo` implementation backed by `multiplatform-settings` (`Settings`), persisting `sortField` (`columnName`) and `sortOrder` (`sql`).
 
 #### Note Screen
 - `NoteViewModel`: Manages note editing state and content

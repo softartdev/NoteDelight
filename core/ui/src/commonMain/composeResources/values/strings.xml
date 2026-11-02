@@ -100,4 +100,11 @@
     <string name="biometric_disabled_due_to_password_change">Biometric sign-in disabled — please re-enable in Settings.</string>
     <string name="biometric_error">Biometric authentication failed</string>
     <string name="biometric_unavailable">Biometric authentication is not available</string>
+    <string name="sort">Sort</string>
+    <string name="sort_modified_desc">Modified: newest first</string>
+    <string name="sort_modified_asc">Modified: oldest first</string>
+    <string name="sort_created_desc">Created: newest first</string>
+    <string name="sort_created_asc">Created: oldest first</string>
+    <string name="sort_title_asc">Title: A–Z</string>
+    <string name="sort_title_desc">Title: Z–A</string>
 </resources>

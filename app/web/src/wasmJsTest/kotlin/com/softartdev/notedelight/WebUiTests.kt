@@ -28,6 +28,7 @@ import com.softartdev.notedelight.ui.cases.FlowAfterCryptTestCase
 import com.softartdev.notedelight.ui.cases.LocaleTestCase
 import com.softartdev.notedelight.ui.cases.PrepopulateDbTestCase
 import com.softartdev.notedelight.ui.cases.SettingPasswordTestCase
+import com.softartdev.notedelight.ui.cases.SortNotesTestCase
 import com.softartdev.notedelight.util.kermitLogger
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
@@ -144,6 +145,12 @@ class WebUiTests {
             composeUiTest = this@runComposeUiTest,
             pressBack = { clickBack(this@runComposeUiTest) },
         ).invoke()
+    }
+
+    @Test
+    fun sortNotesTest() = runComposeUiTest {
+        launchApp(composeUiTest = this@runComposeUiTest)
+        SortNotesTestCase(composeUiTest = this@runComposeUiTest).invoke()
     }
 
     private fun launchApp(composeUiTest: ComposeUiTest) {

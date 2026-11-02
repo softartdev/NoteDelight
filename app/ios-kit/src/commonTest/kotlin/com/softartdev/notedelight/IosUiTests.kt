@@ -38,4 +38,7 @@ class IosUiTests : CommonUiTests() {
 
     @Test
     override fun localeTest(): TestResult = super.localeTest()
+
+    @Test
+    override fun sortNotesTest(): TestResult = super.sortNotesTest()
 }

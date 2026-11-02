@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.5.9] - 2026-11-02
+
+### Features
+- Add note list sorting functionality with 6 sort options: by last modified date (descending/ascending), creation date (descending/ascending), and title (A–Z / Z–A)
+- Support reactive sorting updates in SQLite queries across both SQLDelight (`Note.sq`) and Room (`@RawQuery`) via `NoteDAO.noteSortFlow`
+- Add `SortMenuButton` and `SortOption` to `MainScreen` top app bar with English and Russian localizations
+- Add smart date display in `NoteItem`: show single creation timestamp with `CalendarToday` icon when unmodified, or both creation (`AddCircleOutline`) and modification (`Edit`) timestamps side-by-side when modified
+- Persist sorting preferences across app restarts via `PreferencesRepo` / `PreferencesRepoImpl` backed by `multiplatform-settings`
+
+### Refactoring
+- Centralize note sorting domain models (`NoteSort`, `SortField`, `SortOrder`) and introduce `NoteSortUseCase` to synchronize sort preferences without coupling presentation to persistence
+- Optimize and deduplicate SQLDelight `pagedNotes` query by computing sort field values within a subquery
+- Place `companion object` at the bottom of Kotlin classes/interfaces across the codebase
+- Simplify syntax in DAO, ViewModel, and UI: import companion members directly (`noteSortFlow`), inline redundant single-use variables, and use single-expression bodies for composable wrappers
+
+### Tests
+- Add `SortNotesTestCase` multiplatform Compose UI tests covering sorting flows on Android, Desktop, iOS, and Web
+- Add `NoteSortingTest` (SQLDelight) and `RoomDatabaseIntegrationTest` (Room) verifying dynamic sorting order
+- Add `MainViewModelTest` and `PreferencesRepoImplTest` unit test coverage for sort state management and persistence
+
+### Documentation
+- Document code style rules in `CONTRIBUTING.md` for companion object placement, companion member imports, local variable inlining, expression bodies, and component call-site parameter ordering
+- Update `docs/ROADMAP.md` (mark Milestone 1.1 §2 Note Sorting complete and add pre-formatted date strings to technical debt)
+- Update module `README.md` files for sorting domain models, presentation state, and UI components
+
+### Chores
+- Update Gradle wrapper to 9.8.2
+- Update dependencies in `libs.versions.toml`: AGP (9.5.0), KSP (2.3.13), Firebase (35.1.0), AndroidX DataStore (1.3.0), Navigation (2.10.0), Tracing (2.0.5), kotlinx-serialization (1.12.0), and SQLCipher for Android (4.20.0)
+
 ## [8.5.8] - 2026-10-26
 
 ### Features

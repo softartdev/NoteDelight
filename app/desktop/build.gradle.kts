@@ -57,7 +57,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Note Delight"
-            packageVersion = "8.5.8"
+            packageVersion = "8.5.9"
             description = "Note app with encryption"
             copyright = "© 2023 SoftArtDev"
             macOS.iconFile.set(project.file("src/jvmMain/resources/app_icon.icns"))

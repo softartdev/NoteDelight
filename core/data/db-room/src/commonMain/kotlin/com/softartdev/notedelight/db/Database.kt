@@ -11,7 +11,9 @@ import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.PrimaryKey
 import androidx.room3.Query
+import androidx.room3.RawQuery
 import androidx.room3.RoomDatabase
+import androidx.room3.RoomRawQuery
 import androidx.room3.Update
 import androidx.room3.migration.Migration
 import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
@@ -50,8 +52,8 @@ interface NoteRoomDao {
     @Query("SELECT * FROM note ORDER BY dateModified DESC")
     suspend fun getAll(): List<Note>
 
-    @Query("SELECT * FROM note ORDER BY dateModified DESC")
-    fun pagingSource(): PagingSource<Int, Note>
+    @RawQuery(observedEntities = [Note::class])
+    fun pagingSource(query: RoomRawQuery): PagingSource<Int, Note>
 
     @Query("SELECT * FROM note WHERE id = :id")
     suspend fun load(id: Long): Note

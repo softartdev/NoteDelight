@@ -1,6 +1,7 @@
 package com.softartdev.notedelight.di
 
 import com.softartdev.notedelight.db.NoteDAO
+import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.files.FilesViewModel
 import com.softartdev.notedelight.presentation.main.MainViewModel
 import com.softartdev.notedelight.presentation.note.DeleteViewModel
@@ -8,7 +9,6 @@ import com.softartdev.notedelight.presentation.note.NoteViewModel
 import com.softartdev.notedelight.presentation.note.SaveViewModel
 import com.softartdev.notedelight.presentation.settings.LanguageViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsCategoriesViewModel
-import com.softartdev.notedelight.presentation.console.ConsoleViewModel
 import com.softartdev.notedelight.presentation.settings.SettingsViewModel
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricDisableViewModel
 import com.softartdev.notedelight.presentation.settings.security.biometric.BiometricEnrollViewModel
@@ -19,6 +19,8 @@ import com.softartdev.notedelight.presentation.signin.SignInViewModel
 import com.softartdev.notedelight.presentation.splash.SplashViewModel
 import com.softartdev.notedelight.presentation.title.EditTitleViewModel
 import com.softartdev.notedelight.repository.FileRepo
+import com.softartdev.notedelight.repository.PreferencesRepo
+import com.softartdev.notedelight.repository.PreferencesRepoImpl
 import com.softartdev.notedelight.repository.SafeRepo
 import com.softartdev.notedelight.usecase.console.ConsoleUseCase
 import com.softartdev.notedelight.usecase.crypt.ChangePasswordUseCase
@@ -26,6 +28,7 @@ import com.softartdev.notedelight.usecase.crypt.CheckPasswordUseCase
 import com.softartdev.notedelight.usecase.crypt.CheckSqlCipherVersionUseCase
 import com.softartdev.notedelight.usecase.note.CreateNoteUseCase
 import com.softartdev.notedelight.usecase.note.DeleteNoteUseCase
+import com.softartdev.notedelight.usecase.note.NoteSortUseCase
 import com.softartdev.notedelight.usecase.note.SaveNoteUseCase
 import com.softartdev.notedelight.usecase.note.UpdateTitleUseCase
 import com.softartdev.notedelight.usecase.settings.AppVersionUseCase
@@ -39,15 +42,19 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val sharedModules: List<Module>
-    get() = repoModule + daoModule + useCaseModule + viewModelModule
+    get() = repoModule + daoModule + preferencesModule + useCaseModule + viewModelModule
 
 /**
 Provide the [SafeRepo] and [FileRepo]
  */
 expect val repoModule: Module
 
+val preferencesModule: Module = module {
+    single<PreferencesRepo> { PreferencesRepoImpl() }
+}
+
 val daoModule: Module = module {
-    factory<NoteDAO> { get<SafeRepo>().noteDAO }
+    single<NoteDAO> { get<SafeRepo>().noteDAO }
 }
 
 val useCaseModule: Module = module {
@@ -55,6 +62,7 @@ val useCaseModule: Module = module {
     factoryOf(::CheckPasswordUseCase)
     factoryOf(::CheckSqlCipherVersionUseCase)
     factoryOf(::CreateNoteUseCase)
+    factoryOf(::NoteSortUseCase)
     factoryOf(::SaveNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::UpdateTitleUseCase)

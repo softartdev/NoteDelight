@@ -84,6 +84,7 @@ kotlin.code.style=official
 - No wildcard imports (except in tests)
 - Organized and optimized
 - Android Studio organize imports: ⌥⌘O (Mac) / Ctrl+Alt+O (Windows)
+- **Remove unused imports** promptly; never leave orphaned imports after refactoring.
 
 #### Blank Lines
 - One blank line between functions
@@ -120,6 +121,9 @@ kotlin.code.style=official
   over an inverted `if (!success) ... else ...` ladder.
 - **Collapse trivial `viewModelScope.launch` blocks to a single line** when their body is one statement
   (e.g. `private fun cancel() = viewModelScope.launch { router.popBackStack() }`).
+- **Inline trivial, single-use local variables** directly into call sites or data class constructors
+  (e.g. `NoteListResult.Success(..., noteSort = NoteDAO.noteSortFlow.value)`) instead of declaring an
+  intermediate `val` that is immediately consumed only once.
 - **Compose state edits**: prefer a single `mutableStateFlow.update { it.copy(...) }` that sets every field
   affected by an event over multiple chained `update` calls. It keeps the resulting state atomic and
   makes the visible transition obvious.
@@ -150,30 +154,30 @@ kotlin.code.style=official
 
 ```kotlin
 class MyClass {
-    // 1. Companion object
-    companion object {
-        const val CONSTANT = "value"
-    }
-    
-    // 2. Properties
+    // 1. Properties
     private val privateProperty: String
     val publicProperty: String
     
-    // 3. Init blocks
+    // 2. Init blocks
     init {
         // Initialization
     }
     
-    // 4. Secondary constructors
+    // 3. Secondary constructors
     constructor(param: String) : this(param, "default")
     
-    // 5. Functions (public first, then private)
+    // 4. Functions (public first, then private)
     fun publicFunction() { }
     
     private fun privateFunction() { }
     
-    // 6. Nested classes/objects
+    // 5. Nested classes/objects
     inner class NestedClass
+
+    // 6. Companion object (at the very bottom of the class or interface)
+    companion object {
+        const val CONSTANT = "value"
+    }
 }
 ```
 
@@ -280,6 +284,8 @@ private fun ScreenContent(
 5. **Remember wisely**: Use `remember` for expensive calculations
 6. **Keys in lists**: Provide stable keys for LazyColumn/LazyRow
 7. **Adaptive drag handle**: Prefer method references for pane expansion, e.g. `paneExpansionDragHandle = ThreePaneScaffoldScope::VerticalPaneExpansionDragHandle` (use a lambda in Kotlin/Wasm actuals to avoid the current composable function reference compiler issue).
+8. **Expression body for single-root composables**: Prefer single-expression syntax (`= Row(...) { ... }`, `= Column(...) { ... }`) for private helper composables or wrappers whose entire body is a single root layout composable, avoiding redundant curly braces and reducing indentation.
+9. **Call site parameter ordering for leaf composables**: When calling standard visual leaf composables (such as `Icon`), place `modifier` first among named arguments (e.g. `Icon(modifier = Modifier.size(14.dp), imageVector = ..., contentDescription = ...)`) so that sizing and layout constraints are immediately visible before content properties.
 
 ### ViewModel Style
 

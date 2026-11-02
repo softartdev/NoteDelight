@@ -33,6 +33,9 @@ core:domain (Business Logic - Pure Kotlin)
 Domain entities representing core business concepts:
 
 - `Note`: Immutable data class representing a note with id, title, text, and timestamps
+- `SortField`: Enum mapping sort fields (`DATE_MODIFIED`, `DATE_CREATED`, `TITLE`) to SQLite column names (`columnName`)
+- `SortOrder`: Enum mapping sort directions (`ASC`, `DESC`) to SQL keywords (`sql`)
+- `NoteSort`: Note list sort specification combining `SortField` and `SortOrder`
 - `PlatformSQLiteState`: Represents database encryption state
 - `PlatformSQLiteThrowable`: Domain-specific exception wrapper
 
@@ -42,6 +45,7 @@ Single-responsibility business operations following the **Command Pattern**:
 
 #### Note Operations (`usecase/note/`)
 - `CreateNoteUseCase`: Creates a new note with generated ID
+- `NoteSortUseCase`: Persists and synchronizes active `NoteSort` between `PreferencesRepo` and `NoteDAO.noteSortFlow`
 - `SaveNoteUseCase`: Updates existing note content
 - `UpdateTitleUseCase`: Updates note title
 - `DeleteNoteUseCase`: Removes a note
@@ -62,9 +66,10 @@ Contracts for data access (implemented by data layer):
 - `NoteDAO`: Note data access operations
 - `DatabaseHolder`: Database lifecycle management
 
-### Repository Implementations (`repository/`)
+### Repository Implementations & Contracts (`repository/`)
 
-- `SafeRepo`: Thread-safe repository wrapper managing database operations
+- `SafeRepo`: Thread-safe repository wrapper managing SQLCipher database lifecycle
+- `PreferencesRepo`: Preference contract exposing `var sortField: SortField` and `var sortOrder: SortOrder`
 
 ### Platform Utilities (`util/`)
 

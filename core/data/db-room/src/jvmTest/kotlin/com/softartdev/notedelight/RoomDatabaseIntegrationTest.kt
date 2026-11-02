@@ -1,7 +1,11 @@
 package com.softartdev.notedelight
 
 import androidx.paging.PagingSource
+import com.softartdev.notedelight.db.NoteDAO
 import com.softartdev.notedelight.model.Note
+import com.softartdev.notedelight.model.NoteSort
+import com.softartdev.notedelight.model.SortField
+import com.softartdev.notedelight.model.SortOrder
 import com.softartdev.notedelight.repository.JvmSafeRepo
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -15,6 +19,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertIs
+import kotlin.test.assertNotSame
 
 class RoomDatabaseIntegrationTest {
     private lateinit var databaseFile: File
@@ -22,6 +27,7 @@ class RoomDatabaseIntegrationTest {
 
     @BeforeTest
     fun setUp() {
+        NoteDAO.noteSortFlow.value = NoteSort()
         databaseFile = Files.createTempDirectory("notedelight-room3-")
             .resolve("notes.db")
             .toFile()
@@ -30,6 +36,7 @@ class RoomDatabaseIntegrationTest {
 
     @AfterTest
     fun tearDown() = runTest {
+        NoteDAO.noteSortFlow.value = NoteSort()
         safeRepo.closeDatabase()
         databaseFile.delete()
         File("${databaseFile.absolutePath}-wal").delete()
@@ -122,6 +129,71 @@ class RoomDatabaseIntegrationTest {
 
         safeRepo.decrypt("second password")
         assertEquals("secret", noteDAO.load(1).title)
+    }
+
+    @Test
+    fun noteSortingAcrossAllFieldsAndDirections() = runTest {
+        safeRepo.buildDbIfNeed()
+        val noteDAO = safeRepo.noteDAO
+
+        noteDAO.insert(
+            Note(
+                id = 1,
+                title = "banana",
+                text = "1",
+                dateCreated = LocalDateTime(1998, 1, 1, 10, 0),
+                dateModified = LocalDateTime(2026, 2, 2, 10, 0),
+            )
+        )
+        noteDAO.insert(
+            Note(
+                id = 2,
+                title = "apple",
+                text = "2",
+                dateCreated = LocalDateTime(2026, 1, 2, 10, 0),
+                dateModified = LocalDateTime(2026, 2, 3, 10, 0),
+            )
+        )
+        noteDAO.insert(
+            Note(
+                id = 3,
+                title = "Cherry",
+                text = "3",
+                dateCreated = LocalDateTime(2026, 1, 3, 10, 0),
+                dateModified = LocalDateTime(1998, 2, 1, 10, 0),
+            )
+        )
+
+        suspend fun loadPagedTitles(): List<String> {
+            val page = noteDAO.pagingSource.load(
+                PagingSource.LoadParams.Refresh(key = null, loadSize = 20, placeholdersEnabled = false)
+            )
+            assertIs<PagingSource.LoadResult.Page<Int, Note>>(page)
+            return page.data.map(Note::title)
+        }
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.DATE_MODIFIED, SortOrder.DESC)
+        assertEquals(listOf("apple", "banana", "Cherry"), loadPagedTitles())
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.DATE_MODIFIED, SortOrder.ASC)
+        assertEquals(listOf("Cherry", "banana", "apple"), loadPagedTitles())
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.DATE_CREATED, SortOrder.DESC)
+        assertEquals(listOf("Cherry", "apple", "banana"), loadPagedTitles())
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.DATE_CREATED, SortOrder.ASC)
+        assertEquals(listOf("banana", "apple", "Cherry"), loadPagedTitles())
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.TITLE, SortOrder.ASC)
+        assertEquals(listOf("apple", "banana", "Cherry"), loadPagedTitles())
+
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.TITLE, SortOrder.DESC)
+        assertEquals(listOf("Cherry", "banana", "apple"), loadPagedTitles())
+
+        val firstEmission = noteDAO.pagingDataFlow.first()
+        NoteDAO.noteSortFlow.value = NoteSort(SortField.DATE_CREATED, SortOrder.ASC)
+        val secondEmission = noteDAO.pagingDataFlow.first()
+        assertNotSame(firstEmission, secondEmission)
     }
 
     private fun note(id: Long, title: String, minute: Int = 1): Note {

@@ -6,6 +6,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.paging3.QueryPagingSource
+import com.softartdev.notedelight.db.NoteDAO.Companion.noteSortFlow
 import com.softartdev.notedelight.model.Note
 import com.softartdev.notedelight.shared.db.NoteQueries
 import com.softartdev.notedelight.util.CoroutineDispatchers
@@ -16,7 +17,7 @@ import com.softartdev.notedelight.shared.db.Note as NoteDBO
 
 class SqlDelightNoteDAO(
     private val noteQueriesGetter: () -> NoteQueries,
-    private val coroutineDispatchers: CoroutineDispatchers
+    private val coroutineDispatchers: CoroutineDispatchers,
 ) : NoteDAO {
     private val noteQueries: NoteQueries
         get() = noteQueriesGetter()
@@ -32,11 +33,15 @@ class SqlDelightNoteDAO(
             countQuery = noteQueries.countNotes(),
             transacter = noteQueries,
             context = coroutineDispatchers.io,
-            queryProvider = this::pagedNotes
+            queryProvider = this::pagedNotes,
         )
 
-    private fun pagedNotes(limit: Long, offset: Long): Query<Note> =
-        noteQueries.pagedNotes(limit, offset).toModel()
+    private fun pagedNotes(limit: Long, offset: Long): Query<Note> = noteQueries.pagedNotes(
+        sortField = noteSortFlow.value.field.columnName,
+        sortOrder = noteSortFlow.value.order.sql,
+        limit = limit,
+        offset = offset,
+    ).toModel()
 
     override suspend fun count(): Long = noteQueries.countNotes().awaitAsOne()
 

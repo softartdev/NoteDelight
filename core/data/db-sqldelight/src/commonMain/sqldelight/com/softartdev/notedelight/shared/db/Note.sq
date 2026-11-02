@@ -15,7 +15,20 @@ countNotes:
 SELECT count(*) FROM note;
 
 pagedNotes:
-SELECT * FROM note ORDER BY dateModified DESC LIMIT :limit OFFSET :offset;
+SELECT id, title, text, dateCreated, dateModified FROM (
+    SELECT *,
+        CASE :sortField
+            WHEN 'dateCreated' THEN dateCreated
+            WHEN 'title' THEN LOWER(title)
+            ELSE dateModified
+        END AS sortFieldVal
+    FROM note
+)
+ORDER BY
+    CASE WHEN :sortOrder = 'ASC' THEN sortFieldVal END ASC,
+    CASE WHEN :sortOrder = 'DESC' THEN sortFieldVal END DESC,
+    id DESC
+LIMIT :limit OFFSET :offset;
 
 getById:
 SELECT * FROM note WHERE id = :noteId;

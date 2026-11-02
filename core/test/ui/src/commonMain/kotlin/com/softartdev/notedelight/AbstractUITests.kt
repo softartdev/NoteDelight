@@ -14,6 +14,7 @@ import com.softartdev.notedelight.ui.cases.FlowAfterCryptTestCase
 import com.softartdev.notedelight.ui.cases.LocaleTestCase
 import com.softartdev.notedelight.ui.cases.PrepopulateDbTestCase
 import com.softartdev.notedelight.ui.cases.SettingPasswordTestCase
+import com.softartdev.notedelight.ui.cases.SortNotesTestCase
 
 /**
  * Abstract class for UI test classes:
@@ -63,6 +64,8 @@ abstract class AbstractUITests {
         composeUiTest = composeUiTest,
         pressBack = ::pressBack,
     ).invoke()
+
+    open fun sortNotesTest() = SortNotesTestCase(composeUiTest).invoke()
 
     abstract fun pressBack()
     abstract fun closeSoftKeyboard()

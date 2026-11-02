@@ -1,5 +1,7 @@
 package com.softartdev.notedelight.util
 
+import com.softartdev.notedelight.model.NoteSort
+
 /**
  * Test tags for [com.softartdev.notedelight.ui.signin.SignInScreen]
  */
@@ -58,9 +60,12 @@ const val CHANGE_PASSWORD_DIALOG_SAVE_BUTTON_TAG = "CHANGE_PASSWORD_DIALOG_SAVE_
 /**
  * Test tags for [com.softartdev.notedelight.ui.main.MainScreen]
  */
+const val MAIN_SORT_BUTTON_TAG = "MAIN_SORT_BUTTON_TAG"
 const val MAIN_SETTINGS_BUTTON_TAG = "MAIN_SETTINGS_BUTTON_TAG"
 const val CREATE_NOTE_FAB_TAG = "CREATE_NOTE_FAB_TAG"
 const val EMPTY_RESULT_LABEL_TAG = "EMPTY_RESULT_LABEL_TAG"
+
+fun sortOptionTestTag(noteSort: NoteSort): String = "SORT_OPTION_${noteSort.field.name}_${noteSort.order.name}_TAG"
 
 /**
  * Test tags for [com.softartdev.notedelight.ui.main.NoteDetail]

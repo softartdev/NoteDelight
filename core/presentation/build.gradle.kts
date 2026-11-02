@@ -37,12 +37,15 @@ kotlin {
             implementation(libs.kermit)
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.multiplatform.settings.noArg)
         }
         commonTest.dependencies {
+            implementation(kotlin("test"))
             implementation(projects.core.test.common)
             implementation(project.dependencies.platform(libs.coroutines.bom))
             implementation(libs.coroutines.test)
             implementation(libs.turbine)
+            implementation(libs.multiplatform.settings.test)
         }
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
@@ -52,6 +55,7 @@ kotlin {
                 implementation(kotlin("test-junit"))
                 implementation(libs.bundles.mockito)
                 implementation(libs.androidx.arch.core.testing)
+                implementation(libs.multiplatform.settings.test)
             }
         }
         iosMain.dependencies {

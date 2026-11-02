@@ -70,6 +70,9 @@ class AndroidUiTests : AbstractJvmUiTests() {
     @Test
     override fun consoleFeatureTest() = super.consoleFeatureTest()
 
+    @Test
+    override fun sortNotesTest() = super.sortNotesTest()
+
     override fun pressBack() = Espresso.pressBack()
 
     override fun closeSoftKeyboard() = Espresso.closeSoftKeyboard()
