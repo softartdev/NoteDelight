@@ -126,6 +126,11 @@ This document outlines the strategic plan, architectural considerations, and pri
 
 ## 🛠️ Maintenance & Technical Debt
 
+* **Move `PreferencesRepoImpl` to `:core:data:prefs`**
+  * Create a multiplatform Core Data module independent of `CORE_DATA_DB_MODULE`. Move [`PreferencesRepoImpl`](../core/presentation/src/commonMain/kotlin/com/softartdev/notedelight/repository/PreferencesRepoImpl.kt) and its `multiplatform-settings` dependency to `commonMain`, and move its repository tests to `commonTest`. Keep the `PreferencesRepo` contract in `core:domain`, update the Koin binding, and preserve the sort preference keys, stored values, and defaults.
+* **Move `BiometricCredentialsStore` to `:feature:biometric:data`**
+  * Create a Data submodule for the biometric feature. Move [`BiometricCredentialsStore`](../feature/biometric/domain/src/androidMain/kotlin/com/softartdev/notedelight/interactor/BiometricCredentialsStore.kt) and its Preferences DataStore dependency from `:feature:biometric:domain` to `androidMain` in the new module. Preserve the existing file name, keys, and format for the ciphertext and IV.
+  * Update the Android Koin wiring to supply the store to the biometric interactor, with one DataStore instance for the existing file. The interactor continues to own biometric authentication, encryption, and Android Keystore operations.
 * **Remove LeakCanary from Android Debug Builds:**
   * Remove `leakcanary-android`, `plumber-android`, and `leakcanary-android-instrumentation` from [`app/android/build.gradle.kts`](file:///Users/artur/AndroidStudioProjects/NoteDelight/app/android/build.gradle.kts) and [`gradle/libs.versions.toml`](file:///Users/artur/AndroidStudioProjects/NoteDelight/gradle/libs.versions.toml).
   * *Rationale:* `leakcanary-android` merges `android.permission.POST_NOTIFICATIONS` and `leakcanary.internal.RequestPermissionActivity` into debug builds (triggering `"Allow Note Delight to send you notifications?"` prompts), while Jetpack Compose UI and Android Studio's built-in Memory Profiler make runtime LeakCanary overhead redundant.
