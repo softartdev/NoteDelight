@@ -126,6 +126,11 @@ This document outlines the strategic plan, architectural considerations, and pri
 
 ## 🛠️ Maintenance & Technical Debt
 
+* **Verify Android signing compatibility between Google Play and GitHub Releases**
+  * Compare the app signing certificate used by Google Play with the certificate on APKs published in GitHub Releases; Play App Signing alone does not imply a mismatch. Account for any existing signing-key rotation and certificate lineage.
+  * If certificates differ, investigate a supported migration or distribution strategy that allows updates in both directions without uninstalling the app or losing local notes. An existing Google-generated private signing key cannot be exported; do not assume that changing the upload key resolves an app signing mismatch.
+  * Document the app signing and upload key roles, retained key backups, and the signing configuration used by each release workflow. Verify updates from Google Play to a GitHub APK and back with the same application ID and increasing version codes, preserving user data.
+
 * **Move `PreferencesRepoImpl` to `:core:data:prefs`**
   * Create a multiplatform Core Data module independent of `CORE_DATA_DB_MODULE`. Move [`PreferencesRepoImpl`](../core/presentation/src/commonMain/kotlin/com/softartdev/notedelight/repository/PreferencesRepoImpl.kt) and its `multiplatform-settings` dependency to `commonMain`, and move its repository tests to `commonTest`. Keep the `PreferencesRepo` contract in `core:domain`, update the Koin binding, and preserve the sort preference keys, stored values, and defaults.
 * **Move `BiometricCredentialsStore` to `:feature:biometric:data`**
